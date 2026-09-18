@@ -8,6 +8,7 @@ public class Residential extends Construction
     private static final int MAX_POPULATION_GROWTH_RATE = 5;
     private static final int MAX_POPULATION_DECREASE_RATE = 5;
     private static final int MAX_POPULATION = 50;
+    private static final int MAINTENANCE_COST = 5;
 
     private int population = 10;
     private int populationGrowthRate = 1;
@@ -130,5 +131,11 @@ public class Residential extends Construction
         this.population = population;
         this.populationGrowthRate = populationGrowthRate;
         this.populationDecreaseRate = populationDecreaseRate;
+    }
+
+    @Override
+    public int getMaintenanceCost()
+    {
+        return MAINTENANCE_COST;
     }
 }

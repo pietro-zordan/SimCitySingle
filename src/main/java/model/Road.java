@@ -6,6 +6,7 @@ public class Road extends Construction {
     private static final int MONEY_PRODUCTION = 0;
     private static final int POWER = 0;
     private static final int PLACEMENT_PRICE = -50;
+    private static final int MAINTENANCE_COST = 2;
 
     // Inizializza la strada con i suoi valori prestabiliti.
     public Road() {
@@ -24,5 +25,11 @@ public class Road extends Construction {
     public boolean canBeRemoved()
     {
         return false;
+    }
+
+    @Override
+    public int getMaintenanceCost()
+    {
+        return MAINTENANCE_COST;
     }
 }

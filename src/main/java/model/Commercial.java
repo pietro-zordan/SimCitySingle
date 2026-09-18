@@ -12,6 +12,7 @@ public class Commercial extends EconomicBuilding
     private static final int MAX_MONEY_PRODUCTION = 300;
     private static final double BASE_MONEY_PRODUCTION = 50;
     private static final int NUM_EMPLOYEE = 30;
+    private static final int MAINTENANCE_COST = 30;
 
     // Crea un edificio commerciale con consumi e costo prestabiliti.
     public Commercial()
@@ -76,5 +77,11 @@ public class Commercial extends EconomicBuilding
     public ConstructionType getType()
     {
         return ConstructionType.COMMERCIAL;
+    }
+
+    @Override
+    public int getMaintenanceCost()
+    {
+        return MAINTENANCE_COST;
     }
 }

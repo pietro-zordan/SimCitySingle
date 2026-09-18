@@ -197,4 +197,9 @@ public abstract class Construction {
         return true;
     }
 
+    public int getMaintenanceCost()
+    {
+        return 0;
+    }
+
 }

@@ -15,6 +15,7 @@ public class City
     private int budget;
     private int happiness;
     private int unemployed;
+    private int maintenance;
 
     private final Grid grid;
 
@@ -85,6 +86,7 @@ public class City
             pollution += construction.getPollutionImpact();
             economy += construction.getMoneyProduction();
             happiness += construction.getHappinessImpact();
+            maintenance += construction.getMaintenanceCost();
 
             totalEmployeeSlots +=
                     construction.getNumberOfEmployee();

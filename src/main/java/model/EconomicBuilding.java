@@ -4,7 +4,7 @@ public abstract class EconomicBuilding extends Construction
                                         implements EconomyBoostable
 {
     private static final double INITIAL_ECONOMY_GROWTH_RATE = 1.0;
-    private static final double ECONOMY_GROWTH_INCREMENT = 0.1;
+    private static final double ECONOMY_GROWTH_INCREMENT = 0.03;
 
     private double economyGrowthRate;
     private double economicBoost;

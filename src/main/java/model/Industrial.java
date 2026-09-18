@@ -3,12 +3,12 @@ package model;
 public class Industrial extends EconomicBuilding{
 
     private static final int HAPPINESS_DECREASE=-200;
-    private static final double MAX_ECONOMY_GROWTH_RATE=5; //VALORE DA DECIDERE
+    private static final double MAX_ECONOMY_GROWTH_RATE=3.5; //VALORE DA DECIDERE
     private static final int POLLUTION_GENERATED=600;
     private static final int POWER_CONSUMPTION=1000;
     private static final int PLACEMENT_PRICE = -600;
     private static final int MAX_MONEY_PRODUCTION=1500;
-    private static final double BASE_MONEY_PRODUCTION = 150;
+    private static final double BASE_MONEY_PRODUCTION = 120;
     private static final int NUM_EMPLOYEE = 100;
 
     // Crea un edificio industriale con consumi e costo di piazzamento prestabiliti.
@@ -66,5 +66,12 @@ public class Industrial extends EconomicBuilding{
         return ConstructionType.INDUSTRIAL;
     }
 
+    private static final int MAINTENANCE_COST = 150;
+
+    @Override
+    public int getMaintenanceCost()
+    {
+        return MAINTENANCE_COST;
+    }
 }
 

@@ -150,13 +150,19 @@ public final class GameView implements GameObserver
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        if (controller.requestLoan(1000))
+                        int amount = controller.getLoanAmount();
+
+                        if (controller.requestLoan())
                         {
                             showToast(
-                                    "Prestito ricevuto: 1000 €. "
-                                            + "Tra 3 tick dovrai restituire 3000 €."
+                                    "Prestito ricevuto: "
+                                            + amount
+                                            + " €. Tra 3 tick dovrai restituire "
+                                            + (amount * 3)
+                                            + " €."
                             );
                         }
+
                         else
                         {
                             showToast(

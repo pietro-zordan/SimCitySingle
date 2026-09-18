@@ -13,6 +13,9 @@ public class Simulation{
     private static final int BANK_UNLOCK_TICK = 30;
     private static final int LOAN_DURATION = 3;
     private static final int LOAN_MULTIPLIER = 3;
+    private static final int LOAN_INTERVAL = 15;
+    private static final int BASE_LOAN_AMOUNT = 1000;
+    private int lastLoanTick = -LOAN_INTERVAL;
 
     private boolean loanActive;
     private int loanAmount;
@@ -24,6 +27,7 @@ public class Simulation{
     private Event activeEvent;
     private int eventTicksPassed;
     private final Grid grid;
+    private int remainingDebt;
 
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
@@ -151,16 +155,37 @@ public class Simulation{
 
     private void checkLoanRepayment()
     {
+        // Dopo 3 tick il prestito diventa debito da restituire
         if (loanActive
                 && currentTick - loanStartTick >= LOAN_DURATION)
         {
-            int repayment = loanAmount * LOAN_MULTIPLIER;
-
-            city.updateBudget(-repayment);
+            remainingDebt +=
+                    loanAmount * LOAN_MULTIPLIER;
 
             loanActive = false;
             loanAmount = 0;
         }
+
+        // Se esiste un debito, usa tutto il budget disponibile
+        // senza permettere al budget di diventare negativo
+        if (remainingDebt > 0
+                && city.getBudget() > 0)
+        {
+            int payment = Math.min(
+                    city.getBudget(),
+                    remainingDebt
+            );
+
+            city.updateBudget(-payment);
+
+            remainingDebt -= payment;
+        }
+    }
+
+    public int getLoanAmount()
+    {
+        return BASE_LOAN_AMOUNT
+                * grid.getNumberOfBanks();
     }
 
     // Controlla se è già presente un evento attivo.
@@ -193,20 +218,32 @@ public class Simulation{
         return false;
     }
 
-    public boolean requestLoan(int amount)
+    public boolean requestLoan()
     {
-        if (!canPlaceBank() || loanActive || amount <= 0)
+        if (!canRequestLoan())
         {
             return false;
         }
+
+        int amount = getLoanAmount();
 
         city.updateBudget(amount);
 
         loanAmount = amount;
         loanStartTick = currentTick;
+        lastLoanTick = currentTick;
         loanActive = true;
 
         return true;
+    }
+
+    public boolean canRequestLoan()
+    {
+        int passedTicks = currentTick - lastLoanTick;
+
+        return canPlaceBank()
+                && grid.getNumberOfBanks() > 0
+                && passedTicks >= LOAN_INTERVAL;
     }
 
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.

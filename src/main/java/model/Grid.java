@@ -113,7 +113,7 @@ public class Grid
                     && !hasAdjacentRoad(cell))
             {
                 throw new IllegalStateException(
-                        "A Road must be adjacent to another model.Road"
+                        "A Road must be adjacent to another Road"
                 );
             }
         }
@@ -231,6 +231,34 @@ public class Grid
         }
 
         return false;
+    }
+
+    public boolean hasBank()
+    {
+        for (Construction construction : getConstructions())
+        {
+            if (construction.getType() == ConstructionType.BANK)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int getNumberOfBanks()
+    {
+        int numberOfBanks = 0;
+
+        for (Construction construction : getConstructions())
+        {
+            if (construction.getType() == ConstructionType.BANK)
+            {
+                numberOfBanks++;
+            }
+        }
+
+        return numberOfBanks;
     }
 
     // Ricalcola il collegamento stradale di tutte le costruzioni.

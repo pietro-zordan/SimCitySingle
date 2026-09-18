@@ -11,6 +11,12 @@ public class Simulation{
 
     private static final int POLICY_CHANGE_INTERVAL = 12;
     private static final int BANK_UNLOCK_TICK = 30;
+    private static final int LOAN_DURATION = 3;
+    private static final int LOAN_MULTIPLIER = 3;
+
+    private boolean loanActive;
+    private int loanAmount;
+    private int loanStartTick;
     private final Random random = new Random();
     private int currentTick;
     private int lastPolicyChangeTick;
@@ -140,6 +146,21 @@ public class Simulation{
         }
         else startEvent(createRandomEvent());
         currentTick++;
+        checkLoanRepayment();
+    }
+
+    private void checkLoanRepayment()
+    {
+        if (loanActive
+                && currentTick - loanStartTick >= LOAN_DURATION)
+        {
+            int repayment = loanAmount * LOAN_MULTIPLIER;
+
+            city.updateBudget(-repayment);
+
+            loanActive = false;
+            loanAmount = 0;
+        }
     }
 
     // Controlla se è già presente un evento attivo.
@@ -170,6 +191,22 @@ public class Simulation{
         }
 
         return false;
+    }
+
+    public boolean requestLoan(int amount)
+    {
+        if (!canPlaceBank() || loanActive || amount <= 0)
+        {
+            return false;
+        }
+
+        city.updateBudget(amount);
+
+        loanAmount = amount;
+        loanStartTick = currentTick;
+        loanActive = true;
+
+        return true;
     }
 
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.

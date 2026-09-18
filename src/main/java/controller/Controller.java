@@ -231,6 +231,19 @@ public final class Controller
         return simulation.canPlaceBank();
     }
 
+    public boolean requestLoan(int amount)
+    {
+        boolean requested =
+                simulation.requestLoan(amount);
+
+        if (requested)
+        {
+            notifyObservers();
+        }
+
+        return requested;
+    }
+
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {

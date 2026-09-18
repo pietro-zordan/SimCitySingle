@@ -143,6 +143,29 @@ public final class GameView implements GameObserver
                 .bind(loanButton.visibleProperty());
 
         loanButton.setVisible(false);
+
+        loanButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        if (controller.requestLoan(1000))
+                        {
+                            showToast(
+                                    "Prestito ricevuto: 1000 €. "
+                                            + "Tra 3 tick dovrai restituire 3000 €."
+                            );
+                        }
+                        else
+                        {
+                            showToast(
+                                    "Non puoi richiedere un prestito."
+                            );
+                        }
+                    }
+                }
+        );
     }
 
     // Crea e struttura la scena JavaFX organizzando i pannelli laterali, la griglia centrale e la barra inferiore in un BorderPane.

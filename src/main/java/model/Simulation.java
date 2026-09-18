@@ -182,7 +182,7 @@ public class Simulation{
         }
     }
 
-    public int getLoanAmount()
+    public int getMaxLoanAmount()
     {
         return BASE_LOAN_AMOUNT
                 * grid.getNumberOfBanks();
@@ -218,14 +218,14 @@ public class Simulation{
         return false;
     }
 
-    public boolean requestLoan()
+    public boolean requestLoan(int amount)
     {
-        if (!canRequestLoan())
+        if (!canRequestLoan()
+                || amount <= 0
+                || amount > getMaxLoanAmount())
         {
             return false;
         }
-
-        int amount = getLoanAmount();
 
         city.updateBudget(amount);
 

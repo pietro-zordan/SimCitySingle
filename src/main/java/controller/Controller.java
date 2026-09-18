@@ -236,10 +236,10 @@ public final class Controller
         return simulation.canRequestLoan();
     }
 
-    public boolean requestLoan()
+    public boolean requestLoan(int amount)
     {
         boolean requested =
-                simulation.requestLoan();
+                simulation.requestLoan(amount);
 
         if (requested)
         {
@@ -249,9 +249,9 @@ public final class Controller
         return requested;
     }
 
-    public int getLoanAmount()
+    public int getMaxLoanAmount()
     {
-        return simulation.getLoanAmount();
+        return simulation.getMaxLoanAmount();
     }
 
     // Restituisce il numero di righe della griglia.

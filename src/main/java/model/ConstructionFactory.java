@@ -27,6 +27,9 @@ public class ConstructionFactory
             case POWER_PLANT:
                 return new PowerPlant();
 
+            case BANK:
+                return new Bank();
+
             default:
                 throw new IllegalArgumentException(
                         "Unknown construction type: " + type

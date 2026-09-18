@@ -9,5 +9,6 @@ public enum ConstructionType
         INDUSTRIAL,
         POWER_PLANT,
         COMMERCIAL,
-        RESIDENTIAL
+        RESIDENTIAL,
+        BANK
 }

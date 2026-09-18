@@ -42,6 +42,8 @@ public final class GameView implements GameObserver
     private final EventAnimationView eventAnimationView;
     private final Label toast = new Label();
     private final Button nextTurnButton = new Button("Next Turn");
+    private final Button loanButton =
+            new Button("Richiedi prestito");
     private final Scene scene;
     private boolean observerRegistered;
 
@@ -66,6 +68,7 @@ public final class GameView implements GameObserver
         this.saveFilePath = saveFilePath;
         configureToast();
         configureNextTurnButton();
+        configureLoanButton();
 
         gridView = new GridView(controller, new Consumer<String>()
         {
@@ -131,6 +134,17 @@ public final class GameView implements GameObserver
         });
     }
 
+    private void configureLoanButton()
+    {
+        loanButton.setMaxWidth(Double.MAX_VALUE);
+
+        // Se il pulsante è invisibile, non deve occupare spazio nel VBox
+        loanButton.managedProperty()
+                .bind(loanButton.visibleProperty());
+
+        loanButton.setVisible(false);
+    }
+
     // Crea e struttura la scena JavaFX organizzando i pannelli laterali, la griglia centrale e la barra inferiore in un BorderPane.
     private Scene createScene()
     {
@@ -156,7 +170,8 @@ public final class GameView implements GameObserver
         VBox actionButtons = new VBox(
                 10,
                 nextTurnButton,
-                changePolicyButton
+                changePolicyButton,
+                loanButton
         );
         actionButtons.setAlignment(Pos.CENTER);
 
@@ -371,6 +386,7 @@ public final class GameView implements GameObserver
         statusView.updateTick();
         constructionToolbarView.refreshCosts();
         constructionToolbarView.refreshAvailability();
+        refreshLoanButton();
         gridView.refresh();
     }
 
@@ -394,6 +410,7 @@ public final class GameView implements GameObserver
                 statusView.updateStatistics();
                 constructionToolbarView.refreshCosts();
                 constructionToolbarView.refreshAvailability();
+                refreshLoanButton();
                 statusView.updateTick();
                 statusView.updateEventBanner();
                 chartView.refresh();
@@ -438,5 +455,12 @@ public final class GameView implements GameObserver
         }
 
         eventAnimationView.stop();
+    }
+
+    private void refreshLoanButton()
+    {
+        loanButton.setVisible(
+                controller.canPlaceBank()
+        );
     }
 }

@@ -364,6 +364,7 @@ public final class GridView
             case ROAD -> Color.DIMGRAY;
             case POWER_PLANT -> Color.ORANGE;
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
+            case BANK -> Color.GOLD;
         };
     }
 

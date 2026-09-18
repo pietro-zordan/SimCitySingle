@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -33,7 +34,8 @@ public final class ConstructionToolbarView
             ConstructionType.PARK,
             ConstructionType.ROAD,
             ConstructionType.POWER_PLANT,
-            ConstructionType.COMMERCIAL
+            ConstructionType.COMMERCIAL,
+            ConstructionType.BANK
     );
 
     private final Controller controller;
@@ -42,7 +44,14 @@ public final class ConstructionToolbarView
     private final Map<ConstructionType, Label> costLabels =
             new EnumMap<>(ConstructionType.class);
 
+    private final Map<ConstructionType, Button> buttons =
+            new EnumMap<>(ConstructionType.class);
+
+    private final Map<ConstructionType, Label> lockLabels =
+            new EnumMap<>(ConstructionType.class);
+
     private final HBox view;
+
     //Restituisce l'etichetta testuale descrittiva associata a uno specifico tipo di costruzione.
     public ConstructionToolbarView(
             Controller controller,
@@ -80,6 +89,9 @@ public final class ConstructionToolbarView
                 getButtonText(type)
         );
 
+        // Salva il pulsante per poterlo abilitare/disabilitare in seguito
+        buttons.put(type, button);
+
         // Crea il quadratino colorato
         Rectangle colorBox = new Rectangle(12, 12);
         colorBox.setFill(
@@ -88,10 +100,11 @@ public final class ConstructionToolbarView
         colorBox.setStroke(Color.BLACK);
         colorBox.setStrokeWidth(0.5);
 
-        // Imposta la forma grafica all'interno del bottone
         button.setGraphic(colorBox);
         button.setContentDisplay(ContentDisplay.LEFT);
 
+        // Quando il pulsante viene premuto,
+        // comunica alla GridView quale costruzione è stata selezionata
         button.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
@@ -103,14 +116,48 @@ public final class ConstructionToolbarView
                 }
         );
 
+        // Etichetta che mostra il costo
         Label costLabel = new Label();
         costLabels.put(type, costLabel);
 
+        /*
+         * Lucchetto.
+         * Viene creato per tutti i pulsanti,
+         * ma sarà visibile solo quando necessario.
+         */
+        Label lockLabel = new Label("🔒");
+        lockLabel.setStyle(
+                "-fx-font-size: 22px;"
+        );
+
+        /*
+         * Il lucchetto è soltanto grafico:
+         * non deve intercettare il mouse.
+         */
+        lockLabel.setMouseTransparent(true);
+        lockLabel.setVisible(false);
+
+        lockLabels.put(type, lockLabel);
+
+        /*
+         * StackPane sovrappone il lucchetto al pulsante.
+         *
+         *       🔒
+         *   [  Bank  ]
+         */
+        StackPane buttonContainer =
+                new StackPane(
+                        button,
+                        lockLabel
+                );
+
+        // Testo del costo sotto al pulsante
         VBox box = new VBox(
                 2,
-                button,
+                buttonContainer,
                 costLabel
         );
+
         box.setAlignment(Pos.CENTER);
 
         return box;
@@ -127,6 +174,7 @@ public final class ConstructionToolbarView
             case ROAD -> "Road";
             case POWER_PLANT -> "Power Plant";
             case COMMERCIAL -> "Commercial";
+            case BANK -> "Bank";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -141,8 +189,22 @@ public final class ConstructionToolbarView
             case ROAD -> Color.DIMGRAY;
             case POWER_PLANT -> Color.ORANGE;
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
+            case BANK -> Color.GOLD;
         };
     }
+
+    public void refreshAvailability()
+    {
+        boolean bankLocked =
+                controller.getCurrentTick() < 30;
+
+        buttons.get(ConstructionType.BANK)
+                .setDisable(bankLocked);
+
+        lockLabels.get(ConstructionType.BANK)
+                .setVisible(bankLocked);
+    }
+
 //Aggiorna le etichette dei costi di tutti i pulsanti recuperando i valori aggiornati dal controller.
     public void refreshCosts()
     {

@@ -392,6 +392,7 @@ public final class GameView implements GameObserver
 
                 statusView.updateStatistics();
                 constructionToolbarView.refreshCosts();
+                constructionToolbarView.refreshAvailability();
                 statusView.updateTick();
                 statusView.updateEventBanner();
                 chartView.refresh();

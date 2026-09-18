@@ -16,5 +16,7 @@ public class Bank extends Construction
         return ConstructionType.BANK;
     }
 
-    
+
+
+
 }

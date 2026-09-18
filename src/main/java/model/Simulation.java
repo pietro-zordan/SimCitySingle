@@ -10,6 +10,7 @@ import java.util.Random;
 public class Simulation{
 
     private static final int POLICY_CHANGE_INTERVAL = 12;
+    private static final int BANK_UNLOCK_TICK = 30;
     private final Random random = new Random();
     private int currentTick;
     private int lastPolicyChangeTick;
@@ -99,6 +100,11 @@ public class Simulation{
         int passedTicks = currentTick - lastPolicyChangeTick;
         int remaining = POLICY_CHANGE_INTERVAL - passedTicks;
         return Math.max(0, remaining);
+    }
+
+    public boolean canPlaceBank()
+    {
+        return currentTick >= BANK_UNLOCK_TICK;
     }
 
     // Crea casualmente uno degli eventi disponibili.

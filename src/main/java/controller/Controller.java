@@ -127,6 +127,15 @@ public final class Controller
      */
     public CellState placeConstruction(ConstructionType type, int row, int column)
     {
+
+        if (type == ConstructionType.BANK
+                && !simulation.canPlaceBank())
+        {
+            throw new IllegalStateException(
+                    "Bank is available from tick 30"
+            );
+        }
+
         city.placeConstruction(type, row, column);
         notifyObservers();
 

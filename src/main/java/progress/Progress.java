@@ -1,0 +1,160 @@
+package progress;
+
+import controller.Controller;
+import model.City;
+import model.Construction;
+import model.Grid;
+import model.Simulation;
+import policies.Policy;
+import policies.PolicyFactory;
+import policies.PolicyType;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/* Rappresenta lo stato complessivo di una partita salvata,
+comprendendo tick, budget, policy e costruzioni. */
+public class Progress
+{
+    private int currentTick;
+    private int lastPolicyChangeTick;
+    private PolicyType policyType;
+    private int budget;
+
+
+    private List<ConstructionProgress> constructions;
+
+    public Progress(
+            int currentTick,
+            int lastPolicyChangeTick,
+            int budget,
+            PolicyType policyType,
+            List<ConstructionProgress> constructions)
+    {
+        this.currentTick = currentTick;
+        this.lastPolicyChangeTick = lastPolicyChangeTick;
+        this.budget = budget;
+        this.policyType = policyType;
+        this.constructions = constructions;
+    }
+
+    /* Crea lo stato di salvataggio della partita
+   raccogliendo i dati della simulazione e della griglia. */
+    public static Progress fromGame(
+            Grid grid,
+            City city,
+            Simulation simulation)
+    {
+        List<ConstructionProgress> savedConstructions =
+                new ArrayList<>();
+
+        for (int row = 0; row < grid.getNumberOfRows(); row++)
+        {
+            for (int column = 0;
+                 column < grid.getNumberOfColumns();
+                 column++)
+            {
+                Construction construction =
+                        grid.getCell(row, column).getConstruction();
+
+                if (construction != null)
+                {
+                    ConstructionProgress constructionProgress =
+                            ConstructionProgress.fromConstruction(
+                                    construction,
+                                    row,
+                                    column
+                            );
+
+                    savedConstructions.add(constructionProgress);
+                }
+            }
+        }
+
+        return new Progress(
+                simulation.getCurrentTick(),
+                simulation.getLastPolicyChangeTick(),
+                city.getBudget(),
+                city.getCurrentPolicy().getType(),
+                savedConstructions
+        );
+    }
+
+    public int getCurrentTick()
+    {
+        return currentTick;
+    }
+
+    public int getLastPolicyChangeTick()
+    {
+        return lastPolicyChangeTick;
+    }
+
+    public int getBudget()
+    {
+        return budget;
+    }
+
+    public PolicyType getPolicyType()
+    {
+        return policyType;
+    }
+
+    public List<ConstructionProgress> getConstructions()
+    {
+        return constructions;
+    }
+
+    /* Ricostruisce la griglia utilizzando le costruzioni salvate
+   e ripristina le connessioni stradali ed elettriche. */
+    public Grid restoreGrid()
+    {
+        if (constructions == null)
+        {
+            throw new IllegalStateException(
+                    "The saved construction list cannot be null"
+            );
+        }
+
+        Grid restoredGrid = new Grid();
+
+        for (ConstructionProgress constructionProgress : constructions)
+        {
+            Construction construction =
+                    constructionProgress.toConstruction();
+
+            restoredGrid.restoreConstruction(
+                    construction,
+                    constructionProgress.getRow(),
+                    constructionProgress.getColumn()
+            );
+        }
+
+        restoredGrid.rebuildConnectionsAfterLoad();
+
+        return restoredGrid;
+    }
+
+    // Ricrea la policy che era attiva al momento del salvataggio.
+    public Policy restorePolicy()
+    {
+        return PolicyFactory.create(policyType);
+    }
+
+    /* Ricostruisce il controller completo collegando la griglia,
+   la policy, il budget e i tick precedentemente salvati. */
+    public Controller restoreController()
+    {
+        Grid restoredGrid = restoreGrid();
+        Policy restoredPolicy = restorePolicy();
+
+        return new Controller(
+                restoredGrid,
+                restoredPolicy,
+                budget,
+                currentTick,
+                lastPolicyChangeTick
+        );
+    }
+
+}

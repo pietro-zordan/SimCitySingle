@@ -1,0 +1,325 @@
+package controller;
+
+import Events.EventType;
+import model.*;
+import policies.Policy;
+import policies.PolicyFactory;
+import policies.PolicyType;
+import policies.StandardPolicy;
+import progress.Progress;
+
+import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/* Collega la GUI al modello e coordina città, griglia e simulazione.
+   Notifica inoltre gli osservatori quando lo stato del gioco cambia. */
+public final class Controller
+{
+    private final Grid grid;
+    private final City city;
+    private final Simulation simulation;
+    private final List<GameObserver> observers = new ArrayList<>();
+
+    /*
+     * Informazioni sufficienti alla GUI per disegnare una cella,
+     * senza permetterle di modificare direttamente model.Cell o model.Grid.
+     */
+    public record CellState(
+            boolean empty,
+            ConstructionType type,
+            boolean onFire,
+            boolean powered,
+            boolean boosted)
+    {
+    }
+
+    // Crea un controller con una nuova griglia e la policy standard.
+    public Controller()
+    {
+        this(new Grid(), new StandardPolicy());
+    }
+
+    /*
+     * Questo costruttore è utile anche nei test:
+     * puoi passare una griglia o una policy differente.
+     */
+    public Controller(Grid grid, Policy initialPolicy)
+    {
+        this.grid = Objects.requireNonNull(
+                grid,
+                "model.Grid cannot be null"
+        );
+
+        Objects.requireNonNull(
+                initialPolicy,
+                "Initial policy cannot be null"
+        );
+
+        this.city = new City(grid, initialPolicy);
+        this.simulation = new Simulation(city, grid);
+    }
+
+    // Crea un controller ripristinando i dati di una partita salvata.
+    public Controller(
+            Grid grid,
+            Policy initialPolicy,
+            int budget,
+            int currentTick,
+            int lastPolicyChangeTick)
+    {
+        this.grid = Objects.requireNonNull(
+                grid,
+                "model.Grid cannot be null"
+        );
+
+        Objects.requireNonNull(
+                initialPolicy,
+                "Initial policy cannot be null"
+        );
+
+        this.city = new City(
+                grid,
+                initialPolicy,
+                budget
+        );
+
+        this.simulation = new Simulation(
+                city,
+                grid,
+                currentTick,
+                lastPolicyChangeTick
+        );
+    }
+
+    // Registra un osservatore che verrà aggiornato quando cambia il gioco.
+    public void addObserver(GameObserver observer)
+    {
+        if (observer == null)
+        {
+            throw new NullPointerException(
+                    "Game observer cannot be null"
+            );
+        }
+
+        if (!observers.contains(observer))
+        {
+            observers.add(observer);
+        }
+    }
+
+    // Rimuove un osservatore dall'elenco degli osservatori registrati.
+    public void removeObserver(GameObserver gameObserver) {
+        observers.remove(gameObserver);
+    }
+
+    // Richiede a tutti gli osservatori di aggiornare la schermata di gioco.
+    private void notifyObservers() {
+        for (GameObserver gameObserver : observers) {
+            gameObserver.refreshGameView();
+        }
+    }
+
+    /*
+     * Unico metodo che la GUI deve usare per costruire.
+     * La GUI non deve più chiamare model.Cell.placeConstruction().
+     */
+    public CellState placeConstruction(ConstructionType type, int row, int column)
+    {
+        city.placeConstruction(type, row, column);
+        notifyObservers();
+
+        return getCellState(row, column);
+    }
+
+    /*
+     * Unico metodo che la GUI e gli eventi devono usare
+     * per rimuovere una costruzione.
+     */
+    public void removeConstruction(int row, int column)
+    {
+        grid.removeConstruction(row, column);
+        city.refreshStatistics();
+        notifyObservers();
+    }
+
+    // Fa avanzare l'intero modello di un tick.
+    public void updateOfOneTick()
+    {
+        simulation.updateOfOneTick();
+        notifyObservers();
+    }
+
+    // Verifica se è possibile cambiare la policy attiva.
+    public boolean canChangePolicy()
+    {
+        return simulation.canChangePolicy();
+    }
+
+    // Crea la policy richiesta e prova ad applicarla alla simulazione.
+    public boolean changePolicy(PolicyType policyType)
+    {
+        Policy newPolicy = PolicyFactory.create(policyType);
+
+        return changePolicy(newPolicy);
+    }
+
+    // Applica la nuova policy e aggiorna gli osservatori se il cambio riesce.
+    private boolean changePolicy(Policy newPolicy)
+    {
+        boolean changed = simulation.changePolicy(newPolicy);
+        if (changed) {
+            notifyObservers();
+        }
+        return changed;
+    }
+
+    // Restituisce quanti tick mancano prima di poter cambiare la policy.
+    public int getTicksToPolicyChange(){
+        return simulation.getTicksToPolicyChange();
+    }
+
+    /*
+     * Restituisce una fotografia della cella.
+     * Non restituisce direttamente model.Cell, impedendo alla GUI
+     * di bypassare le regole del dominio.
+     */
+    public CellState getCellState(int row, int column)
+    {
+        requireValidPosition(row, column);
+
+        boolean onFire = simulation.isCellOnFire(row, column);
+
+        Construction construction =
+                grid.getCell(row, column).getConstruction();
+
+        if (construction == null)
+        {
+            return new CellState(
+                    true,
+                    null,
+                    false,
+                    false,
+                    false
+            );
+        }
+
+        boolean powered = construction.isPowered();
+        boolean boosted = simulation.isConstructionBoosted(construction);
+
+        return new CellState(
+                false,
+                construction.getType(),
+                onFire,
+                powered,
+                boosted
+        );
+    }
+
+    // Restituisce il numero di righe della griglia.
+    public int getNumberOfRows()
+    {
+        return grid.getNumberOfRows();
+    }
+
+    // Restituisce il numero di colonne della griglia.
+    public int getNumberOfColumns()
+    {
+        return grid.getNumberOfColumns();
+    }
+
+    // Restituisce il budget disponibile.
+    public int getBudget()
+    {
+        return city.getBudget();
+    }
+
+    // Restituisce la popolazione totale della città.
+    public int getPopulation()
+    {
+        return city.getGlobalPopulation();
+    }
+
+    // Restituisce l'inquinamento totale della città.
+    public int getPollution()
+    {
+        return city.getGlobalPollution();
+    }
+
+    // Restituisce l'economia totale della città.
+    public int getEconomy()
+    {
+        return city.getGlobalEconomy();
+    }
+
+    // Restituisce la felicità totale della città.
+    public int getHappiness()
+    {
+        return city.getGlobalHappiness();
+    }
+
+    // Restituisce il numero di cittadini disoccupati.
+    public int getUnemployed(){return city.getGlobalUnemployed(); }
+
+    // Restituisce il nome della policy attualmente attiva.
+    public String getCurrentPolicyName()
+    {
+        return city.getCurrentPolicy().getName();
+    }
+
+    // Restituisce il numero del tick corrente.
+    public int getCurrentTick() {return simulation.getCurrentTick();}
+
+    /* Calcola il costo di una costruzione usando la policy attiva,
+       senza piazzarla realmente nella griglia. */
+    public int getPlacementCost(ConstructionType type)
+    {
+        // Crea una costruzione temporanea usata soltanto per calcolare il costo.
+        Construction construction = ConstructionFactory.create(type);
+        return city.calculatePlacementCost(construction);
+    }
+
+    // Verifica che la posizione indicata si trovi all'interno della griglia.
+    private void requireValidPosition(int row, int column)
+    {
+        if (!grid.isInside(row, column))
+        {
+            throw new IllegalArgumentException(
+                    "Position outside the grid: row="
+                            + row
+                            + ", column="
+                            + column
+            );
+        }
+    }
+
+    // Restituisce la direzione dello tsunami attivo.
+    public String getActiveTsunamiDirection()
+    {
+        return simulation.getActiveTsunamiDirection();
+    }
+
+    // Restituisce l'avanzamento dello tsunami attivo.
+    public int getActiveTsunamiAdvancementLength()
+    {
+        return simulation.getActiveTsunamiAdvancementLength();
+    }
+
+    // Crea i dati necessari per salvare lo stato attuale della partita.
+    public Progress createProgress()
+    {
+        return Progress.fromGame(
+                grid,
+                city,
+                simulation
+        );
+    }
+
+    // Restituisce il tipo dell'evento attualmente attivo.
+    public EventType getActiveEventType()
+    {
+        return simulation.getActiveEventType();
+    }
+
+}

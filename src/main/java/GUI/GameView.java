@@ -370,6 +370,7 @@ public final class GameView implements GameObserver
         statusView.updateStatistics();
         statusView.updateTick();
         constructionToolbarView.refreshCosts();
+        constructionToolbarView.refreshAvailability();
         gridView.refresh();
     }
 

@@ -226,6 +226,11 @@ public final class Controller
         );
     }
 
+    public boolean canPlaceBank()
+    {
+        return simulation.canPlaceBank();
+    }
+
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {

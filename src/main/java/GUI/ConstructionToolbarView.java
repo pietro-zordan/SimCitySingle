@@ -196,7 +196,7 @@ public final class ConstructionToolbarView
     public void refreshAvailability()
     {
         boolean bankLocked =
-                controller.getCurrentTick() < 30;
+                !controller.canPlaceBank();
 
         buttons.get(ConstructionType.BANK)
                 .setDisable(bankLocked);

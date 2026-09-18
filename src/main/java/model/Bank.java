@@ -16,7 +16,16 @@ public class Bank extends Construction
         return ConstructionType.BANK;
     }
 
+    public void applyLoan()
+    {
+        moneyProduction=1000;
+    }
 
+    @Override
+    public void updateOfOneTick()
+    {
+
+    }
 
 
 }

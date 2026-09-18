@@ -268,7 +268,9 @@ public final class GridView
                         || state.type()
                         == ConstructionType.RESIDENTIAL
                         || state.type()
-                        == ConstructionType.COMMERCIAL;
+                        == ConstructionType.COMMERCIAL
+                        || state.type()
+                        == ConstructionType.BANK;
 
         // Applichiamo il bordo solo se c'è la crisi, la cella è alimentata, e l'edificio consuma energia
         if (energyCrisisActive

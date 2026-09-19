@@ -270,7 +270,9 @@ public final class GridView
                         || state.type()
                         == ConstructionType.COMMERCIAL
                         || state.type()
-                        == ConstructionType.BANK;
+                        == ConstructionType.BANK
+                        || state.type()
+                        == ConstructionType.CONSTRUCTION_COMPANY;
 
         // Applichiamo il bordo solo se c'è la crisi, la cella è alimentata, e l'edificio consuma energia
         if (energyCrisisActive
@@ -367,6 +369,7 @@ public final class GridView
             case POWER_PLANT -> Color.ORANGE;
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
             case BANK -> Color.GOLD;
+            case CONSTRUCTION_COMPANY -> Color.BROWN;
         };
     }
 

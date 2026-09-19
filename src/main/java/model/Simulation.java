@@ -119,6 +119,11 @@ public class Simulation{
         return currentTick >= BANK_UNLOCK_TICK;
     }
 
+    public boolean canPlaceConstructionCompany()
+    {
+        return currentTick >= CC_UNLOCK_TICK;
+    }
+
     // Crea casualmente uno degli eventi disponibili.
     private Event createRandomEvent()
     {

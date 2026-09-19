@@ -136,6 +136,14 @@ public final class Controller
             );
         }
 
+        if (type == ConstructionType.CONSTRUCTION_COMPANY
+                && !simulation.canPlaceConstructionCompany())
+        {
+            throw new IllegalStateException(
+                    "Construction Company is available from tick 40"
+            );
+        }
+
         city.placeConstruction(type, row, column);
         notifyObservers();
 
@@ -224,6 +232,11 @@ public final class Controller
                 powered,
                 boosted
         );
+    }
+
+    public boolean canPlaceConstructionCompany()
+    {
+        return simulation.canPlaceConstructionCompany();
     }
 
     public boolean canPlaceBank()

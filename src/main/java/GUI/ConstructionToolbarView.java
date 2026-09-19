@@ -35,7 +35,8 @@ public final class ConstructionToolbarView
             ConstructionType.ROAD,
             ConstructionType.POWER_PLANT,
             ConstructionType.COMMERCIAL,
-            ConstructionType.BANK
+            ConstructionType.BANK,
+            ConstructionType.CONSTRUCTION_COMPANY
     );
 
     private final Controller controller;
@@ -175,6 +176,7 @@ public final class ConstructionToolbarView
             case POWER_PLANT -> "Power Plant";
             case COMMERCIAL -> "Commercial";
             case BANK -> "Bank";
+            case CONSTRUCTION_COMPANY -> "Construction Company";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -190,6 +192,7 @@ public final class ConstructionToolbarView
             case POWER_PLANT -> Color.ORANGE;
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
             case BANK -> Color.GOLD;
+            case CONSTRUCTION_COMPANY -> Color.BROWN;
         };
     }
 
@@ -203,6 +206,16 @@ public final class ConstructionToolbarView
 
         lockLabels.get(ConstructionType.BANK)
                 .setVisible(bankLocked);
+
+
+        boolean ccLocked =
+                !controller.canPlaceConstructionCompany();
+
+        buttons.get(ConstructionType.CONSTRUCTION_COMPANY)
+                .setDisable(ccLocked);
+
+        lockLabels.get(ConstructionType.CONSTRUCTION_COMPANY)
+                .setVisible(ccLocked);
     }
 
 //Aggiorna le etichette dei costi di tutti i pulsanti recuperando i valori aggiornati dal controller.

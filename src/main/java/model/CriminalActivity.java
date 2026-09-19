@@ -19,5 +19,10 @@ public class CriminalActivity extends Construction{
         probability += 0.1;
     }
 
+    public int getHappinessImpact()
+    {
+        return -300;
+    }
+
 
 }

@@ -18,7 +18,7 @@ public class EnergyCrisis extends Event
     public EnergyCrisis(City city, Grid grid)
     {
         super(TICK_DURATION, city);
-        launchNumber = 22;
+        launchNumber = 40;
         this.grid = grid;
     }
 

@@ -243,7 +243,8 @@ public class Simulation{
 
         return canPlaceBank()
                 && grid.getNumberOfBanks() > 0
-                && passedTicks >= LOAN_INTERVAL;
+                && passedTicks >= LOAN_INTERVAL
+                && isPowered();
     }
 
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.

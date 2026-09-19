@@ -246,6 +246,8 @@ public class Simulation{
                 && passedTicks >= LOAN_INTERVAL;
     }
 
+
+
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.
     public boolean isConstructionBoosted(Construction construction) {
         if (activeEvent == null || construction == null) {
@@ -257,10 +259,9 @@ public class Simulation{
             return ((EconomicBoom)activeEvent).isBoosted(construction);
         }
 
-
-
         return false;
     }
+
 
     // Restituisce il tick attuale della simulazione.
     public int getCurrentTick()
@@ -308,4 +309,5 @@ public class Simulation{
 
         return null;
     }
+
 }

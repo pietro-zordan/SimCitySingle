@@ -30,6 +30,9 @@ public class ConstructionFactory
             case BANK:
                 return new Bank();
 
+            case CONSTRUCTION_COMPANY:
+                return new ConstructionCompany();
+
             default:
                 throw new IllegalArgumentException(
                         "Unknown construction type: " + type

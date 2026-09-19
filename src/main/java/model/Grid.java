@@ -145,7 +145,7 @@ public class Grid
         }
 
         updatePowerConnections();
-        
+
     }
 
     // Rimuove la costruzione dopo aver verificato che sia eliminabile.
@@ -236,17 +236,20 @@ public class Grid
         return false;
     }
 
-    public boolean hasBank()
+    public int getNumberOfPoweredCC()
     {
+        int count = 0;
+
         for (Construction construction : getConstructions())
         {
-            if (construction.getType() == ConstructionType.BANK)
+            if (construction.getType() == ConstructionType.CONSTRUCTION_COMPANY
+            && construction.isPowered())
             {
-                return true;
+                count++;
             }
         }
 
-        return false;
+        return count;
     }
 
     public int getNumberOfBanks()
@@ -536,4 +539,5 @@ public class Grid
             }
         }
     }
+
 }

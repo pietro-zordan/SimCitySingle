@@ -49,7 +49,7 @@ public final class GameView implements GameObserver
             new Button("Next Turn");
 
     private final Button loanButton =
-            new Button("Richiedi prestito");
+            new Button("Ask for a loan");
 
     private final Label loanLimitLabel =
             new Label();
@@ -311,7 +311,7 @@ public final class GameView implements GameObserver
             else
             {
                 showToast(
-                        "Non puoi richiedere un prestito."
+                        "You can't ask for a loan."
                 );
             }
         }

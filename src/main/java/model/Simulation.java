@@ -18,9 +18,7 @@ public class Simulation{
     private int lastLoanTick = -LOAN_INTERVAL;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
-    private static final int CRIME_START_TICK = 15;
-    private static final double CRIME_ECONOMY_FACTOR = 0.00005;
-    private static final double MAX_CRIME_PROBABILITY = 0.15;
+
 
     private boolean loanActive;
     private int loanAmount;
@@ -36,6 +34,9 @@ public class Simulation{
     private int usedRemovals = 0;
     private int lastRemovalResetTick = 0;
     private final BankruptcyManager bankruptcyManager;
+
+    // NUOVO
+    private final CrimeManager crimeManager;
 
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
@@ -85,6 +86,8 @@ public class Simulation{
         this.lastPolicyChangeTick = lastPolicyChangeTick;
         this.bankruptcyManager =
                 new BankruptcyManager();
+        this.crimeManager =
+                new CrimeManager(city, grid);
     }
 
     // Controlla se sono trascorsi almeno dodici tick dall'ultimo cambio di policy.
@@ -172,7 +175,10 @@ public class Simulation{
         }
 
         boolean criminalActivityCreated =
-                tryToCreateCriminalActivity();
+                crimeManager
+                        .tryToCreateCriminalActivity(
+                                currentTick
+                        );
 
         currentTick++;
 
@@ -367,31 +373,7 @@ public class Simulation{
 
         return null;
     }
-
-    private boolean tryToCreateCriminalActivity()
-    {
-        if (currentTick < CRIME_START_TICK)
-        {
-            return false;
-        }
-
-        double probability =
-                city.getGlobalEconomy()
-                        * CRIME_ECONOMY_FACTOR;
-
-        probability = Math.min(
-                probability,
-                MAX_CRIME_PROBABILITY
-        );
-
-        if (random.nextDouble() < probability)
-        {
-            return grid.placeCriminalActivity();
-        }
-
-        return false;
-    }
-
+    
     public boolean isGameOver()
     {
         return bankruptcyManager.isBankrupt();

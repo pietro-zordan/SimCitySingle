@@ -41,6 +41,7 @@ public final class GameView implements GameObserver
     private final GameStatusView statusView;
     private final ConstructionToolbarView constructionToolbarView;
     private final EventAnimationView eventAnimationView;
+    private final GameOverView gameOverView;
 
     private final Label toast = new Label();
 
@@ -92,6 +93,7 @@ public final class GameView implements GameObserver
 
         this.controller = controller;
         this.navigation = navigation;
+        gameOverView = new GameOverView(navigation);
         this.progressManager = progressManager;
         this.saveFilePath = saveFilePath;
 
@@ -460,11 +462,17 @@ public final class GameView implements GameObserver
         StackPane rootWithToast =
                 new StackPane(
                         root,
-                        toast
+                        toast,
+                        gameOverView.getView()
                 );
 
         StackPane.setAlignment(
                 toast,
+                Pos.CENTER
+        );
+
+        StackPane.setAlignment(
+                gameOverView.getView(),
                 Pos.CENTER
         );
 
@@ -756,6 +764,11 @@ public final class GameView implements GameObserver
                         statusView.updateEventBanner();
 
                         chartView.refresh();
+
+                        if (controller.isGameOver())
+                        {
+                            gameOverView.show();
+                        }
                     }
                 }
         );

@@ -18,8 +18,9 @@ public class Simulation{
     private int lastLoanTick = -LOAN_INTERVAL;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
-    private static final double CRIME_ECONOMY_FACTOR = 0.0001;
-    private static final double MAX_CRIME_PROBABILITY = 0.30;
+    private static final int CRIME_START_TICK = 15;
+    private static final double CRIME_ECONOMY_FACTOR = 0.00005;
+    private static final double MAX_CRIME_PROBABILITY = 0.15;
 
     private boolean loanActive;
     private int loanAmount;
@@ -369,6 +370,11 @@ public class Simulation{
 
     private boolean tryToCreateCriminalActivity()
     {
+        if (currentTick < CRIME_START_TICK)
+        {
+            return false;
+        }
+
         double probability =
                 city.getGlobalEconomy()
                         * CRIME_ECONOMY_FACTOR;

@@ -69,7 +69,7 @@ public class EnergyCrisis extends Event
        che il denaro disponibile diventi negativo. */
     private void applyExtraCostToCity(int extraCost)
     {
-        if (extraCost > 0)
+        if (extraCost > 0 && city.getBudget() > 0)
         {
             int costToPay = Math.min(
                     extraCost,

@@ -8,7 +8,7 @@ package model;
  */
 public class BankruptcyManager
 {
-    private static final int BANKRUPTCY_TICKS = 10;
+    private static final int BANKRUPTCY_TICKS = 15;
 
     private int criticalTicks = 0;
 

@@ -261,6 +261,22 @@ public class Grid
         return numberOfBanks;
     }
 
+    public int getNumberOfPoweredBanks()
+    {
+        int numberOfPoweredBanks = 0;
+
+        for (Construction construction : getConstructions())
+        {
+            if (construction.getType() == ConstructionType.BANK
+                    && construction.isPowered())
+            {
+                numberOfPoweredBanks++;
+            }
+        }
+
+        return numberOfPoweredBanks;
+    }
+
     // Ricalcola il collegamento stradale di tutte le costruzioni.
     public void updateRoadConnections()
     {

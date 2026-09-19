@@ -7,6 +7,7 @@ import policies.Policy;
 public class City
 {
     private static final int INITIAL_BUDGET = 2500;
+    private static final int MAX_POLLUTION = 2000;
     private Policy currentPolicy;
 
     private int population;
@@ -65,7 +66,7 @@ public class City
     {
         grid.updateOfOneTick();
         recalculateStatistics();
-        budget += economy;
+        budget += economy - maintenance;
     }
 
     /* Ricalcola le statistiche usando tutte le costruzioni presenti.
@@ -76,6 +77,7 @@ public class City
         pollution = 0;
         economy = 0;
         happiness = 0;
+        maintenance = 0;
 
         int totalEmployeeSlots = 0;
 
@@ -189,7 +191,7 @@ public class City
                 unemployed <= 0)
         {
             throw new IllegalStateException(
-                    "Cannot build model.Industrial or model.Commercial: you need a bigger population"
+                    "Cannot build Industrial or Commercial: you need a bigger population"
             );
         }
 
@@ -209,6 +211,11 @@ public class City
 
         updateBudget(cost);
         recalculateStatistics();
+    }
+
+    public boolean canPlaceIndustrial()
+    {
+        return (pollution <= MAX_POLLUTION);
     }
 
     // Forza il ricalcolo delle statistiche dopo una modifica esterna alla griglia.

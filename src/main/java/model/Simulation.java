@@ -185,7 +185,7 @@ public class Simulation{
     public int getMaxLoanAmount()
     {
         return BASE_LOAN_AMOUNT
-                * grid.getNumberOfBanks();
+                * grid.getNumberOfPoweredBanks();
     }
 
     // Controlla se è già presente un evento attivo.
@@ -242,9 +242,8 @@ public class Simulation{
         int passedTicks = currentTick - lastLoanTick;
 
         return canPlaceBank()
-                && grid.getNumberOfBanks() > 0
-                && passedTicks >= LOAN_INTERVAL
-                && isPowered();
+                && grid.getNumberOfPoweredBanks() > 0
+                && passedTicks >= LOAN_INTERVAL;
     }
 
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.

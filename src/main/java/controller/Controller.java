@@ -189,10 +189,14 @@ public final class Controller
     }
 
     // Fa avanzare l'intero modello di un tick.
-    public void updateOfOneTick()
+    public boolean updateOfOneTick()
     {
-        simulation.updateOfOneTick();
+        boolean criminalActivityCreated =
+                simulation.updateOfOneTick();
+
         notifyObservers();
+
+        return criminalActivityCreated;
     }
 
     // Verifica se è possibile cambiare la policy attiva.

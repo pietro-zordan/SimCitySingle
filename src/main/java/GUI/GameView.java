@@ -173,7 +173,15 @@ public final class GameView implements GameObserver
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        controller.updateOfOneTick();
+                        boolean criminalActivityCreated =
+                                controller.updateOfOneTick();
+
+                        if (criminalActivityCreated)
+                        {
+                            showToast(
+                                    "Attenzione: è comparsa un'attività criminale!"
+                            );
+                        }
                     }
                 }
         );

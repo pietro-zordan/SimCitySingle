@@ -19,7 +19,7 @@ public class Grid
             };
 
     private final Cell[][] cells;
-    Set<Cell> buildable = new HashSet<>();
+    private final Random random = new Random();
 
     // Crea e inizializza tutte le celle della griglia.
     public Grid()
@@ -541,6 +541,7 @@ public class Grid
     public List<Cell> getBuildableCells()
     {
 
+        Set<Cell> buildable = new HashSet<>();
 
         for (int row = 0; row < N_ROW; row++)
         {
@@ -575,9 +576,15 @@ public class Grid
         return new ArrayList<>(buildable);
     }
 
-    public void placeCriminalActivity()
+    public boolean placeCriminalActivity()
     {
-        Random random = new Random();
+        List<Cell> buildableCells =
+                getBuildableCells();
+
+        if (buildableCells.isEmpty())
+        {
+            return false;
+        }
 
         int randomIndex =
                 random.nextInt(buildableCells.size());
@@ -585,7 +592,18 @@ public class Grid
         Cell randomCell =
                 buildableCells.get(randomIndex);
 
+        Construction criminalActivity =
+                ConstructionFactory.create(
+                        ConstructionType.CRIMINAL_ACTIVITY
+                );
 
+        placeConstruction(
+                criminalActivity,
+                randomCell.getRow(),
+                randomCell.getColumn()
+        );
+
+        return true;
     }
 
     public void tryToPlace()

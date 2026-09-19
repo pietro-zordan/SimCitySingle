@@ -18,6 +18,8 @@ public class Simulation{
     private int lastLoanTick = -LOAN_INTERVAL;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
+    private static final double CRIME_ECONOMY_FACTOR = 0.0001;
+    private static final double MAX_CRIME_PROBABILITY = 0.30;
 
     private boolean loanActive;
     private int loanAmount;
@@ -144,20 +146,30 @@ public class Simulation{
 
     /* Aggiorna la città e l'evento attivo.
        Se non ci sono eventi, prova ad avviarne uno casuale e infine incrementa il tick. */
-    public void updateOfOneTick()
+    public boolean updateOfOneTick()
     {
         city.updateOfOneTick();
-        if(isEventActive())
+
+        if (isEventActive())
         {
             activeEvent.updateOfOneTick();
             eventTicksPassed++;
-            if(activeEvent.isFinished(eventTicksPassed) ){
+
+            if (activeEvent.isFinished(eventTicksPassed))
+            {
                 activeEvent.end();
                 activeEvent = null;
                 eventTicksPassed = 0;
             }
         }
-        else startEvent(createRandomEvent());
+        else
+        {
+            startEvent(createRandomEvent());
+        }
+
+        boolean criminalActivityCreated =
+                tryToCreateCriminalActivity();
+
         currentTick++;
 
         if (currentTick - lastRemovalResetTick >= CC_INTERVAL)
@@ -167,6 +179,8 @@ public class Simulation{
         }
 
         checkLoanRepayment();
+
+        return criminalActivityCreated;
     }
 
     public void registerRemoval()
@@ -342,6 +356,25 @@ public class Simulation{
         }
 
         return null;
+    }
+
+    private boolean tryToCreateCriminalActivity()
+    {
+        double probability =
+                city.getGlobalEconomy()
+                        * CRIME_ECONOMY_FACTOR;
+
+        probability = Math.min(
+                probability,
+                MAX_CRIME_PROBABILITY
+        );
+
+        if (random.nextDouble() < probability)
+        {
+            return grid.placeCriminalActivity();
+        }
+
+        return false;
     }
 
 }

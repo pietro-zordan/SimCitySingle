@@ -421,6 +421,7 @@ public final class GridView
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
             case BANK -> Color.GOLD;
             case CONSTRUCTION_COMPANY -> Color.BROWN;
+            case CRIMINAL_ACTIVITY -> Color.BLACK;
         };
     }
 

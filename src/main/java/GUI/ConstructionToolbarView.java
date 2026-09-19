@@ -177,6 +177,7 @@ public final class ConstructionToolbarView
             case COMMERCIAL -> "Commercial";
             case BANK -> "Bank";
             case CONSTRUCTION_COMPANY -> "Construction Company";
+            case CRIMINAL_ACTIVITY -> "Criminal Activity";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -193,6 +194,7 @@ public final class ConstructionToolbarView
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
             case BANK -> Color.GOLD;
             case CONSTRUCTION_COMPANY -> Color.BROWN;
+            case CRIMINAL_ACTIVITY -> Color.BLACK;
         };
     }
 

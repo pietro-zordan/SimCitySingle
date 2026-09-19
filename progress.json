@@ -1,7 +1,1188 @@
 {
-  "currentTick": 0,
+  "currentTick": 279,
   "lastPolicyChangeTick": 0,
   "policyType": "STANDARD",
-  "budget": 2500,
-  "constructions": []
+  "budget": 167430,
+  "constructions": [
+    {
+      "type": "COMMERCIAL",
+      "row": 2,
+      "column": 2,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 2.5299999999999976,
+      "moneyProduction": 124
+    },
+    {
+      "type": "ROAD",
+      "row": 2,
+      "column": 3,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 2,
+      "column": 4,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 3,
+      "column": 2,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 3,
+      "column": 3,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 3,
+      "column": 4,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 4,
+      "column": 2,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 4,
+      "column": 3,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 4,
+      "column": 4,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "CONSTRUCTION_COMPANY",
+      "row": 5,
+      "column": 0,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "INDUSTRIAL",
+      "row": 5,
+      "column": 1,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.5,
+      "moneyProduction": 420
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 5,
+      "column": 2,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 5,
+      "column": 3,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "COMMERCIAL",
+      "row": 5,
+      "column": 4,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150
+    },
+    {
+      "type": "INDUSTRIAL",
+      "row": 5,
+      "column": 5,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.249999999999993,
+      "moneyProduction": 386
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 5,
+      "column": 6,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 5,
+      "column": 7,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 5,
+      "column": 8,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 5,
+      "column": 9,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 5,
+      "column": 10,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "COMMERCIAL",
+      "row": 5,
+      "column": 11,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 5,
+      "column": 12,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "INDUSTRIAL",
+      "row": 5,
+      "column": 13,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.5,
+      "moneyProduction": 420
+    },
+    {
+      "type": "INDUSTRIAL",
+      "row": 5,
+      "column": 14,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.5,
+      "moneyProduction": 420
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 5,
+      "column": 15,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 5,
+      "column": 16,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 0,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 1,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 2,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 3,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 4,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 5,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 6,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 7,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 8,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 9,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 10,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 11,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 12,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 13,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 14,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 6,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 6,
+      "column": 17,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 7,
+      "column": 0,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 7,
+      "column": 1,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 2,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 3,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "BANK",
+      "row": 7,
+      "column": 4,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "COMMERCIAL",
+      "row": 7,
+      "column": 5,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150
+    },
+    {
+      "type": "COMMERCIAL",
+      "row": 7,
+      "column": 6,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 7,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 7,
+      "column": 8,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 9,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 10,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 5,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 11,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 12,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 13,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 7,
+      "column": 14,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "CONSTRUCTION_COMPANY",
+      "row": 7,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 7,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 7,
+      "column": 17,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 8,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 8,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 8,
+      "column": 17,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 9,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 9,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "INDUSTRIAL",
+      "row": 9,
+      "column": 17,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.5,
+      "moneyProduction": 420
+    },
+    {
+      "type": "PARK",
+      "row": 10,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 10,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "COMMERCIAL",
+      "row": 10,
+      "column": 17,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 11,
+      "column": 15,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 11,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 11,
+      "column": 17,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 12,
+      "column": 15,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 12,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 12,
+      "column": 17,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 13,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 13,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 13,
+      "column": 17,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 14,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 14,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 14,
+      "column": 17,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 15,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 15,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 15,
+      "column": 17,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "PARK",
+      "row": 16,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 16,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 16,
+      "column": 17,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 17,
+      "column": 8,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 17,
+      "column": 9,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 17,
+      "column": 10,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 17,
+      "column": 11,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "COMMERCIAL",
+      "row": 17,
+      "column": 12,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 1.3000000000000003,
+      "moneyProduction": 63
+    },
+    {
+      "type": "PARK",
+      "row": 17,
+      "column": 13,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "BANK",
+      "row": 17,
+      "column": 14,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 17,
+      "column": 15,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 17,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "POWER_PLANT",
+      "row": 17,
+      "column": 17,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 8,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 9,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 10,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 11,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 12,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 13,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 14,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "ROAD",
+      "row": 18,
+      "column": 16,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 18,
+      "column": 17,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 19,
+      "column": 8,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 19,
+      "column": 9,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 19,
+      "column": 10,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "COMMERCIAL",
+      "row": 19,
+      "column": 11,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 1.3000000000000003,
+      "moneyProduction": 63
+    },
+    {
+      "type": "CONSTRUCTION_COMPANY",
+      "row": 19,
+      "column": 12,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 19,
+      "column": 13,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 19,
+      "column": 14,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 19,
+      "column": 15,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "RESIDENTIAL",
+      "row": 19,
+      "column": 16,
+      "population": 50,
+      "populationGrowthRate": 5,
+      "populationDecreaseRate": 1,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    }
+  ]
 }

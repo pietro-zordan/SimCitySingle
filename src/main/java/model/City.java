@@ -123,13 +123,15 @@ public class City
     // Modifica il budget impedendo che diventi negativo.
     public void updateBudget(int amount)
     {
-        if(budget + amount < 0) {
+        if (amount < 0
+                && budget + amount < 0)
+        {
             throw new IllegalArgumentException(
-                    "budget is insufficient for this construction"
+                    "Budget is insufficient"
             );
-        } else {
-            budget += amount;
         }
+
+        budget += amount;
     }
 
     // Restituisce la policy attualmente applicata alla città.

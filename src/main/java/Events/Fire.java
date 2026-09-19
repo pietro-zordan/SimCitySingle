@@ -29,7 +29,7 @@ public class Fire extends Event{
     public Fire(City city, Grid grid) {
         super(city);
         this.grid = grid;
-        launchNumber=13;
+        launchNumber=23;
     }
     //Fornisce una lista delle celle con un edificio bruciabili (diverse da road)
     private List<Cell> getBurnableCells()

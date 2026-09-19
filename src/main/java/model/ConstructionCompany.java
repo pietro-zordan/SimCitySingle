@@ -12,4 +12,8 @@ public class ConstructionCompany extends Construction
         return ConstructionType.CONSTRUCTION_COMPANY;
     }
 
+    @Override
+    public int getPollutionImpact() {
+        return 150;
+    }
 }

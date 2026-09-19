@@ -1,9 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /* Gestisce le celle della griglia e le operazioni sulle costruzioni.
    Controlla piazzamento, rimozione, collegamenti e aggiornamento dei tick. */
@@ -22,6 +19,7 @@ public class Grid
             };
 
     private final Cell[][] cells;
+    Set<Cell> buildable = new HashSet<>();
 
     // Crea e inizializza tutte le celle della griglia.
     public Grid()
@@ -538,6 +536,65 @@ public class Grid
                 powerPlant.reconnect();
             }
         }
+    }
+
+    public List<Cell> getBuildableCells()
+    {
+
+
+        for (int row = 0; row < N_ROW; row++)
+        {
+            for (int column = 0; column < N_COL; column++)
+            {
+                Cell cell = cells[row][column];
+
+                if (!cell.isEmpty()
+                        && cell.getConstruction().getType()
+                        == ConstructionType.ROAD)
+                {
+                    for (int[] direction : ORTHOGONAL_DIRECTIONS)
+                    {
+                        int newRow = row + direction[0];
+                        int newColumn = column + direction[1];
+
+                        if (isInside(newRow, newColumn))
+                        {
+                            Cell neighbor =
+                                    getCell(newRow, newColumn);
+
+                            if (neighbor.isEmpty())
+                            {
+                                buildable.add(neighbor);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return new ArrayList<>(buildable);
+    }
+
+    public void placeCriminalActivity()
+    {
+        Random random = new Random();
+
+        int randomIndex =
+                random.nextInt(buildableCells.size());
+
+        Cell randomCell =
+                buildableCells.get(randomIndex);
+
+
+    }
+
+    public void tryToPlace()
+    {
+        Random random = new Random();
+
+
+
+        int number = random.nextInt(20) + 1;
     }
 
 }

@@ -16,12 +16,9 @@ public class Bank extends Construction
         return ConstructionType.BANK;
     }
 
-
-
     @Override
-    public void updateOfOneTick()
-    {
-
+    public int getPollutionImpact() {
+        return 50;
     }
 
 

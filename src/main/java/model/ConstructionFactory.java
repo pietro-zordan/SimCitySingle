@@ -33,6 +33,9 @@ public class ConstructionFactory
             case CONSTRUCTION_COMPANY:
                 return new ConstructionCompany();
 
+            case CRIMINAL_ACTIVITY:
+                return new CriminalActivity();
+
             default:
                 throw new IllegalArgumentException(
                         "Unknown construction type: " + type

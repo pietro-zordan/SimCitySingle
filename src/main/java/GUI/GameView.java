@@ -360,7 +360,8 @@ public final class GameView implements GameObserver
                 nextTurnButton,
                 changePolicyButton,
                 loanButton,
-                loanRequestBox
+                loanRequestBox,
+                demolitionButton
         );
 
         actionButtons.setAlignment(

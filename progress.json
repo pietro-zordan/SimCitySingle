@@ -1,13 +1,23 @@
 {
-  "currentTick": 477,
+  "currentTick": 485,
   "lastPolicyChangeTick": 427,
   "policyType": "INDUSTRIAL",
-  "budget": 62905,
+  "budget": 71056,
   "constructions": [
     {
       "type": "POWER_PLANT",
       "row": 1,
       "column": 10,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "CONSTRUCTION_COMPANY",
+      "row": 1,
+      "column": 18,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
@@ -108,7 +118,7 @@
       "type": "RESIDENTIAL",
       "row": 3,
       "column": 18,
-      "population": 44,
+      "population": 50,
       "populationGrowthRate": 5,
       "populationDecreaseRate": 2,
       "economyGrowthRate": 0.0,
@@ -261,8 +271,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.3900000000000003,
-      "moneyProduction": 163
+      "economyGrowthRate": 1.6300000000000006,
+      "moneyProduction": 192
     },
     {
       "type": "ROAD",
@@ -561,8 +571,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.8100000000000007,
-      "moneyProduction": 213
+      "economyGrowthRate": 2.0500000000000007,
+      "moneyProduction": 242
     },
     {
       "type": "ROAD",
@@ -1031,8 +1041,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.8100000000000007,
-      "moneyProduction": 213
+      "economyGrowthRate": 2.0500000000000007,
+      "moneyProduction": 242
     },
     {
       "type": "INDUSTRIAL",
@@ -1041,8 +1051,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.8100000000000007,
-      "moneyProduction": 213
+      "economyGrowthRate": 2.0500000000000007,
+      "moneyProduction": 242
     },
     {
       "type": "PARK",
@@ -1093,16 +1103,6 @@
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
       "moneyProduction": -20
-    },
-    {
-      "type": "INDUSTRIAL",
-      "row": 19,
-      "column": 18,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.0,
-      "moneyProduction": 0
     }
   ]
 }

@@ -345,6 +345,9 @@ public final class GridView
         }
 
         this.selectedType = selectedType;
+
+        // Se seleziono una costruzione esco dalla modalità demolizione
+        demolitionActive = false;
     }
 
     // Mostra l'effetto Tsunami su un'intera riga della griglia.

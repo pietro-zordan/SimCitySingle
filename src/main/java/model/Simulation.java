@@ -30,6 +30,8 @@ public class Simulation{
     private int eventTicksPassed;
     private final Grid grid;
     private int remainingDebt;
+    private int usedRemovals = 0;
+    private int lastRemovalResetTick = 0;
 
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
@@ -157,7 +159,19 @@ public class Simulation{
         }
         else startEvent(createRandomEvent());
         currentTick++;
+
+        if (currentTick - lastRemovalResetTick >= CC_INTERVAL)
+        {
+            usedRemovals = 0;
+            lastRemovalResetTick = currentTick;
+        }
+
         checkLoanRepayment();
+    }
+
+    public void registerRemoval()
+    {
+        usedRemovals++;
     }
 
     private void checkLoanRepayment()
@@ -267,6 +281,16 @@ public class Simulation{
         }
 
         return false;
+    }
+
+    public int getAvailableRemovals()
+    {
+        return grid.getNumberOfPoweredCC() - usedRemovals;
+    }
+
+    public boolean canRemoveConstruction()
+    {
+        return getAvailableRemovals() > 0;
     }
 
 

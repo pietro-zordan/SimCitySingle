@@ -161,6 +161,33 @@ public final class Controller
         notifyObservers();
     }
 
+    public void removeConstructionByPlayer(int row, int column)
+    {
+        requireValidPosition(row, column);
+        CellState state = getCellState(row, column);
+
+        if (state.empty())
+        {
+            throw new IllegalStateException(
+                    "There is no construction to remove"
+            );
+        }
+
+        if (!simulation.canRemoveConstruction())
+        {
+            throw new IllegalStateException(
+                    "No demolitions available"
+            );
+        }
+
+        grid.removeConstruction(row, column);
+
+        simulation.registerRemoval();
+
+        city.refreshStatistics();
+        notifyObservers();
+    }
+
     // Fa avanzare l'intero modello di un tick.
     public void updateOfOneTick()
     {

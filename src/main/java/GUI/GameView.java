@@ -59,6 +59,9 @@ public final class GameView implements GameObserver
     private final Button confirmLoanButton =
             new Button("Conferma");
 
+    private final Button demolitionButton =
+            new Button("Demolish");
+
     private final VBox loanRequestBox =
             new VBox(
                     5,
@@ -107,6 +110,8 @@ public final class GameView implements GameObserver
                     }
                 }
         );
+
+        configureDemolitionButton();
 
         chartView = new ChartView(controller);
         statusView = new GameStatusView(controller);
@@ -569,6 +574,24 @@ public final class GameView implements GameObserver
                     "Impossible to change the Policy."
             );
         }
+    }
+
+    private void configureDemolitionButton()
+    {
+        demolitionButton.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        demolitionButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        gridView.activateDemolition();
+                    }
+                }
+        );
     }
 
     // Crea e restituisce il pulsante per avviare il salvataggio della partita su file.

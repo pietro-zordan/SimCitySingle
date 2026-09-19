@@ -285,7 +285,10 @@ public class Simulation{
 
     public int getAvailableRemovals()
     {
-        return grid.getNumberOfPoweredCC() - usedRemovals;
+        return Math.max(
+                0,
+                grid.getNumberOfPoweredCC() - usedRemovals
+        );
     }
 
     public boolean canRemoveConstruction()

@@ -33,6 +33,7 @@ public final class GridView
 
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
+    private boolean demolitionActive = false;
 
     // Inizializza la griglia di gioco, allocando le matrici di componenti grafici per le celle e impostando il layout del GridPane.
     public GridView(
@@ -157,9 +158,47 @@ public final class GridView
         Controller.CellState state =
                 controller.getCellState(row, column);
 
+        // Se è stata attivata la demolizione
+        if (demolitionActive)
+        {
+            if (state.empty())
+            {
+                errorHandler.accept(
+                        "There is no construction to demolish"
+                );
+                return;
+            }
+
+            try
+            {
+                controller.removeConstructionByPlayer(
+                        row,
+                        column
+                );
+
+                demolitionActive = false;
+
+                infoLabel.setText(
+                        "Construction demolished at row "
+                                + row
+                                + ", column "
+                                + column
+                );
+            }
+            catch (IllegalStateException
+                   | IllegalArgumentException exception)
+            {
+                errorHandler.accept(
+                        exception.getMessage()
+                );
+            }
+
+            return;
+        }
+
+        // Modalità normale: prova a piazzare una costruzione
         if (state.empty())
         {
-            //piazzare una nuova costruzione con il tasto sinistro
             try
             {
                 controller.placeConstruction(
@@ -181,7 +220,9 @@ public final class GridView
             catch (IllegalStateException
                    | IllegalArgumentException exception)
             {
-                errorHandler.accept(exception.getMessage());
+                errorHandler.accept(
+                        exception.getMessage()
+                );
             }
         }
         else
@@ -194,6 +235,8 @@ public final class GridView
             );
         }
     }
+
+
 
     // Scorrendo l'intera griglia, invoca il rendering grafico di ciascuna cella sincronizzandola con lo stato attuale del modello.
     public void refresh()
@@ -347,6 +390,11 @@ public final class GridView
                 tsunamiIcons[row][column].setVisible(false);
             }
         }
+    }
+
+    public void activateDemolition()
+    {
+        demolitionActive = true;
     }
 
     // Mappa ed ottiene il colore identificativo associato a ciascun tipo di edificio sulla griglia.

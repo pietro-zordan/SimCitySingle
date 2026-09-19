@@ -16,6 +16,8 @@ public class Simulation{
     private static final int LOAN_INTERVAL = 15;
     private static final int BASE_LOAN_AMOUNT = 1000;
     private int lastLoanTick = -LOAN_INTERVAL;
+    private static final int CC_UNLOCK_TICK = 40;
+    private static final int CC_INTERVAL = 10;
 
     private boolean loanActive;
     private int loanAmount;

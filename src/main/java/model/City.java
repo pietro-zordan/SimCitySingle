@@ -225,5 +225,10 @@ public class City
         recalculateStatistics();
     }
 
+    public int getMaintenance()
+    {
+        return maintenance;
+    }
+
 
 }

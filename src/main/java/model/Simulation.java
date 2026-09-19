@@ -34,6 +34,7 @@ public class Simulation{
     private int remainingDebt;
     private int usedRemovals = 0;
     private int lastRemovalResetTick = 0;
+    private final BankruptcyManager bankruptcyManager;
 
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
@@ -81,6 +82,8 @@ public class Simulation{
         this.grid = grid;
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
+        this.bankruptcyManager =
+                new BankruptcyManager();
     }
 
     // Controlla se sono trascorsi almeno dodici tick dall'ultimo cambio di policy.
@@ -179,6 +182,12 @@ public class Simulation{
         }
 
         checkLoanRepayment();
+
+        bankruptcyManager.update(
+                city.getBudget(),
+                city.getGlobalEconomy(),
+                city.getMaintenance()
+        );
 
         return criminalActivityCreated;
     }
@@ -375,6 +384,11 @@ public class Simulation{
         }
 
         return false;
+    }
+
+    public boolean isGameOver()
+    {
+        return bankruptcyManager.isBankrupt();
     }
 
 }

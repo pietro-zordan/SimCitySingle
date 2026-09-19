@@ -403,4 +403,9 @@ public final class Controller
         return simulation.getActiveEventType();
     }
 
+    public boolean isGameOver()
+    {
+        return simulation.isGameOver();
+    }
+
 }

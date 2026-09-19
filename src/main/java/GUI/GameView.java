@@ -788,7 +788,7 @@ public final class GameView implements GameObserver
 
         PauseTransition pause =
                 new PauseTransition(
-                        Duration.seconds(2.5)
+                        Duration.seconds(4)
                 );
 
         pause.setOnFinished(

@@ -202,4 +202,9 @@ public abstract class Construction {
         return 0;
     }
 
+    public boolean isPlacementAllowed(int pollution)
+    {
+        return true;
+    }
+
 }

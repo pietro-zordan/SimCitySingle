@@ -143,6 +143,9 @@ public class Grid
         {
             construction.setRoadConnected(true);
         }
+
+        updatePowerConnections();
+        
     }
 
     // Rimuove la costruzione dopo aver verificato che sia eliminabile.
@@ -520,5 +523,17 @@ public class Grid
         }
 
         return constructions;
+    }
+
+    private void updatePowerConnections()
+    {
+        for (PowerPlant powerPlant : getAllPowerPlants())
+        {
+            if (powerPlant.isActive())
+            {
+                powerPlant.serveConstruction();
+                powerPlant.reconnect();
+            }
+        }
     }
 }

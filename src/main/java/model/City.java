@@ -7,7 +7,6 @@ import policies.Policy;
 public class City
 {
     private static final int INITIAL_BUDGET = 2500;
-    private static final int MAX_POLLUTION = 2000;
     private Policy currentPolicy;
 
     private int population;
@@ -198,7 +197,13 @@ public class City
         Construction construction = ConstructionFactory.create(type);
 
         int cost = calculatePlacementCost(construction);
-        if (budget+cost<0)
+
+        if (!construction.isPlacementAllowed(pollution))
+        {
+            throw new IllegalStateException(" Pollution is too high cannot place industrial");
+        }
+
+        if (budget + cost < 0)
         {
             throw new IllegalStateException(
                     "Insufficient budget: this construction costs "
@@ -213,10 +218,6 @@ public class City
         recalculateStatistics();
     }
 
-    public boolean canPlaceIndustrial()
-    {
-        return (pollution <= MAX_POLLUTION);
-    }
 
     // Forza il ricalcolo delle statistiche dopo una modifica esterna alla griglia.
     public void refreshStatistics()

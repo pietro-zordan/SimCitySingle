@@ -10,6 +10,7 @@ public class Industrial extends EconomicBuilding{
     private static final int MAX_MONEY_PRODUCTION=1500;
     private static final double BASE_MONEY_PRODUCTION = 120;
     private static final int NUM_EMPLOYEE = 100;
+    private static final int MAX_POLLUTION = 2000;
 
     // Crea un edificio industriale con consumi e costo di piazzamento prestabiliti.
     public Industrial (){
@@ -72,6 +73,12 @@ public class Industrial extends EconomicBuilding{
     public int getMaintenanceCost()
     {
         return MAINTENANCE_COST;
+    }
+
+    @Override
+    public boolean isPlacementAllowed(int pollution)
+    {
+        return pollution <= MAX_POLLUTION;
     }
 }
 

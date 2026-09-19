@@ -34,8 +34,7 @@ public class Simulation{
     private int usedRemovals = 0;
     private int lastRemovalResetTick = 0;
     private final BankruptcyManager bankruptcyManager;
-
-    // NUOVO
+    
     private final CrimeManager crimeManager;
 
     // Crea una nuova simulazione partendo dal tick zero.
@@ -373,7 +372,7 @@ public class Simulation{
 
         return null;
     }
-    
+
     public boolean isGameOver()
     {
         return bankruptcyManager.isBankrupt();

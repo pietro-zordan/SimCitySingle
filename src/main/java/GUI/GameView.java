@@ -14,7 +14,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -60,6 +62,9 @@ public final class GameView implements GameObserver
     private final Button confirmLoanButton =
             new Button("Conferma");
 
+    private final Button tsunamiInsuranceButton =
+            new Button("Tsunami insurance");
+
     private final Button demolitionButton =
             new Button("Demolish");
 
@@ -100,6 +105,7 @@ public final class GameView implements GameObserver
         configureToast();
         configureNextTurnButton();
         configureLoanButton();
+        configureTsunamiInsuranceButton();
 
         gridView = new GridView(
                 controller,
@@ -377,6 +383,7 @@ public final class GameView implements GameObserver
                 changePolicyButton,
                 loanButton,
                 loanRequestBox,
+                tsunamiInsuranceButton,
                 demolitionButton
         );
 
@@ -599,6 +606,95 @@ public final class GameView implements GameObserver
         }
     }
 
+    private void configureTsunamiInsuranceButton()
+    {
+        tsunamiInsuranceButton.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        tsunamiInsuranceButton.managedProperty()
+                .bind(
+                        tsunamiInsuranceButton
+                                .visibleProperty()
+                );
+
+        tsunamiInsuranceButton.setVisible(false);
+
+        tsunamiInsuranceButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        showTsunamiInsuranceConfirmation();
+                    }
+                }
+        );
+    }
+
+    private void showTsunamiInsuranceConfirmation()
+    {
+        int cost =
+                controller.getTsunamiInsuranceCost();
+
+        int coveredBuildings =
+                controller
+                        .getTsunamiInsuranceBuildingCount();
+
+        int discount =
+                controller
+                        .getTsunamiInsuranceDiscountPercentage();
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.CONFIRMATION
+                );
+
+        alert.setTitle(
+                "Tsunami insurance"
+        );
+
+        alert.setHeaderText(
+                "Activate tsunami insurance?"
+        );
+
+        alert.setContentText(
+                "Buildings currently covered: "
+                        + coveredBuildings
+                        + "\nBank discount: "
+                        + discount
+                        + "%\nCost: "
+                        + cost
+                        + " €"
+                        + "\n\nBuildings added later in the tsunami risk area "
+                        + "will require an additional coverage cost."
+        );
+
+        ButtonType result =
+                alert.showAndWait()
+                        .orElse(
+                                ButtonType.CANCEL
+                        );
+
+        if (result == ButtonType.OK)
+        {
+            if (controller.buyTsunamiInsurance())
+            {
+                showToast(
+                        "Tsunami insurance activated for "
+                                + cost
+                                + " €."
+                );
+            }
+            else
+            {
+                showToast(
+                        "Unable to activate tsunami insurance. Check your budget."
+                );
+            }
+        }
+    }
+
     private void configureDemolitionButton()
     {
         demolitionButton.setMaxWidth(
@@ -774,6 +870,7 @@ public final class GameView implements GameObserver
                 .refreshAvailability();
 
         refreshLoanButton();
+        refreshTsunamiInsuranceButton();
         refreshDemolitionButton();
 
         gridView.refresh();
@@ -808,6 +905,7 @@ public final class GameView implements GameObserver
                                 .refreshAvailability();
 
                         refreshLoanButton();
+                        refreshTsunamiInsuranceButton();
                         refreshDemolitionButton();
 
                         statusView.updateTick();
@@ -838,6 +936,42 @@ public final class GameView implements GameObserver
         {
             loanRequestBox.setVisible(
                     false
+            );
+        }
+    }
+
+    private void refreshTsunamiInsuranceButton()
+    {
+        boolean hasBanks =
+                controller.hasBanks();
+
+        tsunamiInsuranceButton.setVisible(
+                hasBanks
+        );
+
+        if (!hasBanks)
+        {
+            return;
+        }
+
+        boolean insuranceActive =
+                controller
+                        .isTsunamiInsuranceActive();
+
+        tsunamiInsuranceButton.setDisable(
+                insuranceActive
+        );
+
+        if (insuranceActive)
+        {
+            tsunamiInsuranceButton.setText(
+                    "Tsunami insurance active"
+            );
+        }
+        else
+        {
+            tsunamiInsuranceButton.setText(
+                    "Tsunami insurance"
             );
         }
     }

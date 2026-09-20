@@ -421,4 +421,14 @@ public final class Controller
         return simulation.isGameOver();
     }
 
+    public boolean isConstructionUnlocked(
+            ConstructionType type)
+    {
+        Construction construction =
+                ConstructionFactory.create(type);
+
+        return simulation.getCurrentTick()
+                >= construction.getUnlockTick();
+    }
+
 }

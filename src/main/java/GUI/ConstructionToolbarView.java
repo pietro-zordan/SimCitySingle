@@ -36,7 +36,8 @@ public final class ConstructionToolbarView
             ConstructionType.POWER_PLANT,
             ConstructionType.COMMERCIAL,
             ConstructionType.BANK,
-            ConstructionType.CONSTRUCTION_COMPANY
+            ConstructionType.CONSTRUCTION_COMPANY,
+            ConstructionType.POLICE_STATION
     );
 
     private final Controller controller;
@@ -196,29 +197,23 @@ public final class ConstructionToolbarView
             case BANK -> Color.GOLD;
             case CONSTRUCTION_COMPANY -> Color.BROWN;
             case CRIMINAL_ACTIVITY -> Color.BLACK;
+            case POLICE_STATION -> Color.DARKBLUE;
         };
     }
 
     public void refreshAvailability()
     {
-        boolean bankLocked =
-                !controller.canPlaceBank();
+        for (ConstructionType type : TYPES)
+        {
+            boolean locked =
+                    !controller.isConstructionUnlocked(type);
 
-        buttons.get(ConstructionType.BANK)
-                .setDisable(bankLocked);
+            buttons.get(type)
+                    .setDisable(locked);
 
-        lockLabels.get(ConstructionType.BANK)
-                .setVisible(bankLocked);
-
-
-        boolean ccLocked =
-                !controller.canPlaceConstructionCompany();
-
-        buttons.get(ConstructionType.CONSTRUCTION_COMPANY)
-                .setDisable(ccLocked);
-
-        lockLabels.get(ConstructionType.CONSTRUCTION_COMPANY)
-                .setVisible(ccLocked);
+            lockLabels.get(type)
+                    .setVisible(locked);
+        }
     }
 
 //Aggiorna le etichette dei costi di tutti i pulsanti recuperando i valori aggiornati dal controller.

@@ -4,6 +4,7 @@ public class Bank extends Construction
 {
 
     private final static int PLACEMENT_PRICE= -800;
+    private static final int MAINTENANCE_COST = 60;
 
     public Bank()
     {
@@ -19,6 +20,12 @@ public class Bank extends Construction
     @Override
     public int getPollutionImpact() {
         return 50;
+    }
+
+    @Override
+    public int getMaintenanceCost()
+    {
+        return MAINTENANCE_COST;
     }
 
     @Override

@@ -37,8 +37,7 @@ public final class ConstructionToolbarView
             ConstructionType.COMMERCIAL,
             ConstructionType.BANK,
             ConstructionType.CONSTRUCTION_COMPANY,
-            ConstructionType.POLICE_STATION,
-            ConstructionType.TERRORISTIC_GROUP
+            ConstructionType.POLICE_STATION
     );
 
     private final Controller controller;

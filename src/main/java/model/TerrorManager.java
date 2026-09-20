@@ -9,8 +9,8 @@ public class TerrorManager {
     private final City city;
     private final Grid grid;
     private static final int KILLS_PER_GROUP = 5;
-    private static final int HAPPINESS_THRESHOLD = -50;
-    private static final int NUM_OF_SADNESS_TICKS = 5;
+    private static final int HAPPINESS_THRESHOLD = -49;
+    private static final int NUM_OF_SADNESS_TICKS = 1;
     private static final int SPAWN_COOLDOWN = 10;
     private static final int MAX_GROUPS = 3;
 

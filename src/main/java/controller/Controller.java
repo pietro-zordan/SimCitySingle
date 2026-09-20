@@ -381,6 +381,16 @@ public final class Controller
         simulation.startTsunamiReconstruction();
     }
 
+    public void restoreTsunamiReconstruction(
+            List<ReconstructionEntry> entries,
+            String direction)
+    {
+        simulation.restoreTsunamiReconstruction(
+                entries,
+                direction
+        );
+    }
+
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {

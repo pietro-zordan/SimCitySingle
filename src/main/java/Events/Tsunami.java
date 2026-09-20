@@ -24,7 +24,7 @@ public class Tsunami extends Event{
     {
         super(TICK_DURATION, city);
         this.grid = grid;
-        launchNumber = 25;
+        launchNumber = 4;
     }
 
     /* Sceglie casualmente il lato da cui arriva lo tsunami

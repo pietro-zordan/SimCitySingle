@@ -93,6 +93,8 @@ public class CrimeManager
                 randomCell.getColumn()
         );
 
+        city.refreshStatistics();
+
         return true;
     }
 

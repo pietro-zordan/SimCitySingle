@@ -80,7 +80,7 @@ public class Industrial extends EconomicBuilding{
             int pollution,
             int unemployed)
     {
-        if (unemployed <= 0)
+        if (unemployed < getNumberOfEmployee())
         {
             return super.getPlacementErrorMessage(
                     pollution,

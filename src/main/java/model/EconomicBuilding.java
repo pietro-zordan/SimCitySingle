@@ -147,7 +147,7 @@ public abstract class EconomicBuilding extends Construction
             int pollution,
             int unemployed)
     {
-        return unemployed > 0;
+        return unemployed >= getNumberOfEmployee();
     }
 
     @Override
@@ -155,6 +155,10 @@ public abstract class EconomicBuilding extends Construction
             int pollution,
             int unemployed)
     {
-        return "Cannot build Industrial or Commercial: you need a bigger population";
+        return "Cannot build "
+                + getType()
+                + ": at least "
+                + getNumberOfEmployee()
+                + " unemployed citizens are required";
     }
 }

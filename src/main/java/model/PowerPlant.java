@@ -10,7 +10,7 @@ import java.util.Queue;
 public class PowerPlant extends Construction
 {
 
-    private final static int POWER_GENERATED= 10000;
+    private final static int POWER_GENERATED= 6000;
     private final static int POLLUTION_GENERATED = 200;
     private final static int PLACEMENT_PRICE= -800;
     private boolean suspended;

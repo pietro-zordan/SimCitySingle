@@ -3,6 +3,7 @@ package model;
 import Events.*;
 import policies.Policy;
 
+import java.util.List;
 import java.util.Random;
 
 /* Gestisce lo scorrere dei tick della partita.
@@ -351,7 +352,7 @@ public class Simulation{
                 .startTsunamiReconstruction();
     }
 
-    public java.util.List<ReconstructionEntry>
+    public List<ReconstructionEntry>
     getPendingTsunamiReconstructions()
     {
         return insuranceManager
@@ -365,7 +366,7 @@ public class Simulation{
     }
 
     public void restoreTsunamiReconstruction(
-            java.util.List<ReconstructionEntry> entries,
+            List<ReconstructionEntry> entries,
             String direction)
     {
         insuranceManager

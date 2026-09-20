@@ -58,4 +58,124 @@ class CrimeManagerTest
         assertTrue(grid.getCell(10, 11).isEmpty());
     }
 
+
+    @Test
+    void policeRemovesTerroristicGroup()
+    {
+        Grid grid =
+                createGridWithPoweredPoliceStation();
+
+        grid.restoreConstruction(
+                new TerroristicGroup(),
+                10,
+                10
+        );
+
+        City city =
+                new City(
+                        grid,
+                        new StandardPolicy()
+                );
+
+        CrimeManager crimeManager =
+                new CrimeManager(city, grid);
+
+        assertEquals(
+                1,
+                crimeManager
+                        .tryToDestroyCriminalActivities(0)
+        );
+        assertTrue(
+                grid.getCell(10, 10).isEmpty()
+        );
+    }
+
+    @Test
+    void onePoliceStationRemovesOnlyOneThreat()
+    {
+        Grid grid =
+                createGridWithPoweredPoliceStation();
+
+        CriminalActivity criminalActivity =
+                new CriminalActivity();
+
+        criminalActivity.setCreationTick(0);
+
+        grid.restoreConstruction(
+                criminalActivity,
+                10,
+                10
+        );
+        grid.restoreConstruction(
+                new TerroristicGroup(),
+                10,
+                11
+        );
+
+        City city =
+                new City(
+                        grid,
+                        new StandardPolicy()
+                );
+
+        CrimeManager crimeManager =
+                new CrimeManager(city, grid);
+
+        assertEquals(
+                1,
+                crimeManager
+                        .tryToDestroyCriminalActivities(15)
+        );
+
+        // Nello stesso tick la stazione è in cooldown:
+        // non può rimuovere anche l'altra minaccia.
+        assertEquals(
+                0,
+                crimeManager
+                        .tryToDestroyCriminalActivities(15)
+        );
+        assertEquals(
+                1,
+                countThreats(grid)
+        );
+    }
+
+    private Grid createGridWithPoweredPoliceStation()
+    {
+        Grid grid = new Grid();
+
+        grid.restoreConstruction(
+                new PowerPlant(),
+                5,
+                5
+        );
+        grid.restoreConstruction(
+                new PoliceStation(),
+                5,
+                6
+        );
+
+        grid.rebuildConnectionsAfterLoad();
+
+        return grid;
+    }
+
+    private int countThreats(Grid grid)
+    {
+        int count = 0;
+
+        for (Construction construction
+                : grid.getConstructions())
+        {
+            if (construction
+                    instanceof CriminalActivity
+                    || construction
+                    instanceof TerroristicGroup)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
 }

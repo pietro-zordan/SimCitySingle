@@ -784,4 +784,18 @@ public class Grid
         return reconstructionReserved[row][column];
     }
 
+
+    public void releaseAllReconstructionReservations()
+    {
+        for (int row = 0; row < N_ROW; row++)
+        {
+            for (int column = 0;
+                 column < N_COL;
+                 column++)
+            {
+                reconstructionReserved[row][column] = false;
+            }
+        }
+    }
+
 }

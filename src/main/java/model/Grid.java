@@ -20,6 +20,7 @@ public class Grid
 
     private final Cell[][] cells;
     private final boolean[][] reconstructionReserved;
+    private boolean grassGenerationSuspended;
 
     // Crea e inizializza tutte le celle della griglia.
     public Grid()
@@ -606,6 +607,11 @@ public class Grid
      */
     private void fillTrappedCellsWithGrass()
     {
+        if (grassGenerationSuspended)
+        {
+            return;
+        }
+
         Set<Cell> cellsToFill =
                 new HashSet<>();
 
@@ -796,6 +802,14 @@ public class Grid
                 reconstructionReserved[row][column] = false;
             }
         }
+    }
+
+
+    public void setGrassGenerationSuspended(
+            boolean suspended)
+    {
+        grassGenerationSuspended =
+                suspended;
     }
 
 }

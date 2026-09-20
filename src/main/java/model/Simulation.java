@@ -271,7 +271,8 @@ public class Simulation{
                         (Tsunami) activeEvent;
 
                 insuranceManager.registerTsunamiDamage(
-                        tsunami.getDestroyedBuildings()
+                        tsunami.getDestroyedBuildings(),
+                        tsunami.getDirection()
                 );
             }
         }

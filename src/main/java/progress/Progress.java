@@ -4,6 +4,7 @@ import controller.Controller;
 import model.City;
 import model.Construction;
 import model.Grid;
+import model.ReconstructionEntry;
 import model.Simulation;
 import policies.Policy;
 import policies.PolicyFactory;
@@ -23,6 +24,9 @@ public class Progress
     private boolean tsunamiInsuranceActive;
 
     private List<ConstructionProgress> constructions;
+    private List<ConstructionProgress>
+            pendingTsunamiReconstructions;
+    private String tsunamiReconstructionDirection;
 
     public Progress(
             int currentTick,
@@ -49,6 +53,28 @@ public class Progress
             List<ConstructionProgress> constructions,
             boolean tsunamiInsuranceActive)
     {
+        this(
+                currentTick,
+                lastPolicyChangeTick,
+                budget,
+                policyType,
+                constructions,
+                tsunamiInsuranceActive,
+                null,
+                null
+        );
+    }
+
+    public Progress(
+            int currentTick,
+            int lastPolicyChangeTick,
+            int budget,
+            PolicyType policyType,
+            List<ConstructionProgress> constructions,
+            boolean tsunamiInsuranceActive,
+            List<ConstructionProgress> pendingTsunamiReconstructions,
+            String tsunamiReconstructionDirection)
+    {
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
         this.budget = budget;
@@ -56,6 +82,10 @@ public class Progress
         this.constructions = constructions;
         this.tsunamiInsuranceActive =
                 tsunamiInsuranceActive;
+        this.pendingTsunamiReconstructions =
+                pendingTsunamiReconstructions;
+        this.tsunamiReconstructionDirection =
+                tsunamiReconstructionDirection;
     }
 
     /* Crea lo stato di salvataggio della partita
@@ -91,13 +121,34 @@ public class Progress
             }
         }
 
+        List<ConstructionProgress>
+                savedPendingReconstructions =
+                new ArrayList<>();
+
+        for (ReconstructionEntry entry
+                : simulation
+                .getPendingTsunamiReconstructions())
+        {
+            savedPendingReconstructions.add(
+                    ConstructionProgress
+                            .fromConstruction(
+                                    entry.construction(),
+                                    entry.row(),
+                                    entry.column()
+                            )
+            );
+        }
+
         return new Progress(
                 simulation.getCurrentTick(),
                 simulation.getLastPolicyChangeTick(),
                 city.getBudget(),
                 city.getCurrentPolicy().getType(),
                 savedConstructions,
-                simulation.isTsunamiInsuranceActive()
+                simulation.isTsunamiInsuranceActive(),
+                savedPendingReconstructions,
+                simulation
+                        .getTsunamiReconstructionDirection()
         );
     }
 
@@ -129,6 +180,17 @@ public class Progress
     public boolean isTsunamiInsuranceActive()
     {
         return tsunamiInsuranceActive;
+    }
+
+    public List<ConstructionProgress>
+    getPendingTsunamiReconstructions()
+    {
+        return pendingTsunamiReconstructions;
+    }
+
+    public String getTsunamiReconstructionDirection()
+    {
+        return tsunamiReconstructionDirection;
     }
 
     /* Ricostruisce la griglia utilizzando le costruzioni salvate
@@ -174,14 +236,43 @@ public class Progress
         Grid restoredGrid = restoreGrid();
         Policy restoredPolicy = restorePolicy();
 
-        return new Controller(
-                restoredGrid,
-                restoredPolicy,
-                budget,
-                currentTick,
-                lastPolicyChangeTick,
-                tsunamiInsuranceActive
-        );
+        Controller controller =
+                new Controller(
+                        restoredGrid,
+                        restoredPolicy,
+                        budget,
+                        currentTick,
+                        lastPolicyChangeTick,
+                        tsunamiInsuranceActive
+                );
+
+        if (pendingTsunamiReconstructions != null
+                && !pendingTsunamiReconstructions.isEmpty())
+        {
+            List<ReconstructionEntry> entries =
+                    new ArrayList<>();
+
+            for (ConstructionProgress savedEntry
+                    : pendingTsunamiReconstructions)
+            {
+                entries.add(
+                        new ReconstructionEntry(
+                                savedEntry
+                                        .toConstruction(),
+                                savedEntry.getRow(),
+                                savedEntry.getColumn()
+                        )
+                );
+            }
+
+            controller
+                    .restoreTsunamiReconstruction(
+                            entries,
+                            tsunamiReconstructionDirection
+                    );
+        }
+
+        return controller;
     }
 
 }

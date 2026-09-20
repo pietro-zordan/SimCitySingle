@@ -516,4 +516,9 @@ public final class Controller
         return simulation.getRemovedCriminalActivities();
     }
 
+    public boolean wasTerroristicGroupCreated()
+    {
+        return simulation.wasTerroristicGroupCreated();
+    }
+
 }

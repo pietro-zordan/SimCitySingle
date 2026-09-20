@@ -749,22 +749,36 @@ public final class GameView implements GameObserver
         int cost =
                 controller.getTsunamiInsuranceCost();
 
+        boolean extending =
+                controller.isTsunamiInsuranceActive();
+
         if (controller.buyTsunamiInsurance())
         {
             tsunamiInsuranceBox.setVisible(
                     false
             );
 
-            showToast(
-                    "Tsunami insurance activated for "
-                            + cost
-                            + " €."
-            );
+            if (extending)
+            {
+                showToast(
+                        "Tsunami insurance extended for "
+                                + cost
+                                + " €."
+                );
+            }
+            else
+            {
+                showToast(
+                        "Tsunami insurance activated for "
+                                + cost
+                                + " €."
+                );
+            }
         }
         else
         {
             showToast(
-                    "Unable to activate tsunami insurance. Check your budget."
+                    "Unable to apply tsunami insurance. Check your budget."
             );
         }
     }

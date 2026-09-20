@@ -19,11 +19,14 @@ public class Grid
             };
 
     private final Cell[][] cells;
+    private final boolean[][] reconstructionReserved;
 
     // Crea e inizializza tutte le celle della griglia.
     public Grid()
     {
         cells = new Cell[N_ROW][N_COL];
+        reconstructionReserved =
+                new boolean[N_ROW][N_COL];
 
         for (int row = 0; row < N_ROW; row++)
         {
@@ -80,6 +83,15 @@ public class Grid
         {
             throw new IllegalArgumentException(
                     "Position outside the grid"
+            );
+        }
+
+        if (isCellReservedForReconstruction(
+                row,
+                column))
+        {
+            throw new IllegalStateException(
+                    "Impossibile piazzare un nuovo edificio: ricostruzione in corso"
             );
         }
 
@@ -434,7 +446,11 @@ public class Grid
                                             newColumn
                                     );
 
-                            if (neighbor.isEmpty())
+                            if (neighbor.isEmpty()
+                                    && !isCellReservedForReconstruction(
+                                            newRow,
+                                            newColumn
+                                    ))
                             {
                                 buildable.add(neighbor);
                             }
@@ -565,7 +581,11 @@ public class Grid
                             Cell neighbor =
                                     getCell(newRow, newColumn);
 
-                            if (neighbor.isEmpty())
+                            if (neighbor.isEmpty()
+                                    && !isCellReservedForReconstruction(
+                                            newRow,
+                                            newColumn
+                                    ))
                             {
                                 buildable.add(neighbor);
                             }
@@ -599,6 +619,10 @@ public class Grid
                 Cell cell = cells[row][column];
 
                 if (cell.isEmpty()
+                        && !isCellReservedForReconstruction(
+                                row,
+                                column
+                        )
                         && !hasAdjacentRoad(cell)
                         && countBlockedSides(row, column) >= 3)
                 {
@@ -606,7 +630,11 @@ public class Grid
                 }
 
                 if (visited[row][column]
-                        || !cell.isEmpty())
+                        || !cell.isEmpty()
+                        || isCellReservedForReconstruction(
+                                row,
+                                column
+                        ))
                 {
                     continue;
                 }
@@ -647,7 +675,11 @@ public class Grid
 
                         if (isInside(newRow, newColumn)
                                 && !visited[newRow][newColumn]
-                                && cells[newRow][newColumn].isEmpty())
+                                && cells[newRow][newColumn].isEmpty()
+                                && !isCellReservedForReconstruction(
+                                        newRow,
+                                        newColumn
+                                ))
                         {
                             visited[newRow][newColumn] = true;
 
@@ -710,5 +742,46 @@ public class Grid
         return blockedSides;
     }
 
+
+
+    public void reserveCellForReconstruction(
+            int row,
+            int column)
+    {
+        if (!isInside(row, column))
+        {
+            throw new IllegalArgumentException(
+                    "Position outside the grid"
+            );
+        }
+
+        reconstructionReserved[row][column] = true;
+    }
+
+    public void releaseCellFromReconstruction(
+            int row,
+            int column)
+    {
+        if (!isInside(row, column))
+        {
+            throw new IllegalArgumentException(
+                    "Position outside the grid"
+            );
+        }
+
+        reconstructionReserved[row][column] = false;
+    }
+
+    public boolean isCellReservedForReconstruction(
+            int row,
+            int column)
+    {
+        if (!isInside(row, column))
+        {
+            return false;
+        }
+
+        return reconstructionReserved[row][column];
+    }
 
 }

@@ -636,7 +636,7 @@ public class Grid
                 }
 
                 if (visited[row][column]
-                        || !cell.isEmpty()
+                        || !isOpenForGrassReachability(cell)
                         || isCellReservedForReconstruction(
                                 row,
                                 column
@@ -661,7 +661,10 @@ public class Grid
                     Cell currentCell =
                             pendingCells.removeFirst();
 
-                    emptyArea.add(currentCell);
+                    if (currentCell.isEmpty())
+                    {
+                        emptyArea.add(currentCell);
+                    }
 
                     if (hasAdjacentRoad(currentCell))
                     {
@@ -681,7 +684,9 @@ public class Grid
 
                         if (isInside(newRow, newColumn)
                                 && !visited[newRow][newColumn]
-                                && cells[newRow][newColumn].isEmpty()
+                                && isOpenForGrassReachability(
+                                        cells[newRow][newColumn]
+                                )
                                 && !isCellReservedForReconstruction(
                                         newRow,
                                         newColumn
@@ -718,6 +723,22 @@ public class Grid
      * Conta i lati realmente bloccati da costruzioni o dal bordo.
      * L'erba già creata non provoca la comparsa a catena di altra erba.
      */
+    /*
+     * Le attività criminali sono temporanee e non devono isolare
+     * permanentemente un'area vuota facendola diventare erba.
+     */
+    private boolean isOpenForGrassReachability(
+            Cell cell)
+    {
+        if (cell.isEmpty())
+        {
+            return true;
+        }
+
+        return cell.getConstruction().getType()
+                == ConstructionType.CRIMINAL_ACTIVITY;
+    }
+
     private int countBlockedSides(int row, int column)
     {
         int blockedSides = 0;
@@ -739,7 +760,9 @@ public class Grid
 
             if (construction != null
                     && construction.getType()
-                    != ConstructionType.GRASS)
+                    != ConstructionType.GRASS
+                    && construction.getType()
+                    != ConstructionType.CRIMINAL_ACTIVITY)
             {
                 blockedSides++;
             }

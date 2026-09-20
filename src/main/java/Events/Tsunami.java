@@ -2,6 +2,8 @@ package Events;
 
 import model.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /* Rappresenta uno tsunami che arriva da un lato casuale della griglia.
@@ -9,11 +11,13 @@ import java.util.Random;
    senza rimuovere strade e parchi. */
 public class Tsunami extends Event{
 
-    private static final int ADVANCMENT_LENGTH=4;
+    public static final int ADVANCEMENT_LENGTH = 4;
     private final static int TICK_DURATION=3;
     private final static int HAPPINESS_DECREASE=50;
     private final Grid grid;
     private String direction;
+    private final List<ReconstructionEntry> destroyedBuildings =
+            new ArrayList<>();
 
     // Crea uno tsunami della durata di tre tick e imposta la sua probabilità di avvio.
     public Tsunami(City city, Grid grid)
@@ -27,6 +31,8 @@ public class Tsunami extends Event{
        e distrugge gli edifici presenti nella zona colpita. */
     public void getBuildingsToDestroy(Grid grid)
     {
+        destroyedBuildings.clear();
+
         String[] directions = {"UP", "DOWN", "LEFT", "RIGHT"};
         Random random = new Random();
         direction = directions[random.nextInt(directions.length)];
@@ -36,63 +42,95 @@ public class Tsunami extends Event{
         {
             case "UP"->
             {
-                for(int i=0; i<ADVANCMENT_LENGTH; i++)
+                for(int i=0; i<ADVANCEMENT_LENGTH; i++)
                     for(int j=0; j< grid.getNumberOfColumns(); j++)
                     {
-                        Cell cell=grid.getCell(i,j);
-                        Construction c= cell.getConstruction();
-                        if (c != null
-                                && !(c instanceof Road)
-                                && !(c instanceof Park)) {
-                            grid.removeConstruction(i, j);
-                        }
+                        destroyBuildingIfNeeded(
+                                grid,
+                                i,
+                                j
+                        );
                     }
             }
             case "DOWN"->
             {
                 for(int i= grid.getNumberOfRows()-1;
-                    i >= grid.getNumberOfRows() - ADVANCMENT_LENGTH; i--)
+                    i >= grid.getNumberOfRows() - ADVANCEMENT_LENGTH; i--)
                     for(int j=0; j< grid.getNumberOfColumns(); j++)
                     {
-                        Cell cell=grid.getCell(i,j);
-                        Construction c= cell.getConstruction();
-                        if (c != null
-                                && !(c instanceof Road)
-                                && !(c instanceof Park)) {
-                            grid.removeConstruction(i, j);
-                        }
+                        destroyBuildingIfNeeded(
+                                grid,
+                                i,
+                                j
+                        );
                     }
             }
             case "LEFT"->
             {
                 for(int i=0; i< grid.getNumberOfRows(); i++)
-                    for(int j=0; j<ADVANCMENT_LENGTH; j++)
+                    for(int j=0; j<ADVANCEMENT_LENGTH; j++)
                     {
-                        Cell cell=grid.getCell(i,j);
-                        Construction c= cell.getConstruction();
-                        if (c != null
-                                && !(c instanceof Road)
-                                && !(c instanceof Park)) {
-                            grid.removeConstruction(i, j);
-                        }
+                        destroyBuildingIfNeeded(
+                                grid,
+                                i,
+                                j
+                        );
                     }
             }
             case "RIGHT"->
             {
                 for (int i = 0; i < grid.getNumberOfRows(); i++)
                     for(int j= grid.getNumberOfColumns()-1;
-                        j >= grid.getNumberOfColumns() - ADVANCMENT_LENGTH; j--)
+                        j >= grid.getNumberOfColumns() - ADVANCEMENT_LENGTH; j--)
                     {
-                        Cell cell=grid.getCell(i,j);
-                        Construction c= cell.getConstruction();
-                        if (c != null
-                                && !(c instanceof Road)
-                                && !(c instanceof Park)) {
-                            grid.removeConstruction(i, j);
-                        }
+                        destroyBuildingIfNeeded(
+                                grid,
+                                i,
+                                j
+                        );
                     }
             }
         }
+    }
+
+    private void destroyBuildingIfNeeded(
+            Grid targetGrid,
+            int row,
+            int column)
+    {
+        Cell cell =
+                targetGrid.getCell(
+                        row,
+                        column
+                );
+
+        Construction construction =
+                cell.getConstruction();
+
+        if (construction != null
+                && !(construction instanceof Road)
+                && !(construction instanceof Park))
+        {
+            destroyedBuildings.add(
+                    new ReconstructionEntry(
+                            construction,
+                            row,
+                            column
+                    )
+            );
+
+            targetGrid.removeConstruction(
+                    row,
+                    column
+            );
+        }
+    }
+
+    public List<ReconstructionEntry> getDestroyedBuildings()
+    {
+        return new ArrayList<>(
+                destroyedBuildings
+        );
     }
 
     // Distrugge gli edifici colpiti e aggiorna subito le statistiche della città.
@@ -119,7 +157,7 @@ public class Tsunami extends Event{
     // Restituisce il numero di righe o colonne colpite dallo tsunami.
     public int getAdvancementLength()
     {
-        return ADVANCMENT_LENGTH;
+        return ADVANCEMENT_LENGTH;
     }
 
     // Identifica l'evento come tsunami.

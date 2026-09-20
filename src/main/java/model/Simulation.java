@@ -345,33 +345,6 @@ public class Simulation{
                 .isTsunamiInsuranceActive();
     }
 
-    public int getAdditionalTsunamiCoverageCost(
-            ConstructionType type,
-            int row,
-            int column)
-    {
-        return insuranceManager
-                .getAdditionalCoverageCost(
-                        type,
-                        row,
-                        column
-                );
-    }
-
-    public void coverNewConstruction(
-            Construction construction,
-            int row,
-            int column,
-            int additionalCost)
-    {
-        insuranceManager.coverNewConstruction(
-                construction,
-                row,
-                column,
-                additionalCost
-        );
-    }
-
     public void startTsunamiReconstruction()
     {
         insuranceManager

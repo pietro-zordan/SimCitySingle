@@ -175,12 +175,7 @@ public class Simulation{
             startEvent(createRandomEvent());
         }
 
-        boolean criminalActivityCreated =
-                crimeManager
-                        .tryToCreateCriminalActivity(
-                                currentTick
-                        );
-
+        // Prima agiscono le stazioni di polizia
         removedCriminalActivities =
                 crimeManager
                         .tryToDestroyCriminalActivities(
@@ -191,6 +186,13 @@ public class Simulation{
         {
             city.refreshStatistics();
         }
+
+        // Solo dopo può comparire una nuova attività criminale
+        boolean criminalActivityCreated =
+                crimeManager
+                        .tryToCreateCriminalActivity(
+                                currentTick
+                        );
 
         currentTick++;
 

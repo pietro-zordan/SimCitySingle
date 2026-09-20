@@ -4,7 +4,7 @@ public class CriminalActivity extends Construction{
 
     public CriminalActivity()
     {
-        super(-200, 200, 0);
+        super(-300, 200, 0);
     }
 
     @Override
@@ -14,7 +14,7 @@ public class CriminalActivity extends Construction{
 
     public int getHappinessImpact()
     {
-        return -300;
+        return -400;
     }
 
 

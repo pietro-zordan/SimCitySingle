@@ -7,8 +7,8 @@ import java.util.Random;
 public class CrimeManager
 {
     private static final int CRIME_START_TICK = 15;
-    private static final double CRIME_ECONOMY_FACTOR = 0.00005;
-    private static final double MAX_CRIME_PROBABILITY = 0.15;
+    private static final double CRIME_ECONOMY_FACTOR = 0.00008;
+    private static final double MAX_CRIME_PROBABILITY = 0.25;
 
     private final Random random = new Random();
     private final City city;

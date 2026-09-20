@@ -76,9 +76,19 @@ public class Industrial extends EconomicBuilding{
     }
 
     @Override
-    public boolean isPlacementAllowed(int pollution)
+    public String getPlacementErrorMessage(
+            int pollution,
+            int unemployed)
     {
-        return pollution <= MAX_POLLUTION;
+        if (unemployed <= 0)
+        {
+            return super.getPlacementErrorMessage(
+                    pollution,
+                    unemployed
+            );
+        }
+
+        return "Pollution is too high cannot place industrial";
     }
 }
 

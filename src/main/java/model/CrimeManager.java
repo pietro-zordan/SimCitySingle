@@ -15,7 +15,6 @@ public class CrimeManager
     private final Grid grid;
     private int numOfPoliceStation=0;
     private int maxRemoval=0;
-    private List<CriminalActivity> criminalActivities = new ArrayList<>();
 
     public CrimeManager(City city, Grid grid)
     {
@@ -92,9 +91,7 @@ public class CrimeManager
                 randomCell.getRow(),
                 randomCell.getColumn()
         );
-
-        criminalActivities.add(criminalActivity);
-
+        
         return true;
     }
 

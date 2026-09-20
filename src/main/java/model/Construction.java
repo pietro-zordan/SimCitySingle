@@ -202,9 +202,16 @@ public abstract class Construction {
         return 0;
     }
 
-    public boolean isPlacementAllowed(int pollution)
+    public boolean isPlacementAllowed(int pollution, int unempolyed)
     {
         return true;
+    }
+
+    public String getPlacementErrorMessage(
+            int pollution,
+            int unemployed)
+    {
+        return "Construction cannot be placed";
     }
 
 }

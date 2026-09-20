@@ -141,4 +141,20 @@ public abstract class EconomicBuilding extends Construction
 
         setEconomyGrowthRate(economyGrowthRate);
     }
+
+    @Override
+    public boolean isPlacementAllowed(
+            int pollution,
+            int unemployed)
+    {
+        return unemployed > 0;
+    }
+
+    @Override
+    public String getPlacementErrorMessage(
+            int pollution,
+            int unemployed)
+    {
+        return "Cannot build Industrial or Commercial: you need a bigger population";
+    }
 }

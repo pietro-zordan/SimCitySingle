@@ -187,22 +187,20 @@ public class City
             );
         }
 
-        if ((type == ConstructionType.INDUSTRIAL ||
-                type == ConstructionType.COMMERCIAL) &&
-                unemployed <= 0)
-        {
-            throw new IllegalStateException(
-                    "Cannot build Industrial or Commercial: you need a bigger population"
-            );
-        }
-
         Construction construction = ConstructionFactory.create(type);
 
         int cost = calculatePlacementCost(construction);
 
-        if (!construction.isPlacementAllowed(pollution))
+        if (!construction.isPlacementAllowed(
+                pollution,
+                unemployed))
         {
-            throw new IllegalStateException(" Pollution is too high cannot place industrial");
+            throw new IllegalStateException(
+                    construction.getPlacementErrorMessage(
+                            pollution,
+                            unemployed
+                    )
+            );
         }
 
         if (budget + cost < 0)

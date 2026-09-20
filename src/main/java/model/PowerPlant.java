@@ -181,6 +181,23 @@ public class PowerPlant extends Construction
         return 0;
     }
 
+    // Restituisce l'energia attualmente utilizzata dalla singola centrale.
+    public int getUsedPower()
+    {
+        if (!isActive())
+        {
+            return 0;
+        }
+
+        return calculateUsedPower();
+    }
+
+    // Restituisce la capacità massima della singola centrale.
+    public int getPowerCapacity()
+    {
+        return POWER_GENERATED;
+    }
+
     // Scollega tutte le costruzioni servite e svuota le code della centrale.
     public void disconnectAll()
     {

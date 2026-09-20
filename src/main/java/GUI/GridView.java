@@ -227,39 +227,20 @@ public final class GridView
         {
             try
             {
-                int insuranceCost =
-                        controller
-                                .getAdditionalTsunamiCoverageCost(
-                                        selectedType,
-                                        row,
-                                        column
-                                );
-
                 controller.placeConstruction(
                         selectedType,
                         row,
                         column
                 );
 
-                String message =
+                infoLabel.setText(
                         "Creato/a un/a "
                                 + selectedType
                                 + " (riga "
                                 + row
                                 + ", colonna "
                                 + column
-                                + ")";
-
-                if (insuranceCost > 0)
-                {
-                    message +=
-                            " - extra assicurazione tsunami: "
-                                    + insuranceCost
-                                    + " €";
-                }
-
-                infoLabel.setText(
-                        message
+                                + ")"
                 );
             }
             catch (IllegalStateException

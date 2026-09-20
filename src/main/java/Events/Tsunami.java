@@ -8,7 +8,7 @@ import java.util.Random;
 
 /* Rappresenta uno tsunami che arriva da un lato casuale della griglia.
    Distrugge gli edifici nelle quattro righe o colonne vicine al lato scelto,
-   senza rimuovere strade e parchi. */
+   senza rimuovere strade, parchi ed erba. */
 public class Tsunami extends Event{
 
     public static final int ADVANCEMENT_LENGTH = 4;
@@ -109,7 +109,8 @@ public class Tsunami extends Event{
 
         if (construction != null
                 && !(construction instanceof Road)
-                && !(construction instanceof Park))
+                && !(construction instanceof Park)
+                && !(construction instanceof Grass))
         {
             destroyedBuildings.add(
                     new ReconstructionEntry(

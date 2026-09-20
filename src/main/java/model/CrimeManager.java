@@ -62,7 +62,9 @@ public class CrimeManager
         List<Cell> buildableCells =
                 grid.getBuildableCells();
 
-        if (buildableCells.isEmpty())
+        // L'ultima cella costruibile viene riservata alle strade da Grid.
+        // Evita quindi di tentare un piazzamento che Grid rifiuterebbe.
+        if (buildableCells.size() <= 1)
         {
             return false;
         }

@@ -436,6 +436,18 @@ public final class Controller
     // Restituisce il numero di cittadini disoccupati.
     public int getUnemployed(){return city.getGlobalUnemployed(); }
 
+    // Restituisce l'energia elettrica realmente consumata dalla città.
+    public int getEnergyConsumed()
+    {
+        return city.getEnergyConsumed();
+    }
+
+    // Restituisce la potenza totale disponibile dalle centrali attive.
+    public int getEnergyAvailable()
+    {
+        return city.getEnergyAvailable();
+    }
+
     // Restituisce il nome della policy attualmente attiva.
     public String getCurrentPolicyName()
     {

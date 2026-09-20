@@ -1,8 +1,8 @@
 {
-  "currentTick": 324,
+  "currentTick": 347,
   "lastPolicyChangeTick": 128,
   "policyType": "ENVIRONMENTAL",
-  "budget": 16523,
+  "budget": 31374,
   "constructions": [
     {
       "type": "GRASS",
@@ -21,8 +21,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "COMMERCIAL",
@@ -31,8 +31,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "POWER_PLANT",
@@ -501,8 +501,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.949999999999995,
-      "moneyProduction": 350
+      "economyGrowthRate": 3.5,
+      "moneyProduction": 420
     },
     {
       "type": "BANK",
@@ -961,8 +961,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "ROAD",
@@ -1101,8 +1101,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "ROAD",
@@ -1191,8 +1191,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "ROAD",
@@ -1211,8 +1211,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "POWER_PLANT",
@@ -1281,8 +1281,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "ROAD",
@@ -1301,8 +1301,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "RESIDENTIAL",
@@ -1352,7 +1352,7 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.5,
-      "moneyProduction": 420
+      "moneyProduction": 0
     },
     {
       "type": "ROAD",
@@ -1371,8 +1371,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "ROAD",
@@ -1391,8 +1391,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "RESIDENTIAL",
@@ -1442,7 +1442,7 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.5,
-      "moneyProduction": 420
+      "moneyProduction": 0
     },
     {
       "type": "ROAD",
@@ -1461,8 +1461,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "ROAD",
@@ -1481,8 +1481,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "COMMERCIAL",
@@ -1551,8 +1551,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "ROAD",
@@ -1571,8 +1571,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 1.4500000000000004,
-      "moneyProduction": 71
+      "economyGrowthRate": 2.14,
+      "moneyProduction": 105
     },
     {
       "type": "PARK",
@@ -1688,6 +1688,16 @@
       "type": "ROAD",
       "row": 13,
       "column": 19,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "GRASS",
+      "row": 14,
+      "column": 0,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
@@ -2118,6 +2128,16 @@
       "type": "ROAD",
       "row": 18,
       "column": 19,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0
+    },
+    {
+      "type": "GRASS",
+      "row": 19,
+      "column": 8,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,

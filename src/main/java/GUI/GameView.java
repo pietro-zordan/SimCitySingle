@@ -605,6 +605,13 @@ public final class GameView implements GameObserver
                 Double.MAX_VALUE
         );
 
+        demolitionButton.managedProperty()
+                .bind(
+                        demolitionButton.visibleProperty()
+                );
+
+        demolitionButton.setVisible(false);
+
         demolitionButton.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
@@ -614,6 +621,41 @@ public final class GameView implements GameObserver
                         gridView.activateDemolition();
                     }
                 }
+        );
+    }
+
+    // Mostra il pulsante di demolizione solo se esiste almeno un'impresa edile.
+    private void refreshDemolitionButton()
+    {
+        boolean constructionCompanyPresent = false;
+
+        for (int row = 0;
+             row < controller.getNumberOfRows()
+                     && !constructionCompanyPresent;
+             row++)
+        {
+            for (int column = 0;
+                 column < controller.getNumberOfColumns();
+                 column++)
+            {
+                Controller.CellState state =
+                        controller.getCellState(
+                                row,
+                                column
+                        );
+
+                if (!state.empty()
+                        && state.type()
+                        == ConstructionType.CONSTRUCTION_COMPANY)
+                {
+                    constructionCompanyPresent = true;
+                    break;
+                }
+            }
+        }
+
+        demolitionButton.setVisible(
+                constructionCompanyPresent
         );
     }
 
@@ -732,6 +774,7 @@ public final class GameView implements GameObserver
                 .refreshAvailability();
 
         refreshLoanButton();
+        refreshDemolitionButton();
 
         gridView.refresh();
     }
@@ -765,6 +808,7 @@ public final class GameView implements GameObserver
                                 .refreshAvailability();
 
                         refreshLoanButton();
+                        refreshDemolitionButton();
 
                         statusView.updateTick();
                         statusView.updateEventBanner();

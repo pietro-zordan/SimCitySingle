@@ -21,8 +21,20 @@ public class Progress
     private PolicyType policyType;
     private int budget;
 
+    private static final int DEFAULT_LAST_LOAN_TICK = -15;
+
+    private boolean loanActive;
+    private int loanAmount;
+    private int loanStartTick;
+    private int lastLoanTick = DEFAULT_LAST_LOAN_TICK;
+    private int remainingDebt;
 
     private List<ConstructionProgress> constructions;
+
+    // Usato da Gson; mantiene valori compatibili con i salvataggi precedenti.
+    private Progress()
+    {
+    }
 
     public Progress(
             int currentTick,
@@ -31,10 +43,41 @@ public class Progress
             PolicyType policyType,
             List<ConstructionProgress> constructions)
     {
+        this(
+                currentTick,
+                lastPolicyChangeTick,
+                budget,
+                policyType,
+                false,
+                0,
+                0,
+                DEFAULT_LAST_LOAN_TICK,
+                0,
+                constructions
+        );
+    }
+
+    public Progress(
+            int currentTick,
+            int lastPolicyChangeTick,
+            int budget,
+            PolicyType policyType,
+            boolean loanActive,
+            int loanAmount,
+            int loanStartTick,
+            int lastLoanTick,
+            int remainingDebt,
+            List<ConstructionProgress> constructions)
+    {
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
         this.budget = budget;
         this.policyType = policyType;
+        this.loanActive = loanActive;
+        this.loanAmount = loanAmount;
+        this.loanStartTick = loanStartTick;
+        this.lastLoanTick = lastLoanTick;
+        this.remainingDebt = remainingDebt;
         this.constructions = constructions;
     }
 
@@ -76,6 +119,11 @@ public class Progress
                 simulation.getLastPolicyChangeTick(),
                 city.getBudget(),
                 city.getCurrentPolicy().getType(),
+                simulation.isLoanActive(),
+                simulation.getLoanAmount(),
+                simulation.getLoanStartTick(),
+                simulation.getLastLoanTick(),
+                simulation.getRemainingDebt(),
                 savedConstructions
         );
     }
@@ -103,6 +151,31 @@ public class Progress
     public List<ConstructionProgress> getConstructions()
     {
         return constructions;
+    }
+
+    public boolean isLoanActive()
+    {
+        return loanActive;
+    }
+
+    public int getLoanAmount()
+    {
+        return loanAmount;
+    }
+
+    public int getLoanStartTick()
+    {
+        return loanStartTick;
+    }
+
+    public int getLastLoanTick()
+    {
+        return lastLoanTick;
+    }
+
+    public int getRemainingDebt()
+    {
+        return remainingDebt;
     }
 
     /* Ricostruisce la griglia utilizzando le costruzioni salvate
@@ -153,7 +226,12 @@ public class Progress
                 restoredPolicy,
                 budget,
                 currentTick,
-                lastPolicyChangeTick
+                lastPolicyChangeTick,
+                loanActive,
+                loanAmount,
+                loanStartTick,
+                lastLoanTick,
+                remainingDebt
         );
     }
 

@@ -3,10 +3,7 @@ package model;
 import Events.Tsunami;
 
 import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Set;
 
 /*
  * Gestisce le assicurazioni della città.
@@ -27,11 +24,6 @@ public class InsuranceManager
 
     private final City city;
     private final Grid grid;
-
-    private final Set<Construction> tsunamiCoveredBuildings =
-            Collections.newSetFromMap(
-                    new IdentityHashMap<Construction, Boolean>()
-            );
 
     private final ArrayDeque<ReconstructionEntry>
             reconstructionQueue =
@@ -70,11 +62,6 @@ public class InsuranceManager
         this.grid = grid;
         this.tsunamiInsuranceActive =
                 tsunamiInsuranceActive;
-
-        if (tsunamiInsuranceActive)
-        {
-            coverExistingRiskBuildings();
-        }
     }
 
     public boolean hasBanks()
@@ -93,6 +80,10 @@ public class InsuranceManager
         return tsunamiInsuranceActive;
     }
 
+    /*
+     * Il prezzo iniziale considera solo gli edifici realmente raggiungibili
+     * dallo tsunami, cioè quelli nelle quattro fasce esterne della mappa.
+     */
     public int getTsunamiInsuranceCost()
     {
         int baseCost = 0;
@@ -192,13 +183,15 @@ public class InsuranceManager
         }
 
         city.updateBudget(-cost);
-
         tsunamiInsuranceActive = true;
-        coverExistingRiskBuildings();
 
         return true;
     }
 
+    /*
+     * Dopo l'acquisto ogni nuovo edificio assicurabile nella fascia tsunami
+     * viene coperto automaticamente pagando solo il relativo supplemento.
+     */
     public int getAdditionalCoverageCost(
             ConstructionType type,
             int row,
@@ -214,6 +207,7 @@ public class InsuranceManager
         int numberOfBanks =
                 grid.getNumberOfBanks();
 
+        // Una nuova banca partecipa subito anche allo sconto.
         if (type == ConstructionType.BANK)
         {
             numberOfBanks++;
@@ -247,14 +241,16 @@ public class InsuranceManager
                     -additionalCost
             );
         }
-
-        tsunamiCoveredBuildings.add(
-                construction
-        );
     }
 
+    /*
+     * Con una polizza attiva tutti gli edifici assicurabili distrutti
+     * vengono ricostruiti: non serve applicare di nuovo l'assicurazione
+     * dopo aver costruito nuovi edifici.
+     */
     public void registerTsunamiDamage(
-            List<ReconstructionEntry> destroyedBuildings)
+            List<ReconstructionEntry> destroyedBuildings,
+            String direction)
     {
         if (!tsunamiInsuranceActive
                 || destroyedBuildings == null)
@@ -262,23 +258,39 @@ public class InsuranceManager
             return;
         }
 
+        boolean hasCoveredDamage = false;
+
         for (ReconstructionEntry entry
                 : destroyedBuildings)
         {
             if (entry != null
-                    && tsunamiCoveredBuildings.contains(
+                    && isAtTsunamiRisk(
+                            entry.row(),
+                            entry.column()
+                    )
+                    && isInsurable(
                             entry.construction()
+                                    .getType()
                     ))
             {
                 reconstructionQueue.addLast(
                         entry
                 );
 
-                grid.reserveCellForReconstruction(
-                        entry.row(),
-                        entry.column()
-                );
+                hasCoveredDamage = true;
             }
+        }
+
+        /*
+         * Durante la ricostruzione viene bloccata tutta la fascia colpita
+         * dallo tsunami, non soltanto le singole celle degli edifici distrutti.
+         * In questo modo non si possono aggiungere nemmeno nuove strade.
+         */
+        if (hasCoveredDamage)
+        {
+            reserveTsunamiArea(
+                    direction
+            );
         }
     }
 
@@ -305,7 +317,7 @@ public class InsuranceManager
 
         if (entry == null)
         {
-            reconstructionActive = false;
+            finishReconstruction();
             return;
         }
 
@@ -327,47 +339,87 @@ public class InsuranceManager
             city.refreshStatistics();
         }
 
-        grid.releaseCellFromReconstruction(
-                entry.row(),
-                entry.column()
-        );
-
         if (reconstructionQueue.isEmpty())
         {
-            reconstructionActive = false;
+            finishReconstruction();
         }
     }
 
-    private void coverExistingRiskBuildings()
+    private void finishReconstruction()
+    {
+        reconstructionActive = false;
+        grid.releaseAllReconstructionReservations();
+    }
+
+    private void reserveTsunamiArea(
+            String direction)
+    {
+        int depth =
+                Tsunami.ADVANCEMENT_LENGTH;
+
+        if ("UP".equals(direction))
+        {
+            for (int row = 0;
+                 row < depth;
+                 row++)
+            {
+                reserveRow(row);
+            }
+        }
+        else if ("DOWN".equals(direction))
+        {
+            for (int row =
+                 grid.getNumberOfRows() - depth;
+                 row < grid.getNumberOfRows();
+                 row++)
+            {
+                reserveRow(row);
+            }
+        }
+        else if ("LEFT".equals(direction))
+        {
+            for (int column = 0;
+                 column < depth;
+                 column++)
+            {
+                reserveColumn(column);
+            }
+        }
+        else if ("RIGHT".equals(direction))
+        {
+            for (int column =
+                 grid.getNumberOfColumns() - depth;
+                 column < grid.getNumberOfColumns();
+                 column++)
+            {
+                reserveColumn(column);
+            }
+        }
+    }
+
+    private void reserveRow(int row)
+    {
+        for (int column = 0;
+             column < grid.getNumberOfColumns();
+             column++)
+        {
+            grid.reserveCellForReconstruction(
+                    row,
+                    column
+            );
+        }
+    }
+
+    private void reserveColumn(int column)
     {
         for (int row = 0;
              row < grid.getNumberOfRows();
              row++)
         {
-            for (int column = 0;
-                 column < grid.getNumberOfColumns();
-                 column++)
-            {
-                Construction construction =
-                        grid.getCell(
-                                row,
-                                column
-                        ).getConstruction();
-
-                if (construction != null
-                        && isAtTsunamiRisk(
-                                row,
-                                column
-                        )
-                        && isInsurable(
-                                construction.getType()
-                        ))
-                {
-                    tsunamiCoveredBuildings.add(
-                            construction
-                    );
-                }
-            }
+            grid.reserveCellForReconstruction(
+                    row,
+                    column
+            );
         }
     }
 

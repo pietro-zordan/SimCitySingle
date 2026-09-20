@@ -218,8 +218,8 @@ public final class GridView
                         column
                 );
 
-                demolitionActive = false;
-
+                // La modalità resta attiva per permettere
+                // demolizioni consecutive con un solo clic sul pulsante.
                 infoLabel.setText(
                         "Construction demolished at row "
                                 + row

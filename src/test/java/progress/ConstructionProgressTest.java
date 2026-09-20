@@ -51,6 +51,7 @@ class ConstructionProgressTest {
         when(construction.getPopulationDecreaseRate()).thenReturn(3);
         when(construction.getEconomyGrowthRate()).thenReturn(0.0);
         when(construction.getMoneyProduction()).thenReturn(25);
+        when(construction.isTsunamiInsured()).thenReturn(true);
 
         ConstructionProgress progress =
                 ConstructionProgress.fromConstruction(
@@ -71,6 +72,7 @@ class ConstructionProgressTest {
                 0.0001
         );
         assertEquals(25, progress.getMoneyProduction());
+        assertTrue(progress.isTsunamiInsured());
     }
 
     // Verifica che dal salvataggio venga ricreata la costruzione corretta.
@@ -84,7 +86,8 @@ class ConstructionProgressTest {
                 4,
                 3,
                 0.0,
-                25
+                25,
+                true
         );
 
         Construction restoredConstruction =
@@ -108,6 +111,7 @@ class ConstructionProgressTest {
                 restoredConstruction.getPopulationDecreaseRate()
         );
         assertEquals(25, restoredConstruction.getMoneyProduction());
+        assertTrue(restoredConstruction.isTsunamiInsured());
     }
 
     // Una costruzione priva del tipo non può essere ricreata.

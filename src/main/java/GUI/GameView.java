@@ -335,7 +335,9 @@ public final class GameView implements GameObserver
                         "Prestito ricevuto: "
                                 + amount
                                 + " €. Tra 3 tick dovrai restituire "
-                                + (amount * 3)
+                                + Math.round(
+                                        amount * 1.5
+                                )
                                 + " €."
                 );
 

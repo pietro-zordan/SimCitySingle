@@ -197,7 +197,7 @@ public final class ConstructionToolbarView
             case POWER_PLANT -> Color.ORANGE;
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
             case BANK -> Color.GOLD;
-            case CONSTRUCTION_COMPANY -> Color.BROWN;
+            case CONSTRUCTION_COMPANY -> Color.web("#7B5E3B");
             case CRIMINAL_ACTIVITY -> Color.BLACK;
             case POLICE_STATION -> Color.DARKBLUE;
             case GRASS -> Color.PALEGREEN;

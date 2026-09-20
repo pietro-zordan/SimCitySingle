@@ -3,6 +3,7 @@ package model;
 import Events.Tsunami;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -32,6 +33,7 @@ public class InsuranceManager
 
     private boolean tsunamiInsuranceActive;
     private boolean reconstructionActive;
+    private String reconstructionDirection;
 
     public InsuranceManager(
             City city,
@@ -226,6 +228,9 @@ public class InsuranceManager
 
         if (hasCoveredDamage)
         {
+            reconstructionDirection =
+                    direction;
+
             reserveTsunamiArea(
                     direction
             );
@@ -327,9 +332,81 @@ public class InsuranceManager
                 );
     }
 
+    public List<ReconstructionEntry> getPendingReconstructions()
+    {
+        return new ArrayList<>(
+                reconstructionQueue
+        );
+    }
+
+    public String getReconstructionDirection()
+    {
+        return reconstructionDirection;
+    }
+
+    /*
+     * Ripristina una ricostruzione salvata.
+     * Dopo il caricamento la ricostruzione riprende subito dal prossimo tick.
+     */
+    public void restorePendingReconstruction(
+            List<ReconstructionEntry> entries,
+            String direction)
+    {
+        reconstructionQueue.clear();
+        grid.releaseAllReconstructionReservations();
+
+        reconstructionDirection = null;
+        reconstructionActive = false;
+
+        if (entries == null
+                || entries.isEmpty())
+        {
+            return;
+        }
+
+        for (ReconstructionEntry entry : entries)
+        {
+            if (entry != null)
+            {
+                reconstructionQueue.addLast(
+                        entry
+                );
+            }
+        }
+
+        if (reconstructionQueue.isEmpty())
+        {
+            return;
+        }
+
+        reconstructionDirection =
+                direction;
+
+        if (direction != null)
+        {
+            reserveTsunamiArea(
+                    direction
+            );
+        }
+        else
+        {
+            for (ReconstructionEntry entry
+                    : reconstructionQueue)
+            {
+                grid.reserveCellForReconstruction(
+                        entry.row(),
+                        entry.column()
+                );
+            }
+        }
+
+        reconstructionActive = true;
+    }
+
     private void finishReconstruction()
     {
         reconstructionActive = false;
+        reconstructionDirection = null;
         grid.releaseAllReconstructionReservations();
     }
 

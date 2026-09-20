@@ -168,42 +168,10 @@ public final class Controller
             );
         }
 
-        int insuranceCost =
-                simulation
-                        .getAdditionalTsunamiCoverageCost(
-                                type,
-                                row,
-                                column
-                        );
-
-        int placementCost =
-                city.calculatePlacementCost(
-                        construction
-                );
-
-        if (insuranceCost > 0
-                && city.getBudget()
-                + placementCost
-                - insuranceCost < 0)
-        {
-            throw new IllegalStateException(
-                    "Insufficient budget: construction and insurance coverage require "
-                            + (-placementCost + insuranceCost)
-                            + " €"
-            );
-        }
-
         city.placeConstruction(
                 construction,
                 row,
                 column
-        );
-
-        simulation.coverNewConstruction(
-                construction,
-                row,
-                column,
-                insuranceCost
         );
 
         notifyObservers();
@@ -406,19 +374,6 @@ public final class Controller
     {
         return simulation
                 .isTsunamiInsuranceActive();
-    }
-
-    public int getAdditionalTsunamiCoverageCost(
-            ConstructionType type,
-            int row,
-            int column)
-    {
-        return simulation
-                .getAdditionalTsunamiCoverageCost(
-                        type,
-                        row,
-                        column
-                );
     }
 
     public void startTsunamiReconstruction()

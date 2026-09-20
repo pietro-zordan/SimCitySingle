@@ -131,7 +131,16 @@ public class TerrorManager {
         Cell cell = cells.get(random.nextInt(cells.size()));
 
         TerroristicGroup group = new TerroristicGroup();
-        city.placeConstruction(group, cell.getRow(), cell.getColumn());
+
+        // Il gruppo viene generato automaticamente dal gioco:
+        // non deve dipendere dal budget disponibile del giocatore.
+        grid.placeConstruction(
+                group,
+                cell.getRow(),
+                cell.getColumn()
+        );
+
+        city.refreshStatistics();
 
         return true;
     }

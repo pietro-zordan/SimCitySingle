@@ -76,6 +76,17 @@ public class Industrial extends EconomicBuilding{
     }
 
     @Override
+    public boolean isPlacementAllowed(
+            int pollution,
+            int unemployed)
+    {
+        return super.isPlacementAllowed(
+                pollution,
+                unemployed
+        ) && pollution < MAX_POLLUTION;
+    }
+
+    @Override
     public String getPlacementErrorMessage(
             int pollution,
             int unemployed)

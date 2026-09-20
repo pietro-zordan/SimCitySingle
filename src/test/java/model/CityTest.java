@@ -67,7 +67,8 @@ class CityTest {
 
         assertThrows(IllegalArgumentException.class, () -> new City(null, defaultPolicy, 1000));
         assertThrows(IllegalArgumentException.class, () -> new City(grid, null, 1000));
-        assertThrows(IllegalArgumentException.class, () -> new City(grid, defaultPolicy, -10));
+        City indebtedCity = new City(grid, defaultPolicy, -10);
+        assertEquals(-10, indebtedCity.getBudget());
     }
 
     @Test

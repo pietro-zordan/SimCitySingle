@@ -6,7 +6,6 @@ import java.util.Random;
 
 public class CrimeManager
 {
-    private static final int CRIME_START_TICK = 15;
     private static final double CRIME_ECONOMY_FACTOR = 0.00008;
     private static final double MAX_CRIME_PROBABILITY = 0.25;
 
@@ -38,11 +37,6 @@ public class CrimeManager
     public boolean tryToCreateCriminalActivity(
             int currentTick)
     {
-        if (currentTick < CRIME_START_TICK)
-        {
-            return false;
-        }
-
         double probability =
                 city.getGlobalEconomy()
                         * CRIME_ECONOMY_FACTOR;
@@ -54,13 +48,16 @@ public class CrimeManager
 
         if (random.nextDouble() < probability)
         {
-            return placeCriminalActivity();
+            return placeCriminalActivity(
+                    currentTick
+            );
         }
 
         return false;
     }
 
-    public boolean placeCriminalActivity()
+    public boolean placeCriminalActivity(
+            int currentTick)
     {
         List<Cell> buildableCells =
                 grid.getBuildableCells();
@@ -81,9 +78,14 @@ public class CrimeManager
                 );
 
         CriminalActivity criminalActivity =
-                (CriminalActivity) ConstructionFactory.create(
-                        ConstructionType.CRIMINAL_ACTIVITY
-                );
+                (CriminalActivity)
+                        ConstructionFactory.create(
+                                ConstructionType.CRIMINAL_ACTIVITY
+                        );
+
+        criminalActivity.setCreationTick(
+                currentTick
+        );
 
         grid.placeConstruction(
                 criminalActivity,
@@ -116,7 +118,8 @@ public class CrimeManager
         return getNumOfPoliceStation();
     }
 
-    private List<Cell> getCriminalActivities()
+    private List<Cell> getCriminalActivities(
+            int currentTick)
     {
         List<Cell> criminalActivities =
                 new ArrayList<>();
@@ -130,13 +133,28 @@ public class CrimeManager
                  column++)
             {
                 Cell cell =
-                        grid.getCell(row, column);
+                        grid.getCell(
+                                row,
+                                column
+                        );
 
                 if (!cell.isEmpty()
                         && cell.getConstruction()
                         instanceof CriminalActivity)
                 {
-                    criminalActivities.add(cell);
+                    CriminalActivity criminalActivity =
+                            (CriminalActivity)
+                                    cell.getConstruction();
+
+                    if (criminalActivity
+                            .canBeRemovedByPolice(
+                                    currentTick
+                            ))
+                    {
+                        criminalActivities.add(
+                                cell
+                        );
+                    }
                 }
             }
         }
@@ -144,10 +162,13 @@ public class CrimeManager
         return criminalActivities;
     }
 
-    public boolean destroyCriminalActivity()
+    public boolean destroyCriminalActivity(
+            int currentTick)
     {
         List<Cell> criminalActivities =
-                getCriminalActivities();
+                getCriminalActivities(
+                        currentTick
+                );
 
         if (criminalActivities.isEmpty())
         {
@@ -191,7 +212,8 @@ public class CrimeManager
                                 currentTick
                         ))
                 {
-                    if (destroyCriminalActivity())
+                    if (destroyCriminalActivity(
+                            currentTick))
                     {
                         policeStation
                                 .registerCriminalActivityRemoval(
@@ -206,5 +228,4 @@ public class CrimeManager
 
         return removed;
     }
-
 }

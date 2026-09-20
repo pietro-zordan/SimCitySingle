@@ -178,7 +178,13 @@ public final class GameView implements GameObserver
                         boolean criminalActivityCreated =
                                 controller.updateOfOneTick();
 
-                        if (criminalActivityCreated)
+                        if (controller.getRemovedCriminalActivities() > 0)
+                        {
+                            showToast(
+                                    "Attività criminale eliminata!"
+                            );
+                        }
+                        else if (criminalActivityCreated)
                         {
                             showToast(
                                     "Attenzione: è comparsa un'attività criminale!"

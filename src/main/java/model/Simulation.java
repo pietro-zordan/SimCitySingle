@@ -35,7 +35,9 @@ public class Simulation{
     private int lastRemovalResetTick = 0;
     private final BankruptcyManager bankruptcyManager;
 
+
     private final CrimeManager crimeManager;
+    private int removedCriminalActivities;
 
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
@@ -179,9 +181,22 @@ public class Simulation{
                                 currentTick
                         );
 
+        removedCriminalActivities =
+                crimeManager
+                        .tryToDestroyCriminalActivities(
+                                currentTick
+                        );
+
+        if (removedCriminalActivities > 0)
+        {
+            city.refreshStatistics();
+        }
+
         currentTick++;
 
-        if (currentTick - lastRemovalResetTick >= CC_INTERVAL)
+        if (currentTick
+                - lastRemovalResetTick
+                >= CC_INTERVAL)
         {
             usedRemovals = 0;
             lastRemovalResetTick = currentTick;
@@ -376,6 +391,11 @@ public class Simulation{
     public boolean isGameOver()
     {
         return bankruptcyManager.isBankrupt();
+    }
+
+    public int getRemovedCriminalActivities()
+    {
+        return removedCriminalActivities;
     }
 
 }

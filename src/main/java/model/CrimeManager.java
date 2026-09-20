@@ -13,8 +13,6 @@ public class CrimeManager
     private final Random random = new Random();
     private final City city;
     private final Grid grid;
-    private int numOfPoliceStation=0;
-    private int maxRemoval=0;
     private int lastPoliceRemovalTick = -1;
     private static final int POLICE_REMOVAL_INTERVAL = 15;
 
@@ -187,15 +185,8 @@ public class CrimeManager
             return 0;
         }
 
-        if (lastPoliceRemovalTick == -1)
-        {
-            lastPoliceRemovalTick =
-                    currentTick;
-
-            return 0;
-        }
-
-        if (currentTick
+        if (lastPoliceRemovalTick != -1
+                && currentTick
                 - lastPoliceRemovalTick
                 < POLICE_REMOVAL_INTERVAL)
         {

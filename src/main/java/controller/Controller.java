@@ -431,4 +431,9 @@ public final class Controller
                 >= construction.getUnlockTick();
     }
 
+    public int getRemovedCriminalActivities()
+    {
+        return Simulation.removedCriminalActivities;
+    }
+
 }

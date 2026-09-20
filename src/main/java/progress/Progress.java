@@ -20,7 +20,7 @@ public class Progress
     private int lastPolicyChangeTick;
     private PolicyType policyType;
     private int budget;
-
+    private boolean tsunamiInsuranceActive;
 
     private List<ConstructionProgress> constructions;
 
@@ -31,11 +31,31 @@ public class Progress
             PolicyType policyType,
             List<ConstructionProgress> constructions)
     {
+        this(
+                currentTick,
+                lastPolicyChangeTick,
+                budget,
+                policyType,
+                constructions,
+                false
+        );
+    }
+
+    public Progress(
+            int currentTick,
+            int lastPolicyChangeTick,
+            int budget,
+            PolicyType policyType,
+            List<ConstructionProgress> constructions,
+            boolean tsunamiInsuranceActive)
+    {
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
         this.budget = budget;
         this.policyType = policyType;
         this.constructions = constructions;
+        this.tsunamiInsuranceActive =
+                tsunamiInsuranceActive;
     }
 
     /* Crea lo stato di salvataggio della partita
@@ -76,7 +96,8 @@ public class Progress
                 simulation.getLastPolicyChangeTick(),
                 city.getBudget(),
                 city.getCurrentPolicy().getType(),
-                savedConstructions
+                savedConstructions,
+                simulation.isTsunamiInsuranceActive()
         );
     }
 
@@ -103,6 +124,11 @@ public class Progress
     public List<ConstructionProgress> getConstructions()
     {
         return constructions;
+    }
+
+    public boolean isTsunamiInsuranceActive()
+    {
+        return tsunamiInsuranceActive;
     }
 
     /* Ricostruisce la griglia utilizzando le costruzioni salvate
@@ -153,7 +179,8 @@ public class Progress
                 restoredPolicy,
                 budget,
                 currentTick,
-                lastPolicyChangeTick
+                lastPolicyChangeTick,
+                tsunamiInsuranceActive
         );
     }
 

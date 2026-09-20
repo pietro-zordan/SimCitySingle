@@ -220,12 +220,27 @@ public final class GridView
 
                 // La modalità resta attiva per permettere
                 // demolizioni consecutive con un solo clic sul pulsante.
-                infoLabel.setText(
-                        "Construction demolished at row "
-                                + row
-                                + ", column "
-                                + column
-                );
+                if (state.type() == ConstructionType.TERRORISTIC_GROUP)
+                {
+                    errorHandler.accept(
+                            "Terrorist group eliminated!"
+                    );
+                }
+                else if (state.type() == ConstructionType.CRIMINAL_ACTIVITY)
+                {
+                    errorHandler.accept(
+                            "Criminal activity eliminated!"
+                    );
+                }
+                else
+                {
+                    infoLabel.setText(
+                            "Construction demolished at row "
+                                    + row
+                                    + ", column "
+                                    + column
+                    );
+                }
             }
             catch (IllegalStateException
                    | IllegalArgumentException exception)
@@ -484,6 +499,11 @@ public final class GridView
     public void activateDemolition()
     {
         demolitionActive = true;
+    }
+
+    public void cancelDemolition()
+    {
+        demolitionActive = false;
     }
 
     // Mappa ed ottiene il colore identificativo associato a ciascun tipo di edificio sulla griglia.

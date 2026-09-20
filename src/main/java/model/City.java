@@ -45,13 +45,6 @@ public class City
             );
         }
 
-        if (initialBudget < 0)
-        {
-            throw new IllegalArgumentException(
-                    "The initial budget cannot be negative"
-            );
-        }
-
         this.grid = grid;
         this.currentPolicy = initialPolicy;
         this.budget = initialBudget;

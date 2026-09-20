@@ -5,12 +5,15 @@ import model.Cell;
 import model.City;
 import model.ConstructionType;
 import model.Grid;
+import model.ReconstructionEntry;
 import model.Residential;
+import model.Road;
 import model.Simulation;
 import org.junit.jupiter.api.Test;
 import policies.EnvironmentalPolicy;
 import policies.Policy;
 import policies.PolicyType;
+import policies.StandardPolicy;
 
 import java.util.List;
 
@@ -202,6 +205,98 @@ class ProgressTest {
         assertEquals(
                 ConstructionType.RESIDENTIAL,
                 controller.getCellState(5, 6).type()
+        );
+    }
+
+    @Test
+    void pendingTsunamiReconstructionSurvivesSaveAndLoad()
+    {
+        Grid grid =
+                new Grid();
+
+        grid.restoreConstruction(
+                new Road(),
+                10,
+                10
+        );
+
+        City city =
+                new City(
+                        grid,
+                        new StandardPolicy()
+                );
+
+        Simulation simulation =
+                new Simulation(
+                        city,
+                        grid,
+                        20,
+                        0,
+                        true
+                );
+
+        Residential damagedResidential =
+                new Residential();
+
+        damagedResidential.restoreState(
+                37,
+                4,
+                3,
+                0.0,
+                0
+        );
+
+        damagedResidential.setTsunamiInsured(
+                true
+        );
+
+        simulation.restoreTsunamiReconstruction(
+                List.of(
+                        new ReconstructionEntry(
+                                damagedResidential,
+                                0,
+                                5
+                        )
+                ),
+                "UP"
+        );
+
+        Progress progress =
+                Progress.fromGame(
+                        grid,
+                        city,
+                        simulation
+                );
+
+        assertEquals(
+                1,
+                progress
+                        .getPendingTsunamiReconstructions()
+                        .size()
+        );
+
+        assertEquals(
+                "UP",
+                progress
+                        .getTsunamiReconstructionDirection()
+        );
+
+        Controller restoredController =
+                progress.restoreController();
+
+        assertTrue(
+                restoredController
+                        .getCellState(0, 5)
+                        .empty()
+        );
+
+        restoredController.updateOfOneTick();
+
+        assertEquals(
+                ConstructionType.RESIDENTIAL,
+                restoredController
+                        .getCellState(0, 5)
+                        .type()
         );
     }
 

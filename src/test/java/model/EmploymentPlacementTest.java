@@ -17,6 +17,15 @@ class EmploymentPlacementTest
     }
 
     @Test
+    void industrialCannotBePlacedWhenPollutionLimitIsReached()
+    {
+        Industrial industrial = new Industrial();
+
+        assertTrue(industrial.isPlacementAllowed(1999, 100));
+        assertFalse(industrial.isPlacementAllowed(2000, 100));
+    }
+
+    @Test
     void industrialRequiresOneHundredUnemployedCitizens()
     {
         Industrial industrial = new Industrial();

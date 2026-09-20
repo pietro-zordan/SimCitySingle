@@ -138,4 +138,8 @@ public class Residential extends Construction
     {
         return MAINTENANCE_COST;
     }
+
+    public void setPopulationDecreaseRate(int populationDecreaseRate) {
+        this.populationDecreaseRate = populationDecreaseRate;
+    }
 }

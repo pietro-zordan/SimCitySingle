@@ -28,6 +28,7 @@ public class Simulation{
     private final BankManager bankManager;
     private final InsuranceManager insuranceManager;
     private final TerrorManager terrorManager;
+    private boolean terroristicGroupCreated;
 
     private final CrimeManager crimeManager;
     private int removedCriminalActivities;
@@ -230,7 +231,7 @@ public class Simulation{
                 city.getMaintenance()
         );
 
-        terrorManager.updateOfOneTick();
+        terroristicGroupCreated = terrorManager.updateOfOneTick();
 
         return criminalActivityCreated;
     }
@@ -455,6 +456,11 @@ public class Simulation{
     public int getRemovedCriminalActivities()
     {
         return removedCriminalActivities;
+    }
+
+    public boolean wasTerroristicGroupCreated()
+    {
+        return terroristicGroupCreated;
     }
 
 }

@@ -205,7 +205,13 @@ public final class GameView implements GameObserver
                         boolean criminalActivityCreated =
                                 controller.updateOfOneTick();
 
-                        if (controller.getRemovedCriminalActivities() > 0)
+                        if (controller.wasTerroristicGroupCreated())
+                        {
+                            showToast(
+                                    "Warning: a terrorist group has appeared!"
+                            );
+                        }
+                        else if (controller.getRemovedCriminalActivities() > 0)
                         {
                             showToast(
                                     "Attività criminale eliminata!"

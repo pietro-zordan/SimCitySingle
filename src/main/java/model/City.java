@@ -178,18 +178,20 @@ public class City
 
     /* Controlla popolazione e budget, crea la costruzione richiesta
        e delega alla griglia la verifica della posizione. */
-    public void placeConstruction(ConstructionType type, int row, int column)
+    public void placeConstruction(
+            Construction construction,
+            int row,
+            int column)
     {
-        if (type == null)
+        if (construction == null)
         {
             throw new IllegalArgumentException(
-                    "model.Construction type cannot be null"
+                    "Construction cannot be null"
             );
         }
 
-        Construction construction = ConstructionFactory.create(type);
-
-        int cost = calculatePlacementCost(construction);
+        int cost =
+                calculatePlacementCost(construction);
 
         if (!construction.isPlacementAllowed(
                 pollution,
@@ -207,12 +209,18 @@ public class City
         {
             throw new IllegalStateException(
                     "Insufficient budget: this construction costs "
-                            + (-cost) + " but only " + budget + " is available"
+                            + (-cost)
+                            + " but only "
+                            + budget
+                            + " is available"
             );
         }
 
-        // Grid controlla la posizione, la cella e il collegamento alla strada.
-        grid.placeConstruction(construction, row, column);
+        grid.placeConstruction(
+                construction,
+                row,
+                column
+        );
 
         updateBudget(cost);
         recalculateStatistics();

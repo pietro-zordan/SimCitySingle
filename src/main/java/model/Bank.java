@@ -21,6 +21,10 @@ public class Bank extends Construction
         return 50;
     }
 
-
+    @Override
+    public int getUnlockTick()
+    {
+        return 30;
+    }
 
 }

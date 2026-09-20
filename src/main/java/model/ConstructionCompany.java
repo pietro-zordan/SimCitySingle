@@ -16,4 +16,10 @@ public class ConstructionCompany extends Construction
     public int getPollutionImpact() {
         return 150;
     }
+
+    @Override
+    public int getUnlockTick()
+    {
+        return 40;
+    }
 }

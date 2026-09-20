@@ -4,7 +4,7 @@ public class PoliceStation extends Construction{
 
     public PoliceStation()
     {
-        super(0, 200, 1200);
+        super(0, 200, -1200);
     }
 
     @Override
@@ -22,5 +22,11 @@ public class PoliceStation extends Construction{
     @Override
     public ConstructionType getType() {
         return ConstructionType.POLICE_STATION;
+    }
+
+    @Override
+    public int getUnlockTick()
+    {
+        return 50;
     }
 }

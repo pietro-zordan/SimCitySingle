@@ -117,13 +117,39 @@ class CityTest {
     }
 
     @Test
-    void testPlaceConstructionTypeNullOrInsufficientBudget() {
-        assertThrows(IllegalArgumentException.class, () -> city.placeConstruction(null, 0, 0));
+    void testPlaceConstructionNullOrInsufficientBudget()
+    {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> city.placeConstruction(
+                        null,
+                        0,
+                        0
+                )
+        );
 
-        City poorCity = new City(grid, new DummyPolicy(-500, 0), 10);
+        City poorCity =
+                new City(
+                        grid,
+                        new DummyPolicy(-500, 0),
+                        10
+                );
 
-        assertThrows(IllegalStateException.class, () -> poorCity.placeConstruction(ConstructionType.RESIDENTIAL, 0, 0));
+        Construction residential =
+                new Residential();
 
-        assertEquals(10, poorCity.getBudget());
+        assertThrows(
+                IllegalStateException.class,
+                () -> poorCity.placeConstruction(
+                        residential,
+                        0,
+                        0
+                )
+        );
+
+        assertEquals(
+                10,
+                poorCity.getBudget()
+        );
     }
 }

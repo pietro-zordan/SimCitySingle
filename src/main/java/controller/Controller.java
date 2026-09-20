@@ -125,29 +125,42 @@ public final class Controller
      * Unico metodo che la GUI deve usare per costruire.
      * La GUI non deve più chiamare model.Cell.placeConstruction().
      */
-    public CellState placeConstruction(ConstructionType type, int row, int column)
+    public CellState placeConstruction(
+            ConstructionType type,
+            int row,
+            int column)
     {
-
-        if (type == ConstructionType.BANK
-                && !simulation.canPlaceBank())
+        if (type == null)
         {
-            throw new IllegalStateException(
-                    "Bank is available from tick 30"
+            throw new IllegalArgumentException(
+                    "Construction type cannot be null"
             );
         }
 
-        if (type == ConstructionType.CONSTRUCTION_COMPANY
-                && !simulation.canPlaceConstructionCompany())
+        Construction construction =
+                ConstructionFactory.create(type);
+
+        if (simulation.getCurrentTick()
+                < construction.getUnlockTick())
         {
             throw new IllegalStateException(
-                    "Construction Company is available from tick 40"
+                    "This construction is available from tick "
+                            + construction.getUnlockTick()
             );
         }
 
-        city.placeConstruction(type, row, column);
+        city.placeConstruction(
+                construction,
+                row,
+                column
+        );
+
         notifyObservers();
 
-        return getCellState(row, column);
+        return getCellState(
+                row,
+                column
+        );
     }
 
     /*

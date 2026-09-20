@@ -214,4 +214,9 @@ public abstract class Construction {
         return "Construction cannot be placed";
     }
 
+    public int getUnlockTick()
+    {
+        return 0;
+    }
+
 }

@@ -10,8 +10,12 @@ public class TerrorManager {
     private final Grid grid;
     private static final int KILLS_PER_GROUP = 5;
     private static final int HAPPINESS_THRESHOLD = -50;
+    private static final int NUM_OF_SADNESS_TICKS = 5;
+    private static final int SPAWN_COOLDOWN = 10;
+    private static final int MAX_GROUPS = 3;
+
     private int sadnessTicks = 0;
-    private static final int NUM_OF_SADNESS_TICKS = 1;
+    private int spawnCooldown = 0;
 
     public TerrorManager(City city, Grid grid)
     {
@@ -32,6 +36,9 @@ public class TerrorManager {
 
     public boolean updateOfOneTick()
     {
+        if (spawnCooldown > 0)
+            spawnCooldown--;
+
         if (city.getGlobalHappiness() < HAPPINESS_THRESHOLD)
             sadnessTicks++;
         else
@@ -39,10 +46,15 @@ public class TerrorManager {
 
         boolean groupCreated = false;
 
-        if (sadnessTicks >= NUM_OF_SADNESS_TICKS)
+        if (sadnessTicks >= NUM_OF_SADNESS_TICKS && canPlaceTG())
         {
             groupCreated = placeTG();
-            sadnessTicks = 0;
+
+            if (groupCreated)
+            {
+                spawnCooldown = SPAWN_COOLDOWN;
+                sadnessTicks = 0;
+            }
         }
 
         if (getNumOfTG() > 0)
@@ -123,7 +135,9 @@ public class TerrorManager {
 
     public boolean canPlaceTG()
     {
-        
+        return spawnCooldown == 0
+                && getNumOfTG() < MAX_GROUPS
+                && grid.getBuildableCells().size() > 1;
     }
 
 

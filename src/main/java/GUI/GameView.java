@@ -723,16 +723,20 @@ public final class GameView implements GameObserver
                 controller
                         .getTsunamiInsuranceDiscountPercentage();
 
+        String action =
+                controller.isTsunamiInsuranceActive()
+                        ? "Extend tsunami insurance"
+                        : "Activate tsunami insurance";
+
         tsunamiInsuranceInfoLabel.setText(
-                "Buildings covered: "
+                action
+                        + "\nBuildings to cover: "
                         + coveredBuildings
                         + "\nBank discount: "
                         + discount
                         + "%\nCost: "
                         + cost
                         + " €"
-                        + "\nNew buildings in the tsunami risk area "
-                        + "will be covered automatically with an extra cost."
         );
 
         tsunamiInsuranceBox.setVisible(
@@ -1031,24 +1035,37 @@ public final class GameView implements GameObserver
                 controller
                         .isTsunamiInsuranceActive();
 
+        boolean canApplyInsurance =
+                controller
+                        .canBuyTsunamiInsurance();
+
         tsunamiInsuranceButton.setDisable(
-                insuranceActive
+                !canApplyInsurance
         );
 
-        if (insuranceActive)
+        if (!canApplyInsurance)
         {
-            tsunamiInsuranceButton.setText(
-                    "Tsunami insurance active"
-            );
-
             tsunamiInsuranceBox.setVisible(
                     false
+            );
+        }
+
+        if (!insuranceActive)
+        {
+            tsunamiInsuranceButton.setText(
+                    "Tsunami insurance"
+            );
+        }
+        else if (canApplyInsurance)
+        {
+            tsunamiInsuranceButton.setText(
+                    "Extend tsunami insurance"
             );
         }
         else
         {
             tsunamiInsuranceButton.setText(
-                    "Tsunami insurance"
+                    "Tsunami insurance up to date"
             );
         }
     }

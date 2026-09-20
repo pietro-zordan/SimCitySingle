@@ -118,6 +118,38 @@ class CityTest {
     }
 
     @Test
+    void unemploymentNeverBecomesNegative()
+    {
+        Grid employmentGrid =
+                new Grid();
+
+        employmentGrid.restoreConstruction(
+                new Residential(),
+                5,
+                5
+        );
+
+        employmentGrid.restoreConstruction(
+                new Industrial(),
+                5,
+                6
+        );
+
+        City employmentCity =
+                new City(
+                        employmentGrid,
+                        defaultPolicy,
+                        2500
+                );
+
+        assertEquals(
+                0,
+                employmentCity
+                        .getGlobalUnemployed()
+        );
+    }
+
+    @Test
     void testPlaceConstructionNullOrInsufficientBudget()
     {
         assertThrows(

@@ -48,4 +48,35 @@ class TerrorManagerTest
         assertTrue(grid.getCell(10, 11).isEmpty());
         assertEquals(0, city.getGlobalPopulation());
     }
+
+    @Test
+    void terrorSpawnWorksWithNegativeBudget()
+    {
+        Grid grid = new Grid();
+
+        grid.restoreConstruction(new Road(), 10, 10);
+        grid.restoreConstruction(new CriminalActivity(), 10, 11);
+
+        City city =
+                new City(
+                        grid,
+                        new StandardPolicy(),
+                        -100
+                );
+
+        TerrorManager terrorManager =
+                new TerrorManager(city, grid);
+
+        assertTrue(
+                terrorManager.updateOfOneTick()
+        );
+        assertEquals(
+                1,
+                terrorManager.getNumOfTG()
+        );
+        assertEquals(
+                -100,
+                city.getBudget()
+        );
+    }
 }

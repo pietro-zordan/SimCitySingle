@@ -61,7 +61,7 @@ public final class Controller
         this.simulation = new Simulation(city, grid);
     }
 
-    // Crea un controller ripristinando i dati di una partita salvata.
+    // Crea un controller ripristinando i dati essenziali di un vecchio salvataggio.
     public Controller(
             Grid grid,
             Policy initialPolicy,
@@ -90,6 +90,48 @@ public final class Controller
                 grid,
                 currentTick,
                 lastPolicyChangeTick
+        );
+    }
+
+    // Crea un controller ripristinando anche prestito e debito residuo.
+    public Controller(
+            Grid grid,
+            Policy initialPolicy,
+            int budget,
+            int currentTick,
+            int lastPolicyChangeTick,
+            boolean loanActive,
+            int loanAmount,
+            int loanStartTick,
+            int lastLoanTick,
+            int remainingDebt)
+    {
+        this.grid = Objects.requireNonNull(
+                grid,
+                "model.Grid cannot be null"
+        );
+
+        Objects.requireNonNull(
+                initialPolicy,
+                "Initial policy cannot be null"
+        );
+
+        this.city = new City(
+                grid,
+                initialPolicy,
+                budget
+        );
+
+        this.simulation = new Simulation(
+                city,
+                grid,
+                currentTick,
+                lastPolicyChangeTick,
+                loanActive,
+                loanAmount,
+                loanStartTick,
+                lastLoanTick,
+                remainingDebt
         );
     }
 

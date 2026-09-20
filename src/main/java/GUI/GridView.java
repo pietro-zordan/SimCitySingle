@@ -123,12 +123,11 @@ public final class GridView
                 tsunamiIcon.setVisible(false);
                 tsunamiIcon.setMouseTransparent(true);
 
-                Label grassIcon = new Label("🍃");
+                Label grassIcon = new Label("❧");
                 grassIcon.setStyle(
-                        "-fx-font-size: 22px;"
-                                + "-fx-background-color: rgba(255,255,255,0.65);"
-                                + "-fx-background-radius: 10;"
-                                + "-fx-padding: 0 1 0 1;"
+                        "-fx-text-fill: #2F5D31;"
+                                + "-fx-font-size: 21px;"
+                                + "-fx-font-weight: bold;"
                 );
                 grassIcon.setVisible(false);
                 grassIcon.setMouseTransparent(true);
@@ -375,6 +374,13 @@ public final class GridView
             graphicCell.setStroke(Color.PURPLE); // Cambiato in viola per non confondersi
             graphicCell.setStrokeWidth(2.5);
         }
+        else if (grassPresent)
+        {
+            graphicCell.setStroke(
+                    Color.web("#6F8F55")
+            );
+            graphicCell.setStrokeWidth(1.5);
+        }
         else
         {
             // Altrimenti ripristiniamo il bordo grigio standard
@@ -472,7 +478,7 @@ public final class GridView
             case CONSTRUCTION_COMPANY -> Color.BROWN;
             case CRIMINAL_ACTIVITY -> Color.BLACK;
             case POLICE_STATION -> Color.DARKBLUE;
-            case GRASS -> Color.YELLOWGREEN;
+            case GRASS -> Color.web("#9DBB7A");
         };
     }
 

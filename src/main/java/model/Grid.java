@@ -362,6 +362,8 @@ public class Grid
                 }
             }
         }
+
+        fillTrappedCellsWithGrass();
     }
 
     // Restituisce tutte le centrali presenti nella griglia.
@@ -578,11 +580,15 @@ public class Grid
 
 
     /*
-     * Riempie con erba le zone vuote che non possono più essere raggiunte
-     * estendendo la rete stradale esistente.
+     * Riempie con erba le celle rimaste inutilizzabili:
+     * sia i piccoli vicoli ciechi, sia le zone vuote completamente isolate
+     * dalla rete stradale.
      */
     private void fillTrappedCellsWithGrass()
     {
+        Set<Cell> cellsToFill =
+                new HashSet<>();
+
         boolean[][] visited =
                 new boolean[N_ROW][N_COL];
 
@@ -590,8 +596,17 @@ public class Grid
         {
             for (int column = 0; column < N_COL; column++)
             {
+                Cell cell = cells[row][column];
+
+                if (cell.isEmpty()
+                        && !hasAdjacentRoad(cell)
+                        && countBlockedSides(row, column) >= 3)
+                {
+                    cellsToFill.add(cell);
+                }
+
                 if (visited[row][column]
-                        || !cells[row][column].isEmpty())
+                        || !cell.isEmpty())
                 {
                     continue;
                 }
@@ -602,10 +617,7 @@ public class Grid
                 ArrayDeque<Cell> pendingCells =
                         new ArrayDeque<>();
 
-                pendingCells.add(
-                        cells[row][column]
-                );
-
+                pendingCells.add(cell);
                 visited[row][column] = true;
 
                 boolean reachableFromRoad = false;
@@ -648,15 +660,54 @@ public class Grid
 
                 if (!reachableFromRoad)
                 {
-                    for (Cell trappedCell : emptyArea)
-                    {
-                        trappedCell.placeConstruction(
-                                new Grass()
-                        );
-                    }
+                    cellsToFill.addAll(emptyArea);
                 }
             }
         }
+
+        for (Cell cell : cellsToFill)
+        {
+            if (cell.isEmpty())
+            {
+                cell.placeConstruction(
+                        new Grass()
+                );
+            }
+        }
+    }
+
+    /*
+     * Conta i lati realmente bloccati da costruzioni o dal bordo.
+     * L'erba già creata non provoca la comparsa a catena di altra erba.
+     */
+    private int countBlockedSides(int row, int column)
+    {
+        int blockedSides = 0;
+
+        for (int[] direction : ORTHOGONAL_DIRECTIONS)
+        {
+            int newRow = row + direction[0];
+            int newColumn = column + direction[1];
+
+            if (!isInside(newRow, newColumn))
+            {
+                blockedSides++;
+                continue;
+            }
+
+            Construction construction =
+                    cells[newRow][newColumn]
+                            .getConstruction();
+
+            if (construction != null
+                    && construction.getType()
+                    != ConstructionType.GRASS)
+            {
+                blockedSides++;
+            }
+        }
+
+        return blockedSides;
     }
 
 

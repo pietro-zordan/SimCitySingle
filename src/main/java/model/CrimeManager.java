@@ -15,6 +15,8 @@ public class CrimeManager
     private final Grid grid;
     private int numOfPoliceStation=0;
     private int maxRemoval=0;
+    private int lastPoliceRemovalTick = -1;
+    private static final int POLICE_REMOVAL_INTERVAL = 15;
 
     public CrimeManager(City city, Grid grid)
     {
@@ -91,16 +93,22 @@ public class CrimeManager
                 randomCell.getRow(),
                 randomCell.getColumn()
         );
-        
+
         return true;
     }
 
     public int getNumOfPoliceStation()
     {
-        for (Construction construction : grid.getConstructions())
+        int numOfPoliceStation = 0;
+
+        for (Construction construction
+                : grid.getConstructions())
         {
-            if (construction instanceof PoliceStation)
+            if (construction instanceof PoliceStation
+                    && construction.isPowered())
+            {
                 numOfPoliceStation++;
+            }
         }
 
         return numOfPoliceStation;
@@ -108,15 +116,104 @@ public class CrimeManager
 
     public int getMaxRemoval()
     {
-
+        return getNumOfPoliceStation();
     }
 
-    public void destroyCriminalActivity()
+    private List<Cell> getCriminalActivities()
     {
-        if(!criminalActivities.isEmpty())
-            criminalActivities.remove(0);
+        List<Cell> criminalActivities =
+                new ArrayList<>();
 
+        for (int row = 0;
+             row < grid.getNumberOfRows();
+             row++)
+        {
+            for (int column = 0;
+                 column < grid.getNumberOfColumns();
+                 column++)
+            {
+                Cell cell =
+                        grid.getCell(row, column);
+
+                if (!cell.isEmpty()
+                        && cell.getConstruction()
+                        instanceof CriminalActivity)
+                {
+                    criminalActivities.add(cell);
+                }
+            }
+        }
+
+        return criminalActivities;
     }
 
+    public boolean destroyCriminalActivity()
+    {
+        List<Cell> criminalActivities =
+                getCriminalActivities();
+
+        if (criminalActivities.isEmpty())
+        {
+            return false;
+        }
+
+        int randomIndex =
+                random.nextInt(
+                        criminalActivities.size()
+                );
+
+        Cell criminalCell =
+                criminalActivities.get(
+                        randomIndex
+                );
+
+        grid.removeConstruction(
+                criminalCell.getRow(),
+                criminalCell.getColumn()
+        );
+
+        return true;
+    }
+
+    public int tryToDestroyCriminalActivities(
+            int currentTick)
+    {
+        int maxRemoval =
+                getMaxRemoval();
+
+        if (maxRemoval == 0)
+        {
+            lastPoliceRemovalTick = -1;
+            return 0;
+        }
+
+        if (lastPoliceRemovalTick == -1)
+        {
+            lastPoliceRemovalTick =
+                    currentTick;
+
+            return 0;
+        }
+
+        if (currentTick
+                - lastPoliceRemovalTick
+                < POLICE_REMOVAL_INTERVAL)
+        {
+            return 0;
+        }
+
+        int removed = 0;
+
+        while (removed < maxRemoval
+                && destroyCriminalActivity())
+        {
+            removed++;
+        }
+
+        lastPoliceRemovalTick =
+                currentTick;
+
+        return removed;
+    }
 
 }

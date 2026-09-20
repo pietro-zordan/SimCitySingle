@@ -103,7 +103,7 @@ public final class GridView
                 boostIcon.setStyle(
                         "-fx-text-fill: #32CD32;"
                                 + "-fx-font-weight: bold;"
-                                + "-fx-font-size: 14px;"
+                                + "-fx-font-size: 22px;"
                 );
                 boostIcon.setVisible(false);
                 boostIcon.setMouseTransparent(true);

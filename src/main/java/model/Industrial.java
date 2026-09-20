@@ -67,7 +67,7 @@ public class Industrial extends EconomicBuilding{
         return ConstructionType.INDUSTRIAL;
     }
 
-    private static final int MAINTENANCE_COST = 150;
+    private static final int MAINTENANCE_COST = 200;
 
     @Override
     public int getMaintenanceCost()

@@ -69,10 +69,15 @@ public class InsuranceManager
         return grid.getNumberOfBanks() > 0;
     }
 
+    /*
+     * Non esiste un cooldown temporale:
+     * l'assicurazione può essere acquistata/estesa ogni volta
+     * che esistono nuovi edifici a rischio non ancora coperti.
+     */
     public boolean canBuyTsunamiInsurance()
     {
         return hasBanks()
-                && !tsunamiInsuranceActive;
+                && getTsunamiInsuranceBuildingCount() > 0;
     }
 
     public boolean isTsunamiInsuranceActive()
@@ -81,8 +86,8 @@ public class InsuranceManager
     }
 
     /*
-     * Il prezzo iniziale considera solo gli edifici realmente raggiungibili
-     * dallo tsunami, cioè quelli nelle quattro fasce esterne della mappa.
+     * Il costo comprende soltanto gli edifici a rischio
+     * che non sono già assicurati.
      */
     public int getTsunamiInsuranceCost()
     {
@@ -102,14 +107,10 @@ public class InsuranceManager
                                 column
                         ).getConstruction();
 
-                if (construction != null
-                        && isAtTsunamiRisk(
-                                row,
-                                column
-                        )
-                        && isInsurable(
-                                construction.getType()
-                        ))
+                if (needsTsunamiCoverage(
+                        construction,
+                        row,
+                        column))
                 {
                     baseCost +=
                             getBuildingInsuranceCost(
@@ -125,6 +126,10 @@ public class InsuranceManager
         );
     }
 
+    /*
+     * Restituisce quanti edifici verrebbero coperti
+     * premendo Apply insurance in questo momento.
+     */
     public int getTsunamiInsuranceBuildingCount()
     {
         int count = 0;
@@ -143,14 +148,10 @@ public class InsuranceManager
                                 column
                         ).getConstruction();
 
-                if (construction != null
-                        && isAtTsunamiRisk(
-                                row,
-                                column
-                        )
-                        && isInsurable(
-                                construction.getType()
-                        ))
+                if (needsTsunamiCoverage(
+                        construction,
+                        row,
+                        column))
                 {
                     count++;
                 }
@@ -168,6 +169,10 @@ public class InsuranceManager
         );
     }
 
+    /*
+     * La prima applicazione assicura gli edifici presenti.
+     * Le applicazioni successive coprono soltanto quelli aggiunti dopo.
+     */
     public boolean buyTsunamiInsurance()
     {
         if (!canBuyTsunamiInsurance())
@@ -183,71 +188,14 @@ public class InsuranceManager
         }
 
         city.updateBudget(-cost);
+
+        insureCurrentlyUncoveredBuildings();
+
         tsunamiInsuranceActive = true;
 
         return true;
     }
 
-    /*
-     * Dopo l'acquisto ogni nuovo edificio assicurabile nella fascia tsunami
-     * viene coperto automaticamente pagando solo il relativo supplemento.
-     */
-    public int getAdditionalCoverageCost(
-            ConstructionType type,
-            int row,
-            int column)
-    {
-        if (!tsunamiInsuranceActive
-                || !isAtTsunamiRisk(row, column)
-                || !isInsurable(type))
-        {
-            return 0;
-        }
-
-        int numberOfBanks =
-                grid.getNumberOfBanks();
-
-        // Una nuova banca partecipa subito anche allo sconto.
-        if (type == ConstructionType.BANK)
-        {
-            numberOfBanks++;
-        }
-
-        return applyBankDiscount(
-                getBuildingInsuranceCost(type),
-                numberOfBanks
-        );
-    }
-
-    public void coverNewConstruction(
-            Construction construction,
-            int row,
-            int column,
-            int additionalCost)
-    {
-        if (!tsunamiInsuranceActive
-                || construction == null
-                || !isAtTsunamiRisk(row, column)
-                || !isInsurable(
-                        construction.getType()
-                ))
-        {
-            return;
-        }
-
-        if (additionalCost > 0)
-        {
-            city.updateBudget(
-                    -additionalCost
-            );
-        }
-    }
-
-    /*
-     * Con una polizza attiva tutti gli edifici assicurabili distrutti
-     * vengono ricostruiti: non serve applicare di nuovo l'assicurazione
-     * dopo aver costruito nuovi edifici.
-     */
     public void registerTsunamiDamage(
             List<ReconstructionEntry> destroyedBuildings,
             String direction)
@@ -264,14 +212,8 @@ public class InsuranceManager
                 : destroyedBuildings)
         {
             if (entry != null
-                    && isAtTsunamiRisk(
-                            entry.row(),
-                            entry.column()
-                    )
-                    && isInsurable(
-                            entry.construction()
-                                    .getType()
-                    ))
+                    && entry.construction()
+                            .isTsunamiInsured())
             {
                 reconstructionQueue.addLast(
                         entry
@@ -281,11 +223,6 @@ public class InsuranceManager
             }
         }
 
-        /*
-         * Durante la ricostruzione viene bloccata tutta la fascia colpita
-         * dallo tsunami, non soltanto le singole celle degli edifici distrutti.
-         * In questo modo non si possono aggiungere nemmeno nuove strade.
-         */
         if (hasCoveredDamage)
         {
             reserveTsunamiArea(
@@ -301,9 +238,8 @@ public class InsuranceManager
     }
 
     /*
-     * Ricostruisce un edificio assicurato per tick.
-     * Viene riutilizzato lo stesso oggetto distrutto, quindi conserva
-     * popolazione, crescita economica e gli altri parametri raggiunti.
+     * Ricostruisce un edificio assicurato per tick usando
+     * lo stesso oggetto e quindi gli stessi parametri precedenti.
      */
     public void updateReconstruction()
     {
@@ -343,6 +279,51 @@ public class InsuranceManager
         {
             finishReconstruction();
         }
+    }
+
+    private void insureCurrentlyUncoveredBuildings()
+    {
+        for (int row = 0;
+             row < grid.getNumberOfRows();
+             row++)
+        {
+            for (int column = 0;
+                 column < grid.getNumberOfColumns();
+                 column++)
+            {
+                Construction construction =
+                        grid.getCell(
+                                row,
+                                column
+                        ).getConstruction();
+
+                if (needsTsunamiCoverage(
+                        construction,
+                        row,
+                        column))
+                {
+                    construction.setTsunamiInsured(
+                            true
+                    );
+                }
+            }
+        }
+    }
+
+    private boolean needsTsunamiCoverage(
+            Construction construction,
+            int row,
+            int column)
+    {
+        return construction != null
+                && !construction.isTsunamiInsured()
+                && isAtTsunamiRisk(
+                        row,
+                        column
+                )
+                && isInsurable(
+                        construction.getType()
+                );
     }
 
     private void finishReconstruction()

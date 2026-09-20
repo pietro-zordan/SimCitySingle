@@ -21,7 +21,7 @@ public final class ChartView
     private final Button switchButton =
             new Button("➞Next Graph➞");
 
-    // Contiene i cinque grafici mostrati a rotazione.
+    // Contiene i sei grafici mostrati a rotazione.
     private final List<LineChart<Number, Number>> charts =
             new ArrayList<>();
 
@@ -36,6 +36,8 @@ public final class ChartView
             happinessSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number>
             unemployedSeries = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number>
+            energyConsumptionSeries = new XYChart.Series<>();
 
     private int currentChartIndex;
 
@@ -56,6 +58,7 @@ public final class ChartView
         createChart("Economy", economySeries);
         createChart("Happiness", happinessSeries);
         createChart("Unemployed", unemployedSeries);
+        createChart("Energy Consumption", energyConsumptionSeries);
 
         showOnlyCurrentChart();
 
@@ -135,6 +138,13 @@ public final class ChartView
                 new XYChart.Data<>(
                         tick,
                         controller.getUnemployed()
+                )
+        );
+
+        energyConsumptionSeries.getData().add(
+                new XYChart.Data<>(
+                        tick,
+                        controller.getEnergyConsumed()
                 )
         );
     }

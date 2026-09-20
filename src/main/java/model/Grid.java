@@ -578,56 +578,85 @@ public class Grid
 
 
     /*
-     * Riempie automaticamente con erba le celle vuote rimaste in un vicolo cieco:
-     * devono non avere una strada adiacente e avere almeno tre lati bloccati
-     * da costruzioni o dai bordi della griglia.
+     * Riempie con erba le zone vuote che non possono più essere raggiunte
+     * estendendo la rete stradale esistente.
      */
     private void fillTrappedCellsWithGrass()
     {
-        List<Cell> trappedCells = new ArrayList<>();
+        boolean[][] visited =
+                new boolean[N_ROW][N_COL];
 
         for (int row = 0; row < N_ROW; row++)
         {
             for (int column = 0; column < N_COL; column++)
             {
-                Cell cell = cells[row][column];
-
-                if (cell.isEmpty()
-                        && !hasAdjacentRoad(cell)
-                        && countBlockedSides(row, column) >= 3)
+                if (visited[row][column]
+                        || !cells[row][column].isEmpty())
                 {
-                    trappedCells.add(cell);
+                    continue;
+                }
+
+                List<Cell> emptyArea =
+                        new ArrayList<>();
+
+                ArrayDeque<Cell> pendingCells =
+                        new ArrayDeque<>();
+
+                pendingCells.add(
+                        cells[row][column]
+                );
+
+                visited[row][column] = true;
+
+                boolean reachableFromRoad = false;
+
+                while (!pendingCells.isEmpty())
+                {
+                    Cell currentCell =
+                            pendingCells.removeFirst();
+
+                    emptyArea.add(currentCell);
+
+                    if (hasAdjacentRoad(currentCell))
+                    {
+                        reachableFromRoad = true;
+                    }
+
+                    for (int[] direction
+                            : ORTHOGONAL_DIRECTIONS)
+                    {
+                        int newRow =
+                                currentCell.getRow()
+                                        + direction[0];
+
+                        int newColumn =
+                                currentCell.getColumn()
+                                        + direction[1];
+
+                        if (isInside(newRow, newColumn)
+                                && !visited[newRow][newColumn]
+                                && cells[newRow][newColumn].isEmpty())
+                        {
+                            visited[newRow][newColumn] = true;
+
+                            pendingCells.addLast(
+                                    cells[newRow][newColumn]
+                            );
+                        }
+                    }
+                }
+
+                if (!reachableFromRoad)
+                {
+                    for (Cell trappedCell : emptyArea)
+                    {
+                        trappedCell.placeConstruction(
+                                new Grass()
+                        );
+                    }
                 }
             }
         }
-
-        for (Cell cell : trappedCells)
-        {
-            cell.placeConstruction(new Grass());
-        }
-    }
-
-    // Conta i lati che non possono essere usati per raggiungere la cella.
-    private int countBlockedSides(int row, int column)
-    {
-        int blockedSides = 0;
-
-        for (int[] direction : ORTHOGONAL_DIRECTIONS)
-        {
-            int newRow = row + direction[0];
-            int newColumn = column + direction[1];
-
-            if (!isInside(newRow, newColumn))
-            {
-                blockedSides++;
-            }
-            else if (!getCell(newRow, newColumn).isEmpty())
-            {
-                blockedSides++;
-            }
-        }
-
-        return blockedSides;
     }
 
 

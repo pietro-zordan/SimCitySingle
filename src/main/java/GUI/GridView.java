@@ -32,6 +32,7 @@ public final class GridView
     private final Label[][] noPowerIcons;
     private final Label[][] boostIcons;
     private final Label[][] tsunamiIcons;
+    private final Label[][] grassIcons;
     private final Tooltip[][] grassTooltips;
 
     private ConstructionType selectedType =
@@ -73,6 +74,7 @@ public final class GridView
         noPowerIcons = new Label[rows][columns];
         boostIcons = new Label[rows][columns];
         tsunamiIcons = new Label[rows][columns];
+        grassIcons = new Label[rows][columns];
         grassTooltips = new Tooltip[rows][columns];
 
         // Popolamento celle griglia
@@ -121,6 +123,13 @@ public final class GridView
                 tsunamiIcon.setVisible(false);
                 tsunamiIcon.setMouseTransparent(true);
 
+                Label grassIcon = new Label("🍃");
+                grassIcon.setStyle(
+                        "-fx-font-size: 16px;"
+                );
+                grassIcon.setVisible(false);
+                grassIcon.setMouseTransparent(true);
+
                 Tooltip grassTooltip = new Tooltip("Grass");
                 grassTooltip.setShowDelay(
                         Duration.millis(100)
@@ -133,7 +142,8 @@ public final class GridView
                         graphicCell,
                         noPowerIcon,
                         boostIcon,
-                        tsunamiIcon
+                        tsunamiIcon,
+                        grassIcon
                 );
 
                 final int selectedRow = row;
@@ -158,6 +168,7 @@ public final class GridView
                 noPowerIcons[row][column] = noPowerIcon;
                 boostIcons[row][column] = boostIcon;
                 tsunamiIcons[row][column] = tsunamiIcon;
+                grassIcons[row][column] = grassIcon;
                 grassTooltips[row][column] = grassTooltip;
 
                 view.add(cell, column, row);
@@ -316,13 +327,21 @@ public final class GridView
                 !state.empty() && state.boosted()
         );
 
+        boolean grassPresent =
+                !state.empty()
+                        && state.type()
+                        == ConstructionType.GRASS;
+
+        grassIcons[row][column].setVisible(
+                grassPresent
+        );
+
         Tooltip.uninstall(
                 cells[row][column],
                 grassTooltips[row][column]
         );
 
-        if (!state.empty()
-                && state.type() == ConstructionType.GRASS)
+        if (grassPresent)
         {
             Tooltip.install(
                     cells[row][column],

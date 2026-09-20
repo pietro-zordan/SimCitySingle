@@ -9,9 +9,9 @@ public class TerrorManager {
     private final City city;
     private final Grid grid;
     private static final int KILLS_PER_GROUP = 5;
-    private static final int HAPPINESS_THRESHOLD = -500;
+    private static final int HAPPINESS_THRESHOLD = -50;
     private int sadnessTicks = 0;
-    private static final int NUM_OF_SADNESS_TICKS = 5;
+    private static final int NUM_OF_SADNESS_TICKS = 1;
 
     public TerrorManager(City city, Grid grid)
     {
@@ -43,7 +43,7 @@ public class TerrorManager {
             sadnessTicks = 0;
         }
 
-        if (getNumOfTC() > 0)
+        if (getNumOfTG() > 0)
             killPeople();
     }
 
@@ -75,7 +75,7 @@ public class TerrorManager {
         int index = random.nextInt(houses.size());
         Residential randomHouse = houses.get(index);
 
-        int numberOfGroups = getNumOfTC();
+        int numberOfGroups = getNumOfTG();
         int peopleToKill = KILLS_PER_GROUP * numberOfGroups;
 
         randomHouse.decreasePopulationBy(peopleToKill);
@@ -98,7 +98,7 @@ public class TerrorManager {
         city.placeConstruction(group, cell.getRow(), cell.getColumn());
     }
 
-    public int getNumOfTC()
+    public int getNumOfTG()
     {
         int count = 0;
 
@@ -114,7 +114,10 @@ public class TerrorManager {
     }
 
 
-
+    public boolean canPlaceTG()
+    {
+        
+    }
 
 
 

@@ -37,7 +37,8 @@ public final class ConstructionToolbarView
             ConstructionType.COMMERCIAL,
             ConstructionType.BANK,
             ConstructionType.CONSTRUCTION_COMPANY,
-            ConstructionType.POLICE_STATION
+            ConstructionType.POLICE_STATION,
+            ConstructionType.TERRORISTIC_GROUP
     );
 
     private final Controller controller;
@@ -181,6 +182,7 @@ public final class ConstructionToolbarView
             case CRIMINAL_ACTIVITY -> "Criminal Activity";
             case POLICE_STATION -> "Police station";
             case GRASS -> "Grass";
+            case TERRORISTIC_GROUP -> "Terroristic Group";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -200,6 +202,7 @@ public final class ConstructionToolbarView
             case CRIMINAL_ACTIVITY -> Color.BLACK;
             case POLICE_STATION -> Color.DARKBLUE;
             case GRASS -> Color.PALEGREEN;
+            case TERRORISTIC_GROUP -> Color.DARKRED;
         };
     }
 

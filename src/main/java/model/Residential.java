@@ -139,7 +139,13 @@ public class Residential extends Construction
         return MAINTENANCE_COST;
     }
 
-    public void setPopulationDecreaseRate(int populationDecreaseRate) {
-        this.populationDecreaseRate = populationDecreaseRate;
+    public void decreasePopulationBy(int amount)
+    {
+        population -= amount;
+
+        if (population < 0)
+        {
+            population = 0;
+        }
     }
 }

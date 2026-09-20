@@ -27,6 +27,7 @@ public class Simulation{
     private final BankruptcyManager bankruptcyManager;
     private final BankManager bankManager;
     private final InsuranceManager insuranceManager;
+    private final TerrorManager terrorManager;
 
     private final CrimeManager crimeManager;
     private int removedCriminalActivities;
@@ -99,18 +100,11 @@ public class Simulation{
         this.grid = grid;
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
-        this.bankruptcyManager =
-                new BankruptcyManager();
-        this.bankManager =
-                new BankManager(city, grid);
-        this.insuranceManager =
-                new InsuranceManager(
-                        city,
-                        grid,
-                        tsunamiInsuranceActive
-                );
-        this.crimeManager =
-                new CrimeManager(city, grid);
+        this.bankruptcyManager = new BankruptcyManager();
+        this.bankManager = new BankManager(city, grid);
+        this.insuranceManager = new InsuranceManager(city, grid, tsunamiInsuranceActive);
+        this.terrorManager = new TerrorManager(city, grid);
+        this.crimeManager = new CrimeManager(city, grid);
     }
 
     // Controlla se sono trascorsi almeno dodici tick dall'ultimo cambio di policy.
@@ -235,6 +229,8 @@ public class Simulation{
                 city.getGlobalEconomy(),
                 city.getMaintenance()
         );
+
+        terrorManager.updateOfOneTick();
 
         return criminalActivityCreated;
     }

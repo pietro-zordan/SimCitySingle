@@ -142,6 +142,7 @@ public class Grid
         }
 
         updatePowerConnections();
+        fillTrappedCellsWithGrass();
 
     }
 
@@ -574,5 +575,60 @@ public class Grid
 
         return new ArrayList<>(buildable);
     }
+
+
+    /*
+     * Riempie automaticamente con erba le celle vuote rimaste in un vicolo cieco:
+     * devono non avere una strada adiacente e avere almeno tre lati bloccati
+     * da costruzioni o dai bordi della griglia.
+     */
+    private void fillTrappedCellsWithGrass()
+    {
+        List<Cell> trappedCells = new ArrayList<>();
+
+        for (int row = 0; row < N_ROW; row++)
+        {
+            for (int column = 0; column < N_COL; column++)
+            {
+                Cell cell = cells[row][column];
+
+                if (cell.isEmpty()
+                        && !hasAdjacentRoad(cell)
+                        && countBlockedSides(row, column) >= 3)
+                {
+                    trappedCells.add(cell);
+                }
+            }
+        }
+
+        for (Cell cell : trappedCells)
+        {
+            cell.placeConstruction(new Grass());
+        }
+    }
+
+    // Conta i lati che non possono essere usati per raggiungere la cella.
+    private int countBlockedSides(int row, int column)
+    {
+        int blockedSides = 0;
+
+        for (int[] direction : ORTHOGONAL_DIRECTIONS)
+        {
+            int newRow = row + direction[0];
+            int newColumn = column + direction[1];
+
+            if (!isInside(newRow, newColumn))
+            {
+                blockedSides++;
+            }
+            else if (!getCell(newRow, newColumn).isEmpty())
+            {
+                blockedSides++;
+            }
+        }
+
+        return blockedSides;
+    }
+
 
 }

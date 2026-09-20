@@ -8,11 +8,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.ConstructionType;
 
 // La classe GridView gestisce la rappresentazione grafica della griglia di gioco 2D.
@@ -30,6 +32,7 @@ public final class GridView
     private final Label[][] noPowerIcons;
     private final Label[][] boostIcons;
     private final Label[][] tsunamiIcons;
+    private final Tooltip[][] grassTooltips;
 
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
@@ -70,6 +73,7 @@ public final class GridView
         noPowerIcons = new Label[rows][columns];
         boostIcons = new Label[rows][columns];
         tsunamiIcons = new Label[rows][columns];
+        grassTooltips = new Tooltip[rows][columns];
 
         // Popolamento celle griglia
         createCells();
@@ -117,6 +121,14 @@ public final class GridView
                 tsunamiIcon.setVisible(false);
                 tsunamiIcon.setMouseTransparent(true);
 
+                Tooltip grassTooltip = new Tooltip("Grass");
+                grassTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+                grassTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
                 StackPane cell = new StackPane(
                         graphicCell,
                         noPowerIcon,
@@ -146,6 +158,7 @@ public final class GridView
                 noPowerIcons[row][column] = noPowerIcon;
                 boostIcons[row][column] = boostIcon;
                 tsunamiIcons[row][column] = tsunamiIcon;
+                grassTooltips[row][column] = grassTooltip;
 
                 view.add(cell, column, row);
             }
@@ -303,6 +316,20 @@ public final class GridView
                 !state.empty() && state.boosted()
         );
 
+        Tooltip.uninstall(
+                cells[row][column],
+                grassTooltips[row][column]
+        );
+
+        if (!state.empty()
+                && state.type() == ConstructionType.GRASS)
+        {
+            Tooltip.install(
+                    cells[row][column],
+                    grassTooltips[row][column]
+            );
+        }
+
         // --- EFFETTO GRAFICO ENERGY CRISIS ---
 
         // Controlliamo che l'edificio sia uno di quelli che consuma energia
@@ -423,6 +450,7 @@ public final class GridView
             case CONSTRUCTION_COMPANY -> Color.BROWN;
             case CRIMINAL_ACTIVITY -> Color.BLACK;
             case POLICE_STATION -> Color.DARKBLUE;
+            case GRASS -> Color.PALEGREEN;
         };
     }
 

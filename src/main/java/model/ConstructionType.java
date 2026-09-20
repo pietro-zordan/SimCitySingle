@@ -13,5 +13,6 @@ public enum ConstructionType
         BANK,
         CONSTRUCTION_COMPANY,
         CRIMINAL_ACTIVITY,
-        POLICE_STATION
+        POLICE_STATION,
+        GRASS
 }

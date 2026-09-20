@@ -180,6 +180,7 @@ public final class ConstructionToolbarView
             case CONSTRUCTION_COMPANY -> "Construction Company";
             case CRIMINAL_ACTIVITY -> "Criminal Activity";
             case POLICE_STATION -> "Police station";
+            case GRASS -> "Grass";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -198,6 +199,7 @@ public final class ConstructionToolbarView
             case CONSTRUCTION_COMPANY -> Color.BROWN;
             case CRIMINAL_ACTIVITY -> Color.BLACK;
             case POLICE_STATION -> Color.DARKBLUE;
+            case GRASS -> Color.PALEGREEN;
         };
     }
 

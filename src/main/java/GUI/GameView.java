@@ -14,9 +14,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -64,6 +62,29 @@ public final class GameView implements GameObserver
 
     private final Button tsunamiInsuranceButton =
             new Button("Tsunami insurance");
+
+    private final Label tsunamiInsuranceInfoLabel =
+            new Label();
+
+    private final Button confirmTsunamiInsuranceButton =
+            new Button("Apply insurance");
+
+    private final Button cancelTsunamiInsuranceButton =
+            new Button("Cancel");
+
+    private final HBox tsunamiInsuranceActions =
+            new HBox(
+                    5,
+                    confirmTsunamiInsuranceButton,
+                    cancelTsunamiInsuranceButton
+            );
+
+    private final VBox tsunamiInsuranceBox =
+            new VBox(
+                    5,
+                    tsunamiInsuranceInfoLabel,
+                    tsunamiInsuranceActions
+            );
 
     private final Button demolitionButton =
             new Button("Demolish");
@@ -384,6 +405,7 @@ public final class GameView implements GameObserver
                 loanButton,
                 loanRequestBox,
                 tsunamiInsuranceButton,
+                tsunamiInsuranceBox,
                 demolitionButton
         );
 
@@ -620,6 +642,34 @@ public final class GameView implements GameObserver
 
         tsunamiInsuranceButton.setVisible(false);
 
+        tsunamiInsuranceBox.setAlignment(
+                Pos.CENTER
+        );
+
+        tsunamiInsuranceBox.managedProperty()
+                .bind(
+                        tsunamiInsuranceBox
+                                .visibleProperty()
+                );
+
+        tsunamiInsuranceBox.setVisible(false);
+
+        tsunamiInsuranceInfoLabel.setWrapText(
+                true
+        );
+
+        tsunamiInsuranceActions.setAlignment(
+                Pos.CENTER
+        );
+
+        confirmTsunamiInsuranceButton.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        cancelTsunamiInsuranceButton.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         tsunamiInsuranceButton.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
@@ -630,8 +680,36 @@ public final class GameView implements GameObserver
                     }
                 }
         );
+
+        confirmTsunamiInsuranceButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        applyTsunamiInsurance();
+                    }
+                }
+        );
+
+        cancelTsunamiInsuranceButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        tsunamiInsuranceBox.setVisible(
+                                false
+                        );
+                    }
+                }
+        );
     }
 
+    /*
+     * Mostra la conferma direttamente nel pannello del gioco,
+     * come avviene per il prestito, evitando finestre JavaFX separate.
+     */
     private void showTsunamiInsuranceConfirmation()
     {
         int cost =
@@ -645,53 +723,45 @@ public final class GameView implements GameObserver
                 controller
                         .getTsunamiInsuranceDiscountPercentage();
 
-        Alert alert =
-                new Alert(
-                        Alert.AlertType.CONFIRMATION
-                );
-
-        alert.setTitle(
-                "Tsunami insurance"
-        );
-
-        alert.setHeaderText(
-                "Activate tsunami insurance?"
-        );
-
-        alert.setContentText(
-                "Buildings currently covered: "
+        tsunamiInsuranceInfoLabel.setText(
+                "Buildings covered: "
                         + coveredBuildings
                         + "\nBank discount: "
                         + discount
                         + "%\nCost: "
                         + cost
                         + " €"
-                        + "\n\nBuildings added later in the tsunami risk area "
-                        + "will require an additional coverage cost."
+                        + "\nNew buildings in the tsunami risk area "
+                        + "will be covered automatically with an extra cost."
         );
 
-        ButtonType result =
-                alert.showAndWait()
-                        .orElse(
-                                ButtonType.CANCEL
-                        );
+        tsunamiInsuranceBox.setVisible(
+                true
+        );
+    }
 
-        if (result == ButtonType.OK)
+    private void applyTsunamiInsurance()
+    {
+        int cost =
+                controller.getTsunamiInsuranceCost();
+
+        if (controller.buyTsunamiInsurance())
         {
-            if (controller.buyTsunamiInsurance())
-            {
-                showToast(
-                        "Tsunami insurance activated for "
-                                + cost
-                                + " €."
-                );
-            }
-            else
-            {
-                showToast(
-                        "Unable to activate tsunami insurance. Check your budget."
-                );
-            }
+            tsunamiInsuranceBox.setVisible(
+                    false
+            );
+
+            showToast(
+                    "Tsunami insurance activated for "
+                            + cost
+                            + " €."
+            );
+        }
+        else
+        {
+            showToast(
+                    "Unable to activate tsunami insurance. Check your budget."
+            );
         }
     }
 
@@ -951,6 +1021,9 @@ public final class GameView implements GameObserver
 
         if (!hasBanks)
         {
+            tsunamiInsuranceBox.setVisible(
+                    false
+            );
             return;
         }
 
@@ -966,6 +1039,10 @@ public final class GameView implements GameObserver
         {
             tsunamiInsuranceButton.setText(
                     "Tsunami insurance active"
+            );
+
+            tsunamiInsuranceBox.setVisible(
+                    false
             );
         }
         else

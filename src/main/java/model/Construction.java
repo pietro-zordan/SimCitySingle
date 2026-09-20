@@ -5,6 +5,7 @@ package model;
 public abstract class Construction {
 
     private boolean roadConnected;
+    private boolean tsunamiInsured;
     private PowerPlant connectedPowerPlant;
     protected int moneyProduction;
     private final int powerConsumption;
@@ -217,6 +218,18 @@ public abstract class Construction {
     public int getUnlockTick()
     {
         return 0;
+    }
+
+    public boolean isTsunamiInsured()
+    {
+        return tsunamiInsured;
+    }
+
+    public void setTsunamiInsured(
+            boolean tsunamiInsured)
+    {
+        this.tsunamiInsured =
+                tsunamiInsured;
     }
 
 }

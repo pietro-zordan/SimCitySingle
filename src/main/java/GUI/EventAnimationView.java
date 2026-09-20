@@ -236,6 +236,9 @@ public final class EventAnimationView
     {
         gridView.clearTsunami();
         tsunamiAnimationRunning = false;
+
+        controller.startTsunamiReconstruction();
+
         gridView.refresh();
         nextTurnButton.setDisable(false);
     }

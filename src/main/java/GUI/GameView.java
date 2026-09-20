@@ -214,7 +214,7 @@ public final class GameView implements GameObserver
                         else if (controller.getRemovedCriminalActivities() > 0)
                         {
                             showToast(
-                                    "Minaccia eliminata dalla polizia!"
+                                    "Criminal activity eliminated by the police!"
                             );
                         }
                         else if (criminalActivityCreated)
@@ -379,6 +379,18 @@ public final class GameView implements GameObserver
         Button homeButton =
                 createHomeButton();
 
+        cancelDemolitionWhenUsed(nextTurnButton);
+        cancelDemolitionWhenUsed(changePolicyButton);
+        cancelDemolitionWhenUsed(loanButton);
+        cancelDemolitionWhenUsed(confirmLoanButton);
+        cancelDemolitionWhenUsed(tsunamiInsuranceButton);
+        cancelDemolitionWhenUsed(confirmTsunamiInsuranceButton);
+        cancelDemolitionWhenUsed(cancelTsunamiInsuranceButton);
+        cancelDemolitionWhenUsed(saveButton);
+        cancelDemolitionWhenUsed(restartButton);
+        cancelDemolitionWhenUsed(homeButton);
+        cancelDemolitionWhenUsed(chartView.getSwitchButton());
+
         // ---------- PANNELLO LATERALE SINISTRO ----------
         VBox leftPanel = new VBox(
                 5,
@@ -523,6 +535,21 @@ public final class GameView implements GameObserver
                 rootWithToast,
                 1400,
                 900
+        );
+    }
+
+    private void cancelDemolitionWhenUsed(Button button)
+    {
+        button.addEventFilter(
+                ActionEvent.ACTION,
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        gridView.cancelDemolition();
+                    }
+                }
         );
     }
 

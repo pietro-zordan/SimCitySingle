@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import policies.PolicyType;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -16,6 +17,35 @@ class LoanPersistenceTest
 {
     @TempDir
     Path tempDirectory;
+
+    @Test
+    void oldSaveWithoutLoanFieldsUsesSafeDefaults() throws Exception
+    {
+        Path saveFile =
+                tempDirectory.resolve("old-progress.json");
+
+        Files.writeString(
+                saveFile,
+                """
+                {
+                  "currentTick": 40,
+                  "lastPolicyChangeTick": 36,
+                  "policyType": "STANDARD",
+                  "budget": 2500,
+                  "constructions": []
+                }
+                """
+        );
+
+        Progress loaded =
+                new ProgressManager()
+                        .load(saveFile.toString());
+
+        assertFalse(loaded.isLoanActive());
+        assertEquals(0, loaded.getLoanAmount());
+        assertEquals(-15, loaded.getLastLoanTick());
+        assertEquals(0, loaded.getRemainingDebt());
+    }
 
     @Test
     void activeLoanSurvivesSaveAndLoad() throws Exception

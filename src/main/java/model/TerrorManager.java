@@ -8,7 +8,7 @@ public class TerrorManager {
 
     private final City city;
     private final Grid grid;
-    private static final int KILLS_PER_GROUP = 5;
+    private static final int KILLS_PER_GROUP = 15;
     private static final int HAPPINESS_THRESHOLD = -49;
     private static final int NUM_OF_SADNESS_TICKS = 1;
     private static final int SPAWN_COOLDOWN = 10;
@@ -96,8 +96,27 @@ public class TerrorManager {
 
         randomHouse.decreasePopulationBy(peopleToKill);
 
-        city.refreshStatistics();
+        if (randomHouse.hasNoPopulation())
+            removeResidential(randomHouse);
 
+        city.refreshStatistics();
+    }
+
+    private void removeResidential(Residential residential)
+    {
+        for (int row = 0; row < grid.getNumberOfRows(); row++)
+        {
+            for (int column = 0; column < grid.getNumberOfColumns(); column++)
+            {
+                Cell cell = grid.getCell(row, column);
+
+                if (!cell.isEmpty() && cell.getConstruction() == residential)
+                {
+                    grid.removeConstruction(row, column);
+                    return;
+                }
+            }
+        }
     }
 
     public boolean placeTG()

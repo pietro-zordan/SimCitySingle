@@ -125,18 +125,25 @@ public class Progress
                 savedPendingReconstructions =
                 new ArrayList<>();
 
-        for (ReconstructionEntry entry
-                : simulation
-                .getPendingTsunamiReconstructions())
+        List<ReconstructionEntry>
+                pendingReconstructions =
+                simulation
+                        .getPendingTsunamiReconstructions();
+
+        if (pendingReconstructions != null)
         {
-            savedPendingReconstructions.add(
-                    ConstructionProgress
-                            .fromConstruction(
-                                    entry.construction(),
-                                    entry.row(),
-                                    entry.column()
-                            )
-            );
+            for (ReconstructionEntry entry
+                    : pendingReconstructions)
+            {
+                savedPendingReconstructions.add(
+                        ConstructionProgress
+                                .fromConstruction(
+                                        entry.construction(),
+                                        entry.row(),
+                                        entry.column()
+                                )
+                );
+            }
         }
 
         return new Progress(

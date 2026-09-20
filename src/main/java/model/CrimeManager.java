@@ -13,8 +13,7 @@ public class CrimeManager
     private final Random random = new Random();
     private final City city;
     private final Grid grid;
-    private int lastPoliceRemovalTick = -1;
-    private static final int POLICE_REMOVAL_INTERVAL = 15;
+
 
     public CrimeManager(City city, Grid grid)
     {
@@ -176,33 +175,34 @@ public class CrimeManager
     public int tryToDestroyCriminalActivities(
             int currentTick)
     {
-        int maxRemoval =
-                getMaxRemoval();
-
-        if (maxRemoval == 0)
-        {
-            lastPoliceRemovalTick = -1;
-            return 0;
-        }
-
-        if (lastPoliceRemovalTick != -1
-                && currentTick
-                - lastPoliceRemovalTick
-                < POLICE_REMOVAL_INTERVAL)
-        {
-            return 0;
-        }
-
         int removed = 0;
 
-        while (removed < maxRemoval
-                && destroyCriminalActivity())
+        for (Construction construction
+                : grid.getConstructions())
         {
-            removed++;
-        }
+            if (construction instanceof PoliceStation)
+            {
+                PoliceStation policeStation =
+                        (PoliceStation) construction;
 
-        lastPoliceRemovalTick =
-                currentTick;
+                if (policeStation.isPowered()
+                        && policeStation
+                        .canRemoveCriminalActivity(
+                                currentTick
+                        ))
+                {
+                    if (destroyCriminalActivity())
+                    {
+                        policeStation
+                                .registerCriminalActivityRemoval(
+                                        currentTick
+                                );
+
+                        removed++;
+                    }
+                }
+            }
+        }
 
         return removed;
     }

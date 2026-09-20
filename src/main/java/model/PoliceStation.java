@@ -2,6 +2,8 @@ package model;
 
 public class PoliceStation extends Construction{
 
+    private int lastRemovalTick = -1;
+
     public PoliceStation()
     {
         super(0, 200, -1200);
@@ -28,5 +30,18 @@ public class PoliceStation extends Construction{
     public int getUnlockTick()
     {
         return 50;
+    }
+
+    public boolean canRemoveCriminalActivity(
+            int currentTick)
+    {
+        return lastRemovalTick == -1
+                || currentTick - lastRemovalTick >= 15;
+    }
+
+    public void registerCriminalActivityRemoval(
+            int currentTick)
+    {
+        lastRemovalTick = currentTick;
     }
 }

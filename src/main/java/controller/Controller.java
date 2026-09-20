@@ -433,7 +433,7 @@ public final class Controller
 
     public int getRemovedCriminalActivities()
     {
-        return Simulation.removedCriminalActivities;
+        return simulation.getRemovedCriminalActivities();
     }
 
 }

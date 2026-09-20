@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -12,6 +13,9 @@ public class CrimeManager
     private final Random random = new Random();
     private final City city;
     private final Grid grid;
+    private int numOfPoliceStation=0;
+    private int maxRemoval=0;
+    private List<CriminalActivity> criminalActivities = new ArrayList<>();
 
     public CrimeManager(City city, Grid grid)
     {
@@ -78,8 +82,8 @@ public class CrimeManager
                         randomIndex
                 );
 
-        Construction criminalActivity =
-                ConstructionFactory.create(
+        CriminalActivity criminalActivity =
+                (CriminalActivity) ConstructionFactory.create(
                         ConstructionType.CRIMINAL_ACTIVITY
                 );
 
@@ -89,6 +93,33 @@ public class CrimeManager
                 randomCell.getColumn()
         );
 
+        criminalActivities.add(criminalActivity);
+
         return true;
     }
+
+    public int getNumOfPoliceStation()
+    {
+        for (Construction construction : grid.getConstructions())
+        {
+            if (construction instanceof PoliceStation)
+                numOfPoliceStation++;
+        }
+
+        return numOfPoliceStation;
+    }
+
+    public int getMaxRemoval()
+    {
+
+    }
+
+    public void destroyCriminalActivity()
+    {
+        if(!criminalActivities.isEmpty())
+            criminalActivities.remove(0);
+
+    }
+
+
 }

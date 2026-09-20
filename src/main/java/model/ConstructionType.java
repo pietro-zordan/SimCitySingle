@@ -12,5 +12,6 @@ public enum ConstructionType
         RESIDENTIAL,
         BANK,
         CONSTRUCTION_COMPANY,
-        CRIMINAL_ACTIVITY
+        CRIMINAL_ACTIVITY,
+        POLICE_STATION
 }

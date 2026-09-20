@@ -14,7 +14,13 @@ public class PoliceStation extends Construction{
     }
 
     @Override
+    public int getMaintenanceCost()
+    {
+        return 200;
+    }
+
+    @Override
     public ConstructionType getType() {
-        return null;
+        return ConstructionType.POLICE_STATION;
     }
 }

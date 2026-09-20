@@ -35,6 +35,7 @@ public final class GridView
     private final Rectangle[][] tsunamiOverlays;
     private final Label[][] grassIcons;
     private final Tooltip[][] grassTooltips;
+    private final Tooltip[][] powerPlantTooltips;
 
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
@@ -78,6 +79,7 @@ public final class GridView
         tsunamiOverlays = new Rectangle[rows][columns];
         grassIcons = new Label[rows][columns];
         grassTooltips = new Tooltip[rows][columns];
+        powerPlantTooltips = new Tooltip[rows][columns];
 
         // Popolamento celle griglia
         createCells();
@@ -153,6 +155,14 @@ public final class GridView
                         Duration.ZERO
                 );
 
+                Tooltip powerPlantTooltip = new Tooltip();
+                powerPlantTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+                powerPlantTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
                 StackPane cell = new StackPane(
                         graphicCell,
                         noPowerIcon,
@@ -188,6 +198,8 @@ public final class GridView
                         tsunamiOverlay;
                 grassIcons[row][column] = grassIcon;
                 grassTooltips[row][column] = grassTooltip;
+                powerPlantTooltips[row][column] =
+                        powerPlantTooltip;
 
                 view.add(cell, column, row);
             }
@@ -379,6 +391,37 @@ public final class GridView
             Tooltip.install(
                     cells[row][column],
                     grassTooltips[row][column]
+            );
+        }
+
+        boolean powerPlantPresent =
+                !state.empty()
+                        && state.type()
+                        == ConstructionType.POWER_PLANT;
+
+        Tooltip.uninstall(
+                cells[row][column],
+                powerPlantTooltips[row][column]
+        );
+
+        if (powerPlantPresent)
+        {
+            powerPlantTooltips[row][column].setText(
+                    "Energy: "
+                            + controller.getPowerPlantEnergyConsumed(
+                                    row,
+                                    column
+                            )
+                            + " / "
+                            + controller.getPowerPlantEnergyCapacity(
+                                    row,
+                                    column
+                            )
+            );
+
+            Tooltip.install(
+                    cells[row][column],
+                    powerPlantTooltips[row][column]
             );
         }
 

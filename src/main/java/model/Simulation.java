@@ -351,6 +351,30 @@ public class Simulation{
                 .startTsunamiReconstruction();
     }
 
+    public java.util.List<ReconstructionEntry>
+    getPendingTsunamiReconstructions()
+    {
+        return insuranceManager
+                .getPendingReconstructions();
+    }
+
+    public String getTsunamiReconstructionDirection()
+    {
+        return insuranceManager
+                .getReconstructionDirection();
+    }
+
+    public void restoreTsunamiReconstruction(
+            java.util.List<ReconstructionEntry> entries,
+            String direction)
+    {
+        insuranceManager
+                .restorePendingReconstruction(
+                        entries,
+                        direction
+                );
+    }
+
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.
     public boolean isConstructionBoosted(Construction construction) {
         if (activeEvent == null || construction == null) {

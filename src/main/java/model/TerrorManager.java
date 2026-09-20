@@ -8,7 +8,6 @@ public class TerrorManager {
 
     private final City city;
     private final Grid grid;
-    List<Residential> houses = getAllResidentials();
     private static final int KILLS_PER_GROUP = 5;
     private static final int HAPPINESS_THRESHOLD = -500;
     private int sadnessTicks = 0;
@@ -43,6 +42,9 @@ public class TerrorManager {
             placeTG();
             sadnessTicks = 0;
         }
+
+        if (getNumOfTC() > 0)
+            killPeople();
     }
 
     public List<Residential> getAllResidentials()
@@ -82,13 +84,18 @@ public class TerrorManager {
 
     }
 
-    public void placeTG(int row, int column)
+    public void placeTG()
     {
-        if(city.getGlobalHappiness()<500)
-        {
-            TerroristicGroup terroristicGroup= new TerroristicGroup();
-            city.placeConstruction(terroristicGroup, row, column);
-        }
+        List<Cell> cells = grid.getBuildableCells();
+
+        if (cells.isEmpty())
+            return;
+
+        Random random = new Random();
+        Cell cell = cells.get(random.nextInt(cells.size()));
+
+        TerroristicGroup group = new TerroristicGroup();
+        city.placeConstruction(group, cell.getRow(), cell.getColumn());
     }
 
     public int getNumOfTC()

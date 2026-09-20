@@ -89,7 +89,10 @@ public class City
         pollution = currentPolicy.modifyPollution(pollution);
         economy = currentPolicy.modifyEconomy(economy);
 
-        unemployed = population - totalEmployeeSlots;
+        unemployed = Math.max(
+                0,
+                population - totalEmployeeSlots
+        );
     }
 
     // Restituisce il numero di cittadini senza un posto di lavoro.

@@ -329,6 +329,72 @@ class GridTest {
         assertEquals(4, grid.countBuildableCells());
     }
 
+    @Test
+    void criminalActivityDoesNotTurnReachableAreaIntoGrass()
+    {
+        Grid localGrid = new Grid();
+
+        localGrid.restoreConstruction(
+                new Road(),
+                10,
+                8
+        );
+
+        int[][] wallCells =
+                {
+                        {9, 10},
+                        {9, 11},
+                        {11, 9},
+                        {12, 10},
+                        {12, 11},
+                        {10, 12},
+                        {11, 12}
+                };
+
+        for (int[] position : wallCells)
+        {
+            localGrid.restoreConstruction(
+                    new Park(),
+                    position[0],
+                    position[1]
+            );
+        }
+
+        localGrid.placeConstruction(
+                new CriminalActivity(),
+                10,
+                9
+        );
+
+        assertTrue(
+                localGrid.getCell(
+                        10,
+                        10
+                ).isEmpty()
+        );
+
+        assertTrue(
+                localGrid.getCell(
+                        10,
+                        11
+                ).isEmpty()
+        );
+
+        assertTrue(
+                localGrid.getCell(
+                        11,
+                        10
+                ).isEmpty()
+        );
+
+        assertTrue(
+                localGrid.getCell(
+                        11,
+                        11
+                ).isEmpty()
+        );
+    }
+
     // ---------- restoreConstruction ----------
 
     @Test

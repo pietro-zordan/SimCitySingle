@@ -508,6 +508,7 @@ public final class GridView
             case BANK -> Color.GOLD;
             case CONSTRUCTION_COMPANY -> Color.BROWN;
             case CRIMINAL_ACTIVITY -> Color.BLACK;
+            case TERRORISTIC_GROUP -> Color.DARKRED;
             case POLICE_STATION -> Color.DARKBLUE;
             case GRASS -> Color.web("#9DBB7A");
         };

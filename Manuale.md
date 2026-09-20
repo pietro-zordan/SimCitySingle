@@ -38,9 +38,15 @@ Le zone residenziali ospitano gli abitanti della città. Se sono alimentate, la 
 
 Le zone commerciali e industriali offrono posti di lavoro e producono denaro. Per costruirle deve essere disponibile un numero sufficiente di cittadini senza lavoro.
 
-La loro produzione economica cresce nel tempo se rimangono alimentate. Gli edifici industriali producono più denaro ma generano anche più inquinamento e riducono maggiormente la felicità.
+Il valore **Economy** indica quanto la città sta producendo economicamente in quel momento. Non rappresenta il denaro già disponibile: quello è il **Budget**. L'economia deriva soprattutto dalla produzione delle zone commerciali e industriali alimentate, può essere modificata dalla policy attiva e può essere ridotta da effetti negativi come le attività criminali.
 
-Il denaro prodotto dalla città viene aggiunto al budget a ogni turno.
+La produzione dei singoli edifici economici cresce gradualmente nel tempo finché rimangono alimentati. Le industrie possono produrre molto più dei commerciali, ma richiedono più lavoratori, consumano più energia, generano più inquinamento e hanno costi di manutenzione maggiori.
+
+A ogni turno il gioco usa quindi, in modo semplificato, questa relazione:
+
+**variazione del Budget = Economy - costi di manutenzione**
+
+A questo risultato possono poi aggiungersi altri costi o effetti, per esempio eventi, assicurazioni o rimborso dei prestiti. Se un edificio commerciale o industriale non è alimentato, non produce economia.
 
 ## Energia
 
@@ -59,8 +65,10 @@ Per esempio:
 - zona residenziale: 5 €;
 - parco: 10 €;
 - zona commerciale: 30 €;
-- zona industriale: 150 €;
-- stazione di polizia: 200 €.
+- banca: 60 €;
+- impresa edile: 40 €;
+- zona industriale: 200 €;
+- stazione di polizia: 120 €.
 
 Per questo motivo non basta costruire molto: bisogna assicurarsi che l'economia riesca a sostenere i costi della città.
 
@@ -90,13 +98,13 @@ Le banche diventano disponibili più avanti nella partita.
 
 Una banca alimentata permette di chiedere un prestito. Più banche alimentate sono presenti, maggiore può essere l'importo massimo richiesto.
 
-Il prestito deve poi essere restituito secondo le regole previste dal gioco, quindi va usato con attenzione.
+Il prestito diventa da restituire dopo 3 turni. L'importo da restituire è pari a **1,5 volte** la somma richiesta, quindi va usato con attenzione.
 
 ## Assicurazione contro lo tsunami
 
 Se è presente almeno una banca, è possibile acquistare un'**assicurazione contro lo tsunami**.
 
-Il prezzo dipende dagli edifici presenti nelle zone della mappa che possono essere raggiunte dallo tsunami e dal loro tipo. Ogni banca applica uno **sconto del 5%** sul costo complessivo.
+Il prezzo dipende dalle costruzioni presenti nelle zone della mappa che possono essere raggiunte dallo tsunami e dal loro tipo. Ogni banca applica uno **sconto del 5%** sul costo complessivo, fino a uno sconto massimo del **30%**.
 
 L'assicurazione copre soltanto gli edifici presenti nel momento in cui viene applicata. Se in seguito vengono costruiti nuovi edifici nella zona a rischio, è necessario premere nuovamente il pulsante dell'assicurazione per estendere la copertura soltanto a quelle nuove costruzioni.
 
@@ -120,7 +128,7 @@ Gli eventi principali sono:
 - **Incendio**: può propagarsi tra costruzioni vicine e distruggerle;
 - **Tsunami**: arriva da uno dei quattro lati della mappa e colpisce le prime quattro righe o colonne.
 
-Lo tsunami non distrugge strade, parchi ed erba. Gli edifici assicurati possono essere ricostruiti dopo l'evento.
+Lo tsunami distrugge anche i parchi. Non distrugge invece strade ed erba. Le costruzioni assicurate possono essere ricostruite dopo l'evento.
 
 ## Salvataggio
 

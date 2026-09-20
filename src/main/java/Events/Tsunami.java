@@ -137,8 +137,20 @@ public class Tsunami extends Event{
     @Override
     public void start()
     {
+        grid.setGrassGenerationSuspended(
+                true
+        );
+
         getBuildingsToDestroy(grid);
         city.refreshStatistics();
+    }
+
+    @Override
+    public void end()
+    {
+        grid.setGrassGenerationSuspended(
+                false
+        );
     }
 
     // Riduce la felicità della città a ogni tick dello tsunami.

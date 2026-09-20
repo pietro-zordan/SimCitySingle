@@ -8,7 +8,7 @@ public class BankManager
 {
     private static final int BANK_UNLOCK_TICK = 30;
     private static final int LOAN_DURATION = 3;
-    private static final int LOAN_MULTIPLIER = 3;
+    private static final double LOAN_MULTIPLIER = 1.5;
     private static final int LOAN_INTERVAL = 15;
     private static final int BASE_LOAN_AMOUNT = 1000;
 
@@ -95,7 +95,10 @@ public class BankManager
                 && currentTick - loanStartTick >= LOAN_DURATION)
         {
             remainingDebt +=
-                    loanAmount * LOAN_MULTIPLIER;
+                    (int) Math.round(
+                            loanAmount
+                                    * LOAN_MULTIPLIER
+                    );
 
             loanActive = false;
             loanAmount = 0;

@@ -1,112 +1,153 @@
-## 1. Descrizione del gioco e regole principali
-SimCity Lite è un simulatore gestionale nel quale il giocatore deve sviluppare una città mantenendo un equilibrio tra popolazione, produzione economica, budget, felicità, inquinamento e disponibilità di posti di lavoro.
-La città è rappresentata da una griglia di 20×20 celle. Per costruire, il giocatore seleziona una tipologia di costruzione dalla barra inferiore e successivamente sceglie una cella libera della griglia. La partita inizia con un budget di **2500 €**.
+# SimCity Lite — Manuale di gioco
 
-### Costruzione della città
-La prima strada può essere collocata liberamente, mentre tutte le strade successive devono essere adiacenti, in senso orizzontale o verticale, a una strada già esistente. Tutte le altre costruzioni devono essere collocate accanto a una strada. Le strade, una volta costruite, non possono essere rimosse.
+## Obiettivo del gioco
 
-Le costruzioni disponibili sono:
+SimCity Lite è un piccolo simulatore gestionale in cui bisogna far crescere una città mantenendo sotto controllo **budget, popolazione, economia, inquinamento, felicità, energia e posti di lavoro**.
 
-| Costruzione        | Costo base | Funzione                                                                                             |
-| ------------------ | ---------: | ---------------------------------------------------------------------------------------------------- |
-| Strada             |       50 € | Permette di estendere la città e di costruire nelle celle adiacenti.                                 |
-| Zona residenziale  |      200 € | Ospita la popolazione della città e richiede energia elettrica.                                      |
-| Zona commerciale   |      300 € | Offre 30 posti di lavoro e produce denaro, felicità e una quantità moderata di inquinamento.         |
-| Zona industriale   |      600 € | Offre 100 posti di lavoro e produce molto denaro, ma aumenta notevolmente inquinamento e infelicità. |
-| Parco              |      150 € | Aumenta la felicità, riduce l’inquinamento e comporta un costo di mantenimento per la città.         |
-| Centrale elettrica |      800 € | Fornisce energia alle costruzioni circostanti, ma produce inquinamento.                              |
+La città è costruita su una griglia **20 × 20**. Ogni pressione di **Next Turn** fa avanzare la simulazione di un turno e aggiorna edifici, statistiche, eventi e budget.
 
-All’inizio è quindi necessario costruire una strada, una zona residenziale e una centrale elettrica. Le zone industriali e commerciali possono essere costruite solamente se nella città sono presenti sufficienti abitanti.
-L'interfaccia grafica mostra eventuali necessità o condizioni non rispettate sotto forma di pop-up che durano qualche secondo. 
-### Popolazione ed energia elettrica
-Ogni nuova zona residenziale parte con 10 abitanti e può raggiungere un massimo di 50. Se riceve energia, la sua popolazione cresce a ogni tick, con una velocità progressivamente maggiore. Se rimane senza corrente, la popolazione comincia invece a diminuire; quando raggiunge zero, la zona residenziale viene rimossa automaticamente dalla griglia.
-Le zone industriali e commerciali prive di energia non vengono rimosse, ma smettono di produrre denaro e di influenzare felicità e inquinamento finché l’alimentazione non viene ripristinata.
-Ogni centrale produce una quantità limitata di energia e può alimentare le costruzioni presenti entro un raggio di 3 caselle da essa, per un massimo di 48 celle. Le costruzioni hanno consumi differenti: le zone industriali sono quelle che richiedono più energia, seguite dalle zone commerciali e dalle zone residenziali.
-Se il consumo complessivo supera la capacità della centrale, alcune costruzioni vengono scollegate. Quando torna disponibile abbastanza energia, il collegamento viene ripristinato automaticamente, dando priorità alle costruzioni con un consumo minore. Le celle non alimentate sono segnalate sulla griglia da un simbolo rosso a forma di fulmine.
+La partita inizia con **2500 €**.
 
-### Avanzamento della simulazione
-Il pulsante **Next Turn** fa avanzare la simulazione di un tick. A ogni tick vengono aggiornati:
-* la crescita o la diminuzione della popolazione;
-* la produzione delle zone industriali e commerciali;
-* i collegamenti alle centrali elettriche;
-* popolazione, economia, inquinamento e felicità;
-* il budget della città;
-* la durata e gli effetti degli eventi attivi.
-Il valore dell’economia prodotto durante il tick viene aggiunto al budget. La produzione delle zone industriali e commerciali aumenta gradualmente nel tempo, purché gli edifici rimangano alimentati.
-L’interfaccia permette inoltre di visualizzare l’andamento nel tempo di popolazione, economia, inquinamento, felicità e disoccupazione attraverso diversi grafici. Il pulsante sottostante permette di passare da un grafico a quello successivo.
+## Costruzione della città
 
-### Politiche cittadine
-La partita comincia con la **Standard Policy**. La politica può essere cambiata per la prima volta dopo 12 tick e, dopo ogni modifica, devono trascorrere altri 12 tick prima di poterla cambiare nuovamente.
+La prima strada può essere costruita liberamente. Tutte le strade successive devono essere adiacenti a una strada già esistente.
 
-Sono disponibili tre politiche:
-* **Standard Policy:** non modifica i prezzi, l’economia o l’inquinamento.
-* **Environmental Policy:** riduce del 25% l’economia e l’inquinamento complessivi. Le zone industriali costano 700 €, mentre i parchi costano solamente 100 €. È adatta a una città più pulita e orientata alla felicità, ma rallenta la crescita economica.
-* **Industrial Policy:** aumenta del 25% sia l’economia sia l’inquinamento. Le zone industriali costano 500 €, mentre i parchi costano 200 €. Favorisce una crescita economica più rapida, al prezzo di un maggiore impatto ambientale.
-I prezzi mostrati nell’interfaccia vengono aggiornati automaticamente quando viene selezionata una nuova politica.
+Gli altri edifici devono invece essere costruiti accanto a una strada. Alcune costruzioni diventano disponibili solo più avanti nella partita oppure richiedono particolari condizioni, come un numero sufficiente di lavoratori.
 
-### Eventi casuali
-Durante la partita possono verificarsi eventi casuali. Può essere attivo un solo evento alla volta e il suo nome viene mostrato nel pannello laterale.
+Costi base principali:
 
-* **Attacco hacker:** una centrale elettrica scelta casualmente viene sospesa per 5 tick. Durante questo periodo gli edifici collegati rimangono associati alla centrale, ma sono considerati privi di energia. Al termine dell’evento la centrale riprende automaticamente a funzionare.
-* **Crisi energetica:** per 5 tick viene sottratto dal budget un costo aggiuntivo di 50 € per ogni costruzione alimentata che consuma energia. Durante l’evento il budget viene evidenziato in rosso e gli edifici coinvolti sono segnalati sulla griglia.
-* **Boom economico:** per 5 tick aumenta temporaneamente la produzione delle zone industriali e commerciali, comprese quelle costruite mentre l’evento è già in corso. Gli edifici potenziati sono contrassegnati da un simbolo verde.
-* **Incendio:** il fuoco parte da una costruzione casuale diversa da una strada. A ogni tick può propagarsi agli edifici adiacenti in senso orizzontale o verticale, distruggendoli e riducendo la felicità. Le strade non possono bruciare e l’evento termina quando il fuoco non riesce più a propagarsi.
-* **Tsunami:** proviene casualmente da nord, sud, est oppure ovest e coinvolge le prime quattro righe o colonne della mappa. Distrugge le costruzioni incontrate, con l’eccezione di strade e parchi, e riduce la felicità per 3 tick. La direzione di provenienza viene mostrata nel pannello dell’evento e l’avanzamento dell’onda è rappresentato graficamente sulla griglia.
+| Costruzione | Costo base |
+| --- | ---: |
+| Strada | 50 € |
+| Zona residenziale | 200 € |
+| Zona commerciale | 300 € |
+| Zona industriale | 600 € |
+| Parco | 150 € |
+| Centrale elettrica | 800 € |
+| Banca | 800 € |
+| Impresa edile | 1000 € |
+| Stazione di polizia | 1200 € |
 
-### Salvataggio della partita
-Il giocatore può salvare lo stato corrente attraverso il pulsante **Save Game**. Dalla schermata iniziale è possibile caricare il salvataggio e riprendere la simulazione mantenendo costruzioni, statistiche, budget, tick raggiunto, crescita degli edifici e politica attiva.
+Le politiche cittadine possono modificare alcuni prezzi.
 
-Sono inoltre disponibili i comandi per tornare alla schermata iniziale oppure riavviare la partita senza conservare i progressi non salvati.
+Le strade non possono essere demolite. Per demolire le altre costruzioni serve almeno un'**impresa edile alimentata**; il numero di demolizioni disponibili dipende dalle imprese edili presenti e si rinnova periodicamente.
 
-## 2. Installazione e avvio
+## Popolazione, lavoro ed economia
 
-Per installare ed eseguire SimCity Lite è necessario:
+Le zone residenziali ospitano gli abitanti della città. Se sono alimentate, la popolazione cresce; se rimangono senza corrente, la popolazione diminuisce e la zona può infine scomparire.
 
-* installare il **JDK 17**;
-* installare **Apache Maven**;
-* clonare il repository oppure scaricare ed estrarre il progetto;
-* aprire un terminale nella cartella contenente il file `pom.xml`;
-* eseguire il comando:
+Le zone commerciali e industriali offrono posti di lavoro e producono denaro. Per costruirle deve essere disponibile un numero sufficiente di cittadini senza lavoro.
+
+Il valore **Economy** indica quanto la città sta producendo economicamente in quel momento. Non rappresenta il denaro già disponibile: quello è il **Budget**. L'economia deriva soprattutto dalla produzione delle zone commerciali e industriali alimentate, può essere modificata dalla policy attiva e può essere ridotta da effetti negativi come le attività criminali.
+
+La produzione dei singoli edifici economici cresce gradualmente nel tempo finché rimangono alimentati. Le industrie possono produrre molto più dei commerciali, ma richiedono più lavoratori, consumano più energia, generano più inquinamento e hanno costi di manutenzione maggiori.
+
+A ogni turno il gioco usa quindi, in modo semplificato, questa relazione:
+
+**variazione del Budget = Economy - costi di manutenzione**
+
+A questo risultato possono poi aggiungersi altri costi o effetti, per esempio eventi, assicurazioni o rimborso dei prestiti. Se un edificio commerciale o industriale non è alimentato, non produce economia.
+
+## Energia
+
+Le centrali elettriche alimentano le costruzioni vicine entro la propria area di copertura.
+
+Ogni edificio consuma una quantità diversa di energia. Se una centrale non riesce ad alimentare tutto, alcune costruzioni vengono scollegate; quando torna disponibile energia sufficiente, vengono ricollegate automaticamente.
+
+Gli edifici senza energia sono indicati nella griglia con il simbolo del fulmine.
+
+## Manutenzione
+
+Oltre al costo iniziale di costruzione, alcune strutture hanno un **costo di manutenzione per turno**, che viene sottratto dal guadagno della città.
+
+Per esempio:
+- strada: 2 € per turno;
+- zona residenziale: 5 €;
+- parco: 10 €;
+- zona commerciale: 30 €;
+- banca: 60 €;
+- impresa edile: 40 €;
+- zona industriale: 200 €;
+- stazione di polizia: 120 €.
+
+Per questo motivo non basta costruire molto: bisogna assicurarsi che l'economia riesca a sostenere i costi della città.
+
+Se la città rimane per molti turni in una situazione economica critica, può andare incontro al fallimento.
+
+## Felicità e inquinamento
+
+Le costruzioni influenzano in modo diverso la città.
+
+I parchi aumentano la felicità e riducono l'inquinamento. Le zone commerciali aumentano moderatamente entrambi, mentre le industrie producono molto inquinamento e riducono la felicità.
+
+In alcune celle che diventano inutilizzabili può comparire automaticamente dell'**erba**. L'erba riduce leggermente l'inquinamento e può essere rimossa.
+
+## Politiche cittadine
+
+La città può utilizzare tre politiche:
+
+- **Standard Policy**: comportamento normale;
+- **Environmental Policy**: favorisce la riduzione dell'inquinamento, ma riduce anche l'economia;
+- **Industrial Policy**: favorisce l'economia, aumentando però anche l'inquinamento.
+
+La politica non può essere cambiata continuamente: dopo un cambio devono passare **12 turni** prima di poterla modificare di nuovo.
+
+## Banche e prestiti
+
+Le banche diventano disponibili più avanti nella partita.
+
+Una banca alimentata permette di chiedere un prestito. Più banche alimentate sono presenti, maggiore può essere l'importo massimo richiesto.
+
+Il prestito diventa da restituire dopo 3 turni. L'importo da restituire è pari a **1,5 volte** la somma richiesta, quindi va usato con attenzione.
+
+## Assicurazione contro lo tsunami
+
+Se è presente almeno una banca, è possibile acquistare un'**assicurazione contro lo tsunami**.
+
+Il prezzo dipende dalle costruzioni presenti nelle zone della mappa che possono essere raggiunte dallo tsunami e dal loro tipo. Ogni banca applica uno **sconto del 5%** sul costo complessivo, fino a uno sconto massimo del **30%**.
+
+L'assicurazione copre soltanto gli edifici presenti nel momento in cui viene applicata. Se in seguito vengono costruiti nuovi edifici nella zona a rischio, è necessario premere nuovamente il pulsante dell'assicurazione per estendere la copertura soltanto a quelle nuove costruzioni.
+
+Quando uno tsunami distrugge edifici assicurati, questi vengono ricostruiti gradualmente dopo la fine dell'animazione, mantenendo lo stato che avevano prima della distruzione. Durante la ricostruzione non è possibile costruire nella zona interessata.
+
+## Attività criminali e polizia
+
+Con la crescita dell'economia possono comparire casualmente delle **attività criminali**. Queste riducono l'economia e la felicità della città.
+
+Una stazione di polizia alimentata può eliminare un'attività criminale quando questa è rimasta attiva per **almeno 3 turni**. Le stazioni di polizia non possono effettuare rimozioni continuamente: tra un intervento e il successivo deve trascorrere del tempo.
+
+## Eventi casuali
+
+Durante la partita può essere attivo un solo evento casuale alla volta.
+
+Gli eventi principali sono:
+
+- **Attacco hacker**: sospende temporaneamente una centrale elettrica;
+- **Crisi energetica**: aumenta temporaneamente i costi legati agli edifici alimentati;
+- **Boom economico**: aumenta temporaneamente la produzione di zone commerciali e industriali;
+- **Incendio**: può propagarsi tra costruzioni vicine e distruggerle;
+- **Tsunami**: arriva da uno dei quattro lati della mappa e colpisce le prime quattro righe o colonne.
+
+Lo tsunami distrugge anche i parchi. Non distrugge invece strade ed erba. Le costruzioni assicurate possono essere ricostruite dopo l'evento.
+
+## Salvataggio
+
+La partita può essere salvata con **Save Game** e caricata successivamente dalla schermata iniziale.
+
+Il salvataggio conserva le principali informazioni della città, comprese le costruzioni, il budget, il turno raggiunto, la politica e lo stato degli edifici.
+
+## Avvio del gioco
+
+Sono necessari **JDK 17** e **Apache Maven**.
+
+Dalla cartella che contiene il file `pom.xml`:
 
 ```bash
 mvn clean javafx:run
 ```
 
-Al primo avvio Maven scarica automaticamente da Maven Central le librerie necessarie. Successivamente viene avviata la classe `GUI.Main` e compare la schermata iniziale, dalla quale è possibile iniziare una nuova simulazione oppure caricarne una precedentemente salvata.
-Il progetto può anche essere aperto con IntelliJ IDEA importando il file `pom.xml`, selezionando il **JDK 17** come Project SDK ed eseguendo l’obiettivo Maven `javafx:run`.
-Per eseguire i test automatici si utilizza:
+Per eseguire i test:
 
 ```bash
 mvn test
 ```
-
-## 3. Ambiente di esecuzione
-
-Il progetto è sviluppato in **Java 17** e utilizza Maven per la compilazione e la gestione delle dipendenze. L’interfaccia grafica è realizzata con **JavaFX 17.0.20**.
-Il software non richiede un database o un collegamento permanente a Internet. La connessione è necessaria solamente al primo avvio per consentire a Maven di scaricare le dipendenze. Il salvataggio della partita viene memorizzato localmente nel file `progress.json`, pertanto il programma deve avere il permesso di scrittura nella propria cartella di esecuzione.
-Non sono presenti dipendenze specifiche da un sistema operativo: il progetto può essere eseguito su Windows, macOS e Linux, purché siano disponibili il JDK 17, Maven e un ambiente grafico.
-
-## 4. Principali funzionalità riutilizzate da librerie esistenti
-
-Il progetto utilizza le seguenti librerie:
-
-* **JavaFX Controls 17.0.20:** utilizzata per realizzare l’interfaccia grafica attraverso finestre, scene, pulsanti, etichette, menu contestuali, messaggi di errore e contenitori per l’organizzazione degli elementi. Le classi `Application`, `Stage` e `Scene` gestiscono inoltre il ciclo di vita dell’applicazione.
-* **JavaFX Charts:** le classi `LineChart`, `NumberAxis` e `XYChart` permettono di visualizzare l’andamento nel tempo di popolazione, economia, inquinamento, felicità e disoccupazione.
-* **JavaFX Animation:** `Timeline`, `KeyFrame`, `KeyValue` e `PauseTransition` vengono utilizzate per le animazioni degli eventi e per la visualizzazione temporanea dei messaggi.
-* **Gson 2.14.0:** converte lo stato della simulazione in formato JSON mediante `toJson()` e lo ricostruisce mediante `fromJson()`. `GsonBuilder` viene usato per produrre un file di salvataggio leggibile e indentato.
-* **JUnit Jupiter 5.10.2:** utilizzata per organizzare ed eseguire i test automatici e per verificare i risultati mediante le principali funzioni di assertion.
-* **Mockito 5.11.0:** utilizzata nei test per creare oggetti simulati e controllare il comportamento delle classi senza dover costruire tutte le dipendenze reali.
-
-## 5. API esterne
-
-Il software non utilizza API esterne e non comunica con servizi web, server remoti o database. Tutta la simulazione viene eseguita localmente. Maven Central viene utilizzato esclusivamente durante la configurazione del progetto per scaricare le librerie dichiarate nel file `pom.xml`.
-
-## 6. Strumenti di intelligenza artificiale
-
-Durante lo sviluppo sono stati utilizzati ChatGPT e Claude come strumento di supporto per l’analisi del codice, l’individuazione di possibili errori, la valutazione di alcune scelte progettuali, la scrittura e revisione dei test, dei commenti e della documentazione.
-I suggerimenti prodotti dallo strumento sono stati controllati, adattati e verificati manualmente dai componenti del gruppo prima di essere inseriti nel progetto. Nessun sistema di intelligenza artificiale è integrato nel software o utilizzato durante l’esecuzione della simulazione.
-
-
-
-
-

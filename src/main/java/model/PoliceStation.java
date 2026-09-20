@@ -2,6 +2,7 @@ package model;
 
 public class PoliceStation extends Construction{
 
+    private static final int MAINTENANCE_COST = 120;
     private int lastRemovalTick = -1;
 
     public PoliceStation()
@@ -18,7 +19,7 @@ public class PoliceStation extends Construction{
     @Override
     public int getMaintenanceCost()
     {
-        return 200;
+        return MAINTENANCE_COST;
     }
 
     @Override

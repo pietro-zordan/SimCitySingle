@@ -214,7 +214,7 @@ public final class GameView implements GameObserver
                         else if (controller.getRemovedCriminalActivities() > 0)
                         {
                             showToast(
-                                    "Attività criminale eliminata!"
+                                    "Minaccia eliminata dalla polizia!"
                             );
                         }
                         else if (criminalActivityCreated)

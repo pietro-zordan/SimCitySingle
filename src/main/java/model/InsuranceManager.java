@@ -12,8 +12,9 @@ import java.util.List;
 public class InsuranceManager
 {
     private static final double BANK_DISCOUNT = 0.05;
-    private static final double MAX_BANK_DISCOUNT = 0.50;
+    private static final double MAX_BANK_DISCOUNT = 0.30;
 
+    private static final int PARK_COST = 60;
     private static final int RESIDENTIAL_COST = 80;
     private static final int COMMERCIAL_COST = 120;
     private static final int INDUSTRIAL_COST = 200;
@@ -422,7 +423,8 @@ public class InsuranceManager
     private boolean isInsurable(
             ConstructionType type)
     {
-        return type == ConstructionType.RESIDENTIAL
+        return type == ConstructionType.PARK
+                || type == ConstructionType.RESIDENTIAL
                 || type == ConstructionType.COMMERCIAL
                 || type == ConstructionType.INDUSTRIAL
                 || type == ConstructionType.POWER_PLANT
@@ -437,6 +439,7 @@ public class InsuranceManager
     {
         return switch (type)
         {
+            case PARK -> PARK_COST;
             case RESIDENTIAL -> RESIDENTIAL_COST;
             case COMMERCIAL -> COMMERCIAL_COST;
             case INDUSTRIAL -> INDUSTRIAL_COST;

@@ -42,50 +42,15 @@ public class Simulation{
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
     {
-        this(
-                city,
-                grid,
-                0,
-                0,
-                false,
-                0,
-                0,
-                -LOAN_INTERVAL,
-                0
-        );
+        this(city, grid, 0, 0);
     }
 
-    // Crea una simulazione usando i tick recuperati da un salvataggio precedente.
+    // Crea una simulazione usando i tick recuperati da un salvataggio.
     public Simulation(
             City city,
             Grid grid,
             int currentTick,
             int lastPolicyChangeTick)
-    {
-        this(
-                city,
-                grid,
-                currentTick,
-                lastPolicyChangeTick,
-                false,
-                0,
-                0,
-                -LOAN_INTERVAL,
-                0
-        );
-    }
-
-    // Crea una simulazione ripristinando anche lo stato completo dei prestiti.
-    public Simulation(
-            City city,
-            Grid grid,
-            int currentTick,
-            int lastPolicyChangeTick,
-            boolean loanActive,
-            int loanAmount,
-            int loanStartTick,
-            int lastLoanTick,
-            int remainingDebt)
     {
         if (city == null)
         {
@@ -116,46 +81,10 @@ public class Simulation{
             );
         }
 
-        if (loanAmount < 0
-                || remainingDebt < 0)
-        {
-            throw new IllegalArgumentException(
-                    "Loan values cannot be negative"
-            );
-        }
-
-        if (loanActive && loanAmount == 0)
-        {
-            throw new IllegalArgumentException(
-                    "An active loan must have a positive amount"
-            );
-        }
-
-        if (!loanActive && loanAmount != 0)
-        {
-            throw new IllegalArgumentException(
-                    "An inactive loan cannot have a pending amount"
-            );
-        }
-
-        if (loanStartTick < 0
-                || loanStartTick > currentTick
-                || lastLoanTick > currentTick)
-        {
-            throw new IllegalArgumentException(
-                    "Invalid loan tick"
-            );
-        }
-
         this.city = city;
         this.grid = grid;
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
-        this.loanActive = loanActive;
-        this.loanAmount = loanAmount;
-        this.loanStartTick = loanStartTick;
-        this.lastLoanTick = lastLoanTick;
-        this.remainingDebt = remainingDebt;
         this.bankruptcyManager =
                 new BankruptcyManager();
         this.crimeManager =
@@ -343,31 +272,6 @@ public class Simulation{
             eventTicksPassed = 0;
             activeEvent.start();
         }
-    }
-
-    public boolean isLoanActive()
-    {
-        return loanActive;
-    }
-
-    public int getLoanAmount()
-    {
-        return loanAmount;
-    }
-
-    public int getLoanStartTick()
-    {
-        return loanStartTick;
-    }
-
-    public int getLastLoanTick()
-    {
-        return lastLoanTick;
-    }
-
-    public int getRemainingDebt()
-    {
-        return remainingDebt;
     }
 
     // Controlla se una cella è coinvolta nell'incendio attivo.

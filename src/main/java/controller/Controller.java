@@ -69,6 +69,24 @@ public final class Controller
             int currentTick,
             int lastPolicyChangeTick)
     {
+        this(
+                grid,
+                initialPolicy,
+                budget,
+                currentTick,
+                lastPolicyChangeTick,
+                false
+        );
+    }
+
+    public Controller(
+            Grid grid,
+            Policy initialPolicy,
+            int budget,
+            int currentTick,
+            int lastPolicyChangeTick,
+            boolean tsunamiInsuranceActive)
+    {
         this.grid = Objects.requireNonNull(
                 grid,
                 "model.Grid cannot be null"
@@ -89,7 +107,8 @@ public final class Controller
                 city,
                 grid,
                 currentTick,
-                lastPolicyChangeTick
+                lastPolicyChangeTick,
+                tsunamiInsuranceActive
         );
     }
 
@@ -149,10 +168,42 @@ public final class Controller
             );
         }
 
+        int insuranceCost =
+                simulation
+                        .getAdditionalTsunamiCoverageCost(
+                                type,
+                                row,
+                                column
+                        );
+
+        int placementCost =
+                city.calculatePlacementCost(
+                        construction
+                );
+
+        if (insuranceCost > 0
+                && city.getBudget()
+                + placementCost
+                - insuranceCost < 0)
+        {
+            throw new IllegalStateException(
+                    "Insufficient budget: construction and insurance coverage require "
+                            + (-placementCost + insuranceCost)
+                            + " €"
+            );
+        }
+
         city.placeConstruction(
                 construction,
                 row,
                 column
+        );
+
+        simulation.coverNewConstruction(
+                construction,
+                row,
+                column,
+                insuranceCost
         );
 
         notifyObservers();
@@ -309,6 +360,70 @@ public final class Controller
     public int getMaxLoanAmount()
     {
         return simulation.getMaxLoanAmount();
+    }
+
+    public boolean hasBanks()
+    {
+        return simulation.hasBanks();
+    }
+
+    public boolean canBuyTsunamiInsurance()
+    {
+        return simulation.canBuyTsunamiInsurance();
+    }
+
+    public boolean buyTsunamiInsurance()
+    {
+        boolean bought =
+                simulation.buyTsunamiInsurance();
+
+        if (bought)
+        {
+            notifyObservers();
+        }
+
+        return bought;
+    }
+
+    public int getTsunamiInsuranceCost()
+    {
+        return simulation.getTsunamiInsuranceCost();
+    }
+
+    public int getTsunamiInsuranceBuildingCount()
+    {
+        return simulation
+                .getTsunamiInsuranceBuildingCount();
+    }
+
+    public int getTsunamiInsuranceDiscountPercentage()
+    {
+        return simulation
+                .getTsunamiInsuranceDiscountPercentage();
+    }
+
+    public boolean isTsunamiInsuranceActive()
+    {
+        return simulation
+                .isTsunamiInsuranceActive();
+    }
+
+    public int getAdditionalTsunamiCoverageCost(
+            ConstructionType type,
+            int row,
+            int column)
+    {
+        return simulation
+                .getAdditionalTsunamiCoverageCost(
+                        type,
+                        row,
+                        column
+                );
+    }
+
+    public void startTsunamiReconstruction()
+    {
+        simulation.startTsunamiReconstruction();
     }
 
     // Restituisce il numero di righe della griglia.

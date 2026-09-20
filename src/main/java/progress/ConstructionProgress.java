@@ -17,6 +17,7 @@ public class ConstructionProgress {
 
     private double economyGrowthRate;
     private int moneyProduction;
+    private boolean tsunamiInsured;
 
     public ConstructionProgress(
             ConstructionType type,
@@ -28,6 +29,30 @@ public class ConstructionProgress {
             double economyGrowthRate,
             int moneyProduction)
     {
+        this(
+                type,
+                row,
+                column,
+                population,
+                populationGrowthRate,
+                populationDecreaseRate,
+                economyGrowthRate,
+                moneyProduction,
+                false
+        );
+    }
+
+    public ConstructionProgress(
+            ConstructionType type,
+            int row,
+            int column,
+            int population,
+            int populationGrowthRate,
+            int populationDecreaseRate,
+            double economyGrowthRate,
+            int moneyProduction,
+            boolean tsunamiInsured)
+    {
         this.type = type;
         this.row = row;
         this.column = column;
@@ -36,6 +61,7 @@ public class ConstructionProgress {
         this.populationDecreaseRate = populationDecreaseRate;
         this.economyGrowthRate = economyGrowthRate;
         this.moneyProduction = moneyProduction;
+        this.tsunamiInsured = tsunamiInsured;
     }
 
     /* Crea una copia dello stato corrente di una costruzione,
@@ -54,7 +80,8 @@ public class ConstructionProgress {
                 construction.getPopulationGrowthRate(),
                 construction.getPopulationDecreaseRate(),
                 construction.getEconomyGrowthRate(),
-                construction.getMoneyProduction()
+                construction.getMoneyProduction(),
+                construction.isTsunamiInsured()
         );
     }
 
@@ -98,6 +125,11 @@ public class ConstructionProgress {
         return moneyProduction;
     }
 
+    public boolean isTsunamiInsured()
+    {
+        return tsunamiInsured;
+    }
+
     /* Ricrea la costruzione del tipo corretto
    e ripristina i valori presenti nel salvataggio. */
 
@@ -119,6 +151,10 @@ public class ConstructionProgress {
                 populationDecreaseRate,
                 economyGrowthRate,
                 moneyProduction
+        );
+
+        construction.setTsunamiInsured(
+                tsunamiInsured
         );
 
         return construction;

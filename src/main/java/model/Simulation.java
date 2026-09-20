@@ -25,6 +25,7 @@ public class Simulation{
     private int lastRemovalResetTick = 0;
     private final BankruptcyManager bankruptcyManager;
     private final BankManager bankManager;
+    private final InsuranceManager insuranceManager;
 
     private final CrimeManager crimeManager;
     private int removedCriminalActivities;
@@ -32,7 +33,13 @@ public class Simulation{
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
     {
-        this(city, grid, 0, 0);
+        this(
+                city,
+                grid,
+                0,
+                0,
+                false
+        );
     }
 
     // Crea una simulazione usando i tick recuperati da un salvataggio.
@@ -41,6 +48,22 @@ public class Simulation{
             Grid grid,
             int currentTick,
             int lastPolicyChangeTick)
+    {
+        this(
+                city,
+                grid,
+                currentTick,
+                lastPolicyChangeTick,
+                false
+        );
+    }
+
+    public Simulation(
+            City city,
+            Grid grid,
+            int currentTick,
+            int lastPolicyChangeTick,
+            boolean tsunamiInsuranceActive)
     {
         if (city == null)
         {
@@ -79,6 +102,12 @@ public class Simulation{
                 new BankruptcyManager();
         this.bankManager =
                 new BankManager(city, grid);
+        this.insuranceManager =
+                new InsuranceManager(
+                        city,
+                        grid,
+                        tsunamiInsuranceActive
+                );
         this.crimeManager =
                 new CrimeManager(city, grid);
     }
@@ -167,6 +196,8 @@ public class Simulation{
             startEvent(createRandomEvent());
         }
 
+        insuranceManager.updateReconstruction();
+
         // Prima agiscono le stazioni di polizia
         removedCriminalActivities =
                 crimeManager
@@ -233,6 +264,16 @@ public class Simulation{
             activeEvent = event;
             eventTicksPassed = 0;
             activeEvent.start();
+
+            if (activeEvent instanceof Tsunami)
+            {
+                Tsunami tsunami =
+                        (Tsunami) activeEvent;
+
+                insuranceManager.registerTsunamiDamage(
+                        tsunami.getDestroyedBuildings()
+                );
+            }
         }
     }
 
@@ -261,6 +302,80 @@ public class Simulation{
     }
 
 
+
+    public boolean hasBanks()
+    {
+        return insuranceManager.hasBanks();
+    }
+
+    public boolean canBuyTsunamiInsurance()
+    {
+        return insuranceManager
+                .canBuyTsunamiInsurance();
+    }
+
+    public boolean buyTsunamiInsurance()
+    {
+        return insuranceManager
+                .buyTsunamiInsurance();
+    }
+
+    public int getTsunamiInsuranceCost()
+    {
+        return insuranceManager
+                .getTsunamiInsuranceCost();
+    }
+
+    public int getTsunamiInsuranceBuildingCount()
+    {
+        return insuranceManager
+                .getTsunamiInsuranceBuildingCount();
+    }
+
+    public int getTsunamiInsuranceDiscountPercentage()
+    {
+        return insuranceManager
+                .getBankDiscountPercentage();
+    }
+
+    public boolean isTsunamiInsuranceActive()
+    {
+        return insuranceManager
+                .isTsunamiInsuranceActive();
+    }
+
+    public int getAdditionalTsunamiCoverageCost(
+            ConstructionType type,
+            int row,
+            int column)
+    {
+        return insuranceManager
+                .getAdditionalCoverageCost(
+                        type,
+                        row,
+                        column
+                );
+    }
+
+    public void coverNewConstruction(
+            Construction construction,
+            int row,
+            int column,
+            int additionalCost)
+    {
+        insuranceManager.coverNewConstruction(
+                construction,
+                row,
+                column,
+                additionalCost
+        );
+    }
+
+    public void startTsunamiReconstruction()
+    {
+        insuranceManager
+                .startTsunamiReconstruction();
+    }
 
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.
     public boolean isConstructionBoosted(Construction construction) {

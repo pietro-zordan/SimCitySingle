@@ -1,8 +1,9 @@
 {
-  "currentTick": 347,
+  "currentTick": 415,
   "lastPolicyChangeTick": 128,
   "policyType": "ENVIRONMENTAL",
-  "budget": 31374,
+  "budget": 81846,
+  "tsunamiInsuranceActive": true,
   "constructions": [
     {
       "type": "GRASS",
@@ -12,7 +13,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -21,8 +23,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "COMMERCIAL",
@@ -31,8 +34,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "POWER_PLANT",
@@ -42,7 +46,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -52,7 +57,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -62,7 +68,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -72,7 +79,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "POWER_PLANT",
@@ -82,7 +90,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "PARK",
@@ -92,7 +101,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -102,7 +112,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "INDUSTRIAL",
@@ -112,7 +123,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.5,
-      "moneyProduction": 420
+      "moneyProduction": 420,
+      "tsunamiInsured": true
     },
     {
       "type": "INDUSTRIAL",
@@ -122,7 +134,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.5,
-      "moneyProduction": 420
+      "moneyProduction": 420,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -130,9 +143,10 @@
       "column": 12,
       "population": 50,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 3,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "POWER_PLANT",
@@ -142,7 +156,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -152,7 +167,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -162,7 +178,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -172,37 +189,41 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
       "row": 0,
       "column": 17,
-      "population": 50,
+      "population": 5,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 5,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
       "row": 0,
       "column": 18,
-      "population": 50,
+      "population": 15,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 5,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
       "row": 0,
       "column": 19,
-      "population": 50,
+      "population": 25,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 5,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -212,7 +233,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -222,7 +244,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -232,7 +255,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -242,7 +266,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -252,7 +277,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -262,7 +288,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -272,7 +299,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -282,7 +310,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -292,7 +321,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -302,7 +332,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -312,7 +343,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -322,7 +354,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -332,7 +365,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -342,7 +376,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -352,7 +387,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -362,7 +398,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -372,7 +409,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -382,7 +420,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -392,7 +431,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -402,17 +442,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 2,
-      "column": 0,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -422,7 +453,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -432,7 +464,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -442,7 +475,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -452,7 +486,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -462,7 +497,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -472,7 +508,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "BANK",
@@ -482,7 +519,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "CONSTRUCTION_COMPANY",
@@ -492,7 +530,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "INDUSTRIAL",
@@ -502,7 +541,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.5,
-      "moneyProduction": 420
+      "moneyProduction": 420,
+      "tsunamiInsured": true
     },
     {
       "type": "BANK",
@@ -512,7 +552,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "INDUSTRIAL",
@@ -522,7 +563,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.5,
-      "moneyProduction": 420
+      "moneyProduction": 420,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -532,7 +574,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -542,7 +585,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -552,7 +596,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -562,37 +607,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 2,
-      "column": 16,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 2,
-      "column": 17,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "INDUSTRIAL",
-      "row": 2,
-      "column": 18,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.5,
-      "moneyProduction": 420
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -602,7 +618,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -610,9 +627,10 @@
       "column": 0,
       "population": 50,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 5,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -622,7 +640,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -632,17 +651,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "POWER_PLANT",
-      "row": 3,
-      "column": 18,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -652,7 +662,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -662,7 +673,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -672,7 +684,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -682,7 +695,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POWER_PLANT",
@@ -692,7 +706,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POLICE_STATION",
@@ -702,7 +717,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POLICE_STATION",
@@ -712,7 +728,19 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
+    },
+    {
+      "type": "GRASS",
+      "row": 4,
+      "column": 15,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -722,7 +750,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -732,7 +761,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -742,7 +772,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -752,7 +783,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POLICE_STATION",
@@ -762,7 +794,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -772,7 +805,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -782,7 +816,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -792,7 +827,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -802,7 +838,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -812,7 +849,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -822,7 +860,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -832,7 +871,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -842,7 +882,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POWER_PLANT",
@@ -852,7 +893,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -862,7 +904,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -872,7 +915,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -882,7 +926,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -892,7 +937,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -902,7 +948,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -912,7 +959,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -922,7 +970,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -932,7 +981,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POLICE_STATION",
@@ -942,7 +992,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -952,7 +1003,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -961,8 +1013,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -972,7 +1025,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -982,7 +1036,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -992,7 +1047,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1002,7 +1058,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1012,7 +1069,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1022,7 +1080,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1032,17 +1091,19 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
-      "type": "RESIDENTIAL",
+      "type": "CRIMINAL_ACTIVITY",
       "row": 7,
       "column": 8,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": -300,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1052,7 +1113,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1062,7 +1124,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 150,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1072,7 +1135,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -1082,7 +1146,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1092,7 +1157,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1101,8 +1167,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1112,7 +1179,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POWER_PLANT",
@@ -1122,17 +1190,19 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
-      "type": "RESIDENTIAL",
+      "type": "CRIMINAL_ACTIVITY",
       "row": 8,
-      "column": 8,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "column": 4,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": -300,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1142,7 +1212,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1152,7 +1223,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1162,17 +1234,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 8,
-      "column": 18,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1182,7 +1245,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1191,8 +1255,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1202,7 +1267,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1211,18 +1277,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
-    },
-    {
-      "type": "POWER_PLANT",
-      "row": 9,
-      "column": 8,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1232,17 +1289,19 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
       "row": 9,
       "column": 10,
-      "population": 50,
+      "population": 47,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 3,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1252,17 +1311,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "POWER_PLANT",
-      "row": 9,
-      "column": 18,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1272,7 +1322,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1281,8 +1332,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1292,7 +1344,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1301,18 +1354,20 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
       "row": 10,
       "column": 8,
-      "population": 50,
+      "population": 47,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 3,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1322,7 +1377,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1332,7 +1388,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1342,17 +1399,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "INDUSTRIAL",
-      "row": 10,
-      "column": 18,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.5,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1362,7 +1410,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1371,8 +1420,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1382,7 +1432,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1391,8 +1442,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -1402,7 +1454,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1412,7 +1465,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -1422,7 +1476,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1432,17 +1487,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "INDUSTRIAL",
-      "row": 11,
-      "column": 18,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.5,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1452,7 +1498,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1461,8 +1508,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1472,7 +1520,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1481,8 +1530,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "COMMERCIAL",
@@ -1492,7 +1542,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 150,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1502,7 +1553,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -1512,7 +1564,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1522,7 +1575,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -1532,7 +1586,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1542,7 +1597,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1551,8 +1607,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "ROAD",
@@ -1562,7 +1619,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1571,8 +1629,9 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.14,
-      "moneyProduction": 105
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
+      "tsunamiInsured": true
     },
     {
       "type": "PARK",
@@ -1582,7 +1641,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1592,7 +1652,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -1602,7 +1663,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1612,7 +1674,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1622,7 +1685,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1632,7 +1696,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1642,7 +1707,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1652,7 +1718,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1662,7 +1729,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1672,7 +1740,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -1682,7 +1751,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1692,7 +1762,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "GRASS",
@@ -1702,7 +1773,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POWER_PLANT",
@@ -1712,7 +1784,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": true
     },
     {
       "type": "RESIDENTIAL",
@@ -1722,7 +1795,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1732,7 +1806,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "POWER_PLANT",
@@ -1742,7 +1817,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1752,7 +1828,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -1762,7 +1839,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1772,7 +1850,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "COMMERCIAL",
@@ -1782,7 +1861,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 150,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1792,7 +1872,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "RESIDENTIAL",
@@ -1802,7 +1883,8 @@
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1812,7 +1894,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -1822,7 +1905,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1832,17 +1916,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "COMMERCIAL",
-      "row": 16,
-      "column": 8,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1852,17 +1927,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "COMMERCIAL",
-      "row": 16,
-      "column": 10,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1872,7 +1938,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -1882,7 +1949,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1892,17 +1960,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "POLICE_STATION",
-      "row": 17,
-      "column": 8,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -1912,77 +1971,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "CONSTRUCTION_COMPANY",
-      "row": 17,
-      "column": 10,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 17,
-      "column": 11,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 17,
-      "column": 12,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 17,
-      "column": 13,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 17,
-      "column": 14,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "COMMERCIAL",
-      "row": 17,
-      "column": 15,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.0,
-      "moneyProduction": 150
-    },
-    {
-      "type": "BANK",
-      "row": 17,
-      "column": 16,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -1992,7 +1982,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -2002,7 +1993,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2012,17 +2004,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "COMMERCIAL",
-      "row": 18,
-      "column": 8,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.0,
-      "moneyProduction": 150
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2032,7 +2015,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2042,7 +2026,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2052,7 +2037,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2062,7 +2048,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2072,7 +2059,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2082,7 +2070,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2092,7 +2081,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2102,7 +2092,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2112,7 +2103,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2122,7 +2114,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "ROAD",
@@ -2132,7 +2125,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "GRASS",
@@ -2142,77 +2136,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "POWER_PLANT",
-      "row": 19,
-      "column": 9,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "INDUSTRIAL",
-      "row": 19,
-      "column": 10,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.5,
-      "moneyProduction": 420
-    },
-    {
-      "type": "INDUSTRIAL",
-      "row": 19,
-      "column": 11,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 3.5,
-      "moneyProduction": 420
-    },
-    {
-      "type": "POLICE_STATION",
-      "row": 19,
-      "column": 12,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "RESIDENTIAL",
-      "row": 19,
-      "column": 13,
-      "population": 50,
-      "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "POWER_PLANT",
-      "row": 19,
-      "column": 14,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
-    },
-    {
-      "type": "BANK",
-      "row": 19,
-      "column": 15,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
-      "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -2222,7 +2147,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -2232,7 +2158,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -2242,7 +2169,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     },
     {
       "type": "PARK",
@@ -2252,7 +2180,8 @@
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
-      "moneyProduction": 0
+      "moneyProduction": 0,
+      "tsunamiInsured": false
     }
   ]
 }

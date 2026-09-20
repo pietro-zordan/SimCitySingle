@@ -30,21 +30,25 @@ public class TerrorManager {
 
     }
 
-    public void updateOfOneTick()
+    public boolean updateOfOneTick()
     {
         if (city.getGlobalHappiness() < HAPPINESS_THRESHOLD)
             sadnessTicks++;
         else
             sadnessTicks = 0;
 
+        boolean groupCreated = false;
+
         if (sadnessTicks >= NUM_OF_SADNESS_TICKS)
         {
-            placeTG();
+            groupCreated = placeTG();
             sadnessTicks = 0;
         }
 
         if (getNumOfTC() > 0)
             killPeople();
+
+        return groupCreated;
     }
 
     public List<Residential> getAllResidentials()
@@ -84,18 +88,21 @@ public class TerrorManager {
 
     }
 
-    public void placeTG()
+    public boolean placeTG()
     {
         List<Cell> cells = grid.getBuildableCells();
 
-        if (cells.isEmpty())
-            return;
+        // Non occupa l'ultima cella costruibile: Grid la riserva alle strade.
+        if (cells.size() <= 1)
+            return false;
 
         Random random = new Random();
         Cell cell = cells.get(random.nextInt(cells.size()));
 
         TerroristicGroup group = new TerroristicGroup();
         city.placeConstruction(group, cell.getRow(), cell.getColumn());
+
+        return true;
     }
 
     public int getNumOfTC()

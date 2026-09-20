@@ -14,13 +14,13 @@ public class InsuranceManager
     private static final double BANK_DISCOUNT = 0.05;
     private static final double MAX_BANK_DISCOUNT = 0.50;
 
-    private static final int RESIDENTIAL_COST = 40;
-    private static final int COMMERCIAL_COST = 60;
-    private static final int INDUSTRIAL_COST = 100;
-    private static final int POWER_PLANT_COST = 120;
-    private static final int BANK_COST = 80;
-    private static final int CONSTRUCTION_COMPANY_COST = 100;
-    private static final int POLICE_STATION_COST = 100;
+    private static final int RESIDENTIAL_COST = 80;
+    private static final int COMMERCIAL_COST = 120;
+    private static final int INDUSTRIAL_COST = 200;
+    private static final int POWER_PLANT_COST = 240;
+    private static final int BANK_COST = 160;
+    private static final int CONSTRUCTION_COMPANY_COST = 200;
+    private static final int POLICE_STATION_COST = 200;
 
     private final City city;
     private final Grid grid;

@@ -32,6 +32,7 @@ public final class GridView
     private final Label[][] noPowerIcons;
     private final Label[][] boostIcons;
     private final Label[][] tsunamiIcons;
+    private final Rectangle[][] tsunamiOverlays;
     private final Label[][] grassIcons;
     private final Tooltip[][] grassTooltips;
 
@@ -74,6 +75,7 @@ public final class GridView
         noPowerIcons = new Label[rows][columns];
         boostIcons = new Label[rows][columns];
         tsunamiIcons = new Label[rows][columns];
+        tsunamiOverlays = new Rectangle[rows][columns];
         grassIcons = new Label[rows][columns];
         grassTooltips = new Tooltip[rows][columns];
 
@@ -114,6 +116,17 @@ public final class GridView
                 boostIcon.setVisible(false);
                 boostIcon.setMouseTransparent(true);
 
+                Rectangle tsunamiOverlay =
+                        new Rectangle(
+                                CELL_SIZE,
+                                CELL_SIZE
+                        );
+                tsunamiOverlay.setFill(
+                        Color.LIGHTBLUE
+                );
+                tsunamiOverlay.setVisible(false);
+                tsunamiOverlay.setMouseTransparent(true);
+
                 Label tsunamiIcon = new Label("∿");
                 tsunamiIcon.setStyle(
                         "-fx-text-fill: white;"
@@ -144,8 +157,9 @@ public final class GridView
                         graphicCell,
                         noPowerIcon,
                         boostIcon,
-                        tsunamiIcon,
-                        grassIcon
+                        grassIcon,
+                        tsunamiOverlay,
+                        tsunamiIcon
                 );
 
                 final int selectedRow = row;
@@ -170,6 +184,8 @@ public final class GridView
                 noPowerIcons[row][column] = noPowerIcon;
                 boostIcons[row][column] = boostIcon;
                 tsunamiIcons[row][column] = tsunamiIcon;
+                tsunamiOverlays[row][column] =
+                        tsunamiOverlay;
                 grassIcons[row][column] = grassIcon;
                 grassTooltips[row][column] = grassTooltip;
 
@@ -427,11 +443,20 @@ public final class GridView
         }
     }
 
-    // Evidenzia visivamente una singola cella colpita dallo Tsunami cambiandone il colore e attivando l'icona dell'onda.
+    /*
+     * Mostra lo tsunami con un overlay sopra l'intera cella.
+     * In questo modo anche l'erba viene coperta correttamente
+     * dall'animazione senza modificarne lo stato o il colore reale.
+     */
     private void showTsunamiCell(int row, int column)
     {
-        graphicCells[row][column].setFill(Color.LIGHTBLUE);
-        tsunamiIcons[row][column].setVisible(true);
+        tsunamiOverlays[row][column].setVisible(
+                true
+        );
+
+        tsunamiIcons[row][column].setVisible(
+                true
+        );
     }
 
     // Nasconde l'icona dello Tsunami da tutte le celle della griglia al termine dell'evento.
@@ -445,7 +470,13 @@ public final class GridView
                  column < controller.getNumberOfColumns();
                  column++)
             {
-                tsunamiIcons[row][column].setVisible(false);
+                tsunamiOverlays[row][column].setVisible(
+                        false
+                );
+
+                tsunamiIcons[row][column].setVisible(
+                        false
+                );
             }
         }
     }

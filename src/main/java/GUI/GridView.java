@@ -125,7 +125,10 @@ public final class GridView
 
                 Label grassIcon = new Label("🍃");
                 grassIcon.setStyle(
-                        "-fx-font-size: 16px;"
+                        "-fx-font-size: 22px;"
+                                + "-fx-background-color: rgba(255,255,255,0.65);"
+                                + "-fx-background-radius: 10;"
+                                + "-fx-padding: 0 1 0 1;"
                 );
                 grassIcon.setVisible(false);
                 grassIcon.setMouseTransparent(true);
@@ -469,7 +472,7 @@ public final class GridView
             case CONSTRUCTION_COMPANY -> Color.BROWN;
             case CRIMINAL_ACTIVITY -> Color.BLACK;
             case POLICE_STATION -> Color.DARKBLUE;
-            case GRASS -> Color.PALEGREEN;
+            case GRASS -> Color.YELLOWGREEN;
         };
     }
 

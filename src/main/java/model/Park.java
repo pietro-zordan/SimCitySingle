@@ -3,8 +3,8 @@ package model;
 /* Rappresenta un parco della città.
    Riduce l'inquinamento e aumenta la felicità. */
 public class Park extends Construction {
-    private static final int POLLUTION_REDUCTION=-400;
-    private static final int HAPPINESS_INCREASE=400;
+    private static final int POLLUTION_REDUCTION=-250;
+    private static final int HAPPINESS_INCREASE=200;
     private static final int PLACEMENT_PRICE=-150;
     private static final int MAINTENANCE_COST = 10;
 

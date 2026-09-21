@@ -13,6 +13,7 @@ public class Simulation{
     private static final int POLICY_CHANGE_INTERVAL = 12;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
+    private static final int MAX_ENERGY_SERVED = 24000;
 
 
     private final Random random = new Random();

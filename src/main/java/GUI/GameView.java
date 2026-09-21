@@ -1162,7 +1162,9 @@ public final class GameView implements GameObserver
                         eventAnimationView.refresh();
 
                         if (!eventAnimationView
-                                .isTsunamiAnimationRunning())
+                                .isTsunamiAnimationRunning()
+                                && !eventAnimationView
+                                .isExplosionAnimationRunning())
                         {
                             gridView.refresh();
                         }

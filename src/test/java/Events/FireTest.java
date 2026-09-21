@@ -2,6 +2,7 @@ package Events;
 
 import model.City;
 import model.Grid;
+import model.NuclearPlant;
 import model.Construction;
 import model.ConstructionType;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,6 +59,21 @@ class FireTest {
         fire.setProbability(0);
 
         assertFalse(fire.canStart());
+    }
+
+    @Test
+    void protectedNuclearPlantCannotCatchFire() {
+        NuclearPlant nuclearPlant = new NuclearPlant();
+        nuclearPlant.setFireProtected(true);
+        grid.restoreConstruction(nuclearPlant, 5, 5);
+
+        fire.setProbability(12);
+
+        assertFalse(fire.canStart());
+
+        fire.burn(grid.getCell(5, 5));
+
+        assertSame(nuclearPlant, grid.getCell(5, 5).getConstruction());
     }
 
     @Test

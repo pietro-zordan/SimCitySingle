@@ -27,6 +27,7 @@ Costi base principali:
 | Banca | 800 € |
 | Impresa edile | 1000 € |
 | Stazione di polizia | 1200 € |
+| Centrale nucleare | 3000 € |
 
 Le politiche cittadine possono modificare alcuni prezzi.
 
@@ -54,6 +55,10 @@ Le centrali elettriche alimentano le costruzioni vicine entro la propria area di
 
 Ogni edificio consuma una quantità diversa di energia. Se una centrale non riesce ad alimentare tutto, alcune costruzioni vengono scollegate; quando torna disponibile energia sufficiente, vengono ricollegate automaticamente.
 
+La rete cittadina ha inoltre una capacità massima complessiva di **10000**. Se una nuova costruzione supererebbe questo limite, non può essere piazzata finché la rete non viene estesa.
+
+Quando la rete si avvicina al limite compare la **centrale nucleare** tra le costruzioni disponibili. Una centrale nucleare costa **3000 €** e aumenta la capacità massima della rete di **10000**. La centrale nucleare può essere costruita anche quando la rete è già al limite, proprio perché serve a estenderla.
+
 Gli edifici senza energia sono indicati nella griglia con il simbolo del fulmine.
 
 ## Manutenzione
@@ -80,7 +85,7 @@ Le costruzioni influenzano in modo diverso la città.
 
 I parchi aumentano la felicità e riducono l'inquinamento. Le zone commerciali aumentano moderatamente entrambi, mentre le industrie producono molto inquinamento e riducono la felicità.
 
-In alcune celle che diventano inutilizzabili può comparire automaticamente dell'**erba**. L'erba riduce leggermente l'inquinamento e può essere rimossa.
+La generazione automatica dell'erba è attualmente disabilitata.
 
 ## Politiche cittadine
 
@@ -110,11 +115,13 @@ L'assicurazione copre soltanto gli edifici presenti nel momento in cui viene app
 
 Quando uno tsunami distrugge edifici assicurati, questi vengono ricostruiti gradualmente dopo la fine dell'animazione, mantenendo lo stato che avevano prima della distruzione. Durante la ricostruzione non è possibile costruire nella zona interessata.
 
-## Attività criminali e polizia
+## Attività criminali, terrorismo e polizia
 
-Con la crescita dell'economia possono comparire casualmente delle **attività criminali**. Queste riducono l'economia e la felicità della città.
+Dal **turno 20** possono comparire casualmente delle **attività criminali**, con probabilità legata all'economia della città. Queste riducono economia e felicità.
 
-Una stazione di polizia alimentata può eliminare un'attività criminale quando questa è rimasta attiva per **almeno 3 turni**. Le stazioni di polizia non possono effettuare rimozioni continuamente: tra un intervento e il successivo deve trascorrere del tempo.
+I **gruppi terroristici** possono comparire quando la felicità rimane molto bassa per diversi turni oppure quando subisce un calo brusco di almeno **1200 punti nell'arco di massimo 3 turni**. I gruppi terroristici riducono la popolazione finché restano attivi.
+
+Una stazione di polizia alimentata può eliminare una minaccia alla volta, scegliendo tra attività criminali e gruppi terroristici. Le attività criminali devono essere rimaste attive per almeno **3 turni**, mentre i gruppi terroristici possono essere eliminati subito. Dopo un intervento la stazione deve attendere prima di poter agire di nuovo.
 
 ## Eventi casuali
 
@@ -128,7 +135,7 @@ Gli eventi principali sono:
 - **Incendio**: può propagarsi tra costruzioni vicine e distruggerle;
 - **Tsunami**: arriva da uno dei quattro lati della mappa e colpisce le prime quattro righe o colonne.
 
-Lo tsunami distrugge anche i parchi. Non distrugge invece strade ed erba. Le costruzioni assicurate possono essere ricostruite dopo l'evento.
+Lo tsunami distrugge anche i parchi. Non distrugge invece le strade. Le costruzioni assicurate possono essere ricostruite dopo l'evento.
 
 ## Salvataggio
 

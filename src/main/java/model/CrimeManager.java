@@ -8,7 +8,7 @@ public class CrimeManager {
     private static final double CRIME_ECONOMY_FACTOR = 0.00008;
     private static final double MAX_CRIME_PROBABILITY = 0.25;
     private static final int CRIME_UNLOCK_TICK = 20;
-    private static final int HAPPINESS_DROP_THRESHOLD = 1000;
+    private static final int HAPPINESS_DROP_THRESHOLD = 1200;
 
     private final Random random = new Random();
     private final City city;

@@ -20,7 +20,7 @@ public class NuclearPlant extends Construction {
 
     @Override
     public int getHappinessImpact() {
-        return 400;
+        return -1500;
     }
 
     @Override

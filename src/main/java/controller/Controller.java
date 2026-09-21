@@ -448,6 +448,18 @@ public final class Controller
         return city.getEnergyAvailable();
     }
 
+    // Restituisce il consumo energetico totale richiesto da tutte le costruzioni.
+    public int getTotalEnergyDemand()
+    {
+        return city.getTotalEnergyDemand();
+    }
+
+    // Restituisce il limite massimo di energia servibile dalla simulazione.
+    public int getMaxEnergyServed()
+    {
+        return simulation.getMaxEnergyServed();
+    }
+
     // Restituisce l'energia utilizzata dalla centrale presente nella cella indicata.
     public int getPowerPlantEnergyConsumed(int row, int column)
     {

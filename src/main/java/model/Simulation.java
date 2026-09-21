@@ -31,6 +31,7 @@ public class Simulation{
 
     private final CrimeManager crimeManager;
     private int removedCriminalActivities;
+    private int removedTerroristicGroups;
 
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
@@ -193,14 +194,20 @@ public class Simulation{
 
         insuranceManager.updateReconstruction();
 
-        // Prima agiscono le stazioni di polizia
-        removedCriminalActivities =
+        // Prima agiscono le stazioni di polizia.
+        int removedThreats =
                 crimeManager
                         .tryToDestroyCriminalActivities(
                                 currentTick
                         );
 
-        if (removedCriminalActivities > 0)
+        removedCriminalActivities =
+                crimeManager.getRemovedCriminalActivities();
+
+        removedTerroristicGroups =
+                crimeManager.getRemovedTerroristicGroups();
+
+        if (removedThreats > 0)
         {
             city.refreshStatistics();
         }
@@ -485,6 +492,11 @@ public class Simulation{
     public int getRemovedCriminalActivities()
     {
         return removedCriminalActivities;
+    }
+
+    public int getRemovedTerroristicGroups()
+    {
+        return removedTerroristicGroups;
     }
 
     public boolean wasTerroristicGroupCreated()

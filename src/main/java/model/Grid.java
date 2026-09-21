@@ -306,6 +306,22 @@ public class Grid
         return numberOfPoweredBanks;
     }
 
+    public int getNumOfNuclearPlants()
+    {
+        int numberOfNuclearPlants = 0;
+
+        for (Construction construction : getConstructions())
+        {
+            if (construction.getType() == ConstructionType.NUCLEAR_PLANT
+                    && construction.isPowered())
+            {
+                numberOfNuclearPlants++;
+            }
+        }
+
+        return numberOfNuclearPlants;
+    }
+
     // Ricalcola il collegamento stradale di tutte le costruzioni.
     public void updateRoadConnections()
     {

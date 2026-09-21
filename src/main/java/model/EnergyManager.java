@@ -10,7 +10,7 @@ import java.util.Queue;
    Gestisce aree servite, collegamenti, scollegamenti e riconnessioni
    senza affidare queste responsabilità alle singole centrali. */
 public class EnergyManager {
-    private static final int MAX_ENERGY_SERVED = 24000;
+    private int maxEnergyServed = 24000;
 
     private final Grid grid;
     private final Map<PowerPlant, Cell[]> nearbyCells = new HashMap<>();
@@ -132,14 +132,20 @@ public class EnergyManager {
 
             if (!isStillNearby(powerPlant, candidate)) {
                 candidates.remove();
-            } else if (candidate.isPowerPlantConnected()) {
+            }
+
+            else if (candidate.isPowerPlantConnected()) {
                 candidates.remove();
-            } else if (candidate.getPowerConsumption() <= availablePower) {
+            }
+
+            else if (candidate.getPowerConsumption() <= availablePower) {
                 candidates.remove();
                 candidate.connectToPowerPlant(powerPlant);
                 served.add(candidate);
                 availablePower = availablePower - candidate.getPowerConsumption();
-            } else {
+            }
+
+            else {
                 return;
             }
         }
@@ -197,12 +203,14 @@ public class EnergyManager {
         }
 
         if (construction instanceof PowerPlant) {
+
             PowerPlant powerPlant = (PowerPlant) construction;
             disconnectAll(powerPlant);
             nearbyCells.remove(powerPlant);
             servedConstructions.remove(powerPlant);
             candidatesForReconnection.remove(powerPlant);
             return;
+
         }
 
         for (Queue<Construction> served : servedConstructions.values()) {
@@ -306,8 +314,18 @@ public class EnergyManager {
         return energyAvailable;
     }
 
+    //estende l'energia fornibile dalla rete grazie al numero di centrali nucleari presenti
+    public void setMaxEnergyServed()
+    {
+        int numOfNuclearPlants= grid.getNumOfNuclearPlants();
+        maxEnergyServed *= numOfNuclearPlants;
+    }
+
+
     // Restituisce il limite globale mostrato nella GUI per l'energia servibile dalla città.
     public int getMaxEnergyServed() {
-        return MAX_ENERGY_SERVED;
+        return maxEnergyServed;
     }
+
+
 }

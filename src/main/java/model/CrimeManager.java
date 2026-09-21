@@ -142,7 +142,7 @@ public class CrimeManager {
         return criminalActivities;
     }
 
-    // Crea l'elenco completo delle minacce eliminabili dalla polizia: attività criminali valide e gruppi terroristici.
+    // Crea l'elenco delle minacce eliminabili: attività criminali valide e gruppi terroristici con almeno 5 tick di vita.
     private List<Cell> getPoliceTargets(int currentTick) {
         List<Cell> policeTargets = new ArrayList<>(getCriminalActivities(currentTick));
 
@@ -151,7 +151,11 @@ public class CrimeManager {
                 Cell cell = grid.getCell(row, column);
 
                 if (!cell.isEmpty() && cell.getConstruction() instanceof TerroristicGroup) {
-                    policeTargets.add(cell);
+                    TerroristicGroup terroristicGroup = (TerroristicGroup) cell.getConstruction();
+
+                    if (terroristicGroup.canBeRemovedByPolice()) {
+                        policeTargets.add(cell);
+                    }
                 }
             }
         }

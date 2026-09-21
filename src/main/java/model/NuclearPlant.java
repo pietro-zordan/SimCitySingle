@@ -10,7 +10,7 @@ public class NuclearPlant extends Construction
 
     @Override
     public ConstructionType getType() {
-        return null;
+        return ConstructionType.NUCLEAR_PLANT;
     }
 
 

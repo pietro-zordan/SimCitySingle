@@ -1,6 +1,5 @@
-// La classe EventAnimationView gestisce le animazioni visive degli eventi speciali di gioco (Tsunami e Hacker Attack).
-// Controlla la propagazione dell'onda sulla griglia e l'effetto glitch con codice binario a schermo,
-// bloccando l'interfaccia quando necessario
+// La classe EventAnimationView gestisce le animazioni visive degli eventi speciali di gioco.
+// Controlla Tsunami, Hacker Attack ed esplosioni nucleari, bloccando i comandi quando necessario.
 
 package GUI;
 
@@ -20,24 +19,33 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import model.ExplosionInfo;
+
+import java.util.ArrayDeque;
+import java.util.List;
+import java.util.Queue;
 
 public final class EventAnimationView
 {
     private static final int TSUNAMI_LINE_DELAY = 500;
+    private static final int EXPLOSION_RING_DELAY = 120;
 
     private final Controller controller;
     private final GridView gridView;
     private final Button nextTurnButton;
     private final VBox hackerAttackPanel;
     private final Label hackerBinaryCode;
+    private final Queue<ExplosionInfo> pendingExplosions = new ArrayDeque<>();
 
     private boolean tsunamiAnimationStarted;
     private boolean tsunamiAnimationRunning;
     private boolean hackerAttackAnimationStarted;
+    private boolean explosionAnimationRunning;
     private Timeline tsunamiTimeline;
     private Timeline hackerCodeTimeline;
+    private Timeline explosionTimeline;
 
-//Inizializza le dipendenze visive e costruisce il pannello grafico di avviso per l'attacco hacker (icona computer, testo e codice).
+    // Inizializza le dipendenze visive e costruisce il pannello grafico dell'attacco hacker.
     public EventAnimationView(
             Controller controller,
             GridView gridView,
@@ -124,13 +132,16 @@ public final class EventAnimationView
         hackerAttackPanel.setVisible(false);
         hackerAttackPanel.setMouseTransparent(true);
     }
-//Sincronizza lo stato delle animazioni con il tipo di evento attualmente attivo nel controller.
+
+    // Sincronizza tutte le animazioni con lo stato corrente del gioco.
     public void refresh()
     {
         updateTsunamiAnimation();
         updateHackerAttackAnimation();
+        updateExplosionAnimation();
     }
-//Verifica se l'evento Tsunami e attivo nel controller e ne avvia o resetta lo stato di animazione.
+
+    // Verifica se lo Tsunami è attivo e ne avvia o resetta l'animazione.
     private void updateTsunamiAnimation()
     {
         boolean tsunamiActive =
@@ -147,7 +158,8 @@ public final class EventAnimationView
             tsunamiAnimationStarted = false;
         }
     }
-//Crea e avvia la Timeline per l'avanzamento sequenziale dello Tsunami, disabilitando temporaneamente il pulsante del turno successivo.
+
+    // Crea e avvia la Timeline per l'avanzamento sequenziale dello Tsunami.
     private void startTsunamiAnimation()
     {
         tsunamiAnimationRunning = true;
@@ -205,7 +217,8 @@ public final class EventAnimationView
         tsunamiTimeline.getKeyFrames().add(resetFrame);
         tsunamiTimeline.play();
     }
-//Evidenzia sulla griglia di gioco la riga o colonna colpita dallo Tsunami in base alla direzione e allo step di avanzamento.
+
+    // Evidenzia sulla griglia la riga o colonna raggiunta dallo Tsunami.
     private void showTsunamiLine(
             String direction,
             int step)
@@ -231,7 +244,8 @@ public final class EventAnimationView
             gridView.showTsunamiColumn(column);
         }
     }
-//Ripristina lo stato iniziale della griglia dopo il passaggio dello Tsunami e riabilita l'interazione con il pulsante del turno.
+
+    // Ripristina la griglia al termine dello Tsunami.
     private void clearTsunamiAnimation()
     {
         gridView.clearTsunami();
@@ -240,9 +254,14 @@ public final class EventAnimationView
         controller.startTsunamiReconstruction();
 
         gridView.refresh();
-        nextTurnButton.setDisable(false);
+
+        if (!explosionAnimationRunning)
+        {
+            nextTurnButton.setDisable(false);
+        }
     }
-//Gestisce la visibilità e lo stato di avanzamento dell'animazione dell'attacco hacker in base all'evento attivo.
+
+    // Gestisce la visibilità dell'animazione dell'attacco hacker.
     private void updateHackerAttackAnimation()
     {
         boolean hackerAttackActive =
@@ -263,7 +282,8 @@ public final class EventAnimationView
             hackerAttackPanel.setOpacity(1.0);
         }
     }
-//Mostra il pannello dell'attacco hacker eseguendo un effetto visivo di sfarfallio (glitch) e avviando la generazione del codice binario.
+
+    // Mostra il pannello dell'attacco hacker con un effetto glitch.
     private void startHackerAttackAnimation()
     {
         hackerAttackPanel.setVisible(true);
@@ -317,7 +337,8 @@ public final class EventAnimationView
         timeline.play();
         startHackerCodeAnimation();
     }
-//Avvia un ciclo indefinito (Timeline) che aggiorna periodicamente la stringa di codice binario mostrata nel pannello hacker.
+
+    // Avvia il codice binario animato dell'attacco hacker.
     private void startHackerCodeAnimation()
     {
         hackerCodeTimeline = new Timeline(
@@ -339,7 +360,8 @@ public final class EventAnimationView
         hackerCodeTimeline.setCycleCount(Timeline.INDEFINITE);
         hackerCodeTimeline.play();
     }
-//Ferma e distrugge la Timeline responsabile dell'aggiornamento del codice binario.
+
+    // Ferma la Timeline del codice binario.
     private void stopHackerCodeAnimation()
     {
         if (hackerCodeTimeline != null)
@@ -348,7 +370,8 @@ public final class EventAnimationView
             hackerCodeTimeline = null;
         }
     }
-//Genera una stringa casuale di 16 cifre binarie (0 e 1) formattata in due blocchi separati da uno spazio.
+
+    // Genera una stringa casuale di 16 cifre binarie.
     private String generateBinaryCode()
     {
         StringBuilder code = new StringBuilder();
@@ -372,19 +395,123 @@ public final class EventAnimationView
 
         return code.toString();
     }
-//Restituisce true se l'animazione dello Tsunami e attualmente in corso sulla griglia, false altrimenti.
+
+    // Legge le nuove esplosioni dal Controller e le mette in coda per l'animazione.
+    private void updateExplosionAnimation()
+    {
+        List<ExplosionInfo> newExplosions =
+                controller.consumeExplosions();
+
+        for (ExplosionInfo explosion : newExplosions)
+        {
+            pendingExplosions.offer(explosion);
+        }
+
+        if (!explosionAnimationRunning
+                && !pendingExplosions.isEmpty())
+        {
+            startNextExplosionAnimation();
+        }
+    }
+
+    // Anima una singola esplosione espandendo progressivamente gli anelli dal centro verso l'esterno.
+    private void startNextExplosionAnimation()
+    {
+        ExplosionInfo explosion =
+                pendingExplosions.poll();
+
+        if (explosion == null)
+        {
+            return;
+        }
+
+        explosionAnimationRunning = true;
+        nextTurnButton.setDisable(true);
+        gridView.clearExplosion();
+
+        explosionTimeline = new Timeline();
+
+        for (int radius = 0;
+             radius <= explosion.getRadius();
+             radius++)
+        {
+            final int currentRadius = radius;
+
+            KeyFrame frame = new KeyFrame(
+                    Duration.millis(
+                            radius * EXPLOSION_RING_DELAY
+                    ),
+                    new EventHandler<ActionEvent>()
+                    {
+                        @Override
+                        public void handle(ActionEvent event)
+                        {
+                            gridView.showExplosionRing(
+                                    explosion.getRow(),
+                                    explosion.getColumn(),
+                                    currentRadius
+                            );
+                        }
+                    }
+            );
+
+            explosionTimeline
+                    .getKeyFrames()
+                    .add(frame);
+        }
+
+        KeyFrame resetFrame = new KeyFrame(
+                Duration.millis(
+                        (explosion.getRadius() + 2)
+                                * EXPLOSION_RING_DELAY
+                ),
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        finishExplosionAnimation();
+                    }
+                }
+        );
+
+        explosionTimeline
+                .getKeyFrames()
+                .add(resetFrame);
+
+        explosionTimeline.play();
+    }
+
+    // Pulisce l'esplosione appena conclusa e avvia quella successiva, se presente.
+    private void finishExplosionAnimation()
+    {
+        gridView.clearExplosion();
+        explosionAnimationRunning = false;
+        explosionTimeline = null;
+
+        if (!pendingExplosions.isEmpty())
+        {
+            startNextExplosionAnimation();
+        }
+        else if (!tsunamiAnimationRunning)
+        {
+            nextTurnButton.setDisable(false);
+        }
+    }
+
+    // Restituisce true se l'animazione dello Tsunami è in corso.
     public boolean isTsunamiAnimationRunning()
     {
         return tsunamiAnimationRunning;
     }
 
-//Restituisce il pannello VBox dell'attacco hacker per permetterne l'inserimento nell'interfaccia principale.
+    // Restituisce il pannello dell'attacco hacker.
     public VBox getHackerAttackPanel()
     {
         return hackerAttackPanel;
     }
 
-//Interrompe immediatamente tutte le animazioni in corso, ripristinando lo stato di default dei componenti e riabilitando i comandi.
+    // Interrompe tutte le animazioni e ripristina lo stato grafico.
     public void stop()
     {
         if (tsunamiTimeline != null)
@@ -393,10 +520,22 @@ public final class EventAnimationView
             tsunamiTimeline = null;
         }
 
+        if (explosionTimeline != null)
+        {
+            explosionTimeline.stop();
+            explosionTimeline = null;
+        }
+
         stopHackerCodeAnimation();
+
+        pendingExplosions.clear();
+        gridView.clearExplosion();
+
         tsunamiAnimationRunning = false;
         tsunamiAnimationStarted = false;
         hackerAttackAnimationStarted = false;
+        explosionAnimationRunning = false;
+
         nextTurnButton.setDisable(false);
         hackerAttackPanel.setVisible(false);
     }

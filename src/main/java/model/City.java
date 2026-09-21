@@ -189,6 +189,13 @@ public class City
         int cost =
                 calculatePlacementCost(construction);
 
+        if (!grid.canSupportConstruction(construction))
+        {
+            throw new IllegalStateException(
+                    "You need to expand the grid capacity before placing more constructions"
+            );
+        }
+
         if (!construction.isPlacementAllowed(
                 pollution,
                 unemployed))

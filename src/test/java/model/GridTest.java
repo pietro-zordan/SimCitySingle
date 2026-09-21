@@ -330,6 +330,20 @@ class GridTest {
     }
 
     @Test
+    void automaticGrassGenerationIsDisabled()
+    {
+        Grid localGrid = new Grid();
+
+        localGrid.restoreConstruction(new Park(), 9, 10);
+        localGrid.restoreConstruction(new Park(), 10, 9);
+        localGrid.restoreConstruction(new Park(), 10, 11);
+
+        localGrid.placeConstruction(new Road(), 0, 0);
+
+        assertTrue(localGrid.getCell(10, 10).isEmpty());
+    }
+
+    @Test
     void criminalActivityDoesNotTurnReachableAreaIntoGrass()
     {
         Grid localGrid = new Grid();

@@ -228,6 +228,19 @@ public final class GameView implements GameObserver
                                     "Warning: a terrorist group has appeared!"
                             );
                         }
+                        else if (controller.getRemovedTerroristicGroups() > 0
+                                && controller.getRemovedCriminalActivities() > 0)
+                        {
+                            showToast(
+                                    "Criminal activity and terrorist group eliminated by the police!"
+                            );
+                        }
+                        else if (controller.getRemovedTerroristicGroups() > 0)
+                        {
+                            showToast(
+                                    "Terrorist group eliminated by the police!"
+                            );
+                        }
                         else if (controller.getRemovedCriminalActivities() > 0)
                         {
                             showToast(

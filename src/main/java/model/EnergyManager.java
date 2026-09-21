@@ -338,6 +338,45 @@ public class EnergyManager {
         return getTotalEnergyDemand() + highestPowerConsumption > getMaxEnergyServed();
     }
 
+    //ricava le costruzioni dell'esplosione
+    public List<Construction> getExplosionCells(Cell cell)
+    {
+        List<Construction> constructions = new ArrayList<>();
+
+        if(cell.getConstruction() instanceof NuclearPlant) {
+            int plantRow = cell.getRow();
+            int plantColumn = cell.getColumn();
+
+            for (int row = plantRow - 4; row <= plantRow + 4; row++) {
+                for (int column = plantColumn - 4; column <= plantColumn + 4; column++) {
+
+                    if (grid.isInside(row, column)
+                            && (row != plantRow || column != plantColumn)
+                            && !cell.isEmpty()) {
+
+                        Cell cellToExplode = grid.getCell(row, column);
+
+                        if (!cellToExplode.isEmpty()) {
+                            constructions.add(cellToExplode.getConstruction());
+                        }
+                    }
+                }
+            }
+        }
+
+        return constructions;
+    }
+
+    //rimuove le celle dopo l'esplosione
+    public void makeExplosion(List<Construction> constructions)
+    {
+        if(!(constructions instanceof Road))
+        {
+            for (Construction construction : constructions)
+                removeConstruction(construction);
+        }
+    }
+
     // Restituisce il limite massimo attuale della rete, aggiornandolo in base alle centrali nucleari presenti.
     public int getMaxEnergyServed() {
         setMaxEnergyServed();

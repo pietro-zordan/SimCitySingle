@@ -391,6 +391,11 @@ public final class Controller
         return simulation.getNuclearPlantsNeedingFireProtectionCount();
     }
 
+    public int getNuclearFireProtectionDiscountPercentage()
+    {
+        return simulation.getNuclearFireProtectionDiscountPercentage();
+    }
+
     public boolean buyNuclearFireProtection()
     {
         boolean bought = simulation.buyNuclearFireProtection();

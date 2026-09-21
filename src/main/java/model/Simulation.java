@@ -362,6 +362,11 @@ public class Simulation{
         return insuranceManager.getNuclearPlantsNeedingFireProtectionCount();
     }
 
+    public int getNuclearFireProtectionDiscountPercentage()
+    {
+        return insuranceManager.getBankDiscountPercentage();
+    }
+
     public boolean buyNuclearFireProtection()
     {
         return insuranceManager.buyNuclearFireProtection();

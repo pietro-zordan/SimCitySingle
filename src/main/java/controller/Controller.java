@@ -423,6 +423,12 @@ public final class Controller
         );
     }
 
+    // Restituisce alla GUI le esplosioni avvenute nella griglia.
+    public List<ExplosionInfo> getExplosions()
+    {
+        return grid.getExplosions();
+    }
+
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {

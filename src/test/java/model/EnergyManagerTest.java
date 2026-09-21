@@ -141,6 +141,35 @@ class EnergyManagerTest
         );
     }
 
+    @Test
+    void nuclearPlantExtendsGridCapacity()
+    {
+        Grid grid = new Grid();
+
+        assertEquals(24000, grid.getMaxEnergyServed());
+
+        grid.restoreConstruction(new NuclearPlant(), 10, 10);
+
+        assertEquals(34000, grid.getMaxEnergyServed());
+    }
+
+    @Test
+    void gridCapacityBlocksAnotherConsumer()
+    {
+        Grid grid = new Grid();
+
+        for (int i = 0; i < 24; i++)
+        {
+            int row = i / 20;
+            int column = i % 20;
+            grid.restoreConstruction(new Industrial(), row, column);
+        }
+
+        assertEquals(24000, grid.getTotalEnergyDemand());
+        assertFalse(grid.canSupportConstruction(new Residential()));
+        assertTrue(grid.canSupportConstruction(new NuclearPlant()));
+    }
+
     private List<Industrial> createIndustrials(
             Grid grid,
             int number)

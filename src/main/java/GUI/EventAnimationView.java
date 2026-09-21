@@ -28,7 +28,7 @@ import java.util.Queue;
 public final class EventAnimationView
 {
     private static final int TSUNAMI_LINE_DELAY = 500;
-    private static final int EXPLOSION_RING_DELAY = 120;
+    private static final int EXPLOSION_RING_DELAY = 360;
 
     private final Controller controller;
     private final GridView gridView;
@@ -449,7 +449,8 @@ public final class EventAnimationView
                             gridView.showExplosionRing(
                                     explosion.getRow(),
                                     explosion.getColumn(),
-                                    currentRadius
+                                    currentRadius,
+                                    explosion.getRadius()
                             );
                         }
                     }

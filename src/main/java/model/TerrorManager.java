@@ -11,7 +11,7 @@ public class TerrorManager {
     private static final int KILLS_PER_GROUP = 15;
     private static final int HAPPINESS_THRESHOLD = -50;
     private static final int NUM_OF_SADNESS_TICKS = 8;
-    private static final int HAPPINESS_DROP_THRESHOLD = 1000;
+    private static final int HAPPINESS_DROP_THRESHOLD = 1200;
     private static final int SPAWN_COOLDOWN = 10;
     private static final int MAX_GROUPS = 3;
 
@@ -57,7 +57,7 @@ public class TerrorManager {
         boolean suddenHappinessDrop = hasSuddenHappinessDrop(currentHappiness);
         boolean groupCreated = false;
 
-        // Il gruppo compare dopo una tristezza prolungata oppure dopo un calo di almeno 1000 punti in massimo 3 tick.
+        // Il gruppo compare dopo una tristezza prolungata oppure dopo un calo di almeno 1200 punti in massimo 3 tick.
         if ((sadnessTicks >= NUM_OF_SADNESS_TICKS || suddenHappinessDrop) && canPlaceTG()) {
             groupCreated = placeTG();
 
@@ -76,7 +76,7 @@ public class TerrorManager {
         return groupCreated;
     }
 
-    // Controlla se la felicità è scesa di almeno 1000 punti rispetto a uno degli ultimi tre tick.
+    // Controlla se la felicità è scesa di almeno 1200 punti rispetto a uno degli ultimi tre tick.
     private boolean hasSuddenHappinessDrop(int currentHappiness) {
         return happinessOneTickAgo - currentHappiness >= HAPPINESS_DROP_THRESHOLD
                 || happinessTwoTicksAgo - currentHappiness >= HAPPINESS_DROP_THRESHOLD

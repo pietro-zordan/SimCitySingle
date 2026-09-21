@@ -213,7 +213,7 @@ public final class ConstructionToolbarView
             case GRASS -> Color.PALEGREEN;
             case TERRORISTIC_GROUP -> Color.DARKRED;
             case NUCLEAR_PLANT -> Color.PURPLE;
-            case WAST_TREATMENT_PLANT -> Color.PINK;
+            case WAST_TREATMENT_PLANT -> Color.web("#A0522D");
         };
     }
 

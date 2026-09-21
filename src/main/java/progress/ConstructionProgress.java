@@ -4,6 +4,7 @@ import model.Construction;
 import model.ConstructionFactory;
 import model.ConstructionType;
 import model.NuclearPlant;
+import model.TerroristicGroup;
 
 // Rappresenta lo stato salvato di una costruzione, compresi il tipo, la posizione e gli attributi modificabili
 public class ConstructionProgress {
@@ -20,6 +21,7 @@ public class ConstructionProgress {
     private int moneyProduction;
     private boolean tsunamiInsured;
     private boolean fireProtected;
+    private int terroristicGroupLifetimeTicks;
 
     public ConstructionProgress(
             ConstructionType type,
@@ -81,6 +83,34 @@ public class ConstructionProgress {
             boolean tsunamiInsured,
             boolean fireProtected)
     {
+        this(
+                type,
+                row,
+                column,
+                population,
+                populationGrowthRate,
+                populationDecreaseRate,
+                economyGrowthRate,
+                moneyProduction,
+                tsunamiInsured,
+                fireProtected,
+                0
+        );
+    }
+
+    public ConstructionProgress(
+            ConstructionType type,
+            int row,
+            int column,
+            int population,
+            int populationGrowthRate,
+            int populationDecreaseRate,
+            double economyGrowthRate,
+            int moneyProduction,
+            boolean tsunamiInsured,
+            boolean fireProtected,
+            int terroristicGroupLifetimeTicks)
+    {
         this.type = type;
         this.row = row;
         this.column = column;
@@ -91,6 +121,7 @@ public class ConstructionProgress {
         this.moneyProduction = moneyProduction;
         this.tsunamiInsured = tsunamiInsured;
         this.fireProtected = fireProtected;
+        this.terroristicGroupLifetimeTicks = terroristicGroupLifetimeTicks;
     }
 
     /* Crea una copia dello stato corrente di una costruzione,
@@ -102,11 +133,18 @@ public class ConstructionProgress {
             int column)
     {
         boolean fireProtected = false;
+        int terroristicGroupLifetimeTicks = 0;
 
         if (construction instanceof NuclearPlant)
         {
             NuclearPlant nuclearPlant = (NuclearPlant) construction;
             fireProtected = nuclearPlant.isFireProtected();
+        }
+
+        if (construction instanceof TerroristicGroup)
+        {
+            TerroristicGroup terroristicGroup = (TerroristicGroup) construction;
+            terroristicGroupLifetimeTicks = terroristicGroup.getLifetimeTicks();
         }
 
         return new ConstructionProgress(
@@ -119,7 +157,8 @@ public class ConstructionProgress {
                 construction.getEconomyGrowthRate(),
                 construction.getMoneyProduction(),
                 construction.isTsunamiInsured(),
-                fireProtected
+                fireProtected,
+                terroristicGroupLifetimeTicks
         );
     }
 
@@ -173,6 +212,11 @@ public class ConstructionProgress {
         return fireProtected;
     }
 
+    public int getTerroristicGroupLifetimeTicks()
+    {
+        return terroristicGroupLifetimeTicks;
+    }
+
     /* Ricrea la costruzione del tipo corretto
    e ripristina i valori presenti nel salvataggio. */
 
@@ -204,6 +248,12 @@ public class ConstructionProgress {
         {
             NuclearPlant nuclearPlant = (NuclearPlant) construction;
             nuclearPlant.setFireProtected(fireProtected);
+        }
+
+        if (construction instanceof TerroristicGroup)
+        {
+            TerroristicGroup terroristicGroup = (TerroristicGroup) construction;
+            terroristicGroup.setLifetimeTicks(terroristicGroupLifetimeTicks);
         }
 
         return construction;

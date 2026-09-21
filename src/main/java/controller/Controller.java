@@ -470,7 +470,9 @@ public final class Controller
 
         if (construction instanceof PowerPlant powerPlant)
         {
-            return powerPlant.getUsedPower();
+            return grid.getPowerPlantUsedPower(
+                    powerPlant
+            );
         }
 
         return 0;

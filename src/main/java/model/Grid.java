@@ -291,6 +291,17 @@ public class Grid
         return new ArrayList<>(explosions);
     }
 
+    // Restituisce le esplosioni non ancora mostrate dalla GUI e poi svuota la lista.
+    public List<ExplosionInfo> consumeExplosions()
+    {
+        List<ExplosionInfo> pendingExplosions =
+                new ArrayList<>(explosions);
+
+        explosions.clear();
+
+        return pendingExplosions;
+    }
+
     // Verifica se una delle quattro celle adiacenti contiene una strada.
     public boolean hasAdjacentRoad(Cell cell)
     {

@@ -127,7 +127,7 @@ Dal **turno 20** possono comparire casualmente delle **attività criminali**, co
 
 I **gruppi terroristici** possono comparire quando la felicità rimane molto bassa per diversi turni oppure quando subisce un calo brusco di almeno **1200 punti nell'arco di massimo 3 turni**. I gruppi terroristici riducono la popolazione finché restano attivi.
 
-Una stazione di polizia alimentata può eliminare una minaccia alla volta, scegliendo tra attività criminali e gruppi terroristici. Le attività criminali devono essere rimaste attive per almeno **3 turni**, mentre i gruppi terroristici possono essere eliminati subito. Dopo un intervento la stazione deve attendere prima di poter agire di nuovo.
+Una stazione di polizia alimentata può eliminare una minaccia alla volta, scegliendo tra attività criminali e gruppi terroristici. Le attività criminali devono essere rimaste attive per almeno **3 turni**, mentre i gruppi terroristici devono essere attivi per almeno **5 turni**. Dopo un intervento la stazione deve attendere prima di poter agire di nuovo.
 
 ## Eventi casuali
 

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Gestisce le assicurazioni della città.
- * Per ora supporta l'assicurazione contro lo tsunami.
+ * Gestisce le protezioni assicurative della città:
+ * assicurazione contro lo tsunami e protezione antincendio delle centrali nucleari.
  */
 public class InsuranceManager
 {

@@ -41,6 +41,8 @@ public final class EventAnimationView
     private boolean tsunamiAnimationRunning;
     private boolean hackerAttackAnimationStarted;
     private boolean explosionAnimationRunning;
+    private int tsunamiCurrentStep = -1;
+    private int tsunamiExplosionStartStep = -1;
     private Timeline tsunamiTimeline;
     private Timeline hackerCodeTimeline;
     private Timeline explosionTimeline;
@@ -171,6 +173,9 @@ public final class EventAnimationView
         int advancementLength =
                 controller.getActiveTsunamiAdvancementLength();
 
+        tsunamiCurrentStep = -1;
+        tsunamiExplosionStartStep = advancementLength / 2;
+
         tsunamiTimeline = new Timeline();
 
         for (int step = 0;
@@ -192,6 +197,9 @@ public final class EventAnimationView
                                     direction,
                                     currentStep
                             );
+
+                            tsunamiCurrentStep = currentStep;
+                            startWaitingExplosionIfReady();
                         }
                     }
             );
@@ -250,13 +258,16 @@ public final class EventAnimationView
     {
         gridView.clearTsunami();
         tsunamiAnimationRunning = false;
+        tsunamiCurrentStep = -1;
+        tsunamiExplosionStartStep = -1;
 
         controller.startTsunamiReconstruction();
 
-        gridView.refresh();
+        startWaitingExplosionIfReady();
 
         if (!explosionAnimationRunning)
         {
+            gridView.refresh();
             nextTurnButton.setDisable(false);
         }
     }
@@ -407,11 +418,25 @@ public final class EventAnimationView
             pendingExplosions.offer(explosion);
         }
 
-        if (!explosionAnimationRunning
-                && !pendingExplosions.isEmpty())
+        startWaitingExplosionIfReady();
+    }
+
+    // Avvia un'esplosione subito, oppure appena lo Tsunami ha superato la metà del suo avanzamento.
+    private void startWaitingExplosionIfReady()
+    {
+        if (explosionAnimationRunning
+                || pendingExplosions.isEmpty())
         {
-            startNextExplosionAnimation();
+            return;
         }
+
+        if (tsunamiAnimationRunning
+                && tsunamiCurrentStep < tsunamiExplosionStartStep)
+        {
+            return;
+        }
+
+        startNextExplosionAnimation();
     }
 
     // Anima una singola esplosione espandendo progressivamente gli anelli dal centro verso l'esterno.
@@ -547,6 +572,8 @@ public final class EventAnimationView
         tsunamiAnimationStarted = false;
         hackerAttackAnimationStarted = false;
         explosionAnimationRunning = false;
+        tsunamiCurrentStep = -1;
+        tsunamiExplosionStartStep = -1;
 
         nextTurnButton.setDisable(false);
         hackerAttackPanel.setVisible(false);

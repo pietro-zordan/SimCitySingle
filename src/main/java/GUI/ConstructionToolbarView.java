@@ -38,7 +38,8 @@ public final class ConstructionToolbarView
             ConstructionType.BANK,
             ConstructionType.CONSTRUCTION_COMPANY,
             ConstructionType.POLICE_STATION,
-            ConstructionType.NUCLEAR_PLANT
+            ConstructionType.NUCLEAR_PLANT,
+            ConstructionType.WAST_TREATMENT_PLANT
     );
 
     private final Controller controller;
@@ -190,6 +191,7 @@ public final class ConstructionToolbarView
             case GRASS -> "Grass";
             case TERRORISTIC_GROUP -> "Terroristic Group";
             case NUCLEAR_PLANT -> "Nuclear Plant";
+            case WAST_TREATMENT_PLANT -> "Waste Treatment Plant ";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -211,6 +213,7 @@ public final class ConstructionToolbarView
             case GRASS -> Color.PALEGREEN;
             case TERRORISTIC_GROUP -> Color.DARKRED;
             case NUCLEAR_PLANT -> Color.PURPLE;
+            case WAST_TREATMENT_PLANT -> Color.PINK;
         };
     }
 

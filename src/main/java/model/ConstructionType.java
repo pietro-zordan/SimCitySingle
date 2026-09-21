@@ -16,5 +16,6 @@ public enum ConstructionType
         POLICE_STATION,
         GRASS,
         TERRORISTIC_GROUP,
-        NUCLEAR_PLANT
+        NUCLEAR_PLANT,
+        WAST_TREATMENT_PLANT
 }

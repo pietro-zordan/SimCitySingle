@@ -13,8 +13,6 @@ public class Simulation{
     private static final int POLICY_CHANGE_INTERVAL = 12;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
-    private static final int MAX_ENERGY_SERVED = 24000;
-
 
     private final Random random = new Random();
     private int currentTick;
@@ -249,7 +247,7 @@ public class Simulation{
 
     public int getMaxEnergyServed()
     {
-        return MAX_ENERGY_SERVED;
+        return grid.getMaxEnergyServed();
     }
 
     // Controlla se è già presente un evento attivo.

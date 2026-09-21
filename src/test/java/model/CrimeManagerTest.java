@@ -69,7 +69,7 @@ class CrimeManagerTest
     }
 
     @Test
-    void suddenHappinessDropCreatesCriminalActivity()
+    void suddenHappinessDropDoesNotCreateCriminalActivity()
     {
         Grid grid = new Grid();
         City city = new City(grid, new StandardPolicy());
@@ -78,14 +78,10 @@ class CrimeManagerTest
 
         CrimeManager crimeManager = new CrimeManager(city, grid);
 
-        assertFalse(crimeManager.tryToCreateCriminalActivity(20));
-        assertFalse(crimeManager.tryToCreateCriminalActivity(21));
-        assertFalse(crimeManager.tryToCreateCriminalActivity(22));
-
         city.decreaseGlobalHappiness(1200);
 
-        assertTrue(crimeManager.tryToCreateCriminalActivity(23));
-        assertEquals(1, countCriminalActivities(grid));
+        assertFalse(crimeManager.tryToCreateCriminalActivity(20));
+        assertEquals(0, countCriminalActivities(grid));
     }
 
     @Test
@@ -129,6 +125,8 @@ class CrimeManagerTest
         terroristicGroup.updateOfOneTick();
 
         assertEquals(1, crimeManager.tryToDestroyCriminalActivities(5));
+        assertEquals(0, crimeManager.getRemovedCriminalActivities());
+        assertEquals(1, crimeManager.getRemovedTerroristicGroups());
         assertTrue(grid.getCell(10, 10).isEmpty());
     }
 

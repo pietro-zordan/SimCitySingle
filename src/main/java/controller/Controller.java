@@ -460,6 +460,12 @@ public final class Controller
         return simulation.getMaxEnergyServed();
     }
 
+    // Indica alla GUI quando deve comparire il pulsante della centrale nucleare.
+    public boolean shouldShowNuclearPlant()
+    {
+        return grid.shouldShowNuclearPlant();
+    }
+
     // Restituisce l'energia utilizzata dalla centrale presente nella cella indicata.
     public int getPowerPlantEnergyConsumed(int row, int column)
     {

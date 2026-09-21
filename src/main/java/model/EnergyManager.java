@@ -10,7 +10,8 @@ import java.util.Queue;
    Gestisce aree servite, collegamenti, scollegamenti e riconnessioni
    senza affidare queste responsabilità alle singole centrali. */
 public class EnergyManager {
-    private int maxEnergyServed = 24000;
+    private static final int BASE_MAX_ENERGY_SERVED = 24000;
+    private int maxEnergyServed = BASE_MAX_ENERGY_SERVED;
 
     private final Grid grid;
     private final Map<PowerPlant, Cell[]> nearbyCells = new HashMap<>();
@@ -314,16 +315,25 @@ public class EnergyManager {
         return energyAvailable;
     }
 
-    //estende l'energia fornibile dalla rete grazie al numero di centrali nucleari presenti
-    public void setMaxEnergyServed()
-    {
-        int numOfNuclearPlants= grid.getNumOfNuclearPlants();
-        maxEnergyServed *= numOfNuclearPlants;
+    // Ricalcola la capacità massima della rete: 24000 di base più 10000 per ogni centrale nucleare presente.
+    public void setMaxEnergyServed() {
+        int numOfNuclearPlants = grid.getNumOfNuclearPlants();
+        maxEnergyServed = BASE_MAX_ENERGY_SERVED + numOfNuclearPlants * NuclearPlant.getNetworkCapacityIncrease();
     }
 
+    // Controlla se la rete può sostenere anche il consumo della nuova costruzione.
+    public boolean canSupportConstruction(Construction construction) {
+        if (construction == null) {
+            return false;
+        }
 
-    // Restituisce il limite globale mostrato nella GUI per l'energia servibile dalla città.
+        int futureEnergyDemand = getTotalEnergyDemand() + construction.getPowerConsumption();
+        return futureEnergyDemand <= getMaxEnergyServed();
+    }
+
+    // Restituisce il limite massimo attuale della rete, aggiornandolo in base alle centrali nucleari presenti.
     public int getMaxEnergyServed() {
+        setMaxEnergyServed();
         return maxEnergyServed;
     }
 

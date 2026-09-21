@@ -4,6 +4,7 @@ import model.Construction;
 import model.ConstructionType;
 import model.NuclearPlant;
 import model.Residential;
+import model.TerroristicGroup;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -136,6 +137,33 @@ class ConstructionProgressTest {
 
         assertTrue(progress.isFireProtected());
         assertTrue(restoredPlant.isFireProtected());
+    }
+
+    @Test
+    void terroristicGroupLifetimeSurvivesSaveAndLoad()
+    {
+        TerroristicGroup terroristicGroup = new TerroristicGroup();
+
+        for (int i = 0; i < 3; i++)
+        {
+            terroristicGroup.updateOfOneTick();
+        }
+
+        ConstructionProgress progress =
+                ConstructionProgress.fromConstruction(
+                        terroristicGroup,
+                        4,
+                        9
+                );
+
+        TerroristicGroup restoredGroup =
+                assertInstanceOf(
+                        TerroristicGroup.class,
+                        progress.toConstruction()
+                );
+
+        assertEquals(3, progress.getTerroristicGroupLifetimeTicks());
+        assertEquals(3, restoredGroup.getLifetimeTicks());
     }
 
     // Una costruzione priva del tipo non può essere ricreata.

@@ -253,6 +253,25 @@ public class City
         return energyConsumed;
     }
 
+    // Restituisce il consumo energetico totale richiesto da tutte le costruzioni,
+    // comprese quelle attualmente non alimentate.
+    public int getTotalEnergyDemand()
+    {
+        int totalEnergyDemand = 0;
+
+        for (Construction construction
+                : grid.getConstructions())
+        {
+            if (construction.requiresPower())
+            {
+                totalEnergyDemand +=
+                        construction.getPowerConsumption();
+            }
+        }
+
+        return totalEnergyDemand;
+    }
+
     // Restituisce la potenza totale attualmente disponibile dalle centrali attive.
     public int getEnergyAvailable()
     {

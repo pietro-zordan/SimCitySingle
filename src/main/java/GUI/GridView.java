@@ -33,6 +33,7 @@ public final class GridView
     private final Label[][] boostIcons;
     private final Label[][] tsunamiIcons;
     private final Rectangle[][] tsunamiOverlays;
+    private final Rectangle[][] explosionOverlays;
     private final Label[][] grassIcons;
     private final Tooltip[][] grassTooltips;
     private final Tooltip[][] powerPlantTooltips;
@@ -77,6 +78,7 @@ public final class GridView
         boostIcons = new Label[rows][columns];
         tsunamiIcons = new Label[rows][columns];
         tsunamiOverlays = new Rectangle[rows][columns];
+        explosionOverlays = new Rectangle[rows][columns];
         grassIcons = new Label[rows][columns];
         grassTooltips = new Tooltip[rows][columns];
         powerPlantTooltips = new Tooltip[rows][columns];
@@ -129,6 +131,16 @@ public final class GridView
                 tsunamiOverlay.setVisible(false);
                 tsunamiOverlay.setMouseTransparent(true);
 
+                Rectangle explosionOverlay =
+                        new Rectangle(
+                                CELL_SIZE,
+                                CELL_SIZE
+                        );
+                explosionOverlay.setFill(Color.ORANGERED);
+                explosionOverlay.setOpacity(0.75);
+                explosionOverlay.setVisible(false);
+                explosionOverlay.setMouseTransparent(true);
+
                 Label tsunamiIcon = new Label("∿");
                 tsunamiIcon.setStyle(
                         "-fx-text-fill: white;"
@@ -169,7 +181,8 @@ public final class GridView
                         boostIcon,
                         grassIcon,
                         tsunamiOverlay,
-                        tsunamiIcon
+                        tsunamiIcon,
+                        explosionOverlay
                 );
 
                 final int selectedRow = row;
@@ -196,6 +209,8 @@ public final class GridView
                 tsunamiIcons[row][column] = tsunamiIcon;
                 tsunamiOverlays[row][column] =
                         tsunamiOverlay;
+                explosionOverlays[row][column] =
+                        explosionOverlay;
                 grassIcons[row][column] = grassIcon;
                 grassTooltips[row][column] = grassTooltip;
                 powerPlantTooltips[row][column] =
@@ -535,6 +550,39 @@ public final class GridView
                 tsunamiIcons[row][column].setVisible(
                         false
                 );
+            }
+        }
+    }
+
+    // Mostra un anello dell'esplosione attorno alla cella centrale.
+    public void showExplosionRing(
+            int centerRow,
+            int centerColumn,
+            int radius)
+    {
+        for (int row = 0; row < controller.getNumberOfRows(); row++)
+        {
+            for (int column = 0; column < controller.getNumberOfColumns(); column++)
+            {
+                int rowDistance = Math.abs(row - centerRow);
+                int columnDistance = Math.abs(column - centerColumn);
+
+                if (Math.max(rowDistance, columnDistance) == radius)
+                {
+                    explosionOverlays[row][column].setVisible(true);
+                }
+            }
+        }
+    }
+
+    // Nasconde l'effetto grafico dell'esplosione da tutta la griglia.
+    public void clearExplosion()
+    {
+        for (int row = 0; row < controller.getNumberOfRows(); row++)
+        {
+            for (int column = 0; column < controller.getNumberOfColumns(); column++)
+            {
+                explosionOverlays[row][column].setVisible(false);
             }
         }
     }

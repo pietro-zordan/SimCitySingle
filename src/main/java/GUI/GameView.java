@@ -907,6 +907,11 @@ public final class GameView implements GameObserver
     {
         int plantsToProtect = controller.getNuclearPlantsNeedingFireProtectionCount();
 
+        if (plantsToProtect == 0)
+        {
+            dismissedNuclearProtectionCount = -1;
+        }
+
         if (!controller.canBuyNuclearFireProtection()
                 || plantsToProtect == dismissedNuclearProtectionCount)
         {

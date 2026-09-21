@@ -28,7 +28,7 @@ class CrimeManagerTest
                 new CrimeManager(city, grid);
 
         boolean created =
-                crimeManager.placeCriminalActivity(5);
+                crimeManager.placeCriminalActivity(20);
 
         assertTrue(created);
         assertEquals(
@@ -40,6 +40,34 @@ class CrimeManagerTest
                 city.getGlobalHappiness()
         );
     }
+    @Test
+    void criminalActivityCannotAppearBeforeTick20()
+    {
+        Grid grid = new Grid();
+        City city = new City(
+                grid,
+                new StandardPolicy()
+        );
+
+        grid.placeConstruction(
+                new Road(),
+                10,
+                10
+        );
+
+        CrimeManager crimeManager =
+                new CrimeManager(city, grid);
+
+        assertFalse(
+                crimeManager.placeCriminalActivity(19)
+        );
+
+        assertEquals(
+                0,
+                countCriminalActivities(grid)
+        );
+    }
+
     @Test
     void criminalActivityDoesNotUseLastBuildableCell()
     {
@@ -54,7 +82,7 @@ class CrimeManagerTest
         CrimeManager crimeManager = new CrimeManager(city, grid);
 
         assertEquals(1, grid.getBuildableCells().size());
-        assertFalse(crimeManager.placeCriminalActivity(5));
+        assertFalse(crimeManager.placeCriminalActivity(20));
         assertTrue(grid.getCell(10, 11).isEmpty());
     }
 
@@ -158,6 +186,24 @@ class CrimeManagerTest
         grid.rebuildConnectionsAfterLoad();
 
         return grid;
+    }
+
+    private int countCriminalActivities(
+            Grid grid)
+    {
+        int count = 0;
+
+        for (Construction construction
+                : grid.getConstructions())
+        {
+            if (construction
+                    instanceof CriminalActivity)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private int countThreats(Grid grid)

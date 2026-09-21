@@ -3,6 +3,7 @@ package progress;
 import model.Construction;
 import model.ConstructionFactory;
 import model.ConstructionType;
+import model.NuclearPlant;
 
 // Rappresenta lo stato salvato di una costruzione, compresi il tipo, la posizione e gli attributi modificabili
 public class ConstructionProgress {
@@ -18,6 +19,7 @@ public class ConstructionProgress {
     private double economyGrowthRate;
     private int moneyProduction;
     private boolean tsunamiInsured;
+    private boolean fireProtected;
 
     public ConstructionProgress(
             ConstructionType type,
@@ -53,6 +55,32 @@ public class ConstructionProgress {
             int moneyProduction,
             boolean tsunamiInsured)
     {
+        this(
+                type,
+                row,
+                column,
+                population,
+                populationGrowthRate,
+                populationDecreaseRate,
+                economyGrowthRate,
+                moneyProduction,
+                tsunamiInsured,
+                false
+        );
+    }
+
+    public ConstructionProgress(
+            ConstructionType type,
+            int row,
+            int column,
+            int population,
+            int populationGrowthRate,
+            int populationDecreaseRate,
+            double economyGrowthRate,
+            int moneyProduction,
+            boolean tsunamiInsured,
+            boolean fireProtected)
+    {
         this.type = type;
         this.row = row;
         this.column = column;
@@ -62,6 +90,7 @@ public class ConstructionProgress {
         this.economyGrowthRate = economyGrowthRate;
         this.moneyProduction = moneyProduction;
         this.tsunamiInsured = tsunamiInsured;
+        this.fireProtected = fireProtected;
     }
 
     /* Crea una copia dello stato corrente di una costruzione,
@@ -72,6 +101,14 @@ public class ConstructionProgress {
             int row,
             int column)
     {
+        boolean fireProtected = false;
+
+        if (construction instanceof NuclearPlant)
+        {
+            NuclearPlant nuclearPlant = (NuclearPlant) construction;
+            fireProtected = nuclearPlant.isFireProtected();
+        }
+
         return new ConstructionProgress(
                 construction.getType(),
                 row,
@@ -81,7 +118,8 @@ public class ConstructionProgress {
                 construction.getPopulationDecreaseRate(),
                 construction.getEconomyGrowthRate(),
                 construction.getMoneyProduction(),
-                construction.isTsunamiInsured()
+                construction.isTsunamiInsured(),
+                fireProtected
         );
     }
 
@@ -130,6 +168,11 @@ public class ConstructionProgress {
         return tsunamiInsured;
     }
 
+    public boolean isFireProtected()
+    {
+        return fireProtected;
+    }
+
     /* Ricrea la costruzione del tipo corretto
    e ripristina i valori presenti nel salvataggio. */
 
@@ -156,6 +199,12 @@ public class ConstructionProgress {
         construction.setTsunamiInsured(
                 tsunamiInsured
         );
+
+        if (construction instanceof NuclearPlant)
+        {
+            NuclearPlant nuclearPlant = (NuclearPlant) construction;
+            nuclearPlant.setFireProtected(fireProtected);
+        }
 
         return construction;
     }

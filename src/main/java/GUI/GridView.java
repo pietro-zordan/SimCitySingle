@@ -554,12 +554,29 @@ public final class GridView
         }
     }
 
-    // Mostra un anello dell'esplosione attorno alla cella centrale.
+    // Mostra un anello dell'esplosione con un colore che sfuma dal giallo al rosso scuro.
     public void showExplosionRing(
             int centerRow,
             int centerColumn,
-            int radius)
+            int radius,
+            int maxRadius)
     {
+        double progress = 0.0;
+
+        if (maxRadius > 0)
+        {
+            progress = (double) radius / maxRadius;
+        }
+
+        Color explosionColor =
+                Color.YELLOW.interpolate(
+                        Color.DARKRED,
+                        progress
+                );
+
+        double opacity =
+                0.9 - (0.4 * progress);
+
         for (int row = 0; row < controller.getNumberOfRows(); row++)
         {
             for (int column = 0; column < controller.getNumberOfColumns(); column++)
@@ -569,7 +586,12 @@ public final class GridView
 
                 if (Math.max(rowDistance, columnDistance) == radius)
                 {
-                    explosionOverlays[row][column].setVisible(true);
+                    Rectangle overlay =
+                            explosionOverlays[row][column];
+
+                    overlay.setFill(explosionColor);
+                    overlay.setOpacity(opacity);
+                    overlay.setVisible(true);
                 }
             }
         }

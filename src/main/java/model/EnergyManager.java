@@ -322,13 +322,24 @@ public class EnergyManager {
     }
 
     // Controlla se la rete può sostenere anche il consumo della nuova costruzione.
+    // La centrale nucleare è sempre ammessa perché serve proprio ad aumentare il limite della rete.
     public boolean canSupportConstruction(Construction construction) {
         if (construction == null) {
             return false;
         }
 
+        if (construction instanceof NuclearPlant) {
+            return true;
+        }
+
         int futureEnergyDemand = getTotalEnergyDemand() + construction.getPowerConsumption();
         return futureEnergyDemand <= getMaxEnergyServed();
+    }
+
+    // Mostra la centrale nucleare quando aggiungere l'edificio che consuma di più manderebbe la rete oltre il limite.
+    public boolean shouldShowNuclearPlant() {
+        int highestPowerConsumption = new Industrial().getPowerConsumption();
+        return getTotalEnergyDemand() + highestPowerConsumption > getMaxEnergyServed();
     }
 
     // Restituisce il limite massimo attuale della rete, aggiornandolo in base alle centrali nucleari presenti.

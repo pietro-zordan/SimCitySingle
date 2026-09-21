@@ -216,7 +216,7 @@ public final class ConstructionToolbarView
 
     public void refreshAvailability()
     {
-        boolean nuclearPlantVisible = controller.getTotalEnergyDemand() >= controller.getMaxEnergyServed();
+        boolean nuclearPlantVisible = controller.shouldShowNuclearPlant();
 
         nuclearPlantBox.setVisible(nuclearPlantVisible);
         nuclearPlantBox.setManaged(nuclearPlantVisible);

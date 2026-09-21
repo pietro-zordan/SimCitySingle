@@ -118,7 +118,7 @@ public abstract class Construction {
     {
         if (isPowerPlantConnected())
         {
-            connectedPowerPlant.removeConstruction(this);
+            disconnectFromPowerPlant();
         }
     }
 

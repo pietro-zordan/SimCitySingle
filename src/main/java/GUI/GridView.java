@@ -554,7 +554,7 @@ public final class GridView
         }
     }
 
-    // Mostra un anello dell'esplosione con un colore che sfuma dal giallo al rosso scuro.
+    // Mostra un anello dell'esplosione e aggiorna le celle solo quando l'onda le raggiunge.
     public void showExplosionRing(
             int centerRow,
             int centerColumn,
@@ -577,6 +577,10 @@ public final class GridView
         double opacity =
                 0.9 - (0.4 * progress);
 
+        boolean energyCrisisActive =
+                controller.getActiveEventType()
+                        == EventType.ENERGY_CRISIS;
+
         for (int row = 0; row < controller.getNumberOfRows(); row++)
         {
             for (int column = 0; column < controller.getNumberOfColumns(); column++)
@@ -586,6 +590,13 @@ public final class GridView
 
                 if (Math.max(rowDistance, columnDistance) == radius)
                 {
+                    renderCell(
+                            row,
+                            column,
+                            controller.getCellState(row, column),
+                            energyCrisisActive
+                    );
+
                     Rectangle overlay =
                             explosionOverlays[row][column];
 

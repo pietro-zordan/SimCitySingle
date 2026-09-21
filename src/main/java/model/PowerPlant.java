@@ -63,7 +63,7 @@ public class PowerPlant extends Construction {
     @Override
     public int getMaintenanceCost()
     {
-        return 50;
+        return 10;
     }
 
     @Override

@@ -3,6 +3,7 @@ package progress;
 import controller.Controller;
 import model.City;
 import model.Construction;
+import model.ConstructionType;
 import model.Grid;
 import model.ReconstructionEntry;
 import model.Simulation;
@@ -107,7 +108,8 @@ public class Progress
                 Construction construction =
                         grid.getCell(row, column).getConstruction();
 
-                if (construction != null)
+                if (construction != null
+                        && construction.getType() != ConstructionType.GRASS)
                 {
                     ConstructionProgress constructionProgress =
                             ConstructionProgress.fromConstruction(
@@ -215,6 +217,12 @@ public class Progress
 
         for (ConstructionProgress constructionProgress : constructions)
         {
+            // I vecchi salvataggi possono ancora contenere erba: viene ignorata perché la generazione è disattivata.
+            if (constructionProgress.getType() == ConstructionType.GRASS)
+            {
+                continue;
+            }
+
             Construction construction =
                     constructionProgress.toConstruction();
 

@@ -8,6 +8,7 @@ public class CrimeManager
 {
     private static final double CRIME_ECONOMY_FACTOR = 0.00008;
     private static final double MAX_CRIME_PROBABILITY = 0.25;
+    private static final int CRIME_UNLOCK_TICK = 20;
 
     private final Random random = new Random();
     private final City city;
@@ -37,6 +38,11 @@ public class CrimeManager
     public boolean tryToCreateCriminalActivity(
             int currentTick)
     {
+        if (currentTick < CRIME_UNLOCK_TICK)
+        {
+            return false;
+        }
+
         double probability =
                 city.getGlobalEconomy()
                         * CRIME_ECONOMY_FACTOR;
@@ -59,6 +65,11 @@ public class CrimeManager
     public boolean placeCriminalActivity(
             int currentTick)
     {
+        if (currentTick < CRIME_UNLOCK_TICK)
+        {
+            return false;
+        }
+
         List<Cell> buildableCells =
                 grid.getBuildableCells();
 

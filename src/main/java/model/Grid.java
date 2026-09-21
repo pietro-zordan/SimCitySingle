@@ -20,6 +20,7 @@ public class Grid
 
     private final Cell[][] cells;
     private final boolean[][] reconstructionReserved;
+    private final EnergyManager energyManager;
     private boolean grassGenerationSuspended;
 
     // Crea e inizializza tutte le celle della griglia.
@@ -28,6 +29,8 @@ public class Grid
         cells = new Cell[N_ROW][N_COL];
         reconstructionReserved =
                 new boolean[N_ROW][N_COL];
+        energyManager =
+                new EnergyManager(this);
 
         for (int row = 0; row < N_ROW; row++)
         {
@@ -145,6 +148,12 @@ public class Grid
                 column
         );
 
+        energyManager.registerConstruction(
+                construction,
+                row,
+                column
+        );
+
         if (placingRoad)
         {
             updateRoadConnections();
@@ -154,7 +163,7 @@ public class Grid
             construction.setRoadConnected(true);
         }
 
-        updatePowerConnections();
+        energyManager.updatePowerConnections();
         fillTrappedCellsWithGrass();
 
     }
@@ -188,6 +197,9 @@ public class Grid
             );
         }
 
+        energyManager.removeConstruction(
+                construction
+        );
         construction.prepareForRemoval();
         cell.removeConstruction();
     }
@@ -322,6 +334,8 @@ public class Grid
        Rimuove quelle che non possono più rimanere nella griglia. */
     public void updateOfOneTick()
     {
+        energyManager.updatePowerConnections();
+
         // Prima fase: aggiorna tutte le centrali elettriche.
         for (int row = 0; row < N_ROW; row++)
         {
@@ -396,6 +410,39 @@ public class Grid
         }
 
         return powerPlants;
+    }
+
+    // Restituisce l'energia realmente utilizzata dalla centrale indicata.
+    public int getPowerPlantUsedPower(
+            PowerPlant powerPlant)
+    {
+        return energyManager.getUsedPower(
+                powerPlant
+        );
+    }
+
+    // Restituisce l'energia realmente consumata dalle costruzioni alimentate.
+    public int getEnergyConsumed()
+    {
+        return energyManager.getEnergyConsumed();
+    }
+
+    // Restituisce il consumo richiesto da tutte le costruzioni.
+    public int getTotalEnergyDemand()
+    {
+        return energyManager.getTotalEnergyDemand();
+    }
+
+    // Restituisce la potenza complessivamente disponibile dalle centrali attive.
+    public int getEnergyAvailable()
+    {
+        return energyManager.getEnergyAvailable();
+    }
+
+    // Restituisce il limite massimo di energia servibile dalla città.
+    public int getMaxEnergyServed()
+    {
+        return energyManager.getMaxEnergyServed();
     }
 
     // Restituisce il numero di righe della griglia.
@@ -501,6 +548,12 @@ public class Grid
                 row,
                 column
         );
+
+        energyManager.registerConstruction(
+                construction,
+                row,
+                column
+        );
     }
 
     /* Dopo il caricamento ricalcola i collegamenti stradali
@@ -508,15 +561,7 @@ public class Grid
     public void rebuildConnectionsAfterLoad()
     {
         updateRoadConnections();
-
-        List<PowerPlant> powerPlants =
-                getAllPowerPlants();
-
-        for (PowerPlant powerPlant
-                : powerPlants)
-        {
-            powerPlant.serveConstruction();
-        }
+        energyManager.rebuildConnections();
     }
 
     // Restituisce tutte le costruzioni presenti nella griglia.
@@ -543,18 +588,6 @@ public class Grid
         }
 
         return constructions;
-    }
-
-    private void updatePowerConnections()
-    {
-        for (PowerPlant powerPlant : getAllPowerPlants())
-        {
-            if (powerPlant.isActive())
-            {
-                powerPlant.serveConstruction();
-                powerPlant.reconnect();
-            }
-        }
     }
 
     public List<Cell> getBuildableCells()

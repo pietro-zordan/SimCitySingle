@@ -430,16 +430,51 @@ class GridTest {
     // ---------- rebuildConnectionsAfterLoad ----------
 
     @Test
-    void rebuildConnectionsAfterLoadUpdatesRoadsAndServesPowerPlants() {
-        grid.restoreConstruction(road, 5, 5);
-        grid.restoreConstruction(powerPlant, 5, 6);
-        grid.restoreConstruction(building, 5, 4);
+    void rebuildConnectionsAfterLoadUpdatesRoadsAndEnergyConnections()
+    {
+        Grid localGrid =
+                new Grid();
 
-        grid.rebuildConnectionsAfterLoad();
+        Road localRoad =
+                new Road();
 
-        // building è adiacente a una strada -> deve risultare connesso
-        verify(building, atLeastOnce()).setRoadConnected(true);
-        // ogni power plant presente deve servire le costruzioni adiacenti
-        verify(powerPlant).serveConstruction();
+        PowerPlant localPowerPlant =
+                new PowerPlant();
+
+        Residential residential =
+                new Residential();
+
+        localGrid.restoreConstruction(
+                localRoad,
+                5,
+                5
+        );
+
+        localGrid.restoreConstruction(
+                localPowerPlant,
+                5,
+                6
+        );
+
+        localGrid.restoreConstruction(
+                residential,
+                5,
+                4
+        );
+
+        localGrid.rebuildConnectionsAfterLoad();
+
+        assertTrue(
+                residential.isRoadConnected()
+        );
+
+        assertTrue(
+                residential.isPowerPlantConnected()
+        );
+
+        assertSame(
+                localPowerPlant,
+                residential.getConnectedPowerPlant()
+        );
     }
 }

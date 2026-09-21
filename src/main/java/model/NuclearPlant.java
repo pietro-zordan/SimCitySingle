@@ -2,6 +2,7 @@ package model;
 
 public class NuclearPlant extends Construction {
     private static final int NETWORK_CAPACITY_INCREASE = 10000;
+    private boolean fireProtected;
 
     // Crea una centrale nucleare che estende la capacità massima della rete di 10000.
     public NuclearPlant() {
@@ -11,6 +12,16 @@ public class NuclearPlant extends Construction {
     // Restituisce di quanto una centrale nucleare aumenta la capacità massima della rete.
     public static int getNetworkCapacityIncrease() {
         return NETWORK_CAPACITY_INCREASE;
+    }
+
+    // Indica se la centrale possiede la protezione avanzata contro gli incendi.
+    public boolean isFireProtected() {
+        return fireProtected;
+    }
+
+    // Registra la protezione avanzata contro gli incendi.
+    public void setFireProtected(boolean fireProtected) {
+        this.fireProtected = fireProtected;
     }
 
     @Override

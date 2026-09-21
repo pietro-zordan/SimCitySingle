@@ -61,6 +61,12 @@ public class PowerPlant extends Construction {
     }
 
     @Override
+    public int getMaintenanceCost()
+    {
+        return 50;
+    }
+
+    @Override
     public ConstructionType getType() {
         return ConstructionType.POWER_PLANT;
     }

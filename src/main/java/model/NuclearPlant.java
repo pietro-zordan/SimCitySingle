@@ -34,6 +34,11 @@ public class NuclearPlant extends Construction {
         return -1500;
     }
 
+    public int getMaintenanceCost()
+    {
+        return 100;
+    }
+
     @Override
     public ConstructionType getType() {
         return ConstructionType.NUCLEAR_PLANT;

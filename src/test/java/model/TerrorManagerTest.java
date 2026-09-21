@@ -50,7 +50,7 @@ class TerrorManagerTest
     }
 
     @Test
-    void terroristGroupAppearsAfterHappinessDropsBy1000InOneTick()
+    void terroristGroupAppearsAfterHappinessDropsBy1200InOneTick()
     {
         Grid grid = new Grid();
         grid.restoreConstruction(new Road(), 10, 10);
@@ -58,14 +58,14 @@ class TerrorManagerTest
         City city = new City(grid, new StandardPolicy());
         TerrorManager terrorManager = new TerrorManager(city, grid);
 
-        city.decreaseGlobalHappiness(1000);
+        city.decreaseGlobalHappiness(1200);
 
         assertTrue(terrorManager.updateOfOneTick());
         assertEquals(1, terrorManager.getNumOfTG());
     }
 
     @Test
-    void terroristGroupAppearsAfterHappinessDropsBy1000WithinThreeTicks()
+    void terroristGroupAppearsAfterHappinessDropsBy1200WithinThreeTicks()
     {
         Grid grid = new Grid();
         grid.restoreConstruction(new Road(), 10, 10);
@@ -73,10 +73,10 @@ class TerrorManagerTest
         City city = new City(grid, new StandardPolicy());
         TerrorManager terrorManager = new TerrorManager(city, grid);
 
-        city.decreaseGlobalHappiness(300);
+        city.decreaseGlobalHappiness(400);
         terrorManager.updateOfOneTick();
 
-        city.decreaseGlobalHappiness(300);
+        city.decreaseGlobalHappiness(400);
         terrorManager.updateOfOneTick();
 
         city.decreaseGlobalHappiness(400);

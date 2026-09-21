@@ -423,10 +423,10 @@ public final class Controller
         );
     }
 
-    // Restituisce alla GUI le esplosioni avvenute nella griglia.
-    public List<ExplosionInfo> getExplosions()
+    // Restituisce alla GUI le esplosioni non ancora mostrate e le rimuove dalla coda della griglia.
+    public List<ExplosionInfo> consumeExplosions()
     {
-        return grid.getExplosions();
+        return grid.consumeExplosions();
     }
 
     // Restituisce il numero di righe della griglia.

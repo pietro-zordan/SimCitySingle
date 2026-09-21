@@ -103,16 +103,14 @@ class TerrorManagerTest
         TerrorManager terrorManager =
                 new TerrorManager(city, grid);
 
-        assertTrue(
-                terrorManager.updateOfOneTick()
-        );
-        assertEquals(
-                1,
-                terrorManager.getNumOfTG()
-        );
-        assertEquals(
-                -100,
-                city.getBudget()
-        );
+        boolean groupCreated = false;
+
+        for (int i = 0; i < 8; i++) {
+            groupCreated = terrorManager.updateOfOneTick();
+        }
+
+        assertTrue(groupCreated);
+        assertEquals(1, terrorManager.getNumOfTG());
+        assertEquals(-100, city.getBudget());
     }
 }

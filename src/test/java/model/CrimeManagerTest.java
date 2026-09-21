@@ -82,7 +82,7 @@ class CrimeManagerTest
         assertFalse(crimeManager.tryToCreateCriminalActivity(21));
         assertFalse(crimeManager.tryToCreateCriminalActivity(22));
 
-        city.decreaseGlobalHappiness(1000);
+        city.decreaseGlobalHappiness(1200);
 
         assertTrue(crimeManager.tryToCreateCriminalActivity(23));
         assertEquals(1, countCriminalActivities(grid));
@@ -108,34 +108,28 @@ class CrimeManagerTest
 
 
     @Test
-    void policeRemovesTerroristicGroup()
+    void policeRemovesTerroristicGroupOnlyAfterFiveTicks()
     {
-        Grid grid =
-                createGridWithPoweredPoliceStation();
+        Grid grid = createGridWithPoweredPoliceStation();
 
-        grid.restoreConstruction(
-                new TerroristicGroup(),
-                10,
-                10
-        );
+        TerroristicGroup terroristicGroup = new TerroristicGroup();
+        grid.restoreConstruction(terroristicGroup, 10, 10);
 
-        City city =
-                new City(
-                        grid,
-                        new StandardPolicy()
-                );
+        City city = new City(grid, new StandardPolicy());
+        CrimeManager crimeManager = new CrimeManager(city, grid);
 
-        CrimeManager crimeManager =
-                new CrimeManager(city, grid);
+        for (int i = 0; i < 4; i++)
+        {
+            terroristicGroup.updateOfOneTick();
+        }
 
-        assertEquals(
-                1,
-                crimeManager
-                        .tryToDestroyCriminalActivities(0)
-        );
-        assertTrue(
-                grid.getCell(10, 10).isEmpty()
-        );
+        assertEquals(0, crimeManager.tryToDestroyCriminalActivities(4));
+        assertFalse(grid.getCell(10, 10).isEmpty());
+
+        terroristicGroup.updateOfOneTick();
+
+        assertEquals(1, crimeManager.tryToDestroyCriminalActivities(5));
+        assertTrue(grid.getCell(10, 10).isEmpty());
     }
 
     @Test

@@ -21,6 +21,7 @@ public class Grid
     private final Cell[][] cells;
     private final boolean[][] reconstructionReserved;
     private final EnergyManager energyManager;
+    private final List<ExplosionInfo> explosions = new ArrayList<>();
     // Per ora la generazione automatica dell'erba è disattivata, ma il sistema resta disponibile.
     private boolean grassGenerationSuspended = true;
 
@@ -209,6 +210,14 @@ public class Grid
 
         if (destructionRadius > 0)
         {
+            explosions.add(
+                    new ExplosionInfo(
+                            row,
+                            column,
+                            destructionRadius
+                    )
+            );
+
             makeExplosion(
                     row,
                     column,
@@ -274,6 +283,12 @@ public class Grid
                 );
             }
         }
+    }
+
+    // Restituisce le esplosioni avvenute nella griglia.
+    public List<ExplosionInfo> getExplosions()
+    {
+        return new ArrayList<>(explosions);
     }
 
     // Verifica se una delle quattro celle adiacenti contiene una strada.

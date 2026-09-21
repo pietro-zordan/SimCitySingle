@@ -247,6 +247,11 @@ public class Simulation{
         return bankManager.getMaxLoanAmount();
     }
 
+    public int getMaxEnergyServed()
+    {
+        return MAX_ENERGY_SERVED;
+    }
+
     // Controlla se è già presente un evento attivo.
     public boolean isEventActive()
     {

@@ -494,9 +494,14 @@ public final class EventAnimationView
         {
             startNextExplosionAnimation();
         }
-        else if (!tsunamiAnimationRunning)
+        else
         {
-            nextTurnButton.setDisable(false);
+            gridView.refresh();
+
+            if (!tsunamiAnimationRunning)
+            {
+                nextTurnButton.setDisable(false);
+            }
         }
     }
 
@@ -504,6 +509,12 @@ public final class EventAnimationView
     public boolean isTsunamiAnimationRunning()
     {
         return tsunamiAnimationRunning;
+    }
+
+    // Restituisce true se un'esplosione è ancora in corso.
+    public boolean isExplosionAnimationRunning()
+    {
+        return explosionAnimationRunning;
     }
 
     // Restituisce il pannello dell'attacco hacker.

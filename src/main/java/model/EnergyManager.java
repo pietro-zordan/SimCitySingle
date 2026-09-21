@@ -1,9 +1,7 @@
 package model;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -17,7 +15,7 @@ public class EnergyManager
 
     private final Grid grid;
 
-    private final Map<PowerPlant, List<Cell>> nearbyCells =
+    private final Map<PowerPlant, Cell[]> nearbyCells =
             new HashMap<>();
 
     private final Map<PowerPlant, Queue<Construction>> servedConstructions =
@@ -63,8 +61,10 @@ public class EnergyManager
             int plantRow,
             int plantColumn)
     {
-        List<Cell> cellsInRange =
-                new ArrayList<>();
+        Cell[] cellsInRange =
+                new Cell[48];
+
+        int numberOfNearbyCells = 0;
 
         for (int row = plantRow - 3;
              row <= plantRow + 3;
@@ -78,12 +78,13 @@ public class EnergyManager
                         && (row != plantRow
                         || column != plantColumn))
                 {
-                    cellsInRange.add(
+                    cellsInRange[numberOfNearbyCells] =
                             grid.getCell(
                                     row,
                                     column
-                            )
-                    );
+                            );
+
+                    numberOfNearbyCells++;
                 }
             }
         }
@@ -137,7 +138,7 @@ public class EnergyManager
     public void serveConstruction(
             PowerPlant powerPlant)
     {
-        List<Cell> cellsInRange =
+        Cell[] cellsInRange =
                 nearbyCells.get(powerPlant);
 
         if (cellsInRange == null)
@@ -155,9 +156,15 @@ public class EnergyManager
                         powerPlant
                 );
 
-        for (Cell cell : cellsInRange)
+        for (int i = 0;
+             i < cellsInRange.length;
+             i++)
         {
-            if (!cell.isEmpty())
+            Cell cell =
+                    cellsInRange[i];
+
+            if (cell != null
+                    && !cell.isEmpty())
             {
                 Construction construction =
                         cell.getConstruction();
@@ -293,7 +300,7 @@ public class EnergyManager
             PowerPlant powerPlant,
             Construction construction)
     {
-        List<Cell> cellsInRange =
+        Cell[] cellsInRange =
                 nearbyCells.get(powerPlant);
 
         if (cellsInRange == null)
@@ -301,9 +308,15 @@ public class EnergyManager
             return false;
         }
 
-        for (Cell cell : cellsInRange)
+        for (int i = 0;
+             i < cellsInRange.length;
+             i++)
         {
-            if (!cell.isEmpty()
+            Cell cell =
+                    cellsInRange[i];
+
+            if (cell != null
+                    && !cell.isEmpty()
                     && cell.getConstruction()
                     == construction)
             {

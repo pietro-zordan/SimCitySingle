@@ -3,39 +3,52 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class PowerPlantTest {
-
-    private Grid grid;
+class PowerPlantTest
+{
     private PowerPlant powerPlant;
 
     @BeforeEach
-    void setUp() {
-        grid = new Grid();
+    void setUp()
+    {
         powerPlant = new PowerPlant();
-
-        grid.restoreConstruction(
-                powerPlant,
-                10,
-                10
-        );
     }
 
     @Test
-    void initialValuesAreCorrect() {
+    void initialValuesAreCorrect()
+    {
         assertTrue(powerPlant.isActive());
         assertTrue(powerPlant.isPowered());
 
-        assertEquals(10000, powerPlant.getPowerGenerated());
-        assertEquals(200, powerPlant.getPollutionImpact());
-        assertEquals(-800, powerPlant.getPlacementPrice());
-        assertEquals(0, powerPlant.getPowerConsumption());
+        assertEquals(
+                6000,
+                powerPlant.getPowerGenerated()
+        );
 
-        assertFalse(powerPlant.requiresPower());
+        assertEquals(
+                6000,
+                powerPlant.getPowerCapacity()
+        );
+
+        assertEquals(
+                200,
+                powerPlant.getPollutionImpact()
+        );
+
+        assertEquals(
+                -800,
+                powerPlant.getPlacementPrice()
+        );
+
+        assertEquals(
+                0,
+                powerPlant.getPowerConsumption()
+        );
+
+        assertFalse(
+                powerPlant.requiresPower()
+        );
 
         assertEquals(
                 ConstructionType.POWER_PLANT,
@@ -44,226 +57,46 @@ class PowerPlantTest {
     }
 
     @Test
-    void nearbyPowerConsumersAreConnected() {
-        Residential residential = new Residential();
-        Park park = new Park();
+    void suspensionStopsProduction()
+    {
+        powerPlant.suspend();
 
-        grid.restoreConstruction(
-                residential,
-                10,
-                11
+        assertFalse(
+                powerPlant.isActive()
         );
 
-        grid.restoreConstruction(
-                park,
-                10,
-                12
+        assertFalse(
+                powerPlant.isPowered()
         );
 
-        powerPlant.serveConstruction();
-
-        assertTrue(residential.isPowerPlantConnected());
-        assertSame(
-                powerPlant,
-                residential.getConnectedPowerPlant()
+        assertEquals(
+                0,
+                powerPlant.getPowerGenerated()
         );
 
-        assertFalse(park.isPowerPlantConnected());
+        assertEquals(
+                0,
+                powerPlant.getPollutionImpact()
+        );
     }
 
     @Test
-    void constructionsOutsideAreaAreNotConnected() {
-        Residential nearbyResidential = new Residential();
-        Residential distantResidential = new Residential();
-
-        grid.restoreConstruction(
-                nearbyResidential,
-                13,
-                13
-        );
-
-        grid.restoreConstruction(
-                distantResidential,
-                14,
-                10
-        );
-
-        powerPlant.serveConstruction();
+    void resumeRestoresProduction()
+    {
+        powerPlant.suspend();
+        powerPlant.resume();
 
         assertTrue(
-                nearbyResidential.isPowerPlantConnected()
+                powerPlant.isActive()
         );
 
-        assertFalse(
-                distantResidential.isPowerPlantConnected()
-        );
-    }
-
-    @Test
-    void suspensionStopsProductionAndConnections() {
-        Residential residential = new Residential();
-
-        grid.restoreConstruction(
-                residential,
-                10,
-                11
+        assertTrue(
+                powerPlant.isPowered()
         );
 
-        powerPlant.suspend();
-        powerPlant.updateOfOneTick();
-
-        assertFalse(powerPlant.isActive());
-        assertFalse(powerPlant.isPowered());
-        assertEquals(0, powerPlant.getPowerGenerated());
-        assertEquals(0, powerPlant.getPollutionImpact());
-        assertFalse(residential.isPowerPlantConnected());
-
-        powerPlant.resume();
-        powerPlant.updateOfOneTick();
-
-        assertTrue(powerPlant.isActive());
-        assertEquals(10000, powerPlant.getPowerGenerated());
-        assertTrue(residential.isPowerPlantConnected());
-    }
-
-    @Test
-    void removeConstructionDisconnectsBuilding() {
-        Residential residential = new Residential();
-
-        grid.restoreConstruction(
-                residential,
-                10,
-                11
+        assertEquals(
+                6000,
+                powerPlant.getPowerGenerated()
         );
-
-        powerPlant.serveConstruction();
-
-        assertTrue(residential.isPowerPlantConnected());
-
-        powerPlant.removeConstruction(residential);
-
-        assertFalse(residential.isPowerPlantConnected());
-        assertNull(residential.getConnectedPowerPlant());
-    }
-
-    @Test
-    void disconnectAllDisconnectsEveryBuilding() {
-        Residential residential = new Residential();
-        Commercial commercial = new Commercial();
-
-        grid.restoreConstruction(
-                residential,
-                10,
-                11
-        );
-
-        grid.restoreConstruction(
-                commercial,
-                11,
-                10
-        );
-
-        powerPlant.serveConstruction();
-
-        assertTrue(residential.isPowerPlantConnected());
-        assertTrue(commercial.isPowerPlantConnected());
-
-        powerPlant.disconnectAll();
-
-        assertFalse(residential.isPowerPlantConnected());
-        assertFalse(commercial.isPowerPlantConnected());
-    }
-
-    @Test
-    void generatedPowerLimitsConnections() {
-        List<Industrial> industrials =
-                createIndustrials(11);
-
-        powerPlant.serveConstruction();
-
-        int connectedConstructions = 0;
-        int usedPower = 0;
-
-        for (Industrial industrial : industrials) {
-            if (industrial.isPowerPlantConnected()) {
-                connectedConstructions++;
-                usedPower += industrial.getPowerConsumption();
-            }
-        }
-
-        assertEquals(10, connectedConstructions);
-        assertEquals(10000, usedPower);
-    }
-
-    @Test
-    void lowerConsumptionCandidateReconnectsFirst() {
-        Residential residential = new Residential();
-
-        grid.restoreConstruction(
-                residential,
-                7,
-                7
-        );
-
-        List<Industrial> industrials =
-                createIndustrials(11);
-
-        powerPlant.serveConstruction();
-
-        Industrial disconnectedIndustrial = null;
-        Industrial connectedIndustrial = null;
-
-        for (Industrial industrial : industrials) {
-            if (industrial.isPowerPlantConnected()) {
-                connectedIndustrial = industrial;
-            } else {
-                disconnectedIndustrial = industrial;
-            }
-        }
-
-        assertFalse(residential.isPowerPlantConnected());
-        assertNotNull(disconnectedIndustrial);
-        assertNotNull(connectedIndustrial);
-
-        powerPlant.removeConstruction(
-                connectedIndustrial
-        );
-
-        powerPlant.reconnect();
-
-        assertTrue(residential.isPowerPlantConnected());
-        assertFalse(
-                disconnectedIndustrial.isPowerPlantConnected()
-        );
-    }
-
-    private List<Industrial> createIndustrials(int number) {
-        List<Industrial> industrials =
-                new ArrayList<>();
-
-        for (int row = 7;
-             row <= 13 && industrials.size() < number;
-             row++) {
-
-            for (int column = 7;
-                 column <= 13 && industrials.size() < number;
-                 column++) {
-
-                if (grid.getCell(row, column).isEmpty()) {
-                    Industrial industrial =
-                            new Industrial();
-
-                    grid.restoreConstruction(
-                            industrial,
-                            row,
-                            column
-                    );
-
-                    industrials.add(industrial);
-                }
-            }
-        }
-
-        return industrials;
     }
 }

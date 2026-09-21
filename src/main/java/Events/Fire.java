@@ -3,6 +3,7 @@ package Events;
 import model.Cell;
 import model.City;
 import model.Grid;
+import model.NuclearPlant;
 import model.Road;
 
 import java.util.ArrayList;
@@ -44,8 +45,7 @@ public class Fire extends Event{
             {
                 Cell cell = grid.getCell(row, column);
 
-                if (!cell.isEmpty()
-                        && !(cell.getConstruction() instanceof Road))
+                if (isBurnable(cell))
                 {
                     burnableCells.add(cell);
                 }
@@ -61,7 +61,7 @@ public class Fire extends Event{
        e prova a propagare l'incendio alle celle vicine. */
     public void burn(Cell cell) {
 
-        if (cell.isEmpty())
+        if (!isBurnable(cell))
         {
             return;
         }
@@ -85,7 +85,7 @@ public class Fire extends Event{
 
             if (grid.isInside(newRow, newColumn)) {
                 Cell neighbor = grid.getCell(newRow, newColumn);
-                if (!neighbor.isEmpty() && !(neighbor.getConstruction() instanceof Road)) {
+                if (isBurnable(neighbor)) {
                     willItBurn(neighbor);
                 }
             }
@@ -94,6 +94,10 @@ public class Fire extends Event{
 
     // Decide se la cella prende fuoco e in caso la salva per il tick successivo
     public void willItBurn(Cell cell) {
+        if (!isBurnable(cell)) {
+            return;
+        }
+
         Random random = new Random();
 
         if (!involvedCells.contains(cell)
@@ -118,7 +122,7 @@ public class Fire extends Event{
 
         for (Cell cell : current)
         {
-            if (!cell.isEmpty())
+            if (isBurnable(cell))
             {
                 burn(cell);
                 burnedCells++;
@@ -130,6 +134,20 @@ public class Fire extends Event{
         city.decreaseGlobalHappiness(
                 HAPPINESS_DECREASE * burnedCells
         );
+    }
+
+    // Una centrale nucleare con protezione avanzata non può essere coinvolta dall'incendio.
+    private boolean isBurnable(Cell cell) {
+        if (cell == null || cell.isEmpty() || cell.getConstruction() instanceof Road) {
+            return false;
+        }
+
+        if (cell.getConstruction() instanceof NuclearPlant) {
+            NuclearPlant nuclearPlant = (NuclearPlant) cell.getConstruction();
+            return !nuclearPlant.isFireProtected();
+        }
+
+        return true;
     }
 
     // Verifica se la cella indicata è coinvolta nell'incendio.

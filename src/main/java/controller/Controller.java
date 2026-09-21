@@ -376,6 +376,38 @@ public final class Controller
                 .isTsunamiInsuranceActive();
     }
 
+    public boolean canBuyNuclearFireProtection()
+    {
+        return simulation.canBuyNuclearFireProtection();
+    }
+
+    public int getNuclearFireProtectionCost()
+    {
+        return simulation.getNuclearFireProtectionCost();
+    }
+
+    public int getNuclearPlantsNeedingFireProtectionCount()
+    {
+        return simulation.getNuclearPlantsNeedingFireProtectionCount();
+    }
+
+    public int getNuclearFireProtectionDiscountPercentage()
+    {
+        return simulation.getNuclearFireProtectionDiscountPercentage();
+    }
+
+    public boolean buyNuclearFireProtection()
+    {
+        boolean bought = simulation.buyNuclearFireProtection();
+
+        if (bought)
+        {
+            notifyObservers();
+        }
+
+        return bought;
+    }
+
     public void startTsunamiReconstruction()
     {
         simulation.startTsunamiReconstruction();
@@ -460,6 +492,12 @@ public final class Controller
         return simulation.getMaxEnergyServed();
     }
 
+    // Indica alla GUI quando deve comparire il pulsante della centrale nucleare.
+    public boolean shouldShowNuclearPlant()
+    {
+        return grid.shouldShowNuclearPlant();
+    }
+
     // Restituisce l'energia utilizzata dalla centrale presente nella cella indicata.
     public int getPowerPlantEnergyConsumed(int row, int column)
     {
@@ -470,7 +508,9 @@ public final class Controller
 
         if (construction instanceof PowerPlant powerPlant)
         {
-            return powerPlant.getUsedPower();
+            return grid.getPowerPlantUsedPower(
+                    powerPlant
+            );
         }
 
         return 0;
@@ -570,6 +610,11 @@ public final class Controller
     public int getRemovedCriminalActivities()
     {
         return simulation.getRemovedCriminalActivities();
+    }
+
+    public int getRemovedTerroristicGroups()
+    {
+        return simulation.getRemovedTerroristicGroups();
     }
 
     public boolean wasTerroristicGroupCreated()

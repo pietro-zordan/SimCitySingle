@@ -5,6 +5,7 @@ import model.Cell;
 import model.City;
 import model.ConstructionType;
 import model.Grid;
+import model.Grass;
 import model.ReconstructionEntry;
 import model.Residential;
 import model.Road;
@@ -298,6 +299,47 @@ class ProgressTest {
                         .getCellState(0, 5)
                         .type()
         );
+    }
+
+    @Test
+    void oldSavedGrassIsIgnoredWhenLoading()
+    {
+        Progress progress = new Progress(
+                10,
+                0,
+                2500,
+                PolicyType.STANDARD,
+                List.of(
+                        new ConstructionProgress(
+                                ConstructionType.GRASS,
+                                4,
+                                4,
+                                0,
+                                0,
+                                0,
+                                0.0,
+                                0
+                        )
+                )
+        );
+
+        Grid restoredGrid = progress.restoreGrid();
+
+        assertTrue(restoredGrid.getCell(4, 4).isEmpty());
+    }
+
+    @Test
+    void grassIsNotSavedAnymore()
+    {
+        Grid grid = new Grid();
+        grid.restoreConstruction(new Grass(), 4, 4);
+
+        City city = new City(grid, new StandardPolicy());
+        Simulation simulation = new Simulation(city, grid);
+
+        Progress progress = Progress.fromGame(grid, city, simulation);
+
+        assertTrue(progress.getConstructions().isEmpty());
     }
 
     // Un salvataggio senza lista di costruzioni non può ripristinare la griglia.

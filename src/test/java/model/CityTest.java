@@ -150,6 +150,31 @@ class CityTest {
     }
 
     @Test
+    void placementFailsWhenGridCapacityIsFull()
+    {
+        Grid capacityGrid = new Grid();
+
+        for (int i = 0; i < 24; i++)
+        {
+            int row = i / 20;
+            int column = i % 20;
+            capacityGrid.restoreConstruction(new Industrial(), row, column);
+        }
+
+        City capacityCity = new City(capacityGrid, defaultPolicy, 10000);
+
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> capacityCity.placeConstruction(new Residential(), 5, 5)
+        );
+
+        assertEquals(
+                "You need to expand the grid capacity before placing more constructions",
+                exception.getMessage()
+        );
+    }
+
+    @Test
     void testPlaceConstructionNullOrInsufficientBudget()
     {
         assertThrows(

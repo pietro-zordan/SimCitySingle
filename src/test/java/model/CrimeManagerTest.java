@@ -28,7 +28,7 @@ class CrimeManagerTest
                 new CrimeManager(city, grid);
 
         boolean created =
-                crimeManager.placeCriminalActivity(5);
+                crimeManager.placeCriminalActivity(20);
 
         assertTrue(created);
         assertEquals(
@@ -40,6 +40,50 @@ class CrimeManagerTest
                 city.getGlobalHappiness()
         );
     }
+    @Test
+    void criminalActivityCannotAppearBeforeTick20()
+    {
+        Grid grid = new Grid();
+        City city = new City(
+                grid,
+                new StandardPolicy()
+        );
+
+        grid.placeConstruction(
+                new Road(),
+                10,
+                10
+        );
+
+        CrimeManager crimeManager =
+                new CrimeManager(city, grid);
+
+        assertFalse(
+                crimeManager.placeCriminalActivity(19)
+        );
+
+        assertEquals(
+                0,
+                countCriminalActivities(grid)
+        );
+    }
+
+    @Test
+    void suddenHappinessDropDoesNotCreateCriminalActivity()
+    {
+        Grid grid = new Grid();
+        City city = new City(grid, new StandardPolicy());
+
+        grid.placeConstruction(new Road(), 10, 10);
+
+        CrimeManager crimeManager = new CrimeManager(city, grid);
+
+        city.decreaseGlobalHappiness(1200);
+
+        assertFalse(crimeManager.tryToCreateCriminalActivity(20));
+        assertEquals(0, countCriminalActivities(grid));
+    }
+
     @Test
     void criminalActivityDoesNotUseLastBuildableCell()
     {
@@ -54,40 +98,36 @@ class CrimeManagerTest
         CrimeManager crimeManager = new CrimeManager(city, grid);
 
         assertEquals(1, grid.getBuildableCells().size());
-        assertFalse(crimeManager.placeCriminalActivity(5));
+        assertFalse(crimeManager.placeCriminalActivity(20));
         assertTrue(grid.getCell(10, 11).isEmpty());
     }
 
 
     @Test
-    void policeRemovesTerroristicGroup()
+    void policeRemovesTerroristicGroupOnlyAfterFiveTicks()
     {
-        Grid grid =
-                createGridWithPoweredPoliceStation();
+        Grid grid = createGridWithPoweredPoliceStation();
 
-        grid.restoreConstruction(
-                new TerroristicGroup(),
-                10,
-                10
-        );
+        TerroristicGroup terroristicGroup = new TerroristicGroup();
+        grid.restoreConstruction(terroristicGroup, 10, 10);
 
-        City city =
-                new City(
-                        grid,
-                        new StandardPolicy()
-                );
+        City city = new City(grid, new StandardPolicy());
+        CrimeManager crimeManager = new CrimeManager(city, grid);
 
-        CrimeManager crimeManager =
-                new CrimeManager(city, grid);
+        for (int i = 0; i < 4; i++)
+        {
+            terroristicGroup.updateOfOneTick();
+        }
 
-        assertEquals(
-                1,
-                crimeManager
-                        .tryToDestroyCriminalActivities(0)
-        );
-        assertTrue(
-                grid.getCell(10, 10).isEmpty()
-        );
+        assertEquals(0, crimeManager.tryToDestroyCriminalActivities(4));
+        assertFalse(grid.getCell(10, 10).isEmpty());
+
+        terroristicGroup.updateOfOneTick();
+
+        assertEquals(1, crimeManager.tryToDestroyCriminalActivities(5));
+        assertEquals(0, crimeManager.getRemovedCriminalActivities());
+        assertEquals(1, crimeManager.getRemovedTerroristicGroups());
+        assertTrue(grid.getCell(10, 10).isEmpty());
     }
 
     @Test
@@ -158,6 +198,24 @@ class CrimeManagerTest
         grid.rebuildConnectionsAfterLoad();
 
         return grid;
+    }
+
+    private int countCriminalActivities(
+            Grid grid)
+    {
+        int count = 0;
+
+        for (Construction construction
+                : grid.getConstructions())
+        {
+            if (construction
+                    instanceof CriminalActivity)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private int countThreats(Grid grid)

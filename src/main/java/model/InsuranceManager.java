@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Gestisce le assicurazioni della città.
- * Per ora supporta l'assicurazione contro lo tsunami.
+ * Gestisce le protezioni assicurative della città:
+ * assicurazione contro lo tsunami e protezione antincendio delle centrali nucleari.
  */
 public class InsuranceManager
 {
@@ -23,6 +23,7 @@ public class InsuranceManager
     private static final int BANK_COST = 160;
     private static final int CONSTRUCTION_COMPANY_COST = 200;
     private static final int POLICE_STATION_COST = 200;
+    private static final int NUCLEAR_FIRE_PROTECTION_COST = 2000;
 
     private final City city;
     private final Grid grid;
@@ -170,6 +171,73 @@ public class InsuranceManager
                 grid.getNumberOfBanks() * 5,
                 (int) (MAX_BANK_DISCOUNT * 100)
         );
+    }
+
+    // Restituisce quante centrali nucleari non hanno ancora la protezione avanzata contro gli incendi.
+    public int getNuclearPlantsNeedingFireProtectionCount()
+    {
+        int count = 0;
+
+        for (Construction construction : grid.getConstructions())
+        {
+            if (construction instanceof NuclearPlant)
+            {
+                NuclearPlant nuclearPlant = (NuclearPlant) construction;
+
+                if (!nuclearPlant.isFireProtected())
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    // La protezione è acquistabile solo se esistono una banca e almeno una centrale nucleare non protetta.
+    public boolean canBuyNuclearFireProtection()
+    {
+        return hasBanks() && getNuclearPlantsNeedingFireProtectionCount() > 0;
+    }
+
+    // Calcola 2000 euro per ogni centrale da proteggere applicando lo stesso sconto delle altre assicurazioni.
+    public int getNuclearFireProtectionCost()
+    {
+        int baseCost = getNuclearPlantsNeedingFireProtectionCount() * NUCLEAR_FIRE_PROTECTION_COST;
+        return applyBankDiscount(baseCost, grid.getNumberOfBanks());
+    }
+
+    // Acquista la protezione per tutte le centrali nucleari che non la possiedono ancora.
+    public boolean buyNuclearFireProtection()
+    {
+        if (!canBuyNuclearFireProtection())
+        {
+            return false;
+        }
+
+        int cost = getNuclearFireProtectionCost();
+
+        if (city.getBudget() < cost)
+        {
+            return false;
+        }
+
+        city.updateBudget(-cost);
+
+        for (Construction construction : grid.getConstructions())
+        {
+            if (construction instanceof NuclearPlant)
+            {
+                NuclearPlant nuclearPlant = (NuclearPlant) construction;
+
+                if (!nuclearPlant.isFireProtected())
+                {
+                    nuclearPlant.setFireProtected(true);
+                }
+            }
+        }
+
+        return true;
     }
 
     /*

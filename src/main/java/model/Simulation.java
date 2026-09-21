@@ -13,8 +13,6 @@ public class Simulation{
     private static final int POLICY_CHANGE_INTERVAL = 12;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
-    private static final int MAX_ENERGY_SERVED = 24000;
-
 
     private final Random random = new Random();
     private int currentTick;
@@ -33,6 +31,7 @@ public class Simulation{
 
     private final CrimeManager crimeManager;
     private int removedCriminalActivities;
+    private int removedTerroristicGroups;
 
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
@@ -195,14 +194,20 @@ public class Simulation{
 
         insuranceManager.updateReconstruction();
 
-        // Prima agiscono le stazioni di polizia
-        removedCriminalActivities =
+        // Prima agiscono le stazioni di polizia.
+        int removedThreats =
                 crimeManager
                         .tryToDestroyCriminalActivities(
                                 currentTick
                         );
 
-        if (removedCriminalActivities > 0)
+        removedCriminalActivities =
+                crimeManager.getRemovedCriminalActivities();
+
+        removedTerroristicGroups =
+                crimeManager.getRemovedTerroristicGroups();
+
+        if (removedThreats > 0)
         {
             city.refreshStatistics();
         }
@@ -249,7 +254,7 @@ public class Simulation{
 
     public int getMaxEnergyServed()
     {
-        return MAX_ENERGY_SERVED;
+        return grid.getMaxEnergyServed();
     }
 
     // Controlla se è già presente un evento attivo.
@@ -347,6 +352,31 @@ public class Simulation{
     {
         return insuranceManager
                 .isTsunamiInsuranceActive();
+    }
+
+    public boolean canBuyNuclearFireProtection()
+    {
+        return insuranceManager.canBuyNuclearFireProtection();
+    }
+
+    public int getNuclearFireProtectionCost()
+    {
+        return insuranceManager.getNuclearFireProtectionCost();
+    }
+
+    public int getNuclearPlantsNeedingFireProtectionCount()
+    {
+        return insuranceManager.getNuclearPlantsNeedingFireProtectionCount();
+    }
+
+    public int getNuclearFireProtectionDiscountPercentage()
+    {
+        return insuranceManager.getBankDiscountPercentage();
+    }
+
+    public boolean buyNuclearFireProtection()
+    {
+        return insuranceManager.buyNuclearFireProtection();
     }
 
     public void startTsunamiReconstruction()
@@ -462,6 +492,11 @@ public class Simulation{
     public int getRemovedCriminalActivities()
     {
         return removedCriminalActivities;
+    }
+
+    public int getRemovedTerroristicGroups()
+    {
+        return removedTerroristicGroups;
     }
 
     public boolean wasTerroristicGroupCreated()

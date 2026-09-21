@@ -273,4 +273,34 @@ class InsuranceManagerTest
                 ).getConstruction()
         );
     }
+    @Test
+    void nuclearFireProtectionUsesBankDiscountAndProtectsPlants()
+    {
+        Grid grid = new Grid();
+
+        for (int i = 0; i < 7; i++)
+        {
+            grid.restoreConstruction(new Bank(), 5, i);
+        }
+
+        NuclearPlant firstPlant = new NuclearPlant();
+        NuclearPlant secondPlant = new NuclearPlant();
+
+        grid.restoreConstruction(firstPlant, 10, 10);
+        grid.restoreConstruction(secondPlant, 10, 11);
+
+        City city = new City(grid, new StandardPolicy(), 5000);
+        InsuranceManager insuranceManager = new InsuranceManager(city, grid);
+
+        assertEquals(2, insuranceManager.getNuclearPlantsNeedingFireProtectionCount());
+        assertEquals(30, insuranceManager.getBankDiscountPercentage());
+        assertEquals(2800, insuranceManager.getNuclearFireProtectionCost());
+
+        assertTrue(insuranceManager.buyNuclearFireProtection());
+        assertTrue(firstPlant.isFireProtected());
+        assertTrue(secondPlant.isFireProtected());
+        assertEquals(2200, city.getBudget());
+        assertFalse(insuranceManager.canBuyNuclearFireProtection());
+    }
+
 }

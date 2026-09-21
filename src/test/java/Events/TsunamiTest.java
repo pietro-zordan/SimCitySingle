@@ -43,6 +43,18 @@ class TsunamiTest {
     }
 
     @Test
+    void tsunamiEndDoesNotReEnableGrassGeneration() {
+        grid.restoreConstruction(new Park(), 9, 10);
+        grid.restoreConstruction(new Park(), 10, 9);
+        grid.restoreConstruction(new Park(), 10, 11);
+
+        tsunami.end();
+        grid.placeConstruction(new Road(), 0, 0);
+
+        assertTrue(grid.getCell(10, 10).isEmpty());
+    }
+
+    @Test
     void testUpdateOfOneTickDecreasesHappiness() {
         int initialHappiness = city.getGlobalHappiness();
 

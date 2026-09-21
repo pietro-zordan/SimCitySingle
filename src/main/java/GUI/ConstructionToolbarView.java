@@ -37,7 +37,8 @@ public final class ConstructionToolbarView
             ConstructionType.COMMERCIAL,
             ConstructionType.BANK,
             ConstructionType.CONSTRUCTION_COMPANY,
-            ConstructionType.POLICE_STATION
+            ConstructionType.POLICE_STATION,
+            ConstructionType.NUCLEAR_PLANT
     );
 
     private final Controller controller;
@@ -53,6 +54,7 @@ public final class ConstructionToolbarView
             new EnumMap<>(ConstructionType.class);
 
     private final HBox view;
+    private VBox nuclearPlantBox;
 
     //Restituisce l'etichetta testuale descrittiva associata a uno specifico tipo di costruzione.
     public ConstructionToolbarView(
@@ -76,9 +78,14 @@ public final class ConstructionToolbarView
 
         for (ConstructionType type : TYPES)
         {
-            view.getChildren().add(
-                    createConstructionBox(type)
-            );
+            VBox constructionBox = createConstructionBox(type);
+
+            if (type == ConstructionType.NUCLEAR_PLANT)
+            {
+                nuclearPlantBox = constructionBox;
+            }
+
+            view.getChildren().add(constructionBox);
         }
 
         refreshCosts();
@@ -209,16 +216,16 @@ public final class ConstructionToolbarView
 
     public void refreshAvailability()
     {
+        boolean nuclearPlantVisible = controller.shouldShowNuclearPlant();
+
+        nuclearPlantBox.setVisible(nuclearPlantVisible);
+        nuclearPlantBox.setManaged(nuclearPlantVisible);
+
         for (ConstructionType type : TYPES)
         {
-            boolean locked =
-                    !controller.isConstructionUnlocked(type);
-
-            buttons.get(type)
-                    .setDisable(locked);
-
-            lockLabels.get(type)
-                    .setVisible(locked);
+            boolean locked = !controller.isConstructionUnlocked(type);
+            buttons.get(type).setDisable(locked);
+            lockLabels.get(type).setVisible(locked);
         }
     }
 

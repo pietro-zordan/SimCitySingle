@@ -86,6 +86,22 @@ public final class GameView implements GameObserver
                     tsunamiInsuranceActions
             );
 
+    private final Label nuclearFireProtectionInfoLabel = new Label();
+    private final Button confirmNuclearFireProtectionButton = new Button("Apply protection");
+    private final Button cancelNuclearFireProtectionButton = new Button("Not now");
+    private final HBox nuclearFireProtectionActions = new HBox(
+            5,
+            confirmNuclearFireProtectionButton,
+            cancelNuclearFireProtectionButton
+    );
+    private final VBox nuclearFireProtectionBox = new VBox(
+            5,
+            nuclearFireProtectionInfoLabel,
+            nuclearFireProtectionActions
+    );
+
+    private int dismissedNuclearProtectionCount = -1;
+
     private final Button demolitionButton =
             new Button("Demolish");
 
@@ -127,6 +143,7 @@ public final class GameView implements GameObserver
         configureNextTurnButton();
         configureLoanButton();
         configureTsunamiInsuranceButton();
+        configureNuclearFireProtection();
 
         gridView = new GridView(
                 controller,
@@ -209,6 +226,19 @@ public final class GameView implements GameObserver
                         {
                             showToast(
                                     "Warning: a terrorist group has appeared!"
+                            );
+                        }
+                        else if (controller.getRemovedTerroristicGroups() > 0
+                                && controller.getRemovedCriminalActivities() > 0)
+                        {
+                            showToast(
+                                    "Criminal activity and terrorist group eliminated by the police!"
+                            );
+                        }
+                        else if (controller.getRemovedTerroristicGroups() > 0)
+                        {
+                            showToast(
+                                    "Terrorist group eliminated by the police!"
                             );
                         }
                         else if (controller.getRemovedCriminalActivities() > 0)
@@ -386,6 +416,8 @@ public final class GameView implements GameObserver
         cancelDemolitionWhenUsed(tsunamiInsuranceButton);
         cancelDemolitionWhenUsed(confirmTsunamiInsuranceButton);
         cancelDemolitionWhenUsed(cancelTsunamiInsuranceButton);
+        cancelDemolitionWhenUsed(confirmNuclearFireProtectionButton);
+        cancelDemolitionWhenUsed(cancelNuclearFireProtectionButton);
         cancelDemolitionWhenUsed(saveButton);
         cancelDemolitionWhenUsed(restartButton);
         cancelDemolitionWhenUsed(homeButton);
@@ -426,6 +458,7 @@ public final class GameView implements GameObserver
                 loanRequestBox,
                 tsunamiInsuranceButton,
                 tsunamiInsuranceBox,
+                nuclearFireProtectionBox,
                 demolitionButton
         );
 
@@ -818,6 +851,120 @@ public final class GameView implements GameObserver
         }
     }
 
+    // Configura il messaggio automatico per la protezione avanzata delle centrali nucleari dagli incendi.
+    private void configureNuclearFireProtection()
+    {
+        nuclearFireProtectionBox.setAlignment(Pos.CENTER);
+        nuclearFireProtectionBox.managedProperty().bind(nuclearFireProtectionBox.visibleProperty());
+        nuclearFireProtectionBox.setVisible(false);
+
+        nuclearFireProtectionInfoLabel.setWrapText(true);
+        nuclearFireProtectionActions.setAlignment(Pos.CENTER);
+
+        confirmNuclearFireProtectionButton.setMaxWidth(Double.MAX_VALUE);
+        cancelNuclearFireProtectionButton.setMaxWidth(Double.MAX_VALUE);
+
+        confirmNuclearFireProtectionButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        applyNuclearFireProtection();
+                    }
+                }
+        );
+
+        cancelNuclearFireProtectionButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        dismissedNuclearProtectionCount =
+                                controller.getNuclearPlantsNeedingFireProtectionCount();
+                        nuclearFireProtectionBox.setVisible(false);
+                    }
+                }
+        );
+    }
+
+    // Applica la protezione e chiude subito il messaggio dopo la risposta dell'utente.
+    private void applyNuclearFireProtection()
+    {
+        int cost = controller.getNuclearFireProtectionCost();
+        int plantsToProtect = controller.getNuclearPlantsNeedingFireProtectionCount();
+
+        nuclearFireProtectionBox.setVisible(false);
+
+        if (controller.buyNuclearFireProtection())
+        {
+            dismissedNuclearProtectionCount = -1;
+
+            String plantText = "nuclear plants";
+            if (plantsToProtect == 1)
+            {
+                plantText = "nuclear plant";
+            }
+
+            showToast(
+                    "Advanced fire protection applied to "
+                            + plantsToProtect
+                            + " "
+                            + plantText
+                            + " for "
+                            + cost
+                            + " €."
+            );
+        }
+        else
+        {
+            dismissedNuclearProtectionCount = plantsToProtect;
+            showToast("Unable to apply advanced fire protection. Check your budget.");
+        }
+    }
+
+    // Mostra la richiesta solo quando esistono banca e centrali nucleari ancora non protette.
+    private void refreshNuclearFireProtection()
+    {
+        int plantsToProtect = controller.getNuclearPlantsNeedingFireProtectionCount();
+
+        if (plantsToProtect == 0)
+        {
+            dismissedNuclearProtectionCount = -1;
+        }
+
+        if (!controller.canBuyNuclearFireProtection()
+                || plantsToProtect == dismissedNuclearProtectionCount)
+        {
+            nuclearFireProtectionBox.setVisible(false);
+            return;
+        }
+
+        int cost = controller.getNuclearFireProtectionCost();
+        int discount = controller.getNuclearFireProtectionDiscountPercentage();
+
+        String plantText = "nuclear plants";
+        if (plantsToProtect == 1)
+        {
+            plantText = "nuclear plant";
+        }
+
+        nuclearFireProtectionInfoLabel.setText(
+                "Apply advanced fire protection to "
+                        + plantsToProtect
+                        + " "
+                        + plantText
+                        + "?\nBank discount: "
+                        + discount
+                        + "%\nCost: "
+                        + cost
+                        + " €"
+        );
+
+        nuclearFireProtectionBox.setVisible(true);
+    }
+
     private void configureDemolitionButton()
     {
         demolitionButton.setMaxWidth(
@@ -994,6 +1141,7 @@ public final class GameView implements GameObserver
 
         refreshLoanButton();
         refreshTsunamiInsuranceButton();
+        refreshNuclearFireProtection();
         refreshDemolitionButton();
 
         gridView.refresh();
@@ -1029,6 +1177,7 @@ public final class GameView implements GameObserver
 
                         refreshLoanButton();
                         refreshTsunamiInsuranceButton();
+                        refreshNuclearFireProtection();
                         refreshDemolitionButton();
 
                         statusView.updateTick();

@@ -148,8 +148,9 @@ public class Tsunami extends Event{
     @Override
     public void end()
     {
+        // La generazione automatica dell'erba è disattivata globalmente anche dopo lo tsunami.
         grid.setGrassGenerationSuspended(
-                false
+                true
         );
     }
 

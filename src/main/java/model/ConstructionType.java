@@ -17,5 +17,5 @@ public enum ConstructionType
         GRASS,
         TERRORISTIC_GROUP,
         NUCLEAR_PLANT,
-        WAST_TREATMENT_PLANT
+        WASTE_TREATMENT_PLANT
 }

@@ -10,7 +10,7 @@ import java.util.Queue;
    Gestisce aree servite, collegamenti, scollegamenti e riconnessioni
    senza affidare queste responsabilità alle singole centrali. */
 public class EnergyManager {
-    private static final int BASE_MAX_ENERGY_SERVED = 24000;
+    private static final int BASE_MAX_ENERGY_SERVED = 10000;
     private int maxEnergyServed = BASE_MAX_ENERGY_SERVED;
 
     private final Grid grid;

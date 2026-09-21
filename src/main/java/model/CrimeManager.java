@@ -8,16 +8,13 @@ public class CrimeManager {
     private static final double CRIME_ECONOMY_FACTOR = 0.00008;
     private static final double MAX_CRIME_PROBABILITY = 0.25;
     private static final int CRIME_UNLOCK_TICK = 20;
-    private static final int HAPPINESS_DROP_THRESHOLD = 1200;
 
     private final Random random = new Random();
     private final City city;
     private final Grid grid;
 
-    private int happinessThreeTicksAgo;
-    private int happinessTwoTicksAgo;
-    private int happinessOneTickAgo;
-    private int recordedHappinessTicks;
+    private int removedCriminalActivities;
+    private int removedTerroristicGroups;
 
     // Crea il gestore della criminalità usando la città e la griglia della simulazione.
     public CrimeManager(City city, Grid grid) {
@@ -33,16 +30,10 @@ public class CrimeManager {
         this.grid = grid;
     }
 
-    // Dopo il tick 20 prova a generare criminalità per un brusco calo di felicità oppure con la probabilità basata sull'economia.
+    // Dopo il tick 20 prova a generare criminalità usando soltanto la probabilità basata sull'economia.
     public boolean tryToCreateCriminalActivity(int currentTick) {
-        boolean suddenHappinessDrop = checkSuddenHappinessDrop();
-
         if (currentTick < CRIME_UNLOCK_TICK) {
             return false;
-        }
-
-        if (suddenHappinessDrop) {
-            return placeCriminalActivity(currentTick);
         }
 
         double probability = city.getGlobalEconomy() * CRIME_ECONOMY_FACTOR;
@@ -53,30 +44,6 @@ public class CrimeManager {
         }
 
         return false;
-    }
-
-    // Confronta la felicità attuale con quella di tre tick fa. Un calo di almeno 1000 genera una nuova causa di criminalità.
-    private boolean checkSuddenHappinessDrop() {
-        int currentHappiness = city.getGlobalHappiness();
-        boolean suddenDrop = recordedHappinessTicks >= 3
-                && happinessThreeTicksAgo - currentHappiness >= HAPPINESS_DROP_THRESHOLD;
-
-        happinessThreeTicksAgo = happinessTwoTicksAgo;
-        happinessTwoTicksAgo = happinessOneTickAgo;
-        happinessOneTickAgo = currentHappiness;
-
-        if (recordedHappinessTicks < 3) {
-            recordedHappinessTicks++;
-        }
-
-        // Dopo aver rilevato il calo, il nuovo livello diventa il riferimento per evitare tre spawn consecutivi per lo stesso crollo.
-        if (suddenDrop) {
-            happinessThreeTicksAgo = currentHappiness;
-            happinessTwoTicksAgo = currentHappiness;
-            happinessOneTickAgo = currentHappiness;
-        }
-
-        return suddenDrop;
     }
 
     // Piazza una nuova attività criminale in una cella costruibile scelta casualmente, ma mai prima del tick 20.
@@ -178,7 +145,7 @@ public class CrimeManager {
         return true;
     }
 
-    // Sceglie casualmente una minaccia tra criminalità e terrorismo e ne rimuove una sola.
+    // Sceglie casualmente una minaccia tra criminalità e terrorismo e memorizza quale tipo è stato rimosso.
     private boolean destroyPoliceTarget(int currentTick) {
         List<Cell> policeTargets = getPoliceTargets(currentTick);
 
@@ -188,6 +155,14 @@ public class CrimeManager {
 
         int randomIndex = random.nextInt(policeTargets.size());
         Cell targetCell = policeTargets.get(randomIndex);
+        Construction target = targetCell.getConstruction();
+
+        if (target instanceof TerroristicGroup) {
+            removedTerroristicGroups++;
+        } else if (target instanceof CriminalActivity) {
+            removedCriminalActivities++;
+        }
+
         grid.removeConstruction(targetCell.getRow(), targetCell.getColumn());
 
         return true;
@@ -196,6 +171,8 @@ public class CrimeManager {
     // Fa agire ogni stazione disponibile: ciascuna può rimuovere al massimo una minaccia e poi entra in cooldown.
     public int tryToDestroyCriminalActivities(int currentTick) {
         int removed = 0;
+        removedCriminalActivities = 0;
+        removedTerroristicGroups = 0;
 
         for (Construction construction : grid.getConstructions()) {
             if (construction instanceof PoliceStation) {
@@ -211,5 +188,13 @@ public class CrimeManager {
         }
 
         return removed;
+    }
+
+    public int getRemovedCriminalActivities() {
+        return removedCriminalActivities;
+    }
+
+    public int getRemovedTerroristicGroups() {
+        return removedTerroristicGroups;
     }
 }

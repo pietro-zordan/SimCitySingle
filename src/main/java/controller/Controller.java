@@ -612,6 +612,11 @@ public final class Controller
         return simulation.getRemovedCriminalActivities();
     }
 
+    public int getRemovedTerroristicGroups()
+    {
+        return simulation.getRemovedTerroristicGroups();
+    }
+
     public boolean wasTerroristicGroupCreated()
     {
         return simulation.wasTerroristicGroupCreated();

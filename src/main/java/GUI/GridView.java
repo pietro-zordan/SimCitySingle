@@ -35,6 +35,7 @@ public final class GridView
     private final Rectangle[][] tsunamiOverlays;
     private final Label[][] grassIcons;
     private final Tooltip[][] grassTooltips;
+    private final Tooltip[][] powerPlantTooltips;
 
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
@@ -78,6 +79,7 @@ public final class GridView
         tsunamiOverlays = new Rectangle[rows][columns];
         grassIcons = new Label[rows][columns];
         grassTooltips = new Tooltip[rows][columns];
+        powerPlantTooltips = new Tooltip[rows][columns];
 
         // Popolamento celle griglia
         createCells();
@@ -153,6 +155,14 @@ public final class GridView
                         Duration.ZERO
                 );
 
+                Tooltip powerPlantTooltip = new Tooltip();
+                powerPlantTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+                powerPlantTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
                 StackPane cell = new StackPane(
                         graphicCell,
                         noPowerIcon,
@@ -188,6 +198,8 @@ public final class GridView
                         tsunamiOverlay;
                 grassIcons[row][column] = grassIcon;
                 grassTooltips[row][column] = grassTooltip;
+                powerPlantTooltips[row][column] =
+                        powerPlantTooltip;
 
                 view.add(cell, column, row);
             }
@@ -218,14 +230,29 @@ public final class GridView
                         column
                 );
 
-                demolitionActive = false;
-
-                infoLabel.setText(
-                        "Construction demolished at row "
-                                + row
-                                + ", column "
-                                + column
-                );
+                // La modalità resta attiva per permettere
+                // demolizioni consecutive con un solo clic sul pulsante.
+                if (state.type() == ConstructionType.TERRORISTIC_GROUP)
+                {
+                    errorHandler.accept(
+                            "Terrorist group eliminated!"
+                    );
+                }
+                else if (state.type() == ConstructionType.CRIMINAL_ACTIVITY)
+                {
+                    errorHandler.accept(
+                            "Criminal activity eliminated!"
+                    );
+                }
+                else
+                {
+                    infoLabel.setText(
+                            "Construction demolished at row "
+                                    + row
+                                    + ", column "
+                                    + column
+                    );
+                }
             }
             catch (IllegalStateException
                    | IllegalArgumentException exception)
@@ -367,6 +394,37 @@ public final class GridView
             );
         }
 
+        boolean powerPlantPresent =
+                !state.empty()
+                        && state.type()
+                        == ConstructionType.POWER_PLANT;
+
+        Tooltip.uninstall(
+                cells[row][column],
+                powerPlantTooltips[row][column]
+        );
+
+        if (powerPlantPresent)
+        {
+            powerPlantTooltips[row][column].setText(
+                    "Energy: "
+                            + controller.getPowerPlantEnergyConsumed(
+                                    row,
+                                    column
+                            )
+                            + " / "
+                            + controller.getPowerPlantEnergyCapacity(
+                                    row,
+                                    column
+                            )
+            );
+
+            Tooltip.install(
+                    cells[row][column],
+                    powerPlantTooltips[row][column]
+            );
+        }
+
         // --- EFFETTO GRAFICO ENERGY CRISIS ---
 
         // Controlliamo che l'edificio sia uno di quelli che consuma energia
@@ -486,6 +544,11 @@ public final class GridView
         demolitionActive = true;
     }
 
+    public void cancelDemolition()
+    {
+        demolitionActive = false;
+    }
+
     // Mappa ed ottiene il colore identificativo associato a ciascun tipo di edificio sulla griglia.
     public static Color getConstructionColor(
             ConstructionType type)
@@ -506,10 +569,12 @@ public final class GridView
             case POWER_PLANT -> Color.ORANGE;
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
             case BANK -> Color.GOLD;
-            case CONSTRUCTION_COMPANY -> Color.BROWN;
+            case CONSTRUCTION_COMPANY -> Color.web("#7B5E3B");
             case CRIMINAL_ACTIVITY -> Color.BLACK;
+            case TERRORISTIC_GROUP -> Color.DARKRED;
             case POLICE_STATION -> Color.DARKBLUE;
             case GRASS -> Color.web("#9DBB7A");
+            case NUCLEAR_PLANT -> Color.PURPLE;
         };
     }
 

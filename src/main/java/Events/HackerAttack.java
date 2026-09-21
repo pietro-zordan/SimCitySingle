@@ -21,7 +21,7 @@ public class HackerAttack extends Event
     {
         super(TICK_DURATION, city);
         this.grid = grid;
-        launchNumber = 22;
+        launchNumber = 26;
     }
 
     // Seleziona casualmente una delle centrali presenti nella griglia.

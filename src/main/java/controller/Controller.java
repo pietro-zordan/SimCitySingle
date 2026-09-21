@@ -448,6 +448,50 @@ public final class Controller
         return city.getEnergyAvailable();
     }
 
+    // Restituisce il consumo energetico totale richiesto da tutte le costruzioni.
+    public int getTotalEnergyDemand()
+    {
+        return city.getTotalEnergyDemand();
+    }
+
+    // Restituisce il limite massimo di energia servibile dalla simulazione.
+    public int getMaxEnergyServed()
+    {
+        return simulation.getMaxEnergyServed();
+    }
+
+    // Restituisce l'energia utilizzata dalla centrale presente nella cella indicata.
+    public int getPowerPlantEnergyConsumed(int row, int column)
+    {
+        requireValidPosition(row, column);
+
+        Construction construction =
+                grid.getCell(row, column).getConstruction();
+
+        if (construction instanceof PowerPlant powerPlant)
+        {
+            return powerPlant.getUsedPower();
+        }
+
+        return 0;
+    }
+
+    // Restituisce la capacità massima della centrale presente nella cella indicata.
+    public int getPowerPlantEnergyCapacity(int row, int column)
+    {
+        requireValidPosition(row, column);
+
+        Construction construction =
+                grid.getCell(row, column).getConstruction();
+
+        if (construction instanceof PowerPlant powerPlant)
+        {
+            return powerPlant.getPowerCapacity();
+        }
+
+        return 0;
+    }
+
     // Restituisce il nome della policy attualmente attiva.
     public String getCurrentPolicyName()
     {
@@ -526,6 +570,11 @@ public final class Controller
     public int getRemovedCriminalActivities()
     {
         return simulation.getRemovedCriminalActivities();
+    }
+
+    public boolean wasTerroristicGroupCreated()
+    {
+        return simulation.wasTerroristicGroupCreated();
     }
 
 }

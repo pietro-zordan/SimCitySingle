@@ -13,6 +13,7 @@ public class Simulation{
     private static final int POLICY_CHANGE_INTERVAL = 12;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
+    private static final int MAX_ENERGY_SERVED = 24000;
 
 
     private final Random random = new Random();
@@ -27,6 +28,8 @@ public class Simulation{
     private final BankruptcyManager bankruptcyManager;
     private final BankManager bankManager;
     private final InsuranceManager insuranceManager;
+    private final TerrorManager terrorManager;
+    private boolean terroristicGroupCreated;
 
     private final CrimeManager crimeManager;
     private int removedCriminalActivities;
@@ -99,18 +102,11 @@ public class Simulation{
         this.grid = grid;
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
-        this.bankruptcyManager =
-                new BankruptcyManager();
-        this.bankManager =
-                new BankManager(city, grid);
-        this.insuranceManager =
-                new InsuranceManager(
-                        city,
-                        grid,
-                        tsunamiInsuranceActive
-                );
-        this.crimeManager =
-                new CrimeManager(city, grid);
+        this.bankruptcyManager = new BankruptcyManager();
+        this.bankManager = new BankManager(city, grid);
+        this.insuranceManager = new InsuranceManager(city, grid, tsunamiInsuranceActive);
+        this.terrorManager = new TerrorManager(city, grid);
+        this.crimeManager = new CrimeManager(city, grid);
     }
 
     // Controlla se sono trascorsi almeno dodici tick dall'ultimo cambio di policy.
@@ -236,6 +232,8 @@ public class Simulation{
                 city.getMaintenance()
         );
 
+        terroristicGroupCreated = terrorManager.updateOfOneTick();
+
         return criminalActivityCreated;
     }
 
@@ -247,6 +245,11 @@ public class Simulation{
     public int getMaxLoanAmount()
     {
         return bankManager.getMaxLoanAmount();
+    }
+
+    public int getMaxEnergyServed()
+    {
+        return MAX_ENERGY_SERVED;
     }
 
     // Controlla se è già presente un evento attivo.
@@ -459,6 +462,11 @@ public class Simulation{
     public int getRemovedCriminalActivities()
     {
         return removedCriminalActivities;
+    }
+
+    public boolean wasTerroristicGroupCreated()
+    {
+        return terroristicGroupCreated;
     }
 
 }

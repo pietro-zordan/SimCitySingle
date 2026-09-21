@@ -105,8 +105,8 @@ public final class GameStatusView
                         + "Pollution: " + controller.getPollution() + "\n"
                         + "Economy: " + controller.getEconomy() + "\n"
                         + "Happiness: " + controller.getHappiness() + "\n"
-                        + "Energy: " + controller.getEnergyConsumed()
-                        + " / " + controller.getEnergyAvailable() + "\n"
+                        + "Energy: " + controller.getTotalEnergyDemand()
+                        + " / " + controller.getMaxEnergyServed() + "\n"
                         + employmentLine
         );
         policyLabel.setText("Policy: " + controller.getCurrentPolicyName());

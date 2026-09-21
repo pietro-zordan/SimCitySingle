@@ -62,7 +62,9 @@ public class CrimeManager
         List<Cell> buildableCells =
                 grid.getBuildableCells();
 
-        if (buildableCells.isEmpty())
+        // L'ultima cella costruibile viene riservata alle strade da Grid.
+        // Evita quindi di tentare un piazzamento che Grid rifiuterebbe.
+        if (buildableCells.size() <= 1)
         {
             return false;
         }
@@ -164,6 +166,45 @@ public class CrimeManager
         return criminalActivities;
     }
 
+    // Riunisce le minacce che una stazione di polizia può rimuovere.
+    // Le attività criminali rispettano la loro vita minima,
+    // mentre i gruppi terroristici sono rimovibili subito.
+    private List<Cell> getPoliceTargets(
+            int currentTick)
+    {
+        List<Cell> policeTargets =
+                new ArrayList<>(
+                        getCriminalActivities(
+                                currentTick
+                        )
+                );
+
+        for (int row = 0;
+             row < grid.getNumberOfRows();
+             row++)
+        {
+            for (int column = 0;
+                 column < grid.getNumberOfColumns();
+                 column++)
+            {
+                Cell cell =
+                        grid.getCell(
+                                row,
+                                column
+                        );
+
+                if (!cell.isEmpty()
+                        && cell.getConstruction()
+                        instanceof TerroristicGroup)
+                {
+                    policeTargets.add(cell);
+                }
+            }
+        }
+
+        return policeTargets;
+    }
+
     public boolean destroyCriminalActivity(
             int currentTick)
     {
@@ -195,6 +236,38 @@ public class CrimeManager
         return true;
     }
 
+    // Rimuove una sola minaccia scegliendo tra criminalità e terrorismo.
+    private boolean destroyPoliceTarget(
+            int currentTick)
+    {
+        List<Cell> policeTargets =
+                getPoliceTargets(
+                        currentTick
+                );
+
+        if (policeTargets.isEmpty())
+        {
+            return false;
+        }
+
+        int randomIndex =
+                random.nextInt(
+                        policeTargets.size()
+                );
+
+        Cell targetCell =
+                policeTargets.get(
+                        randomIndex
+                );
+
+        grid.removeConstruction(
+                targetCell.getRow(),
+                targetCell.getColumn()
+        );
+
+        return true;
+    }
+
     public int tryToDestroyCriminalActivities(
             int currentTick)
     {
@@ -214,7 +287,9 @@ public class CrimeManager
                                 currentTick
                         ))
                 {
-                    if (destroyCriminalActivity(
+                    // Una stazione esegue una sola rimozione totale:
+                    // attività criminale oppure gruppo terroristico.
+                    if (destroyPoliceTarget(
                             currentTick))
                     {
                         policeStation

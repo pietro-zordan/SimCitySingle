@@ -735,8 +735,10 @@ public class Grid
             return true;
         }
 
-        return cell.getConstruction().getType()
-                == ConstructionType.CRIMINAL_ACTIVITY;
+        ConstructionType type = cell.getConstruction().getType();
+
+        return type == ConstructionType.CRIMINAL_ACTIVITY
+                || type == ConstructionType.TERRORISTIC_GROUP;
     }
 
     private int countBlockedSides(int row, int column)
@@ -759,10 +761,9 @@ public class Grid
                             .getConstruction();
 
             if (construction != null
-                    && construction.getType()
-                    != ConstructionType.GRASS
-                    && construction.getType()
-                    != ConstructionType.CRIMINAL_ACTIVITY)
+                    && construction.getType() != ConstructionType.GRASS
+                    && construction.getType() != ConstructionType.CRIMINAL_ACTIVITY
+                    && construction.getType() != ConstructionType.TERRORISTIC_GROUP)
             {
                 blockedSides++;
             }

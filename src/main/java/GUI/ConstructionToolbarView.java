@@ -181,6 +181,8 @@ public final class ConstructionToolbarView
             case CRIMINAL_ACTIVITY -> "Criminal Activity";
             case POLICE_STATION -> "Police station";
             case GRASS -> "Grass";
+            case TERRORISTIC_GROUP -> "Terroristic Group";
+            case NUCLEAR_PLANT -> "Nuclear Plant";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -196,10 +198,12 @@ public final class ConstructionToolbarView
             case POWER_PLANT -> Color.ORANGE;
             case COMMERCIAL -> Color.CORNFLOWERBLUE;
             case BANK -> Color.GOLD;
-            case CONSTRUCTION_COMPANY -> Color.BROWN;
+            case CONSTRUCTION_COMPANY -> Color.web("#7B5E3B");
             case CRIMINAL_ACTIVITY -> Color.BLACK;
             case POLICE_STATION -> Color.DARKBLUE;
             case GRASS -> Color.PALEGREEN;
+            case TERRORISTIC_GROUP -> Color.DARKRED;
+            case NUCLEAR_PLANT -> Color.PURPLE;
         };
     }
 

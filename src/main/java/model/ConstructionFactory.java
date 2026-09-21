@@ -42,6 +42,12 @@ public class ConstructionFactory
             case GRASS:
                 return new Grass();
 
+            case TERRORISTIC_GROUP:
+                return new TerroristicGroup();
+
+            case NUCLEAR_PLANT:
+                return new NuclearPlant();
+
             default:
                 throw new IllegalArgumentException(
                         "Unknown construction type: " + type

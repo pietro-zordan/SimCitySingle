@@ -14,5 +14,7 @@ public enum ConstructionType
         CONSTRUCTION_COMPANY,
         CRIMINAL_ACTIVITY,
         POLICE_STATION,
-        GRASS
+        GRASS,
+        TERRORISTIC_GROUP,
+        NUCLEAR_PLANT
 }

@@ -182,6 +182,7 @@ public final class ConstructionToolbarView
             case POLICE_STATION -> "Police station";
             case GRASS -> "Grass";
             case TERRORISTIC_GROUP -> "Terroristic Group";
+            case NUCLEAR_PLANT -> "Nuclear Plant";
         };
     }
 //Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
@@ -202,6 +203,7 @@ public final class ConstructionToolbarView
             case POLICE_STATION -> Color.DARKBLUE;
             case GRASS -> Color.PALEGREEN;
             case TERRORISTIC_GROUP -> Color.DARKRED;
+            case NUCLEAR_PLANT -> Color.PURPLE;
         };
     }
 

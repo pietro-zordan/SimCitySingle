@@ -574,6 +574,7 @@ public final class GridView
             case TERRORISTIC_GROUP -> Color.DARKRED;
             case POLICE_STATION -> Color.DARKBLUE;
             case GRASS -> Color.web("#9DBB7A");
+            case NUCLEAR_PLANT -> Color.PURPLE;
         };
     }
 

@@ -467,6 +467,12 @@ public class Grid
         return energyManager.canSupportConstruction(construction);
     }
 
+    // Indica se è il momento di rendere disponibile la centrale nucleare nella toolbar.
+    public boolean shouldShowNuclearPlant()
+    {
+        return energyManager.shouldShowNuclearPlant();
+    }
+
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {

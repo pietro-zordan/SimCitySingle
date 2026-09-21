@@ -21,7 +21,8 @@ public class Grid
     private final Cell[][] cells;
     private final boolean[][] reconstructionReserved;
     private final EnergyManager energyManager;
-    private boolean grassGenerationSuspended;
+    // Per ora la generazione automatica dell'erba è disattivata, ma il sistema resta disponibile.
+    private boolean grassGenerationSuspended = true;
 
     // Crea e inizializza tutte le celle della griglia.
     public Grid()

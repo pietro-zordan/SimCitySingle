@@ -169,7 +169,7 @@ public class Grid
 
     }
 
-    // Rimuove la costruzione dopo aver verificato che sia eliminabile.
+    // Rimuove la costruzione e applica l'eventuale effetto di distruzione preparato dalla costruzione stessa.
     public void removeConstruction(
             int row,
             int column)
@@ -201,8 +201,79 @@ public class Grid
         energyManager.removeConstruction(
                 construction
         );
-        construction.prepareForRemoval();
+
+        int destructionRadius =
+                construction.prepareForRemoval();
+
         cell.removeConstruction();
+
+        if (destructionRadius > 0)
+        {
+            makeExplosion(
+                    row,
+                    column,
+                    destructionRadius
+            );
+        }
+    }
+
+    // Trova le celle occupate nell'area quadrata dell'esplosione, escludendo centro e strade.
+    private List<Cell> getExplosionCells(
+            int centerRow,
+            int centerColumn,
+            int radius)
+    {
+        List<Cell> explosionCells =
+                new ArrayList<>();
+
+        for (int row = centerRow - radius; row <= centerRow + radius; row++)
+        {
+            for (int column = centerColumn - radius;
+                 column <= centerColumn + radius;
+                 column++)
+            {
+                if (isInside(row, column)
+                        && (row != centerRow
+                        || column != centerColumn))
+                {
+                    Cell cell = getCell(row, column);
+
+                    if (!cell.isEmpty()
+                            && !(cell.getConstruction() instanceof Road))
+                    {
+                        explosionCells.add(cell);
+                    }
+                }
+            }
+        }
+
+        return explosionCells;
+    }
+
+    // Distrugge tutte le costruzioni presenti nell'area dell'esplosione.
+    private void makeExplosion(
+            int centerRow,
+            int centerColumn,
+            int radius)
+    {
+        List<Cell> explosionCells =
+                getExplosionCells(
+                        centerRow,
+                        centerColumn,
+                        radius
+                );
+
+        for (Cell cell : explosionCells)
+        {
+            if (!cell.isEmpty()
+                    && !(cell.getConstruction() instanceof Road))
+            {
+                removeConstruction(
+                        cell.getRow(),
+                        cell.getColumn()
+                );
+            }
+        }
     }
 
     // Verifica se una delle quattro celle adiacenti contiene una strada.

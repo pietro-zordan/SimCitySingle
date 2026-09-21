@@ -17,6 +17,7 @@ public class EnergyManager {
     private final Map<PowerPlant, Queue<Construction>> servedConstructions = new HashMap<>();
     private final Map<PowerPlant, PriorityQueue<Construction>> candidatesForReconnection = new HashMap<>();
 
+    // Crea il gestore dell'energia associato alla griglia della città.
     public EnergyManager(Grid grid) {
         if (grid == null) {
             throw new IllegalArgumentException("Grid cannot be null");
@@ -25,7 +26,7 @@ public class EnergyManager {
         this.grid = grid;
     }
 
-    // Registra una nuova centrale e memorizza le celle comprese nella sua area di servizio.
+    // Se la costruzione appena inserita è una centrale, la registra nel sistema energetico.
     public void registerConstruction(Construction construction, int row, int column) {
         if (construction instanceof PowerPlant) {
             PowerPlant powerPlant = (PowerPlant) construction;
@@ -33,6 +34,7 @@ public class EnergyManager {
         }
     }
 
+    // Memorizza le 48 celle attorno alla centrale e prepara le sue code di gestione.
     private void registerPowerPlant(PowerPlant powerPlant, int plantRow, int plantColumn) {
         Cell[] cellsInRange = new Cell[48];
         int numberOfNearbyCells = 0;
@@ -57,7 +59,7 @@ public class EnergyManager {
         }
     }
 
-    // Aggiorna la distribuzione dell'energia di tutte le centrali attive.
+    // Aggiorna tutte le centrali attive: prima collega nuovi edifici, poi prova a ricollegare quelli rimasti senza energia.
     public void updatePowerConnections() {
         for (PowerPlant powerPlant : grid.getAllPowerPlants()) {
             if (powerPlant.isActive()) {
@@ -67,7 +69,7 @@ public class EnergyManager {
         }
     }
 
-    // Collega alla centrale le costruzioni nella sua area che richiedono energia.
+    // Collega alla centrale le costruzioni nella sua area finché la capacità massima non viene superata.
     public void serveConstruction(PowerPlant powerPlant) {
         Cell[] cellsInRange = nearbyCells.get(powerPlant);
 
@@ -99,7 +101,7 @@ public class EnergyManager {
         }
     }
 
-    // Scollega la costruzione servita da più tempo quando la capacità viene superata.
+    // Quando una centrale è sovraccarica, scollega la costruzione servita da più tempo e la mette tra i candidati al riaggancio.
     private void unplug(PowerPlant powerPlant) {
         Queue<Construction> served = servedConstructions.get(powerPlant);
         PriorityQueue<Construction> candidates = candidatesForReconnection.get(powerPlant);
@@ -114,7 +116,7 @@ public class EnergyManager {
         }
     }
 
-    // Ricollega prima le costruzioni che consumano meno energia.
+    // Usa l'energia rimasta per ricollegare gli edifici, dando priorità a quelli che consumano meno.
     public void reconnect(PowerPlant powerPlant) {
         PriorityQueue<Construction> candidates = candidatesForReconnection.get(powerPlant);
         Queue<Construction> served = servedConstructions.get(powerPlant);
@@ -143,6 +145,7 @@ public class EnergyManager {
         }
     }
 
+    // Controlla che una costruzione candidata al riaggancio sia ancora presente nell'area della stessa centrale.
     private boolean isStillNearby(PowerPlant powerPlant, Construction construction) {
         Cell[] cellsInRange = nearbyCells.get(powerPlant);
 
@@ -161,6 +164,7 @@ public class EnergyManager {
         return false;
     }
 
+    // Somma il consumo delle costruzioni attualmente collegate alla centrale indicata.
     private int calculateUsedPower(PowerPlant powerPlant) {
         Queue<Construction> served = servedConstructions.get(powerPlant);
 
@@ -177,7 +181,7 @@ public class EnergyManager {
         return usedPower;
     }
 
-    // Restituisce l'energia realmente utilizzata dalla singola centrale.
+    // Restituisce quanta energia sta realmente usando una centrale attiva.
     public int getUsedPower(PowerPlant powerPlant) {
         if (powerPlant == null || !powerPlant.isActive()) {
             return 0;
@@ -186,7 +190,7 @@ public class EnergyManager {
         return calculateUsedPower(powerPlant);
     }
 
-    // Rimuove una costruzione dalle strutture usate per la distribuzione dell'energia.
+    // Elimina una costruzione dalle code energetiche e la scollega dalla centrale a cui apparteneva.
     public void removeConstruction(Construction construction) {
         if (construction == null) {
             return;
@@ -214,7 +218,7 @@ public class EnergyManager {
         }
     }
 
-    // Scollega tutte le costruzioni servite dalla centrale indicata.
+    // Scollega tutte le costruzioni servite dalla centrale e svuota le sue code.
     public void disconnectAll(PowerPlant powerPlant) {
         Queue<Construction> served = servedConstructions.get(powerPlant);
 
@@ -235,7 +239,7 @@ public class EnergyManager {
         }
     }
 
-    // Ricostruisce da zero i collegamenti energetici dopo il caricamento di una partita.
+    // Dopo un caricamento ricrea le aree delle centrali e ricostruisce tutti i collegamenti energetici.
     public void rebuildConnections() {
         for (Construction construction : grid.getConstructions()) {
             if (construction.isPowerPlantConnected()) {
@@ -265,6 +269,7 @@ public class EnergyManager {
         }
     }
 
+    // Restituisce il consumo delle sole costruzioni che in questo momento stanno ricevendo energia.
     public int getEnergyConsumed() {
         int energyConsumed = 0;
 
@@ -277,6 +282,7 @@ public class EnergyManager {
         return energyConsumed;
     }
 
+    // Restituisce il consumo richiesto da tutte le costruzioni, comprese quelle attualmente senza energia.
     public int getTotalEnergyDemand() {
         int totalEnergyDemand = 0;
 
@@ -289,6 +295,7 @@ public class EnergyManager {
         return totalEnergyDemand;
     }
 
+    // Restituisce la somma dell'energia prodotta in questo momento da tutte le centrali attive.
     public int getEnergyAvailable() {
         int energyAvailable = 0;
 
@@ -299,6 +306,7 @@ public class EnergyManager {
         return energyAvailable;
     }
 
+    // Restituisce il limite globale mostrato nella GUI per l'energia servibile dalla città.
     public int getMaxEnergyServed() {
         return MAX_ENERGY_SERVED;
     }

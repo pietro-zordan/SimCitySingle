@@ -461,6 +461,12 @@ public class Grid
         return energyManager.getMaxEnergyServed();
     }
 
+    // Verifica se la rete ha abbastanza capacità globale per sostenere anche la nuova costruzione.
+    public boolean canSupportConstruction(Construction construction)
+    {
+        return energyManager.canSupportConstruction(construction);
+    }
+
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {

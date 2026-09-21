@@ -105,6 +105,12 @@ Una banca alimentata permette di chiedere un prestito. Più banche alimentate so
 
 Il prestito diventa da restituire dopo 3 turni. L'importo da restituire è pari a **1,5 volte** la somma richiesta, quindi va usato con attenzione.
 
+## Protezione avanzata delle centrali nucleari
+
+Se sono presenti almeno una **banca** e una **centrale nucleare non protetta**, il gioco propone automaticamente di applicare una protezione avanzata contro gli incendi.
+
+Il costo base è di **2000 € per centrale nucleare**. Ogni banca applica uno **sconto del 5%**, fino a un massimo del **30%**. Una centrale nucleare protetta non può essere distrutta da un incendio.
+
 ## Assicurazione contro lo tsunami
 
 Se è presente almeno una banca, è possibile acquistare un'**assicurazione contro lo tsunami**.

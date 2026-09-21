@@ -113,13 +113,16 @@ public abstract class Construction {
         return false;
     }
 
-    // Esegue le operazioni necessarie prima di rimuovere la costruzione.
-    public void prepareForRemoval()
+    /* Esegue le operazioni necessarie prima di rimuovere la costruzione.
+       Restituisce il raggio di un eventuale effetto di distruzione: 0 significa nessun effetto. */
+    public int prepareForRemoval()
     {
         if (isPowerPlantConnected())
         {
             disconnectFromPowerPlant();
         }
+
+        return 0;
     }
 
     // Registra se la costruzione è collegata a una strada

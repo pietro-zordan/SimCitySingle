@@ -170,6 +170,39 @@ class EnergyManagerTest
         assertTrue(grid.canSupportConstruction(new NuclearPlant()));
     }
 
+    @Test
+    void nuclearPlantCanExtendGridEvenIfDemandIsAlreadyOverTheLimit()
+    {
+        Grid grid = new Grid();
+
+        for (int i = 0; i < 25; i++)
+        {
+            grid.restoreConstruction(new Industrial(), i / 20, i % 20);
+        }
+
+        assertEquals(25000, grid.getTotalEnergyDemand());
+        assertTrue(grid.canSupportConstruction(new NuclearPlant()));
+    }
+
+    @Test
+    void nuclearPlantAppearsBeforeTheGridIsCompletelyFull()
+    {
+        Grid grid = new Grid();
+
+        for (int i = 0; i < 23; i++)
+        {
+            grid.restoreConstruction(new Industrial(), i / 20, i % 20);
+        }
+
+        assertEquals(23000, grid.getTotalEnergyDemand());
+        assertFalse(grid.shouldShowNuclearPlant());
+
+        grid.restoreConstruction(new Residential(), 2, 10);
+
+        assertEquals(23100, grid.getTotalEnergyDemand());
+        assertTrue(grid.shouldShowNuclearPlant());
+    }
+
     private List<Industrial> createIndustrials(
             Grid grid,
             int number)

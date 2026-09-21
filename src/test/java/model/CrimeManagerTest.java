@@ -69,6 +69,26 @@ class CrimeManagerTest
     }
 
     @Test
+    void suddenHappinessDropCreatesCriminalActivity()
+    {
+        Grid grid = new Grid();
+        City city = new City(grid, new StandardPolicy());
+
+        grid.placeConstruction(new Road(), 10, 10);
+
+        CrimeManager crimeManager = new CrimeManager(city, grid);
+
+        assertFalse(crimeManager.tryToCreateCriminalActivity(20));
+        assertFalse(crimeManager.tryToCreateCriminalActivity(21));
+        assertFalse(crimeManager.tryToCreateCriminalActivity(22));
+
+        city.decreaseGlobalHappiness(1000);
+
+        assertTrue(crimeManager.tryToCreateCriminalActivity(23));
+        assertEquals(1, countCriminalActivities(grid));
+    }
+
+    @Test
     void criminalActivityDoesNotUseLastBuildableCell()
     {
         Grid grid = new Grid();

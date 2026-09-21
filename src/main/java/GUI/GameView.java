@@ -933,11 +933,9 @@ public final class GameView implements GameObserver
                         + plantsToProtect
                         + " "
                         + plantText
-                        + "?
-Bank discount: "
+                        + "?\nBank discount: "
                         + discount
-                        + "%
-Cost: "
+                        + "%\nCost: "
                         + cost
                         + " €"
         );

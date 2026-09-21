@@ -376,6 +376,33 @@ public final class Controller
                 .isTsunamiInsuranceActive();
     }
 
+    public boolean canBuyNuclearFireProtection()
+    {
+        return simulation.canBuyNuclearFireProtection();
+    }
+
+    public int getNuclearFireProtectionCost()
+    {
+        return simulation.getNuclearFireProtectionCost();
+    }
+
+    public int getNuclearPlantsNeedingFireProtectionCount()
+    {
+        return simulation.getNuclearPlantsNeedingFireProtectionCount();
+    }
+
+    public boolean buyNuclearFireProtection()
+    {
+        boolean bought = simulation.buyNuclearFireProtection();
+
+        if (bought)
+        {
+            notifyObservers();
+        }
+
+        return bought;
+    }
+
     public void startTsunamiReconstruction()
     {
         simulation.startTsunamiReconstruction();

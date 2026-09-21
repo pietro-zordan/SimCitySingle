@@ -887,10 +887,19 @@ public final class GameView implements GameObserver
         if (controller.buyNuclearFireProtection())
         {
             dismissedNuclearProtectionCount = -1;
+
+            String plantText = "nuclear plants";
+            if (plantsToProtect == 1)
+            {
+                plantText = "nuclear plant";
+            }
+
             showToast(
                     "Advanced fire protection applied to "
                             + plantsToProtect
-                            + " nuclear plant(s) for "
+                            + " "
+                            + plantText
+                            + " for "
                             + cost
                             + " €."
             );

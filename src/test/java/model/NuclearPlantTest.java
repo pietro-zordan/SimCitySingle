@@ -45,6 +45,18 @@ class NuclearPlantTest {
     }
 
     @Test
+    void explosionInfoCanBeConsumedOnlyOnce()
+    {
+        Grid grid = new Grid();
+
+        grid.restoreConstruction(new NuclearPlant(), 10, 10);
+        grid.removeConstruction(10, 10);
+
+        assertFalse(grid.consumeExplosions().isEmpty());
+        assertTrue(grid.consumeExplosions().isEmpty());
+    }
+
+    @Test
     void nuclearExplosionTriggersChainReaction()
     {
         Grid grid = new Grid();

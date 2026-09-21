@@ -2,6 +2,7 @@ package progress;
 
 import model.Construction;
 import model.ConstructionType;
+import model.NuclearPlant;
 import model.Residential;
 import org.junit.jupiter.api.Test;
 
@@ -112,6 +113,29 @@ class ConstructionProgressTest {
         );
         assertEquals(25, restoredConstruction.getMoneyProduction());
         assertTrue(restoredConstruction.isTsunamiInsured());
+    }
+
+    @Test
+    void nuclearFireProtectionSurvivesSaveAndLoad()
+    {
+        NuclearPlant nuclearPlant = new NuclearPlant();
+        nuclearPlant.setFireProtected(true);
+
+        ConstructionProgress progress =
+                ConstructionProgress.fromConstruction(
+                        nuclearPlant,
+                        4,
+                        9
+                );
+
+        NuclearPlant restoredPlant =
+                assertInstanceOf(
+                        NuclearPlant.class,
+                        progress.toConstruction()
+                );
+
+        assertTrue(progress.isFireProtected());
+        assertTrue(restoredPlant.isFireProtected());
     }
 
     // Una costruzione priva del tipo non può essere ricreata.

@@ -161,7 +161,8 @@ public class Simulation{
                 new EnergyCrisis(city, grid),
                 new Fire(city, grid),
                 new Tsunami(city, grid),
-                new EconomicBoom(city, grid)
+                new EconomicBoom(city, grid),
+                new MissileAttack(city, grid)
         };
 
         int selectedEvent = random.nextInt(possibleEvents.length);

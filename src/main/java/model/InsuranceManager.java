@@ -23,7 +23,9 @@ public class InsuranceManager
     private static final int BANK_COST = 160;
     private static final int CONSTRUCTION_COMPANY_COST = 200;
     private static final int POLICE_STATION_COST = 200;
+    private static final int WASTE_TREATMENT_COST = 250;
     private static final int NUCLEAR_FIRE_PROTECTION_COST = 2000;
+
 
     private final City city;
     private final Grid grid;
@@ -594,6 +596,7 @@ public class InsuranceManager
                     CONSTRUCTION_COMPANY_COST;
             case POLICE_STATION ->
                     POLICE_STATION_COST;
+            case WASTE_TREATMENT_PLANT -> WASTE_TREATMENT_COST;
             default -> 0;
         };
     }

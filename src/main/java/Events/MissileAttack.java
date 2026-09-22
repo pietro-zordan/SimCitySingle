@@ -15,7 +15,7 @@ public class MissileAttack extends Event
         super(TICK_DURATION, city, 200);
 
         this.grid=grid;
-        launchNumber= 10;
+        launchNumber= 2;
     }
 
     @Override

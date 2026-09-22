@@ -21,7 +21,7 @@ class EventTest {
     @BeforeEach
     void setUp() {
         // Creiamo una classe concreta fittizia con durata definita (5 tick)
-        dummyEvent = new Event(5, city) {
+        dummyEvent = new Event(5, city, 0) {
             {
                 this.launchNumber = 10; // Inizializziamo launchNumber per il test
             }

@@ -19,7 +19,7 @@ public class HackerAttack extends Event
     // Inizializza l'attacco hacker associandolo alla città e alla griglia.
     public HackerAttack(City city, Grid grid)
     {
-        super(TICK_DURATION, city);
+        super(TICK_DURATION, city, 0);
         this.grid = grid;
         launchNumber = 26;
     }

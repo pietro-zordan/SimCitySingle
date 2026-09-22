@@ -13,15 +13,17 @@ public abstract class Event
     private int tickDuration;
     protected City city;
     protected int launchNumber;
+    private int minimumStartTick;
 
     // Inizializza un evento che termina automaticamente dopo un numero prestabilito di tick.
-    public Event(int tickDuration, City city)
+    public Event(int tickDuration, City city, int minimumStartTick)
     {
         this.tickDuration = tickDuration;
         this.city = city;
+        this.minimumStartTick = minimumStartTick;
     }
 
-    /* Inizializza un evento senza una durata prestabilita.
+    /* Inizializza un evento senza una durata prestabilita e verificabile fin da subito
        Il valore -1 impedisce a isFinished() di terminarlo automaticamente. */
     public Event(City city)
     {
@@ -71,6 +73,12 @@ public abstract class Event
        Le sottoclassi lo ridefiniscono quando devono applicare subito un effetto. */
     public void start()
     {
+    }
+
+    //stabilisce se l'evento può avvenire casualmente in questo specifico tick
+    public boolean canBeChosen(int currentTick)
+    {
+        return currentTick >= minimumStartTick;
     }
 
     /* Consente l'avvio soltanto quando l'estrazione casuale produce l'ultimo

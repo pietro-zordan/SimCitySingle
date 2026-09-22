@@ -22,9 +22,9 @@ public class Tsunami extends Event{
     // Crea uno tsunami della durata di tre tick e imposta la sua probabilità di avvio.
     public Tsunami(City city, Grid grid)
     {
-        super(TICK_DURATION, city);
+        super(TICK_DURATION, city, 0);
         this.grid = grid;
-        launchNumber = 22;
+        launchNumber = 24;
     }
 
     /* Sceglie casualmente il lato da cui arriva lo tsunami

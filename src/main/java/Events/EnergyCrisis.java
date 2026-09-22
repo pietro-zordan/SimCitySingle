@@ -17,7 +17,7 @@ public class EnergyCrisis extends Event
     // Inizializza la crisi energetica associandola alla città e alla griglia.
     public EnergyCrisis(City city, Grid grid)
     {
-        super(TICK_DURATION, city);
+        super(TICK_DURATION, city, 0);
         launchNumber = 40;
         this.grid = grid;
     }

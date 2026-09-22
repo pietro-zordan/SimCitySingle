@@ -27,7 +27,7 @@ public class EconomicBoom extends Event
     // Inizializza l'evento associandolo alla città e alla griglia.
     public EconomicBoom(City city, Grid grid)
     {
-        super(TICK_DURATION, city);
+        super(TICK_DURATION, city, 0);
         this.grid = grid;
         launchNumber = 22;
     }

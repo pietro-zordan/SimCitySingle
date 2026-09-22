@@ -266,9 +266,14 @@ public class Simulation{
     // Avvia l'evento ricevuto se non ci sono altri eventi attivi e l'estrazione ha successo.
     public void startEvent(Event event)
     {
-        if(event == null || isEventActive())
+        if (event == null || isEventActive())
             return;
+
+        if (!event.canBeChosen(currentTick))
+            return;
+
         event.randomProbability();
+
         if(event.canStart()){
             activeEvent = event;
             eventTicksPassed = 0;

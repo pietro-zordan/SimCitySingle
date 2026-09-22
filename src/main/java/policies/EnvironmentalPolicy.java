@@ -52,7 +52,12 @@ public class EnvironmentalPolicy implements Policy
     @Override
     public int modifyPollution(int totalPollution)
     {
-        return (int) (totalPollution * 0.75);
+        if (totalPollution >= 0)
+        {
+            return (int) (totalPollution * 0.75);
+        }
+
+        return (int) (totalPollution * 1.25);
     }
 
     // Riduce l'economia totale del 25%.

@@ -8,7 +8,8 @@ public enum EventType
     ENERGY_CRISIS("Energy crisis"),
     FIRE("Fire"),
     TSUNAMI("Tsunami"),
-    ECONOMIC_BOOM("Economic boom");
+    ECONOMIC_BOOM("Economic boom"),
+    MISSILE_ATTACK("Missile Attack");
 
     private final String displayName;
 

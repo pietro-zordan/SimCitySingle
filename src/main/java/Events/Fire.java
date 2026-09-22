@@ -16,8 +16,6 @@ import java.util.Set;
    Distrugge le costruzioni (tranne le strade) e può propagarsi alle celle vicine. */
 public class Fire extends Event{
 
-    // Riduzione della felicità per ogni cella bruciata.
-    private final static int HAPPINESS_DECREASE = 5; // 5 per casella
     private Grid grid;
 
     // Celle che verranno bruciate durante il tick successivo
@@ -108,8 +106,7 @@ public class Fire extends Event{
         }
     }
 
-    /* Brucia le celle previste per il tick corrente
-     e riduce la felicità in base al numero di celle distrutte. */
+    // Brucia le celle previste per il tick corrente e aggiorna le statistiche della città.
     @Override
     public void updateOfOneTick()
     {
@@ -118,22 +115,15 @@ public class Fire extends Event{
 
         cellsToBurnNextTick.clear();
 
-        int burnedCells = 0;
-
         for (Cell cell : current)
         {
             if (isBurnable(cell))
             {
                 burn(cell);
-                burnedCells++;
             }
         }
 
         city.refreshStatistics();
-
-        city.decreaseGlobalHappiness(
-                HAPPINESS_DECREASE * burnedCells
-        );
     }
 
     // Una centrale nucleare con protezione avanzata non può essere coinvolta dall'incendio.

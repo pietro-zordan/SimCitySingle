@@ -41,6 +41,8 @@ public class MissileAttack extends Event
         targetRow = random.nextInt(grid.getNumberOfRows());
         targetColumn = random.nextInt(grid.getNumberOfColumns());
 
+        grid.destroyArea(targetRow, targetColumn, 1);
+
         city.refreshStatistics();
         city.decreaseGlobalHappiness(HAPPINESS_DECREASE);
     }

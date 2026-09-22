@@ -514,6 +514,32 @@ public class Simulation{
         return 0;
     }
 
+    public int getActiveMissileTargetRow()
+    {
+        if (activeEvent instanceof MissileAttack)
+        {
+            MissileAttack missileAttack =
+                    (MissileAttack) activeEvent;
+
+            return missileAttack.getTargetRow();
+        }
+
+        return -1;
+    }
+
+    public int getActiveMissileTargetColumn()
+    {
+        if (activeEvent instanceof MissileAttack)
+        {
+            MissileAttack missileAttack =
+                    (MissileAttack) activeEvent;
+
+            return missileAttack.getTargetColumn();
+        }
+
+        return -1;
+    }
+
     // Restituisce il tick in cui è stata cambiata l'ultima policy.
     public int getLastPolicyChangeTick()
     {

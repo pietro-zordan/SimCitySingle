@@ -756,14 +756,19 @@ public class Grid
                  column <= centerColumn + radius;
                  column++)
             {
-                if (isInside(row, column)
-                        && !getCell(row, column).isEmpty())
+                if (isInside(row, column))
                 {
-                    removeConstructionInternal(
-                            row,
-                            column,
-                            true
-                    );
+                    Cell cell = getCell(row, column);
+
+                    if (!cell.isEmpty()
+                            && !(cell.getConstruction() instanceof Road))
+                    {
+                        removeConstructionInternal(
+                                row,
+                                column,
+                                true
+                        );
+                    }
                 }
             }
         }

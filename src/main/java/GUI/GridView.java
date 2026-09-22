@@ -660,6 +660,62 @@ public final class GridView
         };
     }
 
+    public double getCellCenterOffsetX(int column)
+    {
+        if (column < 0
+                || column >= controller.getNumberOfColumns())
+        {
+            throw new IllegalArgumentException(
+                    "Column outside the grid"
+            );
+        }
+
+        double cellCenterFromLeft =
+                view.getPadding().getLeft()
+                        + column * (CELL_SIZE + view.getHgap())
+                        + CELL_SIZE / 2.0;
+
+        return cellCenterFromLeft
+                - getGridVisualWidth() / 2.0;
+    }
+
+    public double getCellCenterOffsetY(int row)
+    {
+        if (row < 0
+                || row >= controller.getNumberOfRows())
+        {
+            throw new IllegalArgumentException(
+                    "Row outside the grid"
+            );
+        }
+
+        double cellCenterFromTop =
+                view.getPadding().getTop()
+                        + row * (CELL_SIZE + view.getVgap())
+                        + CELL_SIZE / 2.0;
+
+        return cellCenterFromTop
+                - getGridVisualHeight() / 2.0;
+    }
+
+    public double getGridVisualWidth()
+    {
+        return view.getPadding().getLeft()
+                + view.getPadding().getRight()
+                + controller.getNumberOfColumns() * CELL_SIZE
+                + (controller.getNumberOfColumns() - 1)
+                * view.getHgap();
+    }
+
+    public double getGridVisualHeight()
+    {
+        return view.getPadding().getTop()
+                + view.getPadding().getBottom()
+                + controller.getNumberOfRows() * CELL_SIZE
+                + (controller.getNumberOfRows() - 1)
+                * view.getVgap();
+    }
+
     // Restituisce il contenitore GridPane che rappresenta la griglia visiva.
     public GridPane getView()
     {

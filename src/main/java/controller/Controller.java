@@ -608,6 +608,16 @@ public final class Controller
         );
     }
 
+    public int getActiveMissileTargetRow()
+    {
+        return simulation.getActiveMissileTargetRow();
+    }
+
+    public int getActiveMissileTargetColumn()
+    {
+        return simulation.getActiveMissileTargetColumn();
+    }
+
     // Restituisce il tipo dell'evento attualmente attivo.
     public EventType getActiveEventType()
     {

@@ -175,6 +175,18 @@ public class Grid
             int row,
             int column)
     {
+        removeConstructionInternal(
+                row,
+                column,
+                false
+        );
+    }
+
+    private void removeConstructionInternal(
+            int row,
+            int column,
+            boolean forced)
+    {
         if (!isInside(row, column))
         {
             throw new IllegalArgumentException(
@@ -192,7 +204,8 @@ public class Grid
         Construction construction =
                 cell.getConstruction();
 
-        if (!construction.canBeRemoved())
+        if (!forced
+                && !construction.canBeRemoved())
         {
             throw new IllegalStateException(
                     "This construction cannot be removed"
@@ -716,23 +729,47 @@ public class Grid
         return constructions;
     }
 
-    public void destroyArea(int centerRow, int centerColumn, int radius)
+    public void destroyArea(
+            int centerRow,
+            int centerColumn,
+            int radius)
     {
-        for (int row = centerRow - radius; row <= centerRow + radius; row++)
+        if (!isInside(centerRow, centerColumn))
         {
-            for (int column = centerColumn - radius; column <= centerColumn + radius; column++)
-            {
-                if (isInside(row, column))
-                {
-                    Cell cell = getCell(row, column);
+            throw new IllegalArgumentException(
+                    "Explosion center outside the grid"
+            );
+        }
 
-                    if (!cell.isEmpty())
-                    {
-                        removeConstruction(row, column);
-                    }
+        if (radius < 0)
+        {
+            throw new IllegalArgumentException(
+                    "Explosion radius cannot be negative"
+            );
+        }
+
+        for (int row = centerRow - radius;
+             row <= centerRow + radius;
+             row++)
+        {
+            for (int column = centerColumn - radius;
+                 column <= centerColumn + radius;
+                 column++)
+            {
+                if (isInside(row, column)
+                        && !getCell(row, column).isEmpty())
+                {
+                    removeConstructionInternal(
+                            row,
+                            column,
+                            true
+                    );
                 }
             }
         }
+
+        updateRoadConnections();
+        energyManager.updatePowerConnections();
     }
 
     public List<Cell> getBuildableCells()

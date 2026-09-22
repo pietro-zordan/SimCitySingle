@@ -4,7 +4,7 @@ public class WasteTreatmentPlant extends Construction{
 
     public WasteTreatmentPlant()
     {
-        super(0,0, -1600);
+        super(0,-400, -1600);
     }
 
     @Override
@@ -16,4 +16,11 @@ public class WasteTreatmentPlant extends Construction{
     public int getPollutionImpact() {
         return -1200;
     }
+
+    @Override
+    public int getMaintenanceCost() {
+        return 160;
+    }
+
+    
 }

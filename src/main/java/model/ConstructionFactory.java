@@ -48,7 +48,7 @@ public class ConstructionFactory
             case NUCLEAR_PLANT:
                 return new NuclearPlant();
 
-            case WAST_TREATMENT_PLANT:
+            case WASTE_TREATMENT_PLANT:
                 return new WasteTreatmentPlant();
 
             default:

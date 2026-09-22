@@ -7,6 +7,7 @@ import policies.Policy;
 public class City
 {
     private static final int INITIAL_BUDGET = 2500;
+    private static final int HAPPINESS_RECOVERY_PER_TICK = 100;
     private Policy currentPolicy;
 
     private int population;
@@ -16,6 +17,8 @@ public class City
     private int happiness;
     private int unemployed;
     private int maintenance;
+    private int temporaryHappinessPenalty;
+    private boolean happinessPenaltyAppliedSinceLastTick;
 
     private final Grid grid;
 
@@ -57,6 +60,7 @@ public class City
     public void updateOfOneTick()
     {
         grid.updateOfOneTick();
+        recoverTemporaryHappiness();
         recalculateStatistics();
         budget += economy - maintenance;
     }
@@ -88,6 +92,7 @@ public class City
 
         pollution = currentPolicy.modifyPollution(pollution);
         economy = currentPolicy.modifyEconomy(economy);
+        happiness -= temporaryHappinessPenalty;
 
         unemployed = Math.max(
                 0,
@@ -167,10 +172,33 @@ public class City
         return happiness;
     }
 
-    // Riduce la felicità globale della quantità indicata.
+    // Applica una penalità temporanea alla felicità che sopravvive ai ricalcoli delle statistiche.
     public void decreaseGlobalHappiness(int amount)
     {
-        happiness-=amount;
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        temporaryHappinessPenalty += amount;
+        happinessPenaltyAppliedSinceLastTick = true;
+        happiness -= amount;
+    }
+
+    // Recupera gradualmente la felicità quando nell'ultimo tick non è stata applicata una nuova penalità.
+    private void recoverTemporaryHappiness()
+    {
+        if (happinessPenaltyAppliedSinceLastTick)
+        {
+            happinessPenaltyAppliedSinceLastTick = false;
+            return;
+        }
+
+        temporaryHappinessPenalty = Math.max(
+                0,
+                temporaryHappinessPenalty
+                        - HAPPINESS_RECOVERY_PER_TICK
+        );
     }
 
     // Restituisce il budget disponibile.

@@ -68,6 +68,7 @@ public class HackerAttack extends Event
                 selectRandomPowerPlant(grid);
 
         setSuspended();
+        city.refreshStatistics();
     }
 
     // Riattiva la centrale sospesa al termine dell'evento.
@@ -77,6 +78,7 @@ public class HackerAttack extends Event
         if (suspendedPowerPlant != null)
         {
             suspendedPowerPlant.resume();
+            city.refreshStatistics();
         }
     }
 

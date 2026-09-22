@@ -24,6 +24,14 @@ public class Progress
     private int budget;
     private boolean tsunamiInsuranceActive;
 
+    // Stato dei prestiti. bankStatePresent mantiene compatibili i vecchi salvataggi.
+    private boolean bankStatePresent;
+    private int lastLoanTick;
+    private boolean loanActive;
+    private int loanAmount;
+    private int loanStartTick;
+    private int remainingDebt;
+
     private List<ConstructionProgress> constructions;
     private List<ConstructionProgress>
             pendingTsunamiReconstructions;
@@ -148,7 +156,7 @@ public class Progress
             }
         }
 
-        return new Progress(
+        Progress progress = new Progress(
                 simulation.getCurrentTick(),
                 simulation.getLastPolicyChangeTick(),
                 city.getBudget(),
@@ -159,6 +167,20 @@ public class Progress
                 simulation
                         .getTsunamiReconstructionDirection()
         );
+
+        progress.bankStatePresent = true;
+        progress.lastLoanTick =
+                simulation.getLastLoanTick();
+        progress.loanActive =
+                simulation.isLoanActive();
+        progress.loanAmount =
+                simulation.getLoanAmount();
+        progress.loanStartTick =
+                simulation.getLoanStartTick();
+        progress.remainingDebt =
+                simulation.getRemainingDebt();
+
+        return progress;
     }
 
     public int getCurrentTick()
@@ -260,6 +282,17 @@ public class Progress
                         lastPolicyChangeTick,
                         tsunamiInsuranceActive
                 );
+
+        if (bankStatePresent)
+        {
+            controller.restoreBankState(
+                    lastLoanTick,
+                    loanActive,
+                    loanAmount,
+                    loanStartTick,
+                    remainingDebt
+            );
+        }
 
         if (pendingTsunamiReconstructions != null
                 && !pendingTsunamiReconstructions.isEmpty())

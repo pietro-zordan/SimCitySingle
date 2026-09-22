@@ -253,6 +253,47 @@ public class Simulation{
         return bankManager.getMaxLoanAmount();
     }
 
+    public int getLastLoanTick()
+    {
+        return bankManager.getLastLoanTick();
+    }
+
+    public boolean isLoanActive()
+    {
+        return bankManager.isLoanActive();
+    }
+
+    public int getLoanAmount()
+    {
+        return bankManager.getLoanAmount();
+    }
+
+    public int getLoanStartTick()
+    {
+        return bankManager.getLoanStartTick();
+    }
+
+    public int getRemainingDebt()
+    {
+        return bankManager.getRemainingDebt();
+    }
+
+    public void restoreBankState(
+            int lastLoanTick,
+            boolean loanActive,
+            int loanAmount,
+            int loanStartTick,
+            int remainingDebt)
+    {
+        bankManager.restoreState(
+                lastLoanTick,
+                loanActive,
+                loanAmount,
+                loanStartTick,
+                remainingDebt
+        );
+    }
+
     public int getMaxEnergyServed()
     {
         return grid.getMaxEnergyServed();

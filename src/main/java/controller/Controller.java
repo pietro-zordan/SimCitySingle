@@ -330,6 +330,22 @@ public final class Controller
         return simulation.getMaxLoanAmount();
     }
 
+    public void restoreBankState(
+            int lastLoanTick,
+            boolean loanActive,
+            int loanAmount,
+            int loanStartTick,
+            int remainingDebt)
+    {
+        simulation.restoreBankState(
+                lastLoanTick,
+                loanActive,
+                loanAmount,
+                loanStartTick,
+                remainingDebt
+        );
+    }
+
     public boolean hasBanks()
     {
         return simulation.hasBanks();

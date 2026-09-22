@@ -10,7 +10,7 @@ import model.Grid;
 public class EnergyCrisis extends Event
 {
     private static final int TICK_DURATION = 5;
-    private static final int EXTRA_COST_PER_BUILDING = 50;
+    private static final int EXTRA_COST_PER_BUILDING = 35;
 
     private final Grid grid;
 
@@ -65,18 +65,14 @@ public class EnergyCrisis extends Event
         return extraCost;
     }
 
-    /* Sottrae il costo dal budget senza permettere
-       che il denaro disponibile diventi negativo. */
+    // Sottrae l'intero costo della crisi, permettendo al budget di diventare negativo.
     private void applyExtraCostToCity(int extraCost)
     {
-        if (extraCost > 0 && city.getBudget() > 0)
+        if (extraCost > 0)
         {
-            int costToPay = Math.min(
-                    extraCost,
-                    city.getBudget()
+            city.updateBudgetAllowNegative(
+                    -extraCost
             );
-
-            city.updateBudget(-costToPay);
         }
     }
 

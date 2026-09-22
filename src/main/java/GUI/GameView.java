@@ -452,6 +452,8 @@ public final class GameView implements GameObserver
         // ---------- PULSANTI AZIONI ----------
         VBox actionButtons = new VBox(
                 10,
+                eventAnimationView
+                        .getHackerAttackPanel(),
                 nextTurnButton,
                 changePolicyButton,
                 loanButton,
@@ -493,20 +495,12 @@ public final class GameView implements GameObserver
                 new StackPane(
                         gridView.getView(),
                         eventAnimationView
-                                .getMissileNode(),
-                        eventAnimationView
-                                .getHackerAttackPanel()
+                                .getMissileNode()
                 );
 
         StackPane.setAlignment(
                 eventAnimationView
                         .getMissileNode(),
-                Pos.CENTER
-        );
-
-        StackPane.setAlignment(
-                eventAnimationView
-                        .getHackerAttackPanel(),
                 Pos.CENTER
         );
 

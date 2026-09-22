@@ -88,6 +88,46 @@ public class BankManager
                 * grid.getNumberOfPoweredBanks();
     }
 
+    // Ripristina lo stato finanziario salvato della banca.
+    public void restoreState(
+            int lastLoanTick,
+            boolean loanActive,
+            int loanAmount,
+            int loanStartTick,
+            int remainingDebt)
+    {
+        this.lastLoanTick = lastLoanTick;
+        this.loanActive = loanActive;
+        this.loanAmount = loanAmount;
+        this.loanStartTick = loanStartTick;
+        this.remainingDebt = remainingDebt;
+    }
+
+    public int getLastLoanTick()
+    {
+        return lastLoanTick;
+    }
+
+    public boolean isLoanActive()
+    {
+        return loanActive;
+    }
+
+    public int getLoanAmount()
+    {
+        return loanAmount;
+    }
+
+    public int getLoanStartTick()
+    {
+        return loanStartTick;
+    }
+
+    public int getRemainingDebt()
+    {
+        return remainingDebt;
+    }
+
     private void checkLoanRepayment(int currentTick)
     {
         // Dopo tre tick il prestito diventa debito da restituire.

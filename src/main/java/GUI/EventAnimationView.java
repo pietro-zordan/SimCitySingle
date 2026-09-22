@@ -1,5 +1,5 @@
 // La classe EventAnimationView gestisce le animazioni visive degli eventi speciali di gioco.
-// Controlla Tsunami, Hacker Attack ed esplosioni nucleari, bloccando i comandi quando necessario.
+// Controlla Tsunami, Hacker Attack, Missile Attack ed esplosioni nucleari, bloccando i comandi quando necessario.
 
 package GUI;
 
@@ -8,15 +8,18 @@ import controller.Controller;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.ExplosionInfo;
@@ -24,31 +27,44 @@ import model.ExplosionInfo;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 public final class EventAnimationView
 {
     private static final int TSUNAMI_LINE_DELAY = 500;
     private static final int EXPLOSION_RING_DELAY = 360;
+    private static final int MISSILE_FLIGHT_DURATION = 1200;
+    private static final int MISSILE_IMPACT_DELAY = 220;
+    private static final int MISSILE_IMPACT_DURATION = 700;
+    private static final int MISSILE_START_MARGIN = 80;
 
     private final Controller controller;
     private final GridView gridView;
     private final Button nextTurnButton;
     private final VBox hackerAttackPanel;
     private final Label hackerBinaryCode;
+    private final Group missileNode;
+    private final Random random = new Random();
     private final Queue<ExplosionInfo> pendingExplosions = new ArrayDeque<>();
 
     private boolean tsunamiAnimationStarted;
     private boolean tsunamiAnimationRunning;
     private boolean hackerAttackAnimationStarted;
+    private boolean missileAnimationStarted;
+    private boolean missileAnimationRunning;
     private boolean explosionAnimationRunning;
     private int tsunamiCurrentStep = -1;
     private String tsunamiDirection;
     private int tsunamiAdvancementLength;
+    private int missileTargetRow = -1;
+    private int missileTargetColumn = -1;
     private Timeline tsunamiTimeline;
     private Timeline hackerCodeTimeline;
+    private Timeline missileImpactTimeline;
     private Timeline explosionTimeline;
+    private TranslateTransition missileTransition;
 
-    // Inizializza le dipendenze visive e costruisce il pannello grafico dell'attacco hacker.
+    // Inizializza le dipendenze visive e costruisce i componenti grafici degli eventi.
     public EventAnimationView(
             Controller controller,
             GridView gridView,
@@ -134,17 +150,75 @@ public final class EventAnimationView
         );
         hackerAttackPanel.setVisible(false);
         hackerAttackPanel.setMouseTransparent(true);
+
+        missileNode = createMissileNode();
+        missileNode.setVisible(false);
+        missileNode.setMouseTransparent(true);
     }
 
-    // Sincronizza tutte le animazioni con lo stato corrente del gioco.
     public void refresh()
     {
         updateTsunamiAnimation();
         updateHackerAttackAnimation();
+        updateMissileAnimation();
         updateExplosionAnimation();
     }
 
-    // Verifica se lo Tsunami è attivo e ne avvia o resetta l'animazione.
+    private Group createMissileNode()
+    {
+        Rectangle body =
+                new Rectangle(
+                        -18,
+                        -5,
+                        32,
+                        10
+                );
+        body.setArcWidth(8);
+        body.setArcHeight(8);
+        body.setFill(Color.LIGHTGRAY);
+        body.setStroke(Color.DARKSLATEGRAY);
+
+        Polygon nose =
+                new Polygon(
+                        14.0, -5.0,
+                        25.0, 0.0,
+                        14.0, 5.0
+                );
+        nose.setFill(Color.DARKRED);
+
+        Polygon upperFin =
+                new Polygon(
+                        -9.0, -5.0,
+                        -17.0, -13.0,
+                        0.0, -5.0
+                );
+        upperFin.setFill(Color.DARKRED);
+
+        Polygon lowerFin =
+                new Polygon(
+                        -9.0, 5.0,
+                        -17.0, 13.0,
+                        0.0, 5.0
+                );
+        lowerFin.setFill(Color.DARKRED);
+
+        Polygon flame =
+                new Polygon(
+                        -18.0, -3.5,
+                        -29.0, 0.0,
+                        -18.0, 3.5
+                );
+        flame.setFill(Color.ORANGE);
+
+        return new Group(
+                flame,
+                upperFin,
+                lowerFin,
+                body,
+                nose
+        );
+    }
+
     private void updateTsunamiAnimation()
     {
         boolean tsunamiActive =
@@ -162,7 +236,6 @@ public final class EventAnimationView
         }
     }
 
-    // Crea e avvia la Timeline per l'avanzamento sequenziale dello Tsunami.
     private void startTsunamiAnimation()
     {
         tsunamiAnimationRunning = true;
@@ -207,8 +280,6 @@ public final class EventAnimationView
             tsunamiTimeline.getKeyFrames().add(frame);
         }
 
-        // Uno step extra rappresenta il momento in cui l'onda ha appena
-        // superato anche l'ultima riga/colonna colpita.
         KeyFrame passedLastLineFrame = new KeyFrame(
                 Duration.millis(
                         (tsunamiAdvancementLength + 1)
@@ -249,7 +320,6 @@ public final class EventAnimationView
         tsunamiTimeline.play();
     }
 
-    // Evidenzia sulla griglia la riga o colonna raggiunta dallo Tsunami.
     private void showTsunamiLine(
             String direction,
             int step)
@@ -276,7 +346,6 @@ public final class EventAnimationView
         }
     }
 
-    // Ripristina la griglia al termine dello Tsunami.
     private void clearTsunamiAnimation()
     {
         gridView.clearTsunami();
@@ -289,14 +358,14 @@ public final class EventAnimationView
 
         startWaitingExplosionIfReady();
 
-        if (!explosionAnimationRunning)
+        if (!explosionAnimationRunning
+                && !missileAnimationRunning)
         {
             gridView.refresh();
             nextTurnButton.setDisable(false);
         }
     }
 
-    // Gestisce la visibilità dell'animazione dell'attacco hacker.
     private void updateHackerAttackAnimation()
     {
         boolean hackerAttackActive =
@@ -318,7 +387,6 @@ public final class EventAnimationView
         }
     }
 
-    // Mostra il pannello dell'attacco hacker con un effetto glitch.
     private void startHackerAttackAnimation()
     {
         hackerAttackPanel.setVisible(true);
@@ -373,7 +441,6 @@ public final class EventAnimationView
         startHackerCodeAnimation();
     }
 
-    // Avvia il codice binario animato dell'attacco hacker.
     private void startHackerCodeAnimation()
     {
         hackerCodeTimeline = new Timeline(
@@ -396,7 +463,6 @@ public final class EventAnimationView
         hackerCodeTimeline.play();
     }
 
-    // Ferma la Timeline del codice binario.
     private void stopHackerCodeAnimation()
     {
         if (hackerCodeTimeline != null)
@@ -406,7 +472,6 @@ public final class EventAnimationView
         }
     }
 
-    // Genera una stringa casuale di 16 cifre binarie.
     private String generateBinaryCode()
     {
         StringBuilder code = new StringBuilder();
@@ -431,7 +496,235 @@ public final class EventAnimationView
         return code.toString();
     }
 
-    // Legge le nuove esplosioni dal Controller e le mette in coda per l'animazione.
+    private void updateMissileAnimation()
+    {
+        boolean missileActive =
+                controller.getActiveEventType()
+                        == EventType.MISSILE_ATTACK;
+
+        if (missileActive
+                && !missileAnimationStarted)
+        {
+            missileAnimationStarted = true;
+            startMissileAnimation();
+        }
+        else if (!missileActive
+                && !missileAnimationRunning)
+        {
+            missileAnimationStarted = false;
+        }
+    }
+
+    private void startMissileAnimation()
+    {
+        missileTargetRow =
+                controller.getActiveMissileTargetRow();
+
+        missileTargetColumn =
+                controller.getActiveMissileTargetColumn();
+
+        if (missileTargetRow < 0
+                || missileTargetColumn < 0)
+        {
+            missileAnimationStarted = false;
+            return;
+        }
+
+        missileAnimationRunning = true;
+        nextTurnButton.setDisable(true);
+
+        double targetX =
+                gridView.getCellCenterOffsetX(
+                        missileTargetColumn
+                );
+
+        double targetY =
+                gridView.getCellCenterOffsetY(
+                        missileTargetRow
+                );
+
+        double[] startPosition =
+                getRandomMissileStartPosition(
+                        targetX,
+                        targetY
+                );
+
+        double startX = startPosition[0];
+        double startY = startPosition[1];
+
+        double angle =
+                Math.toDegrees(
+                        Math.atan2(
+                                targetY - startY,
+                                targetX - startX
+                        )
+                );
+
+        missileNode.setRotate(angle);
+        missileNode.setVisible(true);
+
+        missileTransition =
+                new TranslateTransition(
+                        Duration.millis(
+                                MISSILE_FLIGHT_DURATION
+                        ),
+                        missileNode
+                );
+
+        missileTransition.setFromX(startX);
+        missileTransition.setFromY(startY);
+        missileTransition.setToX(targetX);
+        missileTransition.setToY(targetY);
+
+        missileTransition.setOnFinished(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        missileNode.setVisible(false);
+                        missileTransition = null;
+                        startMissileImpactAnimation();
+                    }
+                }
+        );
+
+        missileTransition.play();
+    }
+
+    private double[] getRandomMissileStartPosition(
+            double targetX,
+            double targetY)
+    {
+        double halfWidth =
+                gridView.getGridVisualWidth() / 2.0;
+
+        double halfHeight =
+                gridView.getGridVisualHeight() / 2.0;
+
+        int startSide = random.nextInt(6);
+
+        if (startSide == 0)
+        {
+            return new double[] {
+                    -halfWidth - MISSILE_START_MARGIN,
+                    -halfHeight - MISSILE_START_MARGIN
+            };
+        }
+
+        if (startSide == 1)
+        {
+            return new double[] {
+                    halfWidth + MISSILE_START_MARGIN,
+                    -halfHeight - MISSILE_START_MARGIN
+            };
+        }
+
+        if (startSide == 2)
+        {
+            return new double[] {
+                    -halfWidth - MISSILE_START_MARGIN,
+                    targetY
+            };
+        }
+
+        if (startSide == 3)
+        {
+            return new double[] {
+                    halfWidth + MISSILE_START_MARGIN,
+                    targetY
+            };
+        }
+
+        if (startSide == 4)
+        {
+            return new double[] {
+                    -halfWidth - MISSILE_START_MARGIN,
+                    halfHeight + MISSILE_START_MARGIN
+            };
+        }
+
+        return new double[] {
+                halfWidth + MISSILE_START_MARGIN,
+                halfHeight + MISSILE_START_MARGIN
+        };
+    }
+
+    private void startMissileImpactAnimation()
+    {
+        gridView.clearExplosion();
+
+        missileImpactTimeline = new Timeline(
+                new KeyFrame(
+                        Duration.ZERO,
+                        new EventHandler<ActionEvent>()
+                        {
+                            @Override
+                            public void handle(ActionEvent event)
+                            {
+                                gridView.showExplosionRing(
+                                        missileTargetRow,
+                                        missileTargetColumn,
+                                        0,
+                                        1
+                                );
+                            }
+                        }
+                ),
+                new KeyFrame(
+                        Duration.millis(
+                                MISSILE_IMPACT_DELAY
+                        ),
+                        new EventHandler<ActionEvent>()
+                        {
+                            @Override
+                            public void handle(ActionEvent event)
+                            {
+                                gridView.showExplosionRing(
+                                        missileTargetRow,
+                                        missileTargetColumn,
+                                        1,
+                                        1
+                                );
+                            }
+                        }
+                ),
+                new KeyFrame(
+                        Duration.millis(
+                                MISSILE_IMPACT_DURATION
+                        ),
+                        new EventHandler<ActionEvent>()
+                        {
+                            @Override
+                            public void handle(ActionEvent event)
+                            {
+                                finishMissileAnimation();
+                            }
+                        }
+                )
+        );
+
+        missileImpactTimeline.play();
+    }
+
+    private void finishMissileAnimation()
+    {
+        gridView.clearExplosion();
+        missileImpactTimeline = null;
+        missileAnimationRunning = false;
+        missileTargetRow = -1;
+        missileTargetColumn = -1;
+
+        startWaitingExplosionIfReady();
+
+        if (!explosionAnimationRunning
+                && !tsunamiAnimationRunning)
+        {
+            gridView.refresh();
+            nextTurnButton.setDisable(false);
+        }
+    }
+
     private void updateExplosionAnimation()
     {
         List<ExplosionInfo> newExplosions =
@@ -445,11 +738,10 @@ public final class EventAnimationView
         startWaitingExplosionIfReady();
     }
 
-    // Avvia un'esplosione quando l'onda ha superato di una linea
-    // la posizione reale della centrale che l'ha generata.
     private void startWaitingExplosionIfReady()
     {
         if (explosionAnimationRunning
+                || missileAnimationRunning
                 || pendingExplosions.isEmpty())
         {
             return;
@@ -487,9 +779,6 @@ public final class EventAnimationView
         startExplosionAnimation(readyExplosion);
     }
 
-    // Calcola a quale step lo tsunami ha superato la cella della centrale.
-    // Restituisce -1 se l'esplosione non appartiene alla zona attraversata
-    // dallo tsunami attuale.
     private int getExplosionStartStep(
             ExplosionInfo explosion)
     {
@@ -531,7 +820,6 @@ public final class EventAnimationView
         return plantStep + 1;
     }
 
-    // Preleva la prossima esplosione dalla coda.
     private void startNextExplosionAnimation()
     {
         ExplosionInfo explosion =
@@ -545,7 +833,6 @@ public final class EventAnimationView
         startExplosionAnimation(explosion);
     }
 
-    // Anima una singola esplosione espandendo progressivamente gli anelli dal centro verso l'esterno.
     private void startExplosionAnimation(
             ExplosionInfo explosion)
     {
@@ -607,7 +894,6 @@ public final class EventAnimationView
         explosionTimeline.play();
     }
 
-    // Pulisce l'esplosione appena conclusa e avvia quella successiva, se presente.
     private void finishExplosionAnimation()
     {
         gridView.clearExplosion();
@@ -623,38 +909,57 @@ public final class EventAnimationView
         {
             gridView.refresh();
 
-            if (!tsunamiAnimationRunning)
+            if (!tsunamiAnimationRunning
+                    && !missileAnimationRunning)
             {
                 nextTurnButton.setDisable(false);
             }
         }
     }
 
-    // Restituisce true se l'animazione dello Tsunami è in corso.
     public boolean isTsunamiAnimationRunning()
     {
         return tsunamiAnimationRunning;
     }
 
-    // Restituisce true se un'esplosione è ancora in corso.
+    public boolean isMissileAnimationRunning()
+    {
+        return missileAnimationRunning;
+    }
+
     public boolean isExplosionAnimationRunning()
     {
         return explosionAnimationRunning;
     }
 
-    // Restituisce il pannello dell'attacco hacker.
     public VBox getHackerAttackPanel()
     {
         return hackerAttackPanel;
     }
 
-    // Interrompe tutte le animazioni e ripristina lo stato grafico.
+    public Group getMissileNode()
+    {
+        return missileNode;
+    }
+
     public void stop()
     {
         if (tsunamiTimeline != null)
         {
             tsunamiTimeline.stop();
             tsunamiTimeline = null;
+        }
+
+        if (missileTransition != null)
+        {
+            missileTransition.stop();
+            missileTransition = null;
+        }
+
+        if (missileImpactTimeline != null)
+        {
+            missileImpactTimeline.stop();
+            missileImpactTimeline = null;
         }
 
         if (explosionTimeline != null)
@@ -671,10 +976,18 @@ public final class EventAnimationView
         tsunamiAnimationRunning = false;
         tsunamiAnimationStarted = false;
         hackerAttackAnimationStarted = false;
+        missileAnimationRunning = false;
+        missileAnimationStarted = false;
         explosionAnimationRunning = false;
         tsunamiCurrentStep = -1;
         tsunamiDirection = null;
         tsunamiAdvancementLength = 0;
+        missileTargetRow = -1;
+        missileTargetColumn = -1;
+
+        missileNode.setVisible(false);
+        missileNode.setTranslateX(0);
+        missileNode.setTranslateY(0);
 
         nextTurnButton.setDisable(false);
         hackerAttackPanel.setVisible(false);

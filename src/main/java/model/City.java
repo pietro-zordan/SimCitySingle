@@ -130,6 +130,13 @@ public class City
         budget += amount;
     }
 
+    // Applica variazioni di budget che possono portare il saldo sotto zero.
+    // Usato dagli effetti di gioco che devono poter generare debito.
+    public void updateBudgetAllowNegative(int amount)
+    {
+        budget += amount;
+    }
+
     // Restituisce la policy attualmente applicata alla città.
     public Policy getCurrentPolicy()
     {

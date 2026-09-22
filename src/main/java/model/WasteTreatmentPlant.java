@@ -22,5 +22,5 @@ public class WasteTreatmentPlant extends Construction{
         return 160;
     }
 
-    
+
 }

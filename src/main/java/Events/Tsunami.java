@@ -13,7 +13,7 @@ public class Tsunami extends Event{
 
     public static final int ADVANCEMENT_LENGTH = 4;
     private final static int TICK_DURATION=3;
-    private final static int HAPPINESS_DECREASE=50;
+    private final static int HAPPINESS_DECREASE=150;
     private final Grid grid;
     private String direction;
     private final List<ReconstructionEntry> destroyedBuildings =

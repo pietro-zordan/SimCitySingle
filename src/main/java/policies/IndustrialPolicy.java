@@ -52,7 +52,12 @@ public class IndustrialPolicy implements Policy
     @Override
     public int modifyPollution(int totalPollution)
     {
-        return (int) (totalPollution * 1.25);
+        if (totalPollution >= 0)
+        {
+            return (int) (totalPollution * 1.25);
+        }
+
+        return (int) (totalPollution * 0.75);
     }
 
     // Aumenta l'economia totale del 25%.

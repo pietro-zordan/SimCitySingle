@@ -27,6 +27,7 @@ Costi base principali:
 | Banca | 800 € |
 | Impresa edile | 1000 € |
 | Stazione di polizia | 1200 € |
+| Impianto di trattamento rifiuti | 1600 € |
 | Centrale nucleare | 3000 € |
 
 Le politiche cittadine possono modificare alcuni prezzi.
@@ -59,6 +60,8 @@ La rete cittadina ha inoltre una capacità massima complessiva di **10000**. Se 
 
 Quando la rete si avvicina al limite compare la **centrale nucleare** tra le costruzioni disponibili. Una centrale nucleare costa **3000 €** e aumenta la capacità massima della rete di **10000**. La centrale nucleare può essere costruita anche quando la rete è già al limite, proprio perché serve a estenderla.
 
+La centrale nucleare ha però effetti negativi su felicità e inquinamento. Se viene rimossa o distrutta, provoca un'esplosione che può danneggiare le costruzioni vicine; le strade non vengono distrutte dall'esplosione.
+
 Gli edifici senza energia sono indicati nella griglia con il simbolo del fulmine.
 
 ## Manutenzione
@@ -73,7 +76,8 @@ Per esempio:
 - banca: 60 €;
 - impresa edile: 40 €;
 - zona industriale: 200 €;
-- stazione di polizia: 120 €.
+- stazione di polizia: 120 €;
+- impianto di trattamento rifiuti: 160 €.
 
 Per questo motivo non basta costruire molto: bisogna assicurarsi che l'economia riesca a sostenere i costi della città.
 
@@ -84,6 +88,8 @@ Se la città rimane per molti turni in una situazione economica critica, può an
 Le costruzioni influenzano in modo diverso la città.
 
 I parchi aumentano la felicità e riducono l'inquinamento. Le zone commerciali aumentano moderatamente entrambi, mentre le industrie producono molto inquinamento e riducono la felicità.
+
+L'**impianto di trattamento rifiuti** è una struttura costosa da mantenere, ma permette di ridurre in modo significativo l'inquinamento della città.
 
 La generazione automatica dell'erba è attualmente disabilitata.
 
@@ -123,11 +129,11 @@ Quando uno tsunami distrugge edifici assicurati, questi vengono ricostruiti grad
 
 ## Attività criminali, terrorismo e polizia
 
-Dal **turno 20** possono comparire casualmente delle **attività criminali**, con probabilità legata all'economia della città. Queste riducono economia e felicità.
+Durante la partita possono comparire delle **attività criminali**, che riducono economia e felicità.
 
-I **gruppi terroristici** possono comparire quando la felicità rimane molto bassa per diversi turni oppure quando subisce un calo brusco di almeno **1200 punti nell'arco di massimo 3 turni**. I gruppi terroristici riducono la popolazione finché restano attivi.
+I **gruppi terroristici** causano vittime tra gli abitanti e riducono la popolazione finché restano attivi. Possono essere eliminati dalla polizia soltanto dopo essere rimasti attivi per almeno **5 turni**.
 
-Una stazione di polizia alimentata può eliminare una minaccia alla volta, scegliendo tra attività criminali e gruppi terroristici. Le attività criminali devono essere rimaste attive per almeno **3 turni**, mentre i gruppi terroristici devono essere attivi per almeno **5 turni**. Dopo un intervento la stazione deve attendere prima di poter agire di nuovo.
+Una stazione di polizia alimentata può eliminare una minaccia alla volta, scegliendo tra attività criminali e gruppi terroristici. Le attività criminali devono essere rimaste attive per almeno **3 turni**. Dopo un intervento la stazione deve attendere prima di poter agire di nuovo.
 
 ## Eventi casuali
 
@@ -136,18 +142,21 @@ Durante la partita può essere attivo un solo evento casuale alla volta.
 Gli eventi principali sono:
 
 - **Attacco hacker**: sospende temporaneamente una centrale elettrica;
-- **Crisi energetica**: aumenta temporaneamente i costi legati agli edifici alimentati;
+- **Crisi energetica**: aumenta temporaneamente i costi legati agli edifici alimentati e può portare il budget sotto zero;
 - **Boom economico**: aumenta temporaneamente la produzione di zone commerciali e industriali;
 - **Incendio**: può propagarsi tra costruzioni vicine e distruggerle;
-- **Tsunami**: arriva da uno dei quattro lati della mappa e colpisce le prime quattro righe o colonne.
+- **Tsunami**: arriva da uno dei quattro lati della mappa e colpisce una parte della città;
+- **Attacco missilistico**: nelle fasi avanzate della partita può colpire aree casuali della città e distruggere costruzioni.
 
-Lo tsunami distrugge anche i parchi. Non distrugge invece le strade. Le costruzioni assicurate possono essere ricostruite dopo l'evento.
+Lo tsunami distrugge anche i parchi. Le strade non vengono distrutte né dallo tsunami né dagli attacchi missilistici. Le costruzioni assicurate possono essere ricostruite dopo lo tsunami.
+
+Alcuni eventi possono inoltre causare una diminuzione temporanea della felicità.
 
 ## Salvataggio
 
 La partita può essere salvata con **Save Game** e caricata successivamente dalla schermata iniziale.
 
-Il salvataggio conserva le principali informazioni della città, comprese le costruzioni, il budget, il turno raggiunto, la politica e lo stato degli edifici.
+Il salvataggio conserva le principali informazioni della città, comprese le costruzioni, il budget, il turno raggiunto, la politica, lo stato degli edifici e gli eventuali prestiti o debiti attivi.
 
 ## Avvio del gioco
 

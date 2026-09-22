@@ -493,8 +493,16 @@ public final class GameView implements GameObserver
                 new StackPane(
                         gridView.getView(),
                         eventAnimationView
+                                .getMissileNode(),
+                        eventAnimationView
                                 .getHackerAttackPanel()
                 );
+
+        StackPane.setAlignment(
+                eventAnimationView
+                        .getMissileNode(),
+                Pos.CENTER
+        );
 
         StackPane.setAlignment(
                 eventAnimationView
@@ -1163,6 +1171,8 @@ public final class GameView implements GameObserver
 
                         if (!eventAnimationView
                                 .isTsunamiAnimationRunning()
+                                && !eventAnimationView
+                                .isMissileAnimationRunning()
                                 && !eventAnimationView
                                 .isExplosionAnimationRunning())
                         {

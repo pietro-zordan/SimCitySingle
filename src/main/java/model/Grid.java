@@ -716,6 +716,25 @@ public class Grid
         return constructions;
     }
 
+    public void destroyArea(int centerRow, int centerColumn, int radius)
+    {
+        for (int row = centerRow - radius; row <= centerRow + radius; row++)
+        {
+            for (int column = centerColumn - radius; column <= centerColumn + radius; column++)
+            {
+                if (isInside(row, column))
+                {
+                    Cell cell = getCell(row, column);
+
+                    if (!cell.isEmpty())
+                    {
+                        removeConstruction(row, column);
+                    }
+                }
+            }
+        }
+    }
+
     public List<Cell> getBuildableCells()
     {
 

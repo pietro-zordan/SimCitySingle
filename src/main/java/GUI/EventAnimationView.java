@@ -148,6 +148,10 @@ public final class EventAnimationView
                 Region.USE_PREF_SIZE,
                 Region.USE_PREF_SIZE
         );
+        hackerAttackPanel.managedProperty()
+                .bind(
+                        hackerAttackPanel.visibleProperty()
+                );
         hackerAttackPanel.setVisible(false);
         hackerAttackPanel.setMouseTransparent(true);
 

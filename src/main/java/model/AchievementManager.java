@@ -12,6 +12,20 @@ public class AchievementManager {
         unlockedAchievements = new HashSet<>();
     }
 
+    /* Ricostruisce il manager partendo dagli achievement
+       letti dal file di persistenza. */
+    public AchievementManager(Set<Achievement> unlockedAchievements)
+    {
+        this();
+
+        if (unlockedAchievements != null)
+        {
+            this.unlockedAchievements.addAll(
+                    unlockedAchievements
+            );
+        }
+    }
+
     public boolean unlock(Achievement achievement)
     {
         if (achievement == null)
@@ -25,6 +39,13 @@ public class AchievementManager {
     public boolean isUnlocked(Achievement achievement)
     {
         return unlockedAchievements.contains(achievement);
+    }
+
+    public Set<Achievement> getUnlockedAchievements()
+    {
+        return new HashSet<>(
+                unlockedAchievements
+        );
     }
 
     public void reset()

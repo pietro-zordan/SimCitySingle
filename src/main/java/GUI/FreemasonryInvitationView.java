@@ -6,6 +6,8 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,7 +18,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -50,6 +51,8 @@ public final class FreemasonryInvitationView
     private final Button declineButton = new Button("Decline");
     private final Consumer<FreemasonryChoice> choiceHandler;
     private final Runnable closeHandler;
+    private final DoubleProperty unrollProgress =
+            new SimpleDoubleProperty(0);
     private Timeline animation;
 
     public FreemasonryInvitationView(
@@ -66,14 +69,29 @@ public final class FreemasonryInvitationView
         this.choiceHandler = choiceHandler;
         this.closeHandler = closeHandler;
 
-        view.setStyle("-fx-background-color: #e4d1a2;");
         view.setVisible(false);
         view.managedProperty().bind(view.visibleProperty());
 
+        StackPane parchment = new StackPane();
+        parchment.setStyle("-fx-background-color: #e4d1a2;");
+        parchment.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        Rectangle visiblePaper = new Rectangle();
+        visiblePaper.widthProperty().bind(parchment.widthProperty());
+        visiblePaper.heightProperty().bind(
+                parchment.heightProperty().multiply(unrollProgress)
+        );
+        visiblePaper.yProperty().bind(
+                parchment.heightProperty()
+                        .subtract(visiblePaper.heightProperty())
+                        .divide(2)
+        );
+        parchment.setClip(visiblePaper);
+
         texture.setManaged(false);
         texture.setMouseTransparent(true);
-        texture.widthProperty().bind(view.widthProperty());
-        texture.heightProperty().bind(view.heightProperty());
+        texture.widthProperty().bind(parchment.widthProperty());
+        texture.heightProperty().bind(parchment.heightProperty());
 
         ChangeListener<Number> redraw =
                 new ChangeListener<Number>()
@@ -172,12 +190,25 @@ public final class FreemasonryInvitationView
         letter.setPadding(new Insets(55, 65, 55, 65));
         letter.setMaxWidth(1100);
 
-        BorderPane rolls = new BorderPane();
-        rolls.setMouseTransparent(true);
-        rolls.setTop(createRoll());
-        rolls.setBottom(createRoll());
+        Rectangle upperRoll = createRoll();
+        Rectangle lowerRoll = createRoll();
+        upperRoll.translateYProperty().bind(
+                view.heightProperty()
+                        .subtract(24)
+                        .multiply(unrollProgress)
+                        .multiply(-0.5)
+        );
+        lowerRoll.translateYProperty().bind(
+                view.heightProperty()
+                        .subtract(24)
+                        .multiply(unrollProgress)
+                        .multiply(0.5)
+        );
+        upperRoll.setMouseTransparent(true);
+        lowerRoll.setMouseTransparent(true);
 
-        view.getChildren().addAll(texture, letter, rolls);
+        parchment.getChildren().addAll(texture, letter);
+        view.getChildren().addAll(parchment, upperRoll, lowerRoll);
     }
 
     private String loadInkFontFamily()
@@ -341,25 +372,22 @@ public final class FreemasonryInvitationView
         }
 
         view.setVisible(true);
-        view.setScaleY(0.01);
-        view.setOpacity(0.7);
+        unrollProgress.set(0);
         acceptButton.setDisable(true);
         declineButton.setDisable(true);
 
         animation = new Timeline(
                 new KeyFrame(
                         Duration.ZERO,
-                        new KeyValue(view.scaleYProperty(), 0.01),
-                        new KeyValue(view.opacityProperty(), 0.7)
+                        new KeyValue(unrollProgress, 0)
                 ),
                 new KeyFrame(
                         Duration.millis(1000),
                         new KeyValue(
-                                view.scaleYProperty(),
+                                unrollProgress,
                                 1.0,
                                 Interpolator.EASE_OUT
-                        ),
-                        new KeyValue(view.opacityProperty(), 1.0)
+                        )
                 )
         );
         animation.setOnFinished(
@@ -387,17 +415,15 @@ public final class FreemasonryInvitationView
         animation = new Timeline(
                 new KeyFrame(
                         Duration.ZERO,
-                        new KeyValue(view.scaleYProperty(), 1.0),
-                        new KeyValue(view.opacityProperty(), 1.0)
+                        new KeyValue(unrollProgress, 1.0)
                 ),
                 new KeyFrame(
                         Duration.millis(750),
                         new KeyValue(
-                                view.scaleYProperty(),
-                                0.01,
+                                unrollProgress,
+                                0,
                                 Interpolator.EASE_IN
-                        ),
-                        new KeyValue(view.opacityProperty(), 0.7)
+                        )
                 )
         );
         animation.setOnFinished(

@@ -183,6 +183,7 @@ public final class EventAnimationView
 
         missileShieldNode = createMissileShieldNode();
         missileShieldNode.setVisible(false);
+        missileShieldNode.setManaged(false);
         missileShieldNode.setMouseTransparent(true);
 
         missileNode = createMissileNode();

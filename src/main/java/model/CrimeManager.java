@@ -130,6 +130,49 @@ public class CrimeManager {
         return policeTargets;
     }
 
+    // Restituisce soltanto i gruppi terroristici che una base militare può già eliminare.
+    private List<Cell> getMilitaryTargets() {
+        List<Cell> militaryTargets = new ArrayList<>();
+
+        for (int row = 0; row < grid.getNumberOfRows(); row++) {
+            for (int column = 0; column < grid.getNumberOfColumns(); column++) {
+                Cell cell = grid.getCell(row, column);
+
+                if (!cell.isEmpty()
+                        && cell.getConstruction() instanceof TerroristicGroup) {
+                    TerroristicGroup terroristicGroup =
+                            (TerroristicGroup) cell.getConstruction();
+
+                    if (terroristicGroup.canBeRemovedByMilitaryBase()) {
+                        militaryTargets.add(cell);
+                    }
+                }
+            }
+        }
+
+        return militaryTargets;
+    }
+
+    // La base militare elimina esclusivamente un gruppo terroristico disponibile.
+    private boolean destroyMilitaryTarget() {
+        List<Cell> militaryTargets = getMilitaryTargets();
+
+        if (militaryTargets.isEmpty()) {
+            return false;
+        }
+
+        int randomIndex = random.nextInt(militaryTargets.size());
+        Cell targetCell = militaryTargets.get(randomIndex);
+
+        grid.removeConstruction(
+                targetCell.getRow(),
+                targetCell.getColumn()
+        );
+
+        removedTerroristicGroups++;
+        return true;
+    }
+
     // Elimina casualmente una sola attività criminale tra quelle che possono già essere rimosse.
     public boolean destroyCriminalActivity(int currentTick) {
         List<Cell> criminalActivities = getCriminalActivities(currentTick);
@@ -168,21 +211,43 @@ public class CrimeManager {
         return true;
     }
 
-    // Fa agire ogni stazione disponibile: ciascuna può rimuovere al massimo una minaccia e poi entra in cooldown.
+    // Fa agire prima la polizia e poi le basi militari disponibili.
+    // La polizia può colpire criminali o terroristi; la base militare soltanto terroristi.
     public int tryToDestroyCriminalActivities(int currentTick) {
         int removed = 0;
         removedCriminalActivities = 0;
         removedTerroristicGroups = 0;
 
-        for (Construction construction : grid.getConstructions()) {
-            if (construction instanceof PoliceStation) {
-                PoliceStation policeStation = (PoliceStation) construction;
+        List<Construction> constructions =
+                new ArrayList<>(grid.getConstructions());
 
-                if (policeStation.isPowered() && policeStation.canRemoveCriminalActivity(currentTick)) {
-                    if (destroyPoliceTarget(currentTick)) {
-                        policeStation.registerCriminalActivityRemoval(currentTick);
-                        removed++;
-                    }
+        for (Construction construction : constructions) {
+            if (construction instanceof PoliceStation) {
+                PoliceStation policeStation =
+                        (PoliceStation) construction;
+
+                if (policeStation.isPowered()
+                        && policeStation.canRemoveCriminalActivity(currentTick)
+                        && destroyPoliceTarget(currentTick)) {
+                    policeStation.registerCriminalActivityRemoval(currentTick);
+                    removed++;
+                }
+            }
+        }
+
+        constructions =
+                new ArrayList<>(grid.getConstructions());
+
+        for (Construction construction : constructions) {
+            if (construction instanceof MilitaryBase) {
+                MilitaryBase militaryBase =
+                        (MilitaryBase) construction;
+
+                if (militaryBase.isPowered()
+                        && militaryBase.canRemoveCriminalActivity(currentTick)
+                        && destroyMilitaryTarget()) {
+                    militaryBase.registerCriminalActivityRemoval(currentTick);
+                    removed++;
                 }
             }
         }

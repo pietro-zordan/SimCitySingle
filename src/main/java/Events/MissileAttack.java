@@ -22,11 +22,11 @@ public class MissileAttack extends Event
             Grid grid,
             MissileDefense missileDefense)
     {
-        super(TICK_DURATION, city, 200);
+        super(TICK_DURATION, city, 350);
 
         this.grid = grid;
         this.missileDefense = missileDefense;
-        launchNumber = 5;
+        launchNumber = 2;
     }
 
     @Override
@@ -45,32 +45,19 @@ public class MissileAttack extends Event
     {
         Random random = new Random();
 
-        targetRow =
-                random.nextInt(
-                        grid.getNumberOfRows()
-                );
+        targetRow = random.nextInt(grid.getNumberOfRows());
 
-        targetColumn =
-                random.nextInt(
-                        grid.getNumberOfColumns()
-                );
+        targetColumn = random.nextInt(grid.getNumberOfColumns());
 
-        intercepted =
-                missileDefense != null
+        intercepted = missileDefense != null
                         && missileDefense.absorbMissile();
 
         if (!intercepted)
         {
-            grid.destroyArea(
-                    targetRow,
-                    targetColumn,
-                    1
-            );
+            grid.destroyArea(targetRow, targetColumn, 1);
 
             city.refreshStatistics();
-            city.decreaseGlobalHappiness(
-                    HAPPINESS_DECREASE
-            );
+            city.decreaseGlobalHappiness(HAPPINESS_DECREASE);
         }
     }
 

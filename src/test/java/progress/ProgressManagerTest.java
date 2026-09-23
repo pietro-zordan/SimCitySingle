@@ -2,10 +2,13 @@ package progress;
 
 import controller.Controller;
 import model.ConstructionType;
+import model.FreemasonryChoice;
+import model.Grid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import policies.PolicyType;
+import policies.StandardPolicy;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -117,6 +120,41 @@ class ProgressManagerTest {
         verify(controller).createProgress();
         assertEquals(20, loadedProgress.getCurrentTick());
         assertEquals(1800, loadedProgress.getBudget());
+    }
+
+    @Test
+    void invitationChoiceSurvivesSaveAndLoad() throws IOException {
+        Controller controller = new Controller(
+                new Grid(), new StandardPolicy(), 2000, 500, 0
+        );
+        Path file = tempDirectory.resolve("invitation.json");
+
+        assertTrue(controller.isFreemasonryInvitationPending());
+        assertTrue(controller.chooseFreemasonry(
+                FreemasonryChoice.ACCEPTED
+        ));
+
+        progressManager.saveGame(controller, file.toString());
+        Controller loaded = progressManager.loadGame(file.toString());
+
+        assertEquals(FreemasonryChoice.ACCEPTED,
+                loaded.getFreemasonryChoice());
+        assertFalse(loaded.isFreemasonryInvitationPending());
+    }
+
+    @Test
+    void pendingInvitationSurvivesSaveAndLoad() throws IOException {
+        Controller controller = new Controller(
+                new Grid(), new StandardPolicy(), 2000, 500, 0
+        );
+        Path file = tempDirectory.resolve("pending-invitation.json");
+
+        progressManager.saveGame(controller, file.toString());
+        Controller loaded = progressManager.loadGame(file.toString());
+
+        assertEquals(FreemasonryChoice.PENDING,
+                loaded.getFreemasonryChoice());
+        assertTrue(loaded.isFreemasonryInvitationPending());
     }
 
     @Test

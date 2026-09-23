@@ -42,6 +42,28 @@ class SimulationTest {
     }
 
     @Test
+    void invitationStartsAtTick500AndChoiceCannotBeChanged() {
+        Simulation before = new Simulation(city, grid, 499, 0);
+        Simulation at500 = new Simulation(city, grid, 500, 0);
+
+        assertFalse(before.isFreemasonryInvitationPending());
+        assertFalse(before.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
+        before.updateOfOneTick();
+        assertEquals(500, before.getCurrentTick());
+        assertTrue(before.isFreemasonryInvitationPending());
+        assertTrue(at500.isFreemasonryInvitationPending());
+        clearInvocations(city);
+        assertThrows(IllegalStateException.class, at500::updateOfOneTick);
+        verify(city, never()).updateOfOneTick();
+
+        assertTrue(at500.chooseFreemasonry(FreemasonryChoice.DECLINED));
+        assertEquals(FreemasonryChoice.DECLINED,
+                at500.getFreemasonryChoice());
+        assertFalse(at500.isFreemasonryInvitationPending());
+        assertFalse(at500.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
+    }
+
+    @Test
     void testCanChangePolicy_AfterInterval_ReturnsTrue() {
         // Creiamo una simulazione dove sono passati esattamente 12 tick dall'ultimo cambio[cite: 33]
         Simulation advancedSimulation = new Simulation(city, grid, 12, 0);

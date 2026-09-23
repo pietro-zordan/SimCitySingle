@@ -13,10 +13,13 @@ public class Simulation{
     private static final int POLICY_CHANGE_INTERVAL = 12;
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
+    private static final int FREEMASONRY_INVITATION_TICK = 500;
 
     private final Random random = new Random();
     private int currentTick;
     private int lastPolicyChangeTick;
+    private FreemasonryChoice freemasonryChoice =
+            FreemasonryChoice.PENDING;
     private final City city;
     private Event activeEvent;
     private int eventTicksPassed;
@@ -116,6 +119,38 @@ public class Simulation{
         int passedTicks = currentTick - lastPolicyChangeTick;
 
         return passedTicks >= POLICY_CHANGE_INTERVAL;
+    }
+
+    public FreemasonryChoice getFreemasonryChoice()
+    {
+        return freemasonryChoice;
+    }
+
+    public boolean isFreemasonryInvitationPending()
+    {
+        return currentTick >= FREEMASONRY_INVITATION_TICK
+                && freemasonryChoice == FreemasonryChoice.PENDING;
+    }
+
+    public boolean chooseFreemasonry(FreemasonryChoice choice)
+    {
+        if (!isFreemasonryInvitationPending()
+                || choice == null
+                || choice == FreemasonryChoice.PENDING)
+        {
+            return false;
+        }
+
+        freemasonryChoice = choice;
+        return true;
+    }
+
+    public void restoreFreemasonryChoice(
+            FreemasonryChoice choice)
+    {
+        freemasonryChoice = choice == null
+                ? FreemasonryChoice.PENDING
+                : choice;
     }
 
     // Cambia la policy se è valida e sono trascorsi abbastanza tick.
@@ -296,6 +331,12 @@ public class Simulation{
        Se non ci sono eventi, prova ad avviarne uno casuale e infine incrementa il tick. */
     public boolean updateOfOneTick()
     {
+        if (isFreemasonryInvitationPending())
+        {
+            throw new IllegalStateException(
+                    "Choose an answer to the invitation before continuing"
+            );
+        }
         city.updateOfOneTick();
 
         if (isEventActive())

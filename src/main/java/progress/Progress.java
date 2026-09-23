@@ -5,6 +5,7 @@ import model.City;
 import model.Construction;
 import model.ConstructionType;
 import model.Grid;
+import model.FreemasonryChoice;
 import model.ReconstructionEntry;
 import model.Simulation;
 import policies.Policy;
@@ -22,6 +23,8 @@ public class Progress
     private int lastPolicyChangeTick;
     private PolicyType policyType;
     private int budget;
+    // Le vecchie partite prive del campo restano in attesa della scelta.
+    private FreemasonryChoice freemasonryChoice;
     private boolean tsunamiInsuranceActive;
 
     // Stato dei prestiti. bankStatePresent mantiene compatibili i vecchi salvataggi.
@@ -191,6 +194,9 @@ public class Progress
         progress.missileDefenseHitsRemaining =
                 simulation.getMissileDefenseHitsRemaining();
 
+        progress.freemasonryChoice =
+                simulation.getFreemasonryChoice();
+
         return progress;
     }
 
@@ -207,6 +213,13 @@ public class Progress
     public int getBudget()
     {
         return budget;
+    }
+
+    public FreemasonryChoice getFreemasonryChoice()
+    {
+        return freemasonryChoice == null
+                ? FreemasonryChoice.PENDING
+                : freemasonryChoice;
     }
 
     public PolicyType getPolicyType()
@@ -312,6 +325,10 @@ public class Progress
                     missileDefenseHitsRemaining
             );
         }
+
+        controller.restoreFreemasonryChoice(
+                getFreemasonryChoice()
+        );
 
         if (pendingTsunamiReconstructions != null
                 && !pendingTsunamiReconstructions.isEmpty())

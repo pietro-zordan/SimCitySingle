@@ -222,20 +222,41 @@ public final class GameView implements GameObserver
                         boolean criminalActivityCreated =
                                 controller.updateOfOneTick();
 
-                        if (controller.wasTerroristicGroupCreated())
+                        int militaryRemovals =
+                                controller
+                                        .getRemovedTerroristicGroupsByMilitary();
+
+                        int policeTerroristRemovals =
+                                controller.getRemovedTerroristicGroups()
+                                        - militaryRemovals;
+
+                        if (militaryRemovals > 0)
+                        {
+                            String groupText =
+                                    militaryRemovals == 1
+                                            ? " terrorist group!"
+                                            : " terrorist groups!";
+
+                            showToast(
+                                    "Military base eliminated "
+                                            + militaryRemovals
+                                            + groupText
+                            );
+                        }
+                        else if (controller.wasTerroristicGroupCreated())
                         {
                             showToast(
                                     "Warning: a terrorist group has appeared!"
                             );
                         }
-                        else if (controller.getRemovedTerroristicGroups() > 0
+                        else if (policeTerroristRemovals > 0
                                 && controller.getRemovedCriminalActivities() > 0)
                         {
                             showToast(
                                     "Criminal activity and terrorist group eliminated by the police!"
                             );
                         }
-                        else if (controller.getRemovedTerroristicGroups() > 0)
+                        else if (policeTerroristRemovals > 0)
                         {
                             showToast(
                                     "Terrorist group eliminated by the police!"

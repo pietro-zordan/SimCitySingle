@@ -90,6 +90,13 @@ public class ProgressManager
             );
         }
 
+        if (controller.getActiveEventType() != null)
+        {
+            throw new IllegalStateException(
+                    "Cannot save while an event is in progress."
+            );
+        }
+
         Progress progress = controller.createProgress();
 
         save(progress, filePath);

@@ -32,6 +32,11 @@ public class Progress
     private int loanStartTick;
     private int remainingDebt;
 
+    // Stato della difesa missilistica. Il flag mantiene compatibili i vecchi salvataggi.
+    private boolean missileDefenseStatePresent;
+    private boolean missileDefensePurchased;
+    private int missileDefenseHitsRemaining;
+
     private List<ConstructionProgress> constructions;
     private List<ConstructionProgress>
             pendingTsunamiReconstructions;
@@ -180,6 +185,12 @@ public class Progress
         progress.remainingDebt =
                 simulation.getRemainingDebt();
 
+        progress.missileDefenseStatePresent = true;
+        progress.missileDefensePurchased =
+                simulation.isMissileDefensePurchased();
+        progress.missileDefenseHitsRemaining =
+                simulation.getMissileDefenseHitsRemaining();
+
         return progress;
     }
 
@@ -291,6 +302,14 @@ public class Progress
                     loanAmount,
                     loanStartTick,
                     remainingDebt
+            );
+        }
+
+        if (missileDefenseStatePresent)
+        {
+            controller.restoreMissileDefenseState(
+                    missileDefensePurchased,
+                    missileDefenseHitsRemaining
             );
         }
 

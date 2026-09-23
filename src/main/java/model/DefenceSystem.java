@@ -6,4 +6,8 @@ public interface DefenceSystem {
 
     public void registerCriminalActivityRemoval(int currentTick);
 
+    public void setDamage();
+
+    public void resetDamage();
+
 }

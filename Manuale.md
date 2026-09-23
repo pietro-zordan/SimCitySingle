@@ -127,6 +127,12 @@ L'assicurazione copre soltanto gli edifici presenti nel momento in cui viene app
 
 Quando uno tsunami distrugge edifici assicurati, questi vengono ricostruiti gradualmente dopo la fine dell'animazione, mantenendo lo stato che avevano prima della distruzione. Durante la ricostruzione non è possibile costruire nella zona interessata.
 
+## Difesa missilistica
+
+Nelle fasi avanzate della partita, se hai almeno una **base militare**, puoi acquistare il sistema di difesa missilistica. Il costo base è di **20000 €**: ogni base militare applica uno **sconto del 5% sull'acquisto**, fino al **30%**.
+
+Il sistema intercetta fino a **3 missili**. Dopo un'intercettazione puoi ripristinare un utilizzo alla volta oppure premere **Restore to 3** per riportarlo subito alla capacità massima. Ogni utilizzo ripristinato costa **300 €**, senza sconti; se il budget non basta per il ripristino completo, non viene effettuato alcun addebito.
+
 ## Attività criminali, terrorismo e polizia
 
 Durante la partita possono comparire delle **attività criminali**, che riducono economia e felicità.

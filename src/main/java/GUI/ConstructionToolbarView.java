@@ -317,6 +317,7 @@ public final class ConstructionToolbarView
             case TERRORISTIC_GROUP -> "Terroristic Group";
             case NUCLEAR_PLANT -> "Nuclear Plant";
             case WASTE_TREATMENT_PLANT -> "Waste Treatment Plant";
+            case MILITARY_BASE -> "Military Base";
         };
     }
 
@@ -339,6 +340,7 @@ public final class ConstructionToolbarView
             case TERRORISTIC_GROUP -> Color.DARKRED;
             case NUCLEAR_PLANT -> Color.PURPLE;
             case WASTE_TREATMENT_PLANT -> Color.web("#A0522D");
+            case MILITARY_BASE -> Color.DARKOLIVEGREEN;
         };
     }
 

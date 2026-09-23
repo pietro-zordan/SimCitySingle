@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.AchievementManager;
 import progress.ProgressManager;
 
 /* Avvia l'applicazione e gestisce il passaggio
@@ -28,6 +29,9 @@ public class Main
 
     private final ProgressManager progressManager =
             new ProgressManager();
+
+    private final AchievementManager achievementManager =
+            new AchievementManager();
 
     private Stage stage;
     private Controller controller;
@@ -82,7 +86,7 @@ public class Main
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        controller = new Controller();
+                        controller = new Controller(achievementManager);
                         showGameScreen();
                     }
                 }
@@ -209,7 +213,7 @@ public class Main
     @Override
     public void restartGame()
     {
-        controller = new Controller();
+        controller = new Controller(achievementManager);
         showGameScreen();
     }
 

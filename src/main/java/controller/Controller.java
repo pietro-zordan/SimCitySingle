@@ -77,20 +77,15 @@ public final class Controller
             int lastPolicyChangeTick,
             boolean tsunamiInsuranceActive)
     {
-        this.grid = Objects.requireNonNull(
+        this(
                 grid,
-                "model.Grid cannot be null"
-        );
-
-        Objects.requireNonNull(
                 initialPolicy,
-                "Initial policy cannot be null"
+                budget,
+                currentTick,
+                lastPolicyChangeTick,
+                tsunamiInsuranceActive,
+                new AchievementManager()
         );
-
-        this.city = new City(grid, initialPolicy, budget);
-
-        this.simulation = new Simulation(city, grid, currentTick,
-                lastPolicyChangeTick, tsunamiInsuranceActive);
     }
 
     public Controller(Grid grid, Policy initialPolicy,
@@ -114,6 +109,46 @@ public final class Controller
 
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
+    }
+
+    public Controller(
+            Grid grid,
+            Policy initialPolicy,
+            int budget,
+            int currentTick,
+            int lastPolicyChangeTick,
+            boolean tsunamiInsuranceActive,
+            AchievementManager achievementManager)
+    {
+        this.grid = Objects.requireNonNull(
+                grid,
+                "model.Grid cannot be null"
+        );
+
+        Objects.requireNonNull(
+                initialPolicy,
+                "Initial policy cannot be null"
+        );
+
+        this.achievementManager =
+                Objects.requireNonNull(
+                        achievementManager,
+                        "Achievement manager cannot be null"
+                );
+
+        this.city = new City(
+                grid,
+                initialPolicy,
+                budget
+        );
+
+        this.simulation = new Simulation(
+                city,
+                grid,
+                currentTick,
+                lastPolicyChangeTick,
+                tsunamiInsuranceActive
+        );
     }
 
     public Controller(AchievementManager achievementManager)

@@ -16,12 +16,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -40,7 +44,10 @@ public final class EventAnimationView
     private static final int MISSILE_FLIGHT_DURATION = 1200;
     private static final int MISSILE_IMPACT_DELAY = 220;
     private static final int MISSILE_IMPACT_DURATION = 700;
-    private static final int MISSILE_START_MARGIN = 180;
+    private static final int MISSILE_START_MARGIN = 80;
+    private static final double MISSILE_SHIELD_WIDTH_FACTOR = 1.25;
+    private static final double MISSILE_SHIELD_MIN_HORIZONTAL_MARGIN = 30.0;
+    private static final double MISSILE_SHIELD_CORNER_SAFETY = 1.06;
     private static final int MISSILE_DEFLECTION_DURATION = 650;
     private static final int MISSILE_SHIELD_VISIBLE_DURATION = 1100;
 
@@ -51,6 +58,9 @@ public final class EventAnimationView
     private final Label hackerBinaryCode;
     private final Group missileNode;
     private final Group missileShieldNode;
+    private Ellipse missileShieldOuter;
+    private Ellipse missileShieldInner;
+    private Ellipse missileShieldHighlight;
     private final Random random = new Random();
     private final Queue<ExplosionInfo> pendingExplosions = new ArrayDeque<>();
 
@@ -184,32 +194,59 @@ public final class EventAnimationView
 
     private Group createMissileShieldNode()
     {
-        double radiusX =
-                gridView.getGridVisualWidth() / 2.0
-                        + 100;
+        missileShieldOuter = new Ellipse();
+        missileShieldInner = new Ellipse();
+        missileShieldHighlight = new Ellipse();
 
-        double radiusY =
-                gridView.getGridVisualHeight() / 2.0
-                        + 100;
-
-        Ellipse shield =
-                new Ellipse(
-                        0,
-                        0,
-                        radiusX,
-                        radiusY
-                );
-
-        shield.setFill(
-                Color.rgb(
-                        255,
-                        220,
-                        40,
-                        0.14
+        missileShieldOuter.setFill(
+                new RadialGradient(
+                        -35,
+                        0.30,
+                        0.36,
+                        0.24,
+                        0.95,
+                        true,
+                        CycleMethod.NO_CYCLE,
+                        new Stop(
+                                0.0,
+                                Color.rgb(
+                                        255,
+                                        255,
+                                        210,
+                                        0.34
+                                )
+                        ),
+                        new Stop(
+                                0.38,
+                                Color.rgb(
+                                        255,
+                                        230,
+                                        80,
+                                        0.20
+                                )
+                        ),
+                        new Stop(
+                                0.72,
+                                Color.rgb(
+                                        255,
+                                        205,
+                                        25,
+                                        0.11
+                                )
+                        ),
+                        new Stop(
+                                1.0,
+                                Color.rgb(
+                                        255,
+                                        185,
+                                        0,
+                                        0.04
+                                )
+                        )
                 )
         );
 
-        shield.setStroke(
+        missileShieldOuter.setStroke(
                 Color.rgb(
                         255,
                         215,
@@ -217,31 +254,152 @@ public final class EventAnimationView
                         0.95
                 )
         );
+        missileShieldOuter.setStrokeWidth(4);
 
-        shield.setStrokeWidth(4);
+        missileShieldOuter.setEffect(
+                new DropShadow(
+                        22,
+                        Color.rgb(
+                                255,
+                                210,
+                                30,
+                                0.60
+                        )
+                )
+        );
 
-        Ellipse innerGlow =
-                new Ellipse(
-                        0,
-                        0,
-                        radiusX - 8,
-                        radiusY - 8
-                );
-
-        innerGlow.setFill(Color.TRANSPARENT);
-        innerGlow.setStroke(
+        missileShieldInner.setFill(
+                Color.TRANSPARENT
+        );
+        missileShieldInner.setStroke(
                 Color.rgb(
                         255,
                         245,
-                        160,
-                        0.75
+                        165,
+                        0.58
                 )
         );
-        innerGlow.setStrokeWidth(2);
+        missileShieldInner.setStrokeWidth(1.7);
+
+        missileShieldHighlight.setFill(
+                new RadialGradient(
+                        0,
+                        0,
+                        0.5,
+                        0.5,
+                        0.5,
+                        true,
+                        CycleMethod.NO_CYCLE,
+                        new Stop(
+                                0.0,
+                                Color.rgb(
+                                        255,
+                                        255,
+                                        245,
+                                        0.24
+                                )
+                        ),
+                        new Stop(
+                                1.0,
+                                Color.TRANSPARENT
+                        )
+                )
+        );
+        missileShieldHighlight.setStroke(
+                Color.TRANSPARENT
+        );
+        missileShieldHighlight.setRotate(-10);
+
+        updateMissileShieldGeometry();
 
         return new Group(
-                shield,
-                innerGlow
+                missileShieldOuter,
+                missileShieldInner,
+                missileShieldHighlight
+        );
+    }
+
+    /*
+     * Calcola i raggi in base alle dimensioni reali della griglia.
+     * Il raggio X cresce poco oltre la mappa; il raggio Y viene ricavato
+     * matematicamente per includere anche i quattro angoli e creare
+     * una cupola piu alta. Se in futuro cambia il numero di righe/colonne,
+     * la geometria si adatta senza costanti legate alla griglia 20x20.
+     */
+    private double[] getMissileShieldRadii()
+    {
+        double halfWidth =
+                gridView.getGridVisualWidth() / 2.0;
+
+        double halfHeight =
+                gridView.getGridVisualHeight() / 2.0;
+
+        double radiusX =
+                Math.max(
+                        halfWidth
+                                * MISSILE_SHIELD_WIDTH_FACTOR,
+                        halfWidth
+                                + MISSILE_SHIELD_MIN_HORIZONTAL_MARGIN
+                );
+
+        double horizontalRatio =
+                halfWidth / radiusX;
+
+        double verticalFactor =
+                Math.sqrt(
+                        Math.max(
+                                0.05,
+                                1.0
+                                        - horizontalRatio
+                                        * horizontalRatio
+                        )
+                );
+
+        double minimumRadiusY =
+                halfHeight / verticalFactor;
+
+        double radiusY =
+                minimumRadiusY
+                        * MISSILE_SHIELD_CORNER_SAFETY;
+
+        return new double[] {
+                radiusX,
+                radiusY
+        };
+    }
+
+    private void updateMissileShieldGeometry()
+    {
+        double[] radii =
+                getMissileShieldRadii();
+
+        double radiusX = radii[0];
+        double radiusY = radii[1];
+
+        missileShieldOuter.setRadiusX(radiusX);
+        missileShieldOuter.setRadiusY(radiusY);
+
+        missileShieldInner.setRadiusX(
+                radiusX * 0.94
+        );
+        missileShieldInner.setRadiusY(
+                radiusY * 0.92
+        );
+        missileShieldInner.setCenterY(
+                -radiusY * 0.025
+        );
+
+        missileShieldHighlight.setRadiusX(
+                radiusX * 0.42
+        );
+        missileShieldHighlight.setRadiusY(
+                radiusY * 0.16
+        );
+        missileShieldHighlight.setCenterX(
+                -radiusX * 0.16
+        );
+        missileShieldHighlight.setCenterY(
+                -radiusY * 0.30
         );
     }
 
@@ -716,34 +874,34 @@ public final class EventAnimationView
             double targetX,
             double targetY)
     {
-        double halfWidth =
-                gridView.getGridVisualWidth() / 2.0;
+        double[] radii =
+                getMissileShieldRadii();
 
-        double halfHeight =
-                gridView.getGridVisualHeight() / 2.0;
+        double radiusX = radii[0];
+        double radiusY = radii[1];
 
         int startSide = random.nextInt(6);
 
         if (startSide == 0)
         {
             return new double[] {
-                    -halfWidth - MISSILE_START_MARGIN,
-                    -halfHeight - MISSILE_START_MARGIN
+                    -radiusX - MISSILE_START_MARGIN,
+                    -radiusY - MISSILE_START_MARGIN
             };
         }
 
         if (startSide == 1)
         {
             return new double[] {
-                    halfWidth + MISSILE_START_MARGIN,
-                    -halfHeight - MISSILE_START_MARGIN
+                    radiusX + MISSILE_START_MARGIN,
+                    -radiusY - MISSILE_START_MARGIN
             };
         }
 
         if (startSide == 2)
         {
             return new double[] {
-                    -halfWidth - MISSILE_START_MARGIN,
+                    -radiusX - MISSILE_START_MARGIN,
                     targetY
             };
         }
@@ -751,7 +909,7 @@ public final class EventAnimationView
         if (startSide == 3)
         {
             return new double[] {
-                    halfWidth + MISSILE_START_MARGIN,
+                    radiusX + MISSILE_START_MARGIN,
                     targetY
             };
         }
@@ -759,14 +917,14 @@ public final class EventAnimationView
         if (startSide == 4)
         {
             return new double[] {
-                    -halfWidth - MISSILE_START_MARGIN,
-                    halfHeight + MISSILE_START_MARGIN
+                    -radiusX - MISSILE_START_MARGIN,
+                    radiusY + MISSILE_START_MARGIN
             };
         }
 
         return new double[] {
-                halfWidth + MISSILE_START_MARGIN,
-                halfHeight + MISSILE_START_MARGIN
+                radiusX + MISSILE_START_MARGIN,
+                radiusY + MISSILE_START_MARGIN
         };
     }
 
@@ -777,13 +935,11 @@ public final class EventAnimationView
             double targetX,
             double targetY)
     {
-        double radiusX =
-                gridView.getGridVisualWidth() / 2.0
-                        + 100;
+        double[] radii =
+                getMissileShieldRadii();
 
-        double radiusY =
-                gridView.getGridVisualHeight() / 2.0
-                        + 100;
+        double radiusX = radii[0];
+        double radiusY = radii[1];
 
         double dx = targetX - startX;
         double dy = targetY - startY;
@@ -857,13 +1013,11 @@ public final class EventAnimationView
         double incomingY =
                 impactY - startY;
 
-        double radiusX =
-                gridView.getGridVisualWidth() / 2.0
-                        + 100;
+        double[] radii =
+                getMissileShieldRadii();
 
-        double radiusY =
-                gridView.getGridVisualHeight() / 2.0
-                        + 100;
+        double radiusX = radii[0];
+        double radiusY = radii[1];
 
         double normalX =
                 impactX / (radiusX * radiusX);
@@ -911,14 +1065,31 @@ public final class EventAnimationView
         reflectedX /= reflectedLength;
         reflectedY /= reflectedLength;
 
+        double bounceDistance =
+                Math.max(
+                        140,
+                        Math.min(
+                                radiusX,
+                                radiusY
+                        ) * 0.35
+                );
+
+        double downwardFall =
+                Math.max(
+                        55,
+                        radiusY * 0.10
+                );
+
         double bounceX =
                 impactX
-                        + reflectedX * 150;
+                        + reflectedX
+                        * bounceDistance;
 
         double bounceY =
                 impactY
-                        + reflectedY * 150
-                        + 70;
+                        + reflectedY
+                        * bounceDistance
+                        + downwardFall;
 
         missileNode.setRotate(
                 Math.toDegrees(
@@ -989,6 +1160,8 @@ public final class EventAnimationView
 
     private void showMissileShieldImpact()
     {
+        updateMissileShieldGeometry();
+
         if (missileShieldTimeline != null)
         {
             missileShieldTimeline.stop();

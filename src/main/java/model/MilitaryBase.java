@@ -39,15 +39,4 @@ public class MilitaryBase extends Construction implements DefenceSystem{
         lastRemovalTick = currentTick;
     }
 
-    @Override
-    public void setDamage() {
-        return;
-    }
-
-    @Override
-    public void resetDamage() {
-        return;
-    }
-
-
 }

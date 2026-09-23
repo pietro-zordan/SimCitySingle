@@ -58,7 +58,6 @@
             <scope>test</scope>
         </dependency>
 
-
     </dependencies>
 
     <build>
@@ -69,6 +68,22 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>GUI.Main</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Packaging-only addition for the Windows executable branch. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>GUI.Main</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

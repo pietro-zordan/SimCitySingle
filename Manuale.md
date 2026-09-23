@@ -27,6 +27,7 @@ Costi base principali:
 | Banca | 800 € |
 | Impresa edile | 1000 € |
 | Stazione di polizia | 1200 € |
+| Base militare | 2250 € |
 | Impianto di trattamento rifiuti | 1600 € |
 | Centrale nucleare | 3000 € |
 
@@ -126,6 +127,10 @@ Il prezzo dipende dalle costruzioni presenti nelle zone della mappa che possono 
 L'assicurazione copre soltanto gli edifici presenti nel momento in cui viene applicata. Se in seguito vengono costruiti nuovi edifici nella zona a rischio, è necessario premere nuovamente il pulsante dell'assicurazione per estendere la copertura soltanto a quelle nuove costruzioni.
 
 Quando uno tsunami distrugge edifici assicurati, questi vengono ricostruiti gradualmente dopo la fine dell'animazione, mantenendo lo stato che avevano prima della distruzione. Durante la ricostruzione non è possibile costruire nella zona interessata.
+
+## Basi militari
+
+Le **basi militari** diventano disponibili dal **turno 80**. Consumano energia e aumentano l'inquinamento. Una base alimentata può eliminare un gruppo terroristico attivo da almeno **2 turni**; dopo un intervento deve attendere prima di agire di nuovo. La presenza di almeno una base permette inoltre di acquistare la difesa missilistica.
 
 ## Difesa missilistica
 

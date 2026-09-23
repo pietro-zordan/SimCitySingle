@@ -1,5 +1,7 @@
 package GUI;
 
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.function.Consumer;
 
 import Events.EventType;
@@ -12,8 +14,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
@@ -669,70 +670,21 @@ public final class GridView
 
     // Genera una texture mimetica originale usando verdi, marroni e beige.
     // In questo modo la base militare ha l'aspetto camouflage senza usare immagini o scritte esterne.
+    // Usa una piccola immagine camouflage incorporata direttamente nel gioco.
+    // In questo modo non servono connessioni Internet e la texture resta nitida anche a 30x30.
     private static Paint createMilitaryCamouflagePattern()
     {
-        WritableImage image =
-                new WritableImage(
-                        CELL_SIZE,
-                        CELL_SIZE
+        byte[] imageBytes =
+                Base64.getDecoder().decode(
+                        "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAABYklEQVR42rWWv0vDQBTHX54ZVLAUDiOB0nNUCAQiOhWCa3Fxdu7k3+Pf4d/gLAQKHVwDgZJCIQQXwcGh8Wjv57u0fdySI/ncl+/73iPBy+wR/ivnDAw1L2qwVsNCaQcpXABIsys7erj+NaI/yrXlyx6qd55VuqqFXuirhW4X+jpoKrVVB1Bt6jA6vyR6ogqnWiklxKQ050xkAYlatlnOjFPRQsWG6OQKW1AkQSwnnSgF1YTZ6UQuAKAW1I8uvRDSr4CzFsVyB92wUNVIzMDb+8KREOlS0O/I63PiDl/DQrG8rLDQTzA4XS2/xYrii+vhuZfFD7fR59fKfWWkVuyjHeFApdKD9O5mz3aZ0kJCA8CEX1qGtTaFmGRxksW9fZgXdVm1T/fjI3qt0oN8mnbRrn983egGTnSm3Q+1x/LRgPLvYeEax1NZtXw0sE+Ssmrtp3boydg9j5wsDVrL3Qj3xW3XH7eZjsFsvkrrAAAAAElFTkSuQmCC"
                 );
 
-        PixelWriter writer =
-                image.getPixelWriter();
-
-        Color[] colors = {
-                Color.web("#263F26"),
-                Color.web("#4F5634"),
-                Color.web("#66503D"),
-                Color.web("#8A7046"),
-                Color.web("#9B9363"),
-                Color.web("#3E2E2C")
-        };
-
-        for (int y = 0; y < CELL_SIZE; y++)
-        {
-            for (int x = 0; x < CELL_SIZE; x++)
-            {
-                double pattern =
-                        Math.sin(x * 0.34)
-                                + Math.cos(y * 0.31)
-                                + Math.sin((x + y) * 0.20)
-                                + Math.cos((x * 2.0 - y) * 0.13);
-
-                int colorIndex;
-
-                if (pattern < -1.35)
-                {
-                    colorIndex = 5;
-                }
-                else if (pattern < -0.65)
-                {
-                    colorIndex = 0;
-                }
-                else if (pattern < 0.05)
-                {
-                    colorIndex = 2;
-                }
-                else if (pattern < 0.75)
-                {
-                    colorIndex = 1;
-                }
-                else if (pattern < 1.45)
-                {
-                    colorIndex = 3;
-                }
-                else
-                {
-                    colorIndex = 4;
-                }
-
-                writer.setColor(
-                        x,
-                        y,
-                        colors[colorIndex]
+        Image image =
+                new Image(
+                        new ByteArrayInputStream(
+                                imageBytes
+                        )
                 );
-            }
-        }
 
         return new ImagePattern(
                 image,

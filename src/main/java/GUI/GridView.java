@@ -657,6 +657,7 @@ public final class GridView
             case GRASS -> Color.web("#9DBB7A");
             case NUCLEAR_PLANT -> Color.PURPLE;
             case WASTE_TREATMENT_PLANT -> Color.web("#A0522D");
+            case MILITARY_BASE -> Color.DARKOLIVEGREEN;
         };
     }
 

@@ -27,8 +27,12 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -47,9 +51,9 @@ public final class EventAnimationView
     private static final int MISSILE_IMPACT_DELAY = 220;
     private static final int MISSILE_IMPACT_DURATION = 700;
     private static final int MISSILE_START_MARGIN = 80;
-    private static final double MISSILE_SHIELD_WIDTH_FACTOR = 1.18;
-    private static final double MISSILE_SHIELD_MIN_HORIZONTAL_MARGIN = 24.0;
-    private static final double MISSILE_SHIELD_CORNER_SAFETY = 1.08;
+    private static final double MISSILE_SHIELD_INSET = 4.0;
+    private static final double MISSILE_SHIELD_ROUNDNESS = 20.0;
+    private static final int MISSILE_SHIELD_SEGMENTS = 128;
     private static final int MISSILE_DEFLECTION_DURATION = 650;
     private static final int MISSILE_SHIELD_VISIBLE_DURATION = 1100;
 
@@ -60,12 +64,13 @@ public final class EventAnimationView
     private final Label hackerBinaryCode;
     private final Group missileNode;
     private final Group missileShieldNode;
-    private Ellipse missileShieldOuter;
-    private Ellipse missileShieldInner;
+    private Path missileShieldOuter;
+    private Path missileShieldInner;
     private Ellipse missileShieldBaseRing;
     private Ellipse missileShieldHighlight;
     private CubicCurve missileShieldLeftMeridian;
     private CubicCurve missileShieldRightMeridian;
+    private CubicCurve missileShieldLatitude;
     private Circle missileShieldImpactGlow;
     private final Random random = new Random();
     private final Queue<ExplosionInfo> pendingExplosions = new ArrayDeque<>();
@@ -201,12 +206,13 @@ public final class EventAnimationView
 
     private Group createMissileShieldNode()
     {
-        missileShieldOuter = new Ellipse();
-        missileShieldInner = new Ellipse();
+        missileShieldOuter = new Path();
+        missileShieldInner = new Path();
         missileShieldBaseRing = new Ellipse();
         missileShieldHighlight = new Ellipse();
         missileShieldLeftMeridian = new CubicCurve();
         missileShieldRightMeridian = new CubicCurve();
+        missileShieldLatitude = new CubicCurve();
         missileShieldImpactGlow = new Circle(18);
 
         missileShieldOuter.setFill(
@@ -215,7 +221,7 @@ public final class EventAnimationView
                         0.30,
                         0.34,
                         0.20,
-                        0.98,
+                        1.0,
                         true,
                         CycleMethod.NO_CYCLE,
                         new Stop(
@@ -224,7 +230,7 @@ public final class EventAnimationView
                                         255,
                                         255,
                                         225,
-                                        0.32
+                                        0.44
                                 )
                         ),
                         new Stop(
@@ -233,7 +239,7 @@ public final class EventAnimationView
                                         255,
                                         234,
                                         105,
-                                        0.20
+                                        0.26
                                 )
                         ),
                         new Stop(
@@ -242,7 +248,7 @@ public final class EventAnimationView
                                         255,
                                         207,
                                         35,
-                                        0.10
+                                        0.14
                                 )
                         ),
                         new Stop(
@@ -269,7 +275,7 @@ public final class EventAnimationView
 
         missileShieldOuter.setEffect(
                 new DropShadow(
-                        24,
+                        12,
                         Color.rgb(
                                 255,
                                 210,
@@ -315,6 +321,12 @@ public final class EventAnimationView
         );
         configureMissileShieldMeridian(
                 missileShieldRightMeridian
+        );
+        configureMissileShieldMeridian(
+                missileShieldLatitude
+        );
+        missileShieldLatitude.setStroke(
+                Color.rgb(255, 248, 190, 0.21)
         );
 
         missileShieldHighlight.setFill(
@@ -377,15 +389,28 @@ public final class EventAnimationView
 
         updateMissileShieldGeometry();
 
-        return new Group(
+        Group shield = new Group(
                 missileShieldOuter,
                 missileShieldInner,
                 missileShieldBaseRing,
                 missileShieldLeftMeridian,
                 missileShieldRightMeridian,
+                missileShieldLatitude,
                 missileShieldHighlight,
                 missileShieldImpactGlow
         );
+
+        double width = gridView.getGridVisualWidth();
+        double height = gridView.getGridVisualHeight();
+        shield.setClip(
+                new Rectangle(
+                        -width / 2.0,
+                        -height / 2.0,
+                        width,
+                        height
+                )
+        );
+        return shield;
     }
 
     private void configureMissileShieldMeridian(
@@ -404,11 +429,9 @@ public final class EventAnimationView
     }
 
     /*
-     * Calcola i raggi in base alle dimensioni reali della griglia.
-     * Il raggio X cresce poco oltre la mappa; il raggio Y viene ricavato
-     * matematicamente per includere anche i quattro angoli e creare
-     * una cupola piu alta. Se in futuro cambia il numero di righe/colonne,
-     * la geometria si adatta senza costanti legate alla griglia 20x20.
+     * Una superellisse segue la mappa e arrotonda solo gli angoli.
+     * I centri delle celle agli angoli restano protetti; il bordo luminoso
+     * occupa quasi soltanto lo spazio della griglia.
      */
     private double[] getMissileShieldRadii()
     {
@@ -418,38 +441,70 @@ public final class EventAnimationView
         double halfHeight =
                 gridView.getGridVisualHeight() / 2.0;
 
-        double radiusX =
-                Math.max(
-                        halfWidth
-                                * MISSILE_SHIELD_WIDTH_FACTOR,
-                        halfWidth
-                                + MISSILE_SHIELD_MIN_HORIZONTAL_MARGIN
-                );
-
-        double horizontalRatio =
-                halfWidth / radiusX;
-
-        double verticalFactor =
-                Math.sqrt(
-                        Math.max(
-                                0.05,
-                                1.0
-                                        - horizontalRatio
-                                        * horizontalRatio
-                        )
-                );
-
-        double minimumRadiusY =
-                halfHeight / verticalFactor;
-
-        double radiusY =
-                minimumRadiusY
-                        * MISSILE_SHIELD_CORNER_SAFETY;
-
         return new double[] {
-                radiusX,
-                radiusY
+                halfWidth - MISSILE_SHIELD_INSET,
+                halfHeight - MISSILE_SHIELD_INSET
         };
+    }
+
+    private void updateShieldOutline(
+            Path outline,
+            double radiusX,
+            double radiusY,
+            double centerY)
+    {
+        outline.getElements().clear();
+
+        for (int step = 0;
+             step < MISSILE_SHIELD_SEGMENTS;
+             step++)
+        {
+            double angle =
+                    2.0 * Math.PI * step
+                            / MISSILE_SHIELD_SEGMENTS;
+
+            double cosine = Math.cos(angle);
+            double sine = Math.sin(angle);
+            double exponent =
+                    2.0 / MISSILE_SHIELD_ROUNDNESS;
+
+            double x = radiusX
+                    * Math.copySign(
+                            Math.pow(Math.abs(cosine), exponent),
+                            cosine
+                    );
+            double y = centerY + radiusY
+                    * Math.copySign(
+                            Math.pow(Math.abs(sine), exponent),
+                            sine
+                    );
+
+            if (step == 0)
+            {
+                outline.getElements().add(new MoveTo(x, y));
+            }
+            else
+            {
+                outline.getElements().add(new LineTo(x, y));
+            }
+        }
+
+        outline.getElements().add(new ClosePath());
+    }
+
+    private double shieldEquation(
+            double x,
+            double y,
+            double radiusX,
+            double radiusY)
+    {
+        return Math.pow(
+                Math.abs(x / radiusX),
+                MISSILE_SHIELD_ROUNDNESS
+        ) + Math.pow(
+                Math.abs(y / radiusY),
+                MISSILE_SHIELD_ROUNDNESS
+        );
     }
 
     private void updateMissileShieldGeometry()
@@ -460,16 +515,16 @@ public final class EventAnimationView
         double radiusX = radii[0];
         double radiusY = radii[1];
 
-        missileShieldOuter.setRadiusX(radiusX);
-        missileShieldOuter.setRadiusY(radiusY);
-
-        missileShieldInner.setRadiusX(
-                radiusX * 0.94
+        updateShieldOutline(
+                missileShieldOuter,
+                radiusX,
+                radiusY,
+                0
         );
-        missileShieldInner.setRadiusY(
-                radiusY * 0.91
-        );
-        missileShieldInner.setCenterY(
+        updateShieldOutline(
+                missileShieldInner,
+                radiusX * 0.94,
+                radiusY * 0.91,
                 -radiusY * 0.025
         );
 
@@ -479,7 +534,7 @@ public final class EventAnimationView
          * che la barriera sia una cupola e non un semplice ovale.
          */
         missileShieldBaseRing.setRadiusX(
-                radiusX * 0.76
+                radiusX * 0.86
         );
         missileShieldBaseRing.setRadiusY(
                 Math.max(
@@ -488,7 +543,7 @@ public final class EventAnimationView
                 )
         );
         missileShieldBaseRing.setCenterY(
-                radiusY * 0.56
+                radiusY * 0.70
         );
 
         missileShieldHighlight.setRadiusX(
@@ -509,7 +564,7 @@ public final class EventAnimationView
                 -radiusY * 0.88;
 
         double lowerY =
-                radiusY * 0.55;
+                radiusY * 0.70;
 
         missileShieldLeftMeridian.setStartX(0);
         missileShieldLeftMeridian.setStartY(topY);
@@ -548,6 +603,15 @@ public final class EventAnimationView
                 radiusX * 0.58
         );
         missileShieldRightMeridian.setEndY(lowerY);
+
+        missileShieldLatitude.setStartX(-radiusX * 0.82);
+        missileShieldLatitude.setStartY(-radiusY * 0.15);
+        missileShieldLatitude.setControlX1(-radiusX * 0.42);
+        missileShieldLatitude.setControlY1(-radiusY * 0.34);
+        missileShieldLatitude.setControlX2(radiusX * 0.42);
+        missileShieldLatitude.setControlY2(-radiusY * 0.34);
+        missileShieldLatitude.setEndX(radiusX * 0.82);
+        missileShieldLatitude.setEndY(-radiusY * 0.15);
     }
 
     private Group createMissileNode()
@@ -1075,7 +1139,7 @@ public final class EventAnimationView
         };
     }
 
-    // Calcola il primo punto in cui la traiettoria del missile incontra il bordo ellittico dello scudo.
+    // Trova il bordo della stessa superellisse disegnata sulla griglia.
     private double[] getShieldIntersection(
             double startX,
             double startY,
@@ -1091,58 +1155,28 @@ public final class EventAnimationView
         double dx = targetX - startX;
         double dy = targetY - startY;
 
-        double radiusXSquared =
-                radiusX * radiusX;
+        double outside = 0.0;
+        double inside = 1.0;
 
-        double radiusYSquared =
-                radiusY * radiusY;
-
-        double a =
-                dx * dx / radiusXSquared
-                        + dy * dy / radiusYSquared;
-
-        double b =
-                2.0 * (
-                        startX * dx / radiusXSquared
-                                + startY * dy / radiusYSquared
-                );
-
-        double d =
-                startX * startX / radiusXSquared
-                        + startY * startY / radiusYSquared
-                        - 1.0;
-
-        double discriminant =
-                Math.max(
-                        0,
-                        b * b - 4.0 * a * d
-                );
-
-        double root =
-                Math.sqrt(discriminant);
-
-        double first =
-                (-b - root) / (2.0 * a);
-
-        double second =
-                (-b + root) / (2.0 * a);
-
-        double t = second;
-
-        if (first >= 0
-                && first <= 1)
+        for (int iteration = 0; iteration < 40; iteration++)
         {
-            t = first;
-        }
-        else if (second < 0
-                || second > 1)
-        {
-            t = 1;
+            double middle = (outside + inside) / 2.0;
+            double x = startX + dx * middle;
+            double y = startY + dy * middle;
+
+            if (shieldEquation(x, y, radiusX, radiusY) > 1.0)
+            {
+                outside = middle;
+            }
+            else
+            {
+                inside = middle;
+            }
         }
 
         return new double[] {
-                startX + dx * t,
-                startY + dy * t
+                startX + dx * inside,
+                startY + dy * inside
         };
     }
 
@@ -1170,10 +1204,22 @@ public final class EventAnimationView
         double radiusY = radii[1];
 
         double normalX =
-                impactX / (radiusX * radiusX);
+                Math.copySign(
+                        Math.pow(
+                                Math.abs(impactX / radiusX),
+                                MISSILE_SHIELD_ROUNDNESS - 1.0
+                        ),
+                        impactX
+                ) / radiusX;
 
         double normalY =
-                impactY / (radiusY * radiusY);
+                Math.copySign(
+                        Math.pow(
+                                Math.abs(impactY / radiusY),
+                                MISSILE_SHIELD_ROUNDNESS - 1.0
+                        ),
+                        impactY
+                ) / radiusY;
 
         double normalLength =
                 Math.sqrt(

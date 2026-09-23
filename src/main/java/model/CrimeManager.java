@@ -15,6 +15,7 @@ public class CrimeManager {
 
     private int removedCriminalActivities;
     private int removedTerroristicGroups;
+    private int removedTerroristicGroupsByMilitary;
 
     // Crea il gestore della criminalità usando la città e la griglia della simulazione.
     public CrimeManager(City city, Grid grid) {
@@ -170,6 +171,7 @@ public class CrimeManager {
         );
 
         removedTerroristicGroups++;
+        removedTerroristicGroupsByMilitary++;
         return true;
     }
 
@@ -217,6 +219,7 @@ public class CrimeManager {
         int removed = 0;
         removedCriminalActivities = 0;
         removedTerroristicGroups = 0;
+        removedTerroristicGroupsByMilitary = 0;
 
         List<Construction> constructions =
                 new ArrayList<>(grid.getConstructions());
@@ -261,6 +264,10 @@ public class CrimeManager {
 
     public int getRemovedTerroristicGroups() {
         return removedTerroristicGroups;
+    }
+
+    public int getRemovedTerroristicGroupsByMilitary() {
+        return removedTerroristicGroupsByMilitary;
     }
 
 

@@ -20,6 +20,12 @@ public class MilitaryBase extends Construction implements DefenceSystem{
         return 300;
     }
 
+    @Override
+    public int getUnlockTick()
+    {
+        return 80;
+    }
+
     public boolean canRemoveCriminalActivity(
             int currentTick)
     {

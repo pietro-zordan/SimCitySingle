@@ -1473,6 +1473,12 @@ public final class GameView implements GameObserver
                     "Game saved successfully"
             );
         }
+        catch (IllegalStateException exception)
+        {
+            showToast(
+                    exception.getMessage()
+            );
+        }
         catch (IOException exception)
         {
             showToast(

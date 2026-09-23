@@ -1,8 +1,8 @@
 {
-  "currentTick": 359,
+  "currentTick": 517,
   "lastPolicyChangeTick": 0,
   "policyType": "STANDARD",
-  "budget": 9921,
+  "budget": 94210,
   "tsunamiInsuranceActive": false,
   "bankStatePresent": true,
   "lastLoanTick": -15,
@@ -12,7 +12,7 @@
   "remainingDebt": 0,
   "missileDefenseStatePresent": true,
   "missileDefensePurchased": true,
-  "missileDefenseHitsRemaining": 2,
+  "missileDefenseHitsRemaining": 0,
   "constructions": [
     {
       "type": "COMMERCIAL",
@@ -21,8 +21,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.919999999999995,
-      "moneyProduction": 144,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0
@@ -60,8 +60,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.919999999999995,
-      "moneyProduction": 144,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0
@@ -229,8 +229,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.919999999999995,
-      "moneyProduction": 144,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0
@@ -267,7 +267,7 @@
       "column": 8,
       "population": 50,
       "populationGrowthRate": 5,
-      "populationDecreaseRate": 1,
+      "populationDecreaseRate": 5,
       "economyGrowthRate": 0.0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
@@ -366,6 +366,19 @@
       "terroristicGroupLifetimeTicks": 0
     },
     {
+      "type": "CRIMINAL_ACTIVITY",
+      "row": 10,
+      "column": 3,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": -300,
+      "tsunamiInsured": false,
+      "fireProtected": false,
+      "terroristicGroupLifetimeTicks": 0
+    },
+    {
       "type": "ROAD",
       "row": 10,
       "column": 4,
@@ -541,8 +554,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.919999999999995,
-      "moneyProduction": 144,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0
@@ -629,7 +642,7 @@
       "type": "RESIDENTIAL",
       "row": 11,
       "column": 12,
-      "population": 30,
+      "population": 50,
       "populationGrowthRate": 5,
       "populationDecreaseRate": 1,
       "economyGrowthRate": 0.0,
@@ -684,8 +697,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.6799999999999966,
-      "moneyProduction": 132,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0
@@ -710,8 +723,8 @@
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 2.6799999999999966,
-      "moneyProduction": 132,
+      "economyGrowthRate": 3.0,
+      "moneyProduction": 150,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0
@@ -764,6 +777,19 @@
       "populationDecreaseRate": 0,
       "economyGrowthRate": 0.0,
       "moneyProduction": 0,
+      "tsunamiInsured": false,
+      "fireProtected": false,
+      "terroristicGroupLifetimeTicks": 0
+    },
+    {
+      "type": "CRIMINAL_ACTIVITY",
+      "row": 15,
+      "column": 14,
+      "population": 0,
+      "populationGrowthRate": 0,
+      "populationDecreaseRate": 0,
+      "economyGrowthRate": 0.0,
+      "moneyProduction": -300,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0

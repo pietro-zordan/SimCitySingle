@@ -14,6 +14,11 @@ public class AchievementManager {
 
     public boolean unlock(Achievement achievement)
     {
+        if (achievement == null)
+        {
+            throw new IllegalArgumentException("Achievement cannot be null");
+        }
+
         return unlockedAchievements.add(achievement);
     }
 
@@ -25,6 +30,19 @@ public class AchievementManager {
     public void reset()
     {
         unlockedAchievements.clear();
+    }
+
+    public boolean onConstructionPlaced(
+            ConstructionType type)
+    {
+        if (type == ConstructionType.NUCLEAR_PLANT)
+        {
+            return unlock(
+                    Achievement.FIRST_NUCLEAR_PLANT
+            );
+        }
+
+        return false;
     }
 
 }

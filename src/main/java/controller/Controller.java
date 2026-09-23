@@ -20,6 +20,7 @@ public final class Controller
     private final Grid grid;
     private final City city;
     private final Simulation simulation;
+    private final AchievementManager achievementManager;
     private final List<GameObserver> observers = new ArrayList<>();
 
     /*
@@ -47,18 +48,7 @@ public final class Controller
      */
     public Controller(Grid grid, Policy initialPolicy)
     {
-        this.grid = Objects.requireNonNull(
-                grid,
-                "model.Grid cannot be null"
-        );
-
-        Objects.requireNonNull(
-                initialPolicy,
-                "Initial policy cannot be null"
-        );
-
-        this.city = new City(grid, initialPolicy);
-        this.simulation = new Simulation(city, grid);
+        this(grid, initialPolicy, new AchievementManager());
     }
 
     // Crea un controller ripristinando i dati di una partita salvata.
@@ -97,19 +87,38 @@ public final class Controller
                 "Initial policy cannot be null"
         );
 
-        this.city = new City(
+        this.city = new City(grid, initialPolicy, budget);
+
+        this.simulation = new Simulation(city, grid, currentTick,
+                lastPolicyChangeTick, tsunamiInsuranceActive);
+    }
+
+    public Controller(Grid grid, Policy initialPolicy,
+                      AchievementManager achievementManager)
+    {
+        this.grid = Objects.requireNonNull(
                 grid,
-                initialPolicy,
-                budget
+                "model.Grid cannot be null"
         );
 
-        this.simulation = new Simulation(
-                city,
-                grid,
-                currentTick,
-                lastPolicyChangeTick,
-                tsunamiInsuranceActive
+        Objects.requireNonNull(
+                initialPolicy,
+                "Initial policy cannot be null"
         );
+
+        this.achievementManager =
+                Objects.requireNonNull(
+                        achievementManager,
+                        "Achievement manager cannot be null"
+                );
+
+        this.city = new City(grid, initialPolicy);
+        this.simulation = new Simulation(city, grid);
+    }
+
+    public Controller(AchievementManager achievementManager)
+    {
+        this(new Grid(), new StandardPolicy(), achievementManager);
     }
 
     // Registra un osservatore che verrà aggiornato quando cambia il gioco.
@@ -174,6 +183,7 @@ public final class Controller
                 column
         );
 
+        achievementManager.onConstructionPlaced(type);
         notifyObservers();
 
         return getCellState(
@@ -748,6 +758,14 @@ public final class Controller
         simulation.restoreMissileDefenseState(
                 purchased,
                 hitsRemaining
+        );
+    }
+
+    public boolean isAchievementUnlocked(
+            Achievement achievement)
+    {
+        return achievementManager.isUnlocked(
+                achievement
         );
     }
 

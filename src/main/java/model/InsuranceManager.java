@@ -24,6 +24,7 @@ public class InsuranceManager
     private static final int CONSTRUCTION_COMPANY_COST = 200;
     private static final int POLICE_STATION_COST = 200;
     private static final int WASTE_TREATMENT_COST = 250;
+    private static final int MILITARY_BASE_COST = 300;
     private static final int NUCLEAR_FIRE_PROTECTION_COST = 2000;
 
 
@@ -578,7 +579,8 @@ public class InsuranceManager
                 || type == ConstructionType.BANK
                 || type
                 == ConstructionType.CONSTRUCTION_COMPANY
-                || type == ConstructionType.POLICE_STATION;
+                || type == ConstructionType.POLICE_STATION
+                || type == ConstructionType.MILITARY_BASE;
     }
 
     private int getBuildingInsuranceCost(
@@ -597,6 +599,7 @@ public class InsuranceManager
             case POLICE_STATION ->
                     POLICE_STATION_COST;
             case WASTE_TREATMENT_PLANT -> WASTE_TREATMENT_COST;
+            case MILITARY_BASE -> MILITARY_BASE_COST;
             default -> 0;
         };
     }

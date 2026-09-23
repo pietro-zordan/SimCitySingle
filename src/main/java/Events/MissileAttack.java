@@ -26,7 +26,7 @@ public class MissileAttack extends Event
 
         this.grid = grid;
         this.missileDefense = missileDefense;
-        launchNumber = 2;
+        launchNumber = 10;
     }
 
     @Override

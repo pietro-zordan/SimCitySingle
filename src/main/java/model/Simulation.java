@@ -572,6 +572,11 @@ public class Simulation{
         return removedTerroristicGroups;
     }
 
+    public int getRemovedTerroristicGroupsByMilitary()
+    {
+        return crimeManager.getRemovedTerroristicGroupsByMilitary();
+    }
+
     public boolean wasTerroristicGroupCreated()
     {
         return terroristicGroupCreated;

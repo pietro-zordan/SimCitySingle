@@ -45,14 +45,4 @@ public class PoliceStation extends Construction implements DefenceSystem{
     {
         lastRemovalTick = currentTick;
     }
-
-    @Override
-    public void setDamage() {
-        return;
-    }
-
-    @Override
-    public void resetDamage() {
-        return;
-    }
 }

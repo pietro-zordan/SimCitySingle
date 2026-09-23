@@ -1,6 +1,6 @@
 package model;
 
-public class PoliceStation extends Construction{
+public class PoliceStation extends Construction implements DefenceSystem{
 
     private static final int MAINTENANCE_COST = 120;
     private int lastRemovalTick = -1;

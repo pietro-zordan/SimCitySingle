@@ -21,6 +21,7 @@ public class Grid
     private final Cell[][] cells;
     private final boolean[][] reconstructionReserved;
     private final EnergyManager energyManager;
+    private final GrassGenerator grassGenerator;
     private final List<ExplosionInfo> explosions = new ArrayList<>();
     // Per ora la generazione automatica dell'erba è disattivata, ma il sistema resta disponibile.
     private boolean grassGenerationSuspended = true;
@@ -44,6 +45,8 @@ public class Grid
                         new Cell(row, column);
             }
         }
+
+        grassGenerator = new GrassGenerator(this);
     }
 
     // Verifica se la posizione indicata si trova nella griglia.
@@ -848,179 +851,14 @@ public class Grid
     }
 
 
-    /*
-     * Riempie con erba le celle rimaste inutilizzabili:
-     * sia i piccoli vicoli ciechi, sia le zone vuote completamente isolate
-     * dalla rete stradale.
-     */
+    // La generazione rimane disabilitata finché non viene attivata esplicitamente.
     private void fillTrappedCellsWithGrass()
     {
-        if (grassGenerationSuspended)
+        if (!grassGenerationSuspended)
         {
-            return;
-        }
-
-        Set<Cell> cellsToFill =
-                new HashSet<>();
-
-        boolean[][] visited =
-                new boolean[N_ROW][N_COL];
-
-        for (int row = 0; row < N_ROW; row++)
-        {
-            for (int column = 0; column < N_COL; column++)
-            {
-                Cell cell = cells[row][column];
-
-                if (cell.isEmpty()
-                        && !isCellReservedForReconstruction(
-                                row,
-                                column
-                        )
-                        && !hasAdjacentRoad(cell)
-                        && countBlockedSides(row, column) >= 3)
-                {
-                    cellsToFill.add(cell);
-                }
-
-                if (visited[row][column]
-                        || !isOpenForGrassReachability(cell)
-                        || isCellReservedForReconstruction(
-                                row,
-                                column
-                        ))
-                {
-                    continue;
-                }
-
-                List<Cell> emptyArea =
-                        new ArrayList<>();
-
-                ArrayDeque<Cell> pendingCells =
-                        new ArrayDeque<>();
-
-                pendingCells.add(cell);
-                visited[row][column] = true;
-
-                boolean reachableFromRoad = false;
-
-                while (!pendingCells.isEmpty())
-                {
-                    Cell currentCell =
-                            pendingCells.removeFirst();
-
-                    if (currentCell.isEmpty())
-                    {
-                        emptyArea.add(currentCell);
-                    }
-
-                    if (hasAdjacentRoad(currentCell))
-                    {
-                        reachableFromRoad = true;
-                    }
-
-                    for (int[] direction
-                            : ORTHOGONAL_DIRECTIONS)
-                    {
-                        int newRow =
-                                currentCell.getRow()
-                                        + direction[0];
-
-                        int newColumn =
-                                currentCell.getColumn()
-                                        + direction[1];
-
-                        if (isInside(newRow, newColumn)
-                                && !visited[newRow][newColumn]
-                                && isOpenForGrassReachability(
-                                        cells[newRow][newColumn]
-                                )
-                                && !isCellReservedForReconstruction(
-                                        newRow,
-                                        newColumn
-                                ))
-                        {
-                            visited[newRow][newColumn] = true;
-
-                            pendingCells.addLast(
-                                    cells[newRow][newColumn]
-                            );
-                        }
-                    }
-                }
-
-                if (!reachableFromRoad)
-                {
-                    cellsToFill.addAll(emptyArea);
-                }
-            }
-        }
-
-        for (Cell cell : cellsToFill)
-        {
-            if (cell.isEmpty())
-            {
-                cell.placeConstruction(
-                        new Grass()
-                );
-            }
+            grassGenerator.fillTrappedCellsWithGrass();
         }
     }
-
-    /*
-     * Conta i lati realmente bloccati da costruzioni o dal bordo.
-     * L'erba già creata non provoca la comparsa a catena di altra erba.
-     */
-    /*
-     * Le attività criminali sono temporanee e non devono isolare
-     * permanentemente un'area vuota facendola diventare erba.
-     */
-    private boolean isOpenForGrassReachability(
-            Cell cell)
-    {
-        if (cell.isEmpty())
-        {
-            return true;
-        }
-
-        ConstructionType type = cell.getConstruction().getType();
-
-        return type == ConstructionType.CRIMINAL_ACTIVITY
-                || type == ConstructionType.TERRORISTIC_GROUP;
-    }
-
-    private int countBlockedSides(int row, int column)
-    {
-        int blockedSides = 0;
-
-        for (int[] direction : ORTHOGONAL_DIRECTIONS)
-        {
-            int newRow = row + direction[0];
-            int newColumn = column + direction[1];
-
-            if (!isInside(newRow, newColumn))
-            {
-                blockedSides++;
-                continue;
-            }
-
-            Construction construction =
-                    cells[newRow][newColumn]
-                            .getConstruction();
-
-            if (construction != null
-                    && construction.getType() != ConstructionType.GRASS
-                    && construction.getType() != ConstructionType.CRIMINAL_ACTIVITY
-                    && construction.getType() != ConstructionType.TERRORISTIC_GROUP)
-            {
-                blockedSides++;
-            }
-        }
-
-        return blockedSides;
-    }
-
-
 
     public void reserveCellForReconstruction(
             int row,

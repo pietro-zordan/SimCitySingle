@@ -344,6 +344,24 @@ class GridTest {
     }
 
     @Test
+    void grassGeneratorWorksOnlyWhenExplicitlyEnabled()
+    {
+        Grid localGrid = new Grid();
+
+        localGrid.restoreConstruction(new Park(), 9, 10);
+        localGrid.restoreConstruction(new Park(), 10, 9);
+        localGrid.restoreConstruction(new Park(), 10, 11);
+        localGrid.setGrassGenerationSuspended(false);
+
+        localGrid.placeConstruction(new Road(), 0, 0);
+
+        assertInstanceOf(
+                Grass.class,
+                localGrid.getCell(10, 10).getConstruction()
+        );
+    }
+
+    @Test
     void criminalActivityDoesNotTurnReachableAreaIntoGrass()
     {
         Grid localGrid = new Grid();

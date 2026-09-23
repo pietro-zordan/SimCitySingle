@@ -1,5 +1,6 @@
 package progress;
 
+import Events.EventType;
 import controller.Controller;
 import model.ConstructionType;
 import model.FreemasonryChoice;
@@ -155,6 +156,32 @@ class ProgressManagerTest {
         assertEquals(FreemasonryChoice.PENDING,
                 loaded.getFreemasonryChoice());
         assertTrue(loaded.isFreemasonryInvitationPending());
+    }
+
+    @Test
+    void saveGameRejectsActiveEvent()
+    {
+        Controller controller = mock(Controller.class);
+        Path file = tempDirectory.resolve("event-save.json");
+
+        when(controller.getActiveEventType())
+                .thenReturn(EventType.FIRE);
+
+        IllegalStateException exception =
+                assertThrows(
+                        IllegalStateException.class,
+                        () -> progressManager.saveGame(
+                                controller,
+                                file.toString()
+                        )
+                );
+
+        assertEquals(
+                "Cannot save while an event is in progress.",
+                exception.getMessage()
+        );
+        verify(controller, never()).createProgress();
+        assertFalse(Files.exists(file));
     }
 
     @Test

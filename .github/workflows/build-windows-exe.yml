@@ -1,0 +1,97 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - SimCity-6.0-windows-exe
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout SimCity 6.0 packaging branch
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build application and copy runtime dependencies
+        shell: pwsh
+        run: |
+          mvn -B -DskipTests clean package
+          New-Item -ItemType Directory -Force -Path target/app-input | Out-Null
+          Copy-Item target/SimCity-1.0-SNAPSHOT.jar target/app-input/SimCity.jar
+          mvn -B org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies -DincludeScope=runtime -DoutputDirectory=target/app-input/lib
+
+      - name: Build portable Windows application
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path target/windows-portable | Out-Null
+          jpackage `
+            --type app-image `
+            --name SimCity `
+            --input target/app-input `
+            --main-jar SimCity.jar `
+            --main-class GUI.Main `
+            --dest target/windows-portable `
+            --app-version 6.0 `
+            --vendor "SimCity Project" `
+            --description "SimCity 6.0" `
+            --add-modules java.base,java.desktop,java.logging,java.xml,java.scripting,java.sql,java.prefs,jdk.unsupported
+
+          Compress-Archive `
+            -Path target/windows-portable/SimCity `
+            -DestinationPath target/SimCity-6.0-Windows-Portable.zip `
+            -Force
+
+      - name: Upload portable Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimCity-6.0-Windows-Portable
+          path: target/SimCity-6.0-Windows-Portable.zip
+          if-no-files-found: error
+
+      - name: Install WiX for installer build
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          choco install wixtoolset --no-progress -y
+          $wix = Get-ChildItem "C:\\Program Files (x86)" -Directory -Filter "WiX Toolset v3*" -ErrorAction SilentlyContinue |
+            Sort-Object Name -Descending |
+            Select-Object -First 1
+          if ($wix) {
+            "$($wix.FullName)\\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          }
+
+      - name: Build Windows installer EXE
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path target/windows-installer | Out-Null
+          jpackage `
+            --type exe `
+            --name SimCity `
+            --input target/app-input `
+            --main-jar SimCity.jar `
+            --main-class GUI.Main `
+            --dest target/windows-installer `
+            --app-version 6.0 `
+            --vendor "SimCity Project" `
+            --description "SimCity 6.0" `
+            --add-modules java.base,java.desktop,java.logging,java.xml,java.scripting,java.sql,java.prefs,jdk.unsupported `
+            --win-menu `
+            --win-shortcut `
+            --win-dir-chooser
+
+      - name: Upload installer EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimCity-6.0-Windows-Installer
+          path: target/windows-installer/*.exe
+          if-no-files-found: ignore

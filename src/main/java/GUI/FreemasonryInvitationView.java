@@ -98,14 +98,16 @@ public final class FreemasonryInvitationView
         );
 
         Label message = new Label(
-                "Congratulations, player. Your city has reached a good "
-                        + "level of progress. More complex dynamics often "
-                        + "give rise to even more complex ones, which must "
-                        + "be managed wisely. Join us to ensure the best "
-                        + "possible development of your city. Things will "
-                        + "happen that require human decisions, starting "
-                        + "with this one. Your game will be shaped by the "
-                        + "choice you are about to make."
+                "Congratulations, player. Your city has attained a "
+                        + "commendable level of progress. As its affairs "
+                        + "grow more intricate, they give rise to still "
+                        + "more complex challenges, each calling for "
+                        + "thoughtful judgment. We invite you to join us "
+                        + "in guiding your city towards its fullest "
+                        + "potential. In time, events will arise that "
+                        + "require a human decision, beginning with this "
+                        + "one. The course of your game will be shaped by "
+                        + "the choice you make today."
         );
         message.setWrapText(true);
         message.setTextAlignment(TextAlignment.CENTER);
@@ -118,7 +120,7 @@ public final class FreemasonryInvitationView
         );
 
         Label invitation =
-                new Label("Accept the invitation to join Freemasonry?");
+                new Label("Will you accept our invitation to join the Freemasons?");
         invitation.setWrapText(true);
         invitation.setTextAlignment(TextAlignment.CENTER);
         invitation.setStyle(

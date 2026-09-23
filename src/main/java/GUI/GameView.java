@@ -44,6 +44,7 @@ public final class GameView implements GameObserver
     private final EventAnimationView eventAnimationView;
     private final GameOverView gameOverView;
     private final FreemasonryInvitationView invitationView;
+    private final RaEyeView raEyeView = new RaEyeView();
     private BorderPane gameRoot;
 
     private final Label toast = new Label();
@@ -226,7 +227,12 @@ public final class GameView implements GameObserver
                     @Override
                     public void accept(FreemasonryChoice choice)
                     {
-                        controller.chooseFreemasonry(choice);
+                        if (controller.chooseFreemasonry(choice))
+                        {
+                            raEyeView.refresh(
+                                    controller.getFreemasonryChoice()
+                            );
+                        }
                     }
                 },
                 new Runnable()
@@ -618,11 +624,18 @@ public final class GameView implements GameObserver
                 Pos.CENTER
         );
 
+        VBox gridColumn = new VBox(
+                4,
+                raEyeView.getView(),
+                gridWithAnimation
+        );
+        gridColumn.setAlignment(Pos.CENTER);
+
         HBox centralContent =
                 new HBox(
                         20,
                         leftPanel,
-                        gridWithAnimation,
+                        gridColumn,
                         rightPanel
                 );
 
@@ -1539,6 +1552,7 @@ public final class GameView implements GameObserver
         refreshDemolitionButton();
 
         gridView.refresh();
+        raEyeView.refresh(controller.getFreemasonryChoice());
 
         // Anche una partita salvata al turno 500 deve mostrare la scelta.
         Platform.runLater(
@@ -1604,6 +1618,9 @@ public final class GameView implements GameObserver
 
                         statusView.updateTick();
                         statusView.updateEventBanner();
+                        raEyeView.refresh(
+                                controller.getFreemasonryChoice()
+                        );
 
                         chartView.refresh();
 

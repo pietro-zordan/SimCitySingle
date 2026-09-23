@@ -414,6 +414,21 @@ public class Grid
         return false;
     }
 
+    public int getNumberOfMilitaryBases()
+    {
+        int count = 0;
+
+        for (Construction construction : getConstructions())
+        {
+            if (construction instanceof MilitaryBase)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public int getNumberOfPoweredBanks()
     {
         int numberOfPoweredBanks = 0;

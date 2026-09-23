@@ -67,6 +67,18 @@ public class MissileDefense
         return true;
     }
 
+    public boolean repairAllHits()
+    {
+        if (!purchased
+                || hitsRemaining >= MAX_HITS)
+        {
+            return false;
+        }
+
+        hitsRemaining = MAX_HITS;
+        return true;
+    }
+
     public void restoreState(
             boolean purchased,
             int hitsRemaining)

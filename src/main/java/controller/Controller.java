@@ -664,6 +664,19 @@ public final class Controller
         return repaired;
     }
 
+    public boolean repairMissileDefenseFully()
+    {
+        boolean repaired =
+                simulation.repairMissileDefenseFully();
+
+        if (repaired)
+        {
+            notifyObservers();
+        }
+
+        return repaired;
+    }
+
     public boolean isMissileDefensePurchased()
     {
         return simulation.isMissileDefensePurchased();
@@ -684,9 +697,20 @@ public final class Controller
         return simulation.getMissileDefensePurchaseCost();
     }
 
+    public int getMissileDefensePurchaseDiscountPercentage()
+    {
+        return simulation
+                .getMissileDefensePurchaseDiscountPercentage();
+    }
+
     public int getMissileDefenseRepairCost()
     {
         return simulation.getMissileDefenseRepairCost();
+    }
+
+    public int getMissileDefenseFullRepairCost()
+    {
+        return simulation.getMissileDefenseFullRepairCost();
     }
 
     public void restoreMissileDefenseState(

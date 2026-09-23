@@ -169,16 +169,16 @@ public class Simulation{
 
     public boolean buyMissileDefense()
     {
+        int cost = getMissileDefensePurchaseCost();
+
         if (!canBuyMissileDefense()
                 || city.getBudget()
-                < MissileDefense.PURCHASE_COST)
+                < cost)
         {
             return false;
         }
 
-        city.updateBudget(
-                -MissileDefense.PURCHASE_COST
-        );
+        city.updateBudget(-cost);
 
         return missileDefense.purchase();
     }
@@ -206,6 +206,22 @@ public class Simulation{
         return missileDefense.repairOneHit();
     }
 
+    public boolean repairMissileDefenseFully()
+    {
+        int cost = getMissileDefenseFullRepairCost();
+
+        if (!canRepairMissileDefense()
+                || city.getBudget()
+                < cost)
+        {
+            return false;
+        }
+
+        city.updateBudget(-cost);
+
+        return missileDefense.repairAllHits();
+    }
+
     public boolean isMissileDefensePurchased()
     {
         return missileDefense.isPurchased();
@@ -223,12 +239,26 @@ public class Simulation{
 
     public int getMissileDefensePurchaseCost()
     {
-        return MissileDefense.PURCHASE_COST;
+        return MissileDefense.PURCHASE_COST
+                * (100 - getMissileDefensePurchaseDiscountPercentage())
+                / 100;
+    }
+
+    public int getMissileDefensePurchaseDiscountPercentage()
+    {
+        return Math.min(grid.getNumberOfMilitaryBases(), 6) * 5;
     }
 
     public int getMissileDefenseRepairCost()
     {
         return MissileDefense.REPAIR_COST;
+    }
+
+    public int getMissileDefenseFullRepairCost()
+    {
+        return (MissileDefense.MAX_HITS
+                - missileDefense.getHitsRemaining())
+                * MissileDefense.REPAIR_COST;
     }
 
     public void restoreMissileDefenseState(

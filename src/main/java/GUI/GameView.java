@@ -111,6 +111,9 @@ public final class GameView implements GameObserver
     private final Button confirmMissileDefenseButton =
             new Button("Buy");
 
+    private final Button refillMissileDefenseButton =
+            new Button("Restore to 3");
+
     private final Button cancelMissileDefenseButton =
             new Button("Not now");
 
@@ -125,6 +128,7 @@ public final class GameView implements GameObserver
             new VBox(
                     5,
                     missileDefenseInfoLabel,
+                    refillMissileDefenseButton,
                     missileDefenseActions
             );
 
@@ -479,6 +483,7 @@ public final class GameView implements GameObserver
         cancelDemolitionWhenUsed(cancelNuclearFireProtectionButton);
         cancelDemolitionWhenUsed(missileDefenseButton);
         cancelDemolitionWhenUsed(confirmMissileDefenseButton);
+        cancelDemolitionWhenUsed(refillMissileDefenseButton);
         cancelDemolitionWhenUsed(cancelMissileDefenseButton);
         cancelDemolitionWhenUsed(saveButton);
         cancelDemolitionWhenUsed(restartButton);
@@ -1076,6 +1081,11 @@ public final class GameView implements GameObserver
         missileDefenseInfoLabel.setWrapText(true);
         missileDefenseActions.setAlignment(Pos.CENTER);
 
+        refillMissileDefenseButton.setMaxWidth(Double.MAX_VALUE);
+        refillMissileDefenseButton.managedProperty()
+                .bind(refillMissileDefenseButton.visibleProperty());
+        refillMissileDefenseButton.setVisible(false);
+
         confirmMissileDefenseButton.setMaxWidth(
                 Double.MAX_VALUE
         );
@@ -1106,6 +1116,17 @@ public final class GameView implements GameObserver
                 }
         );
 
+        refillMissileDefenseButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        applyFullMissileDefenseRepair();
+                    }
+                }
+        );
+
         cancelMissileDefenseButton.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
@@ -1126,6 +1147,10 @@ public final class GameView implements GameObserver
                     "Missile Defense System available."
                             + "\nRequires at least one Military Base."
                             + "\nCapacity: 3 missile impacts."
+                            + "\nMilitary Base discount: "
+                            + controller
+                            .getMissileDefensePurchaseDiscountPercentage()
+                            + "%"
                             + "\nCost: "
                             + controller.getMissileDefensePurchaseCost()
                             + " €"
@@ -1134,6 +1159,7 @@ public final class GameView implements GameObserver
 
             confirmMissileDefenseButton.setText("Buy");
             confirmMissileDefenseButton.setDisable(false);
+            refillMissileDefenseButton.setVisible(false);
             cancelMissileDefenseButton.setText("Not now");
         }
         else
@@ -1152,7 +1178,10 @@ public final class GameView implements GameObserver
                             ? "\nRepair +1 impact for "
                             + controller
                             .getMissileDefenseRepairCost()
-                            + " €?"
+                            + " € or restore to 3 for "
+                            + controller
+                            .getMissileDefenseFullRepairCost()
+                            + " € (no discount)."
                             : "\nThe shield is fully repaired.")
             );
 
@@ -1164,6 +1193,13 @@ public final class GameView implements GameObserver
 
             confirmMissileDefenseButton.setDisable(
                     !controller.canRepairMissileDefense()
+            );
+
+            refillMissileDefenseButton.setVisible(hits < 3);
+            refillMissileDefenseButton.setText(
+                    "Restore to 3 ("
+                            + controller.getMissileDefenseFullRepairCost()
+                            + " €)"
             );
 
             cancelMissileDefenseButton.setText("Close");
@@ -1219,6 +1255,26 @@ public final class GameView implements GameObserver
         {
             showToast(
                     "Unable to repair Missile Defense. Check your budget."
+            );
+        }
+    }
+
+    private void applyFullMissileDefenseRepair()
+    {
+        int cost = controller.getMissileDefenseFullRepairCost();
+
+        if (controller.repairMissileDefenseFully())
+        {
+            missileDefenseBox.setVisible(false);
+            showToast(
+                    "Missile Defense restored to 3/3 for "
+                            + cost + " €."
+            );
+        }
+        else
+        {
+            showToast(
+                    "Unable to restore Missile Defense. Check your budget."
             );
         }
     }

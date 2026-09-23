@@ -36,7 +36,8 @@ public final class ConstructionToolbarView
             ConstructionType.CONSTRUCTION_COMPANY,
             ConstructionType.POLICE_STATION,
             ConstructionType.NUCLEAR_PLANT,
-            ConstructionType.WASTE_TREATMENT_PLANT
+            ConstructionType.WASTE_TREATMENT_PLANT,
+            ConstructionType.MILITARY_BASE
     );
 
     private static final List<ConstructionType> ZONES = List.of(
@@ -56,7 +57,8 @@ public final class ConstructionToolbarView
             ConstructionType.PARK,
             ConstructionType.BANK,
             ConstructionType.CONSTRUCTION_COMPANY,
-            ConstructionType.POLICE_STATION
+            ConstructionType.POLICE_STATION,
+            ConstructionType.MILITARY_BASE
     );
 
     private final Controller controller;

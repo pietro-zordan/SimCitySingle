@@ -231,6 +231,34 @@ public final class Controller
         return criminalActivityCreated;
     }
 
+    public boolean isFreemasonryInvitationPending()
+    {
+        return simulation.isFreemasonryInvitationPending();
+    }
+
+    public FreemasonryChoice getFreemasonryChoice()
+    {
+        return simulation.getFreemasonryChoice();
+    }
+
+    public boolean chooseFreemasonry(FreemasonryChoice choice)
+    {
+        boolean chosen = simulation.chooseFreemasonry(choice);
+
+        if (chosen)
+        {
+            notifyObservers();
+        }
+
+        return chosen;
+    }
+
+    public void restoreFreemasonryChoice(
+            FreemasonryChoice choice)
+    {
+        simulation.restoreFreemasonryChoice(choice);
+    }
+
     // Verifica se è possibile cambiare la policy attiva.
     public boolean canChangePolicy()
     {

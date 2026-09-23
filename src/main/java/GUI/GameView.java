@@ -25,6 +25,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import model.ConstructionType;
+import model.FreemasonryChoice;
 import policies.PolicyType;
 import progress.ProgressManager;
 
@@ -42,6 +43,9 @@ public final class GameView implements GameObserver
     private final ConstructionToolbarView constructionToolbarView;
     private final EventAnimationView eventAnimationView;
     private final GameOverView gameOverView;
+    private final FreemasonryInvitationView invitationView;
+    private final RaEyeView raEyeView = new RaEyeView();
+    private BorderPane gameRoot;
 
     private final Label toast = new Label();
 
@@ -147,6 +151,7 @@ public final class GameView implements GameObserver
 
     private final Scene scene;
     private boolean observerRegistered;
+    private boolean closed;
 
     // Inizializza la vista di gioco istanziando le sotto-viste, configurando i componenti di controllo e registrandosi come observer.
     public GameView(
@@ -216,6 +221,30 @@ public final class GameView implements GameObserver
                         nextTurnButton
                 );
 
+        invitationView = new FreemasonryInvitationView(
+                new Consumer<FreemasonryChoice>()
+                {
+                    @Override
+                    public void accept(FreemasonryChoice choice)
+                    {
+                        if (controller.chooseFreemasonry(choice))
+                        {
+                            raEyeView.refresh(
+                                    controller.getFreemasonryChoice()
+                            );
+                        }
+                    }
+                },
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        gameRoot.setDisable(false);
+                    }
+                }
+        );
+
         scene = createScene();
 
         initializeDisplayedState();
@@ -254,6 +283,8 @@ public final class GameView implements GameObserver
                     {
                         boolean criminalActivityCreated =
                                 controller.updateOfOneTick();
+
+                        showInvitationIfNeeded();
 
                         int militaryRemovals =
                                 controller
@@ -593,11 +624,18 @@ public final class GameView implements GameObserver
                 Pos.CENTER
         );
 
+        VBox gridColumn = new VBox(
+                4,
+                raEyeView.getView(),
+                gridWithAnimation
+        );
+        gridColumn.setAlignment(Pos.CENTER);
+
         HBox centralContent =
                 new HBox(
                         20,
                         leftPanel,
-                        gridWithAnimation,
+                        gridColumn,
                         rightPanel
                 );
 
@@ -627,22 +665,22 @@ public final class GameView implements GameObserver
         );
 
         // ---------- ORDINE GRAFICO ----------
-        BorderPane root =
-                new BorderPane();
+        gameRoot = new BorderPane();
 
-        root.setCenter(
+        gameRoot.setCenter(
                 centralContent
         );
 
-        root.setBottom(
+        gameRoot.setBottom(
                 bottomPanel
         );
 
         StackPane rootWithToast =
                 new StackPane(
-                        root,
+                        gameRoot,
                         toast,
-                        gameOverView.getView()
+                        gameOverView.getView(),
+                        invitationView.getView()
                 );
 
         StackPane.setAlignment(
@@ -1514,6 +1552,30 @@ public final class GameView implements GameObserver
         refreshDemolitionButton();
 
         gridView.refresh();
+        raEyeView.refresh(controller.getFreemasonryChoice());
+
+        // Anche una partita salvata al turno 500 deve mostrare la scelta.
+        Platform.runLater(
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        showInvitationIfNeeded();
+                    }
+                }
+        );
+    }
+
+    private void showInvitationIfNeeded()
+    {
+        if (!closed
+                && controller.isFreemasonryInvitationPending()
+                && !invitationView.isShowing())
+        {
+            gameRoot.setDisable(true);
+            invitationView.show();
+        }
     }
 
     // Aggiorna in modo asincrono nel JavaFX Application Thread tutti i componenti grafici in seguito alle notifiche del modello.
@@ -1556,6 +1618,9 @@ public final class GameView implements GameObserver
 
                         statusView.updateTick();
                         statusView.updateEventBanner();
+                        raEyeView.refresh(
+                                controller.getFreemasonryChoice()
+                        );
 
                         chartView.refresh();
 
@@ -1563,6 +1628,8 @@ public final class GameView implements GameObserver
                         {
                             gameOverView.show();
                         }
+
+                        showInvitationIfNeeded();
                     }
                 }
         );
@@ -1677,6 +1744,8 @@ public final class GameView implements GameObserver
     // Rimuove la vista dal ruolo di observer e arresta le animazioni attive per rilasciare correttamente le risorse.
     public void close()
     {
+        closed = true;
+
         if (observerRegistered)
         {
             controller.removeObserver(this);
@@ -1684,5 +1753,6 @@ public final class GameView implements GameObserver
         }
 
         eventAnimationView.stop();
+        invitationView.stop();
     }
 }

@@ -26,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -45,9 +47,9 @@ public final class EventAnimationView
     private static final int MISSILE_IMPACT_DELAY = 220;
     private static final int MISSILE_IMPACT_DURATION = 700;
     private static final int MISSILE_START_MARGIN = 80;
-    private static final double MISSILE_SHIELD_WIDTH_FACTOR = 1.25;
-    private static final double MISSILE_SHIELD_MIN_HORIZONTAL_MARGIN = 30.0;
-    private static final double MISSILE_SHIELD_CORNER_SAFETY = 1.06;
+    private static final double MISSILE_SHIELD_WIDTH_FACTOR = 1.18;
+    private static final double MISSILE_SHIELD_MIN_HORIZONTAL_MARGIN = 24.0;
+    private static final double MISSILE_SHIELD_CORNER_SAFETY = 1.08;
     private static final int MISSILE_DEFLECTION_DURATION = 650;
     private static final int MISSILE_SHIELD_VISIBLE_DURATION = 1100;
 
@@ -60,7 +62,11 @@ public final class EventAnimationView
     private final Group missileShieldNode;
     private Ellipse missileShieldOuter;
     private Ellipse missileShieldInner;
+    private Ellipse missileShieldBaseRing;
     private Ellipse missileShieldHighlight;
+    private CubicCurve missileShieldLeftMeridian;
+    private CubicCurve missileShieldRightMeridian;
+    private Circle missileShieldImpactGlow;
     private final Random random = new Random();
     private final Queue<ExplosionInfo> pendingExplosions = new ArrayDeque<>();
 
@@ -196,15 +202,19 @@ public final class EventAnimationView
     {
         missileShieldOuter = new Ellipse();
         missileShieldInner = new Ellipse();
+        missileShieldBaseRing = new Ellipse();
         missileShieldHighlight = new Ellipse();
+        missileShieldLeftMeridian = new CubicCurve();
+        missileShieldRightMeridian = new CubicCurve();
+        missileShieldImpactGlow = new Circle(18);
 
         missileShieldOuter.setFill(
                 new RadialGradient(
                         -35,
                         0.30,
-                        0.36,
-                        0.24,
-                        0.95,
+                        0.34,
+                        0.20,
+                        0.98,
                         true,
                         CycleMethod.NO_CYCLE,
                         new Stop(
@@ -212,16 +222,16 @@ public final class EventAnimationView
                                 Color.rgb(
                                         255,
                                         255,
-                                        210,
-                                        0.34
+                                        225,
+                                        0.32
                                 )
                         ),
                         new Stop(
-                                0.38,
+                                0.36,
                                 Color.rgb(
                                         255,
-                                        230,
-                                        80,
+                                        234,
+                                        105,
                                         0.20
                                 )
                         ),
@@ -229,18 +239,18 @@ public final class EventAnimationView
                                 0.72,
                                 Color.rgb(
                                         255,
-                                        205,
-                                        25,
-                                        0.11
+                                        207,
+                                        35,
+                                        0.10
                                 )
                         ),
                         new Stop(
                                 1.0,
                                 Color.rgb(
                                         255,
-                                        185,
+                                        188,
                                         0,
-                                        0.04
+                                        0.025
                                 )
                         )
                 )
@@ -251,19 +261,19 @@ public final class EventAnimationView
                         255,
                         215,
                         0,
-                        0.95
+                        0.92
                 )
         );
         missileShieldOuter.setStrokeWidth(4);
 
         missileShieldOuter.setEffect(
                 new DropShadow(
-                        22,
+                        24,
                         Color.rgb(
                                 255,
                                 210,
-                                30,
-                                0.60
+                                25,
+                                0.62
                         )
                 )
         );
@@ -274,12 +284,37 @@ public final class EventAnimationView
         missileShieldInner.setStroke(
                 Color.rgb(
                         255,
-                        245,
-                        165,
+                        246,
+                        180,
+                        0.46
+                )
+        );
+        missileShieldInner.setStrokeWidth(1.6);
+
+        missileShieldBaseRing.setFill(
+                Color.rgb(
+                        255,
+                        215,
+                        45,
+                        0.025
+                )
+        );
+        missileShieldBaseRing.setStroke(
+                Color.rgb(
+                        255,
+                        232,
+                        105,
                         0.58
                 )
         );
-        missileShieldInner.setStrokeWidth(1.7);
+        missileShieldBaseRing.setStrokeWidth(2.3);
+
+        configureMissileShieldMeridian(
+                missileShieldLeftMeridian
+        );
+        configureMissileShieldMeridian(
+                missileShieldRightMeridian
+        );
 
         missileShieldHighlight.setFill(
                 new RadialGradient(
@@ -295,8 +330,8 @@ public final class EventAnimationView
                                 Color.rgb(
                                         255,
                                         255,
-                                        245,
-                                        0.24
+                                        250,
+                                        0.26
                                 )
                         ),
                         new Stop(
@@ -308,15 +343,63 @@ public final class EventAnimationView
         missileShieldHighlight.setStroke(
                 Color.TRANSPARENT
         );
-        missileShieldHighlight.setRotate(-10);
+        missileShieldHighlight.setRotate(-12);
+
+        missileShieldImpactGlow.setFill(
+                Color.rgb(
+                        255,
+                        255,
+                        225,
+                        0.92
+                )
+        );
+        missileShieldImpactGlow.setStroke(
+                Color.rgb(
+                        255,
+                        220,
+                        40,
+                        0.95
+                )
+        );
+        missileShieldImpactGlow.setStrokeWidth(3);
+        missileShieldImpactGlow.setEffect(
+                new DropShadow(
+                        28,
+                        Color.rgb(
+                                255,
+                                225,
+                                55,
+                                0.95
+                        )
+                )
+        );
 
         updateMissileShieldGeometry();
 
         return new Group(
                 missileShieldOuter,
                 missileShieldInner,
-                missileShieldHighlight
+                missileShieldBaseRing,
+                missileShieldLeftMeridian,
+                missileShieldRightMeridian,
+                missileShieldHighlight,
+                missileShieldImpactGlow
         );
+    }
+
+    private void configureMissileShieldMeridian(
+            CubicCurve meridian)
+    {
+        meridian.setFill(Color.TRANSPARENT);
+        meridian.setStroke(
+                Color.rgb(
+                        255,
+                        242,
+                        155,
+                        0.30
+                )
+        );
+        meridian.setStrokeWidth(1.5);
     }
 
     /*
@@ -383,24 +466,87 @@ public final class EventAnimationView
                 radiusX * 0.94
         );
         missileShieldInner.setRadiusY(
-                radiusY * 0.92
+                radiusY * 0.91
         );
         missileShieldInner.setCenterY(
                 -radiusY * 0.025
         );
 
+        /*
+         * L'anello basso simula l'equatore visto in prospettiva:
+         * è molto schiacciato verticalmente e dà l'impressione
+         * che la barriera sia una cupola e non un semplice ovale.
+         */
+        missileShieldBaseRing.setRadiusX(
+                radiusX * 0.76
+        );
+        missileShieldBaseRing.setRadiusY(
+                Math.max(
+                        18,
+                        radiusY * 0.075
+                )
+        );
+        missileShieldBaseRing.setCenterY(
+                radiusY * 0.56
+        );
+
         missileShieldHighlight.setRadiusX(
-                radiusX * 0.42
+                radiusX * 0.34
         );
         missileShieldHighlight.setRadiusY(
-                radiusY * 0.16
+                radiusY * 0.13
         );
         missileShieldHighlight.setCenterX(
-                -radiusX * 0.16
+                -radiusX * 0.18
         );
         missileShieldHighlight.setCenterY(
-                -radiusY * 0.30
+                -radiusY * 0.32
         );
+
+        // Due meridiani curvi rendono visibile la profondità della semisfera.
+        double topY =
+                -radiusY * 0.88;
+
+        double lowerY =
+                radiusY * 0.55;
+
+        missileShieldLeftMeridian.setStartX(0);
+        missileShieldLeftMeridian.setStartY(topY);
+        missileShieldLeftMeridian.setControlX1(
+                -radiusX * 0.28
+        );
+        missileShieldLeftMeridian.setControlY1(
+                -radiusY * 0.43
+        );
+        missileShieldLeftMeridian.setControlX2(
+                -radiusX * 0.53
+        );
+        missileShieldLeftMeridian.setControlY2(
+                radiusY * 0.19
+        );
+        missileShieldLeftMeridian.setEndX(
+                -radiusX * 0.58
+        );
+        missileShieldLeftMeridian.setEndY(lowerY);
+
+        missileShieldRightMeridian.setStartX(0);
+        missileShieldRightMeridian.setStartY(topY);
+        missileShieldRightMeridian.setControlX1(
+                radiusX * 0.28
+        );
+        missileShieldRightMeridian.setControlY1(
+                -radiusY * 0.43
+        );
+        missileShieldRightMeridian.setControlX2(
+                radiusX * 0.53
+        );
+        missileShieldRightMeridian.setControlY2(
+                radiusY * 0.19
+        );
+        missileShieldRightMeridian.setEndX(
+                radiusX * 0.58
+        );
+        missileShieldRightMeridian.setEndY(lowerY);
     }
 
     private Group createMissileNode()
@@ -1005,7 +1151,10 @@ public final class EventAnimationView
             double impactX,
             double impactY)
     {
-        showMissileShieldImpact();
+        showMissileShieldImpact(
+                impactX,
+                impactY
+        );
 
         double incomingX =
                 impactX - startX;
@@ -1158,9 +1307,18 @@ public final class EventAnimationView
         missileDeflectionTransition.play();
     }
 
-    private void showMissileShieldImpact()
+    private void showMissileShieldImpact(
+            double impactX,
+            double impactY)
     {
         updateMissileShieldGeometry();
+
+        missileShieldImpactGlow.setCenterX(
+                impactX
+        );
+        missileShieldImpactGlow.setCenterY(
+                impactY
+        );
 
         if (missileShieldTimeline != null)
         {
@@ -1177,23 +1335,23 @@ public final class EventAnimationView
                                 new KeyValue(
                                         missileShieldNode
                                                 .opacityProperty(),
-                                        0.12
+                                        0.0
                                 )
                         ),
                         new KeyFrame(
-                                Duration.millis(120),
+                                Duration.millis(90),
                                 new KeyValue(
                                         missileShieldNode
                                                 .opacityProperty(),
-                                        0.70
+                                        0.86
                                 )
                         ),
                         new KeyFrame(
-                                Duration.millis(430),
+                                Duration.millis(310),
                                 new KeyValue(
                                         missileShieldNode
                                                 .opacityProperty(),
-                                        0.38
+                                        0.48
                                 )
                         ),
                         new KeyFrame(

@@ -401,6 +401,34 @@ public class Grid
         return numberOfBanks;
     }
 
+    public boolean hasMilitaryBase()
+    {
+        for (Construction construction : getConstructions())
+        {
+            if (construction instanceof MilitaryBase)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int getNumberOfMilitaryBases()
+    {
+        int count = 0;
+
+        for (Construction construction : getConstructions())
+        {
+            if (construction instanceof MilitaryBase)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public int getNumberOfPoweredBanks()
     {
         int numberOfPoweredBanks = 0;

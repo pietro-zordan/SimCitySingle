@@ -155,9 +155,7 @@ public abstract class EconomicBuilding extends Construction
             int pollution,
             int unemployed)
     {
-        return "Cannot build "
-                + getType()
-                + ": at least "
+        return "Cannot build " + getType() + ": at least "
                 + getNumberOfEmployee()
                 + " unemployed citizens are required";
     }

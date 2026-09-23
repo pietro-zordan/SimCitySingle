@@ -1,5 +1,7 @@
 package GUI;
 
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.function.Consumer;
 
 import Events.EventType;
@@ -12,7 +14,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.ConstructionType;
@@ -22,6 +27,8 @@ import model.ConstructionType;
 public final class GridView
 {
     private static final int CELL_SIZE = 30; // pixel
+    private static final Paint MILITARY_CAMOUFLAGE =
+            createMilitaryCamouflagePattern();
 
     private final Controller controller;
     private final Consumer<String> errorHandler;
@@ -630,8 +637,8 @@ public final class GridView
         demolitionActive = false;
     }
 
-    // Mappa ed ottiene il colore identificativo associato a ciascun tipo di edificio sulla griglia.
-    public static Color getConstructionColor(
+    // Mappa ed ottiene il riempimento grafico associato a ciascun tipo di edificio sulla griglia.
+    public static Paint getConstructionColor(
             ConstructionType type)
     {
         if (type == null)
@@ -657,7 +664,36 @@ public final class GridView
             case GRASS -> Color.web("#9DBB7A");
             case NUCLEAR_PLANT -> Color.PURPLE;
             case WASTE_TREATMENT_PLANT -> Color.web("#A0522D");
+            case MILITARY_BASE -> MILITARY_CAMOUFLAGE;
         };
+    }
+
+    // Genera una texture mimetica originale usando verdi, marroni e beige.
+    // In questo modo la base militare ha l'aspetto camouflage senza usare immagini o scritte esterne.
+    // Usa una piccola immagine camouflage incorporata direttamente nel gioco.
+    // In questo modo non servono connessioni Internet e la texture resta nitida anche a 30x30.
+    private static Paint createMilitaryCamouflagePattern()
+    {
+        byte[] imageBytes =
+                Base64.getDecoder().decode(
+                        "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAABYklEQVR42rWWv0vDQBTHX54ZVLAUDiOB0nNUCAQiOhWCa3Fxdu7k3+Pf4d/gLAQKHVwDgZJCIQQXwcGh8Wjv57u0fdySI/ncl+/73iPBy+wR/ivnDAw1L2qwVsNCaQcpXABIsys7erj+NaI/yrXlyx6qd55VuqqFXuirhW4X+jpoKrVVB1Bt6jA6vyR6ogqnWiklxKQ050xkAYlatlnOjFPRQsWG6OQKW1AkQSwnnSgF1YTZ6UQuAKAW1I8uvRDSr4CzFsVyB92wUNVIzMDb+8KREOlS0O/I63PiDl/DQrG8rLDQTzA4XS2/xYrii+vhuZfFD7fR59fKfWWkVuyjHeFApdKD9O5mz3aZ0kJCA8CEX1qGtTaFmGRxksW9fZgXdVm1T/fjI3qt0oN8mnbRrn983egGTnSm3Q+1x/LRgPLvYeEax1NZtXw0sE+Ssmrtp3boydg9j5wsDVrL3Qj3xW3XH7eZjsFsvkrrAAAAAElFTkSuQmCC"
+                );
+
+        Image image =
+                new Image(
+                        new ByteArrayInputStream(
+                                imageBytes
+                        )
+                );
+
+        return new ImagePattern(
+                image,
+                0,
+                0,
+                CELL_SIZE,
+                CELL_SIZE,
+                false
+        );
     }
 
     public double getCellCenterOffsetX(int column)

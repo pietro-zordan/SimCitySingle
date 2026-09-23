@@ -26,6 +26,7 @@ public class Simulation{
     private final BankruptcyManager bankruptcyManager;
     private final BankManager bankManager;
     private final InsuranceManager insuranceManager;
+    private final MissileDefense missileDefense;
     private final TerrorManager terrorManager;
     private boolean terroristicGroupCreated;
 
@@ -104,6 +105,7 @@ public class Simulation{
         this.bankruptcyManager = new BankruptcyManager();
         this.bankManager = new BankManager(city, grid);
         this.insuranceManager = new InsuranceManager(city, grid, tsunamiInsuranceActive);
+        this.missileDefense = new MissileDefense();
         this.terrorManager = new TerrorManager(city, grid);
         this.crimeManager = new CrimeManager(city, grid);
     }
@@ -153,6 +155,122 @@ public class Simulation{
         return currentTick >= CC_UNLOCK_TICK;
     }
 
+    public boolean isMissileDefenseAvailable()
+    {
+        return currentTick >= MissileDefense.UNLOCK_TICK
+                && grid.hasMilitaryBase();
+    }
+
+    public boolean canBuyMissileDefense()
+    {
+        return isMissileDefenseAvailable()
+                && !missileDefense.isPurchased();
+    }
+
+    public boolean buyMissileDefense()
+    {
+        int cost = getMissileDefensePurchaseCost();
+
+        if (!canBuyMissileDefense()
+                || city.getBudget()
+                < cost)
+        {
+            return false;
+        }
+
+        city.updateBudget(-cost);
+
+        return missileDefense.purchase();
+    }
+
+    public boolean canRepairMissileDefense()
+    {
+        return missileDefense.isPurchased()
+                && missileDefense.getHitsRemaining()
+                < MissileDefense.MAX_HITS;
+    }
+
+    public boolean repairMissileDefense()
+    {
+        if (!canRepairMissileDefense()
+                || city.getBudget()
+                < MissileDefense.REPAIR_COST)
+        {
+            return false;
+        }
+
+        city.updateBudget(
+                -MissileDefense.REPAIR_COST
+        );
+
+        return missileDefense.repairOneHit();
+    }
+
+    public boolean repairMissileDefenseFully()
+    {
+        int cost = getMissileDefenseFullRepairCost();
+
+        if (!canRepairMissileDefense()
+                || city.getBudget()
+                < cost)
+        {
+            return false;
+        }
+
+        city.updateBudget(-cost);
+
+        return missileDefense.repairAllHits();
+    }
+
+    public boolean isMissileDefensePurchased()
+    {
+        return missileDefense.isPurchased();
+    }
+
+    public boolean isMissileDefenseActive()
+    {
+        return missileDefense.isActive();
+    }
+
+    public int getMissileDefenseHitsRemaining()
+    {
+        return missileDefense.getHitsRemaining();
+    }
+
+    public int getMissileDefensePurchaseCost()
+    {
+        return MissileDefense.PURCHASE_COST
+                * (100 - getMissileDefensePurchaseDiscountPercentage())
+                / 100;
+    }
+
+    public int getMissileDefensePurchaseDiscountPercentage()
+    {
+        return Math.min(grid.getNumberOfMilitaryBases(), 6) * 5;
+    }
+
+    public int getMissileDefenseRepairCost()
+    {
+        return MissileDefense.REPAIR_COST;
+    }
+
+    public int getMissileDefenseFullRepairCost()
+    {
+        return (MissileDefense.MAX_HITS
+                - missileDefense.getHitsRemaining())
+                * MissileDefense.REPAIR_COST;
+    }
+
+    public void restoreMissileDefenseState(
+            boolean purchased,
+            int hitsRemaining)
+    {
+        missileDefense.restoreState(
+                purchased,
+                hitsRemaining
+        );
+    }
+
     // Crea casualmente uno degli eventi disponibili.
     private Event createRandomEvent()
     {
@@ -162,7 +280,11 @@ public class Simulation{
                 new Fire(city, grid),
                 new Tsunami(city, grid),
                 new EconomicBoom(city, grid),
-                new MissileAttack(city, grid)
+                new MissileAttack(
+                        city,
+                        grid,
+                        missileDefense
+                )
         };
 
         int selectedEvent = random.nextInt(possibleEvents.length);
@@ -540,6 +662,19 @@ public class Simulation{
         return -1;
     }
 
+    public boolean isActiveMissileIntercepted()
+    {
+        if (activeEvent instanceof MissileAttack)
+        {
+            MissileAttack missileAttack =
+                    (MissileAttack) activeEvent;
+
+            return missileAttack.isIntercepted();
+        }
+
+        return false;
+    }
+
     // Restituisce il tick in cui è stata cambiata l'ultima policy.
     public int getLastPolicyChangeTick()
     {
@@ -570,6 +705,11 @@ public class Simulation{
     public int getRemovedTerroristicGroups()
     {
         return removedTerroristicGroups;
+    }
+
+    public int getRemovedTerroristicGroupsByMilitary()
+    {
+        return crimeManager.getRemovedTerroristicGroupsByMilitary();
     }
 
     public boolean wasTerroristicGroupCreated()

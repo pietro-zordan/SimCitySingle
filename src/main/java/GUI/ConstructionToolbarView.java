@@ -1,6 +1,5 @@
 // La classe ConstructionToolbarView gestisce la barra degli strumenti per la selezione delle costruzioni.
-// Crea e organizza visivamente i pulsanti per ogni tipo di edificio, ne mostra i relativi colori
-// e aggiorna i costi di piazzamento in tempo reale
+// Organizza gli edifici per categorie, mostra colori e costi e aggiorna la disponibilita in tempo reale.
 
 package GUI;
 
@@ -24,10 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.ConstructionType;
 
-//Costruisce la barra degli strumenti inizializzando il layout e i pulsanti per ogni tipo di costruzione definita.
 public final class ConstructionToolbarView
 {
-    //crea la lista e gli assegna i valori degli enum degli edifici
     private static final List<ConstructionType> TYPES = List.of(
             ConstructionType.INDUSTRIAL,
             ConstructionType.RESIDENTIAL,
@@ -39,7 +36,29 @@ public final class ConstructionToolbarView
             ConstructionType.CONSTRUCTION_COMPANY,
             ConstructionType.POLICE_STATION,
             ConstructionType.NUCLEAR_PLANT,
+            ConstructionType.WASTE_TREATMENT_PLANT,
+            ConstructionType.MILITARY_BASE
+    );
+
+    private static final List<ConstructionType> ZONES = List.of(
+            ConstructionType.RESIDENTIAL,
+            ConstructionType.COMMERCIAL,
+            ConstructionType.INDUSTRIAL
+    );
+
+    private static final List<ConstructionType> INFRASTRUCTURE = List.of(
+            ConstructionType.ROAD,
+            ConstructionType.POWER_PLANT,
+            ConstructionType.NUCLEAR_PLANT,
             ConstructionType.WASTE_TREATMENT_PLANT
+    );
+
+    private static final List<ConstructionType> SERVICES = List.of(
+            ConstructionType.PARK,
+            ConstructionType.BANK,
+            ConstructionType.CONSTRUCTION_COMPANY,
+            ConstructionType.POLICE_STATION,
+            ConstructionType.MILITARY_BASE
     );
 
     private final Controller controller;
@@ -54,10 +73,24 @@ public final class ConstructionToolbarView
     private final Map<ConstructionType, Label> lockLabels =
             new EnumMap<>(ConstructionType.class);
 
-    private final HBox view;
+    private final Map<ConstructionType, VBox> constructionBoxes =
+            new EnumMap<>(ConstructionType.class);
+
+    private final VBox view;
+    private final HBox categoryButtons;
+    private final HBox constructionButtons;
+
+    private final Button zonesButton =
+            new Button("Zones");
+
+    private final Button infrastructureButton =
+            new Button("Infrastructure");
+
+    private final Button servicesButton =
+            new Button("Services");
+
     private VBox nuclearPlantBox;
 
-    //Restituisce l'etichetta testuale descrittiva associata a uno specifico tipo di costruzione.
     public ConstructionToolbarView(
             Controller controller,
             Consumer<ConstructionType> selectionHandler)
@@ -72,26 +105,135 @@ public final class ConstructionToolbarView
         this.controller = controller;
         this.selectionHandler = selectionHandler;
 
-        // ---------- PANNELLO BOTTONI COSTRUZIONI (IN BASSO) ----------
-        view = new HBox(10);
-        view.setAlignment(Pos.CENTER);
-        view.setPadding(new Insets(0, 30, 20, 30));
+        categoryButtons = new HBox(
+                10,
+                zonesButton,
+                infrastructureButton,
+                servicesButton
+        );
 
+        categoryButtons.setAlignment(Pos.CENTER);
+
+        constructionButtons = new HBox(10);
+        constructionButtons.setAlignment(Pos.CENTER);
+
+        view = new VBox(
+                8,
+                categoryButtons,
+                constructionButtons
+        );
+
+        view.setAlignment(Pos.CENTER);
+        view.setPadding(
+                new Insets(
+                        0,
+                        30,
+                        20,
+                        30
+                )
+        );
+
+        createConstructionButtons();
+        configureCategoryButtons();
+
+        refreshCosts();
+        showCategory(
+                ZONES,
+                zonesButton
+        );
+    }
+
+    private void createConstructionButtons()
+    {
         for (ConstructionType type : TYPES)
         {
-            VBox constructionBox = createConstructionBox(type);
+            VBox constructionBox =
+                    createConstructionBox(type);
+
+            constructionBoxes.put(
+                    type,
+                    constructionBox
+            );
 
             if (type == ConstructionType.NUCLEAR_PLANT)
             {
-                nuclearPlantBox = constructionBox;
+                nuclearPlantBox =
+                        constructionBox;
             }
+        }
+    }
 
-            view.getChildren().add(constructionBox);
+    private void configureCategoryButtons()
+    {
+        zonesButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        showCategory(
+                                ZONES,
+                                zonesButton
+                        );
+                    }
+                }
+        );
+
+        infrastructureButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        showCategory(
+                                INFRASTRUCTURE,
+                                infrastructureButton
+                        );
+                    }
+                }
+        );
+
+        servicesButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        showCategory(
+                                SERVICES,
+                                servicesButton
+                        );
+                    }
+                }
+        );
+    }
+
+    private void showCategory(
+            List<ConstructionType> category,
+            Button selectedCategoryButton)
+    {
+        constructionButtons
+                .getChildren()
+                .clear();
+
+        for (ConstructionType type : category)
+        {
+            constructionButtons
+                    .getChildren()
+                    .add(
+                            constructionBoxes.get(type)
+                    );
         }
 
-        refreshCosts();
+        zonesButton.setStyle("");
+        infrastructureButton.setStyle("");
+        servicesButton.setStyle("");
+
+        selectedCategoryButton.setStyle(
+                "-fx-font-weight: bold;"
+        );
     }
-    //Crea il singolo blocco visuale (VBox) contenente il pulsante di selezione con la sua icona colorata e l'etichetta del costo.
+
     private VBox createConstructionBox(
             final ConstructionType type)
     {
@@ -99,11 +241,14 @@ public final class ConstructionToolbarView
                 getButtonText(type)
         );
 
-        // Salva il pulsante per poterlo abilitare/disabilitare in seguito
         buttons.put(type, button);
 
-        // Crea il quadratino colorato
-        Rectangle colorBox = new Rectangle(12, 12);
+        Rectangle colorBox =
+                new Rectangle(
+                        12,
+                        12
+                );
+
         colorBox.setFill(
                 getConstructionColor(type)
         );
@@ -111,10 +256,10 @@ public final class ConstructionToolbarView
         colorBox.setStrokeWidth(0.5);
 
         button.setGraphic(colorBox);
-        button.setContentDisplay(ContentDisplay.LEFT);
+        button.setContentDisplay(
+                ContentDisplay.LEFT
+        );
 
-        // Quando il pulsante viene premuto,
-        // comunica alla GridView quale costruzione è stata selezionata
         button.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
@@ -126,42 +271,24 @@ public final class ConstructionToolbarView
                 }
         );
 
-        // Etichetta che mostra il costo
         Label costLabel = new Label();
         costLabels.put(type, costLabel);
 
-        /*
-         * Lucchetto.
-         * Viene creato per tutti i pulsanti,
-         * ma sarà visibile solo quando necessario.
-         */
         Label lockLabel = new Label("🔒");
         lockLabel.setStyle(
                 "-fx-font-size: 22px;"
         );
-
-        /*
-         * Il lucchetto è soltanto grafico:
-         * non deve intercettare il mouse.
-         */
         lockLabel.setMouseTransparent(true);
         lockLabel.setVisible(false);
 
         lockLabels.put(type, lockLabel);
 
-        /*
-         * StackPane sovrappone il lucchetto al pulsante.
-         *
-         *       🔒
-         *   [  Bank  ]
-         */
         StackPane buttonContainer =
                 new StackPane(
                         button,
                         lockLabel
                 );
 
-        // Testo del costo sotto al pulsante
         VBox box = new VBox(
                 2,
                 buttonContainer,
@@ -172,7 +299,7 @@ public final class ConstructionToolbarView
 
         return box;
     }
-//Restituisce l'etichetta testuale descrittiva associata a uno specifico tipo di costruzione.
+
     private String getButtonText(
             ConstructionType type)
     {
@@ -191,10 +318,11 @@ public final class ConstructionToolbarView
             case GRASS -> "Grass";
             case TERRORISTIC_GROUP -> "Terroristic Group";
             case NUCLEAR_PLANT -> "Nuclear Plant";
-            case WASTE_TREATMENT_PLANT -> "Waste Treatment Plant ";
+            case WASTE_TREATMENT_PLANT -> "Waste Treatment Plant";
+            case MILITARY_BASE -> "Military Base";
         };
     }
-//Associa ed ottiene il colore identificativo per ciascun tipo di costruzione sulla griglia/interfaccia.
+
     private Color getConstructionColor(
             ConstructionType type)
     {
@@ -214,37 +342,52 @@ public final class ConstructionToolbarView
             case TERRORISTIC_GROUP -> Color.DARKRED;
             case NUCLEAR_PLANT -> Color.PURPLE;
             case WASTE_TREATMENT_PLANT -> Color.web("#A0522D");
+            case MILITARY_BASE -> Color.DARKOLIVEGREEN;
         };
     }
 
     public void refreshAvailability()
     {
-        boolean nuclearPlantVisible = controller.shouldShowNuclearPlant();
+        boolean nuclearPlantVisible =
+                controller.shouldShowNuclearPlant();
 
-        nuclearPlantBox.setVisible(nuclearPlantVisible);
-        nuclearPlantBox.setManaged(nuclearPlantVisible);
+        nuclearPlantBox.setVisible(
+                nuclearPlantVisible
+        );
+        nuclearPlantBox.setManaged(
+                nuclearPlantVisible
+        );
 
         for (ConstructionType type : TYPES)
         {
-            boolean locked = !controller.isConstructionUnlocked(type);
-            buttons.get(type).setDisable(locked);
-            lockLabels.get(type).setVisible(locked);
+            boolean locked =
+                    !controller
+                            .isConstructionUnlocked(type);
+
+            buttons.get(type)
+                    .setDisable(locked);
+
+            lockLabels.get(type)
+                    .setVisible(locked);
         }
     }
 
-//Aggiorna le etichette dei costi di tutti i pulsanti recuperando i valori aggiornati dal controller.
     public void refreshCosts()
     {
         for (ConstructionType type : TYPES)
         {
-            costLabels.get(type).setText(
-                    Math.abs(controller.getPlacementCost(type))
-                            + " €"
-            );
+            costLabels.get(type)
+                    .setText(
+                            Math.abs(
+                                    controller
+                                            .getPlacementCost(type)
+                            )
+                                    + " €"
+                    );
         }
     }
-//Restituisce il nodo grafico HBox contenente l'intera barra degli strumenti da inserire nell'interfaccia.
-    public HBox getView()
+
+    public VBox getView()
     {
         return view;
     }

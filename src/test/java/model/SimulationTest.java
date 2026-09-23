@@ -99,4 +99,45 @@ class SimulationTest {
         assertFalse(simulation.isEventActive());
         assertEquals(1, simulation.getCurrentTick());
     }
+
+    @Test
+    void militaryBasesDiscountOnlyPurchase() {
+        when(grid.getNumberOfMilitaryBases()).thenReturn(1, 3, 6, 8);
+
+        assertEquals(19000, simulation.getMissileDefensePurchaseCost());
+        assertEquals(17000, simulation.getMissileDefensePurchaseCost());
+        assertEquals(14000, simulation.getMissileDefensePurchaseCost());
+        assertEquals(14000, simulation.getMissileDefensePurchaseCost());
+        assertEquals(300, simulation.getMissileDefenseRepairCost());
+    }
+
+    @Test
+    void purchaseUsesDiscountedBudgetThreshold() {
+        Simulation unlocked = new Simulation(city, grid, 198, 0);
+        when(grid.hasMilitaryBase()).thenReturn(true);
+        when(grid.getNumberOfMilitaryBases()).thenReturn(6);
+        when(city.getBudget()).thenReturn(13999, 14000);
+
+        assertFalse(unlocked.buyMissileDefense());
+        assertTrue(unlocked.buyMissileDefense());
+        verify(city).updateBudget(-14000);
+        assertEquals(3, unlocked.getMissileDefenseHitsRemaining());
+    }
+
+    @Test
+    void fullRepairChargesEveryMissingHitWithoutDiscount() {
+        when(grid.getNumberOfMilitaryBases()).thenReturn(8);
+        simulation.restoreMissileDefenseState(true, 0);
+        when(city.getBudget()).thenReturn(899, 900);
+
+        assertEquals(14000, simulation.getMissileDefensePurchaseCost());
+        assertEquals(900, simulation.getMissileDefenseFullRepairCost());
+        assertFalse(simulation.repairMissileDefenseFully());
+        assertEquals(0, simulation.getMissileDefenseHitsRemaining());
+        assertTrue(simulation.repairMissileDefenseFully());
+        verify(city).updateBudget(-900);
+        assertEquals(3, simulation.getMissileDefenseHitsRemaining());
+        assertEquals(0, simulation.getMissileDefenseFullRepairCost());
+        assertFalse(simulation.repairMissileDefenseFully());
+    }
 }

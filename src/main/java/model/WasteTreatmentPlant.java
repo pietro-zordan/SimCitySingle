@@ -22,5 +22,11 @@ public class WasteTreatmentPlant extends Construction{
         return 160;
     }
 
+    @Override
+    public int getUnlockTick()
+    {
+        return 70;
+    }
+
 
 }

@@ -564,11 +564,23 @@ public final class GameView implements GameObserver
                                 .getMissileNode()
                 );
 
-        StackPane.setAlignment(
-                eventAnimationView
-                        .getMissileShieldNode(),
-                Pos.CENTER
-        );
+        eventAnimationView
+                .getMissileShieldNode()
+                .layoutXProperty()
+                .bind(
+                        gridWithAnimation
+                                .widthProperty()
+                                .divide(2.0)
+                );
+
+        eventAnimationView
+                .getMissileShieldNode()
+                .layoutYProperty()
+                .bind(
+                        gridWithAnimation
+                                .heightProperty()
+                                .divide(2.0)
+                );
 
         StackPane.setAlignment(
                 eventAnimationView

@@ -1,6 +1,7 @@
 package progress;
 
 import controller.Controller;
+import model.AchievementManager;
 import model.City;
 import model.Construction;
 import model.ConstructionType;
@@ -304,6 +305,16 @@ public class Progress
    la policy, il budget e i tick precedentemente salvati. */
     public Controller restoreController()
     {
+        return restoreController(
+                new AchievementManager()
+        );
+    }
+
+    /* Variante usata dall'applicazione per mantenere gli stessi
+       achievement anche quando viene caricata un'altra partita. */
+    public Controller restoreController(
+            AchievementManager achievementManager)
+    {
         Grid restoredGrid = restoreGrid();
         Policy restoredPolicy = restorePolicy();
 
@@ -314,7 +325,8 @@ public class Progress
                         budget,
                         currentTick,
                         lastPolicyChangeTick,
-                        tsunamiInsuranceActive
+                        tsunamiInsuranceActive,
+                        achievementManager
                 );
 
         controller.restoreBankruptcyState(criticalTicks);

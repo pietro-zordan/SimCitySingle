@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import com.google.gson.JsonParseException;
 import controller.Controller;
+import model.AchievementManager;
 
 import java.io.Reader;
 /* Gestisce il salvataggio e il caricamento della partita
@@ -111,5 +112,24 @@ public class ProgressManager
         Progress progress = load(filePath);
 
         return progress.restoreController();
+    }
+
+    public Controller loadGame(
+            String filePath,
+            AchievementManager achievementManager)
+            throws IOException
+    {
+        if (achievementManager == null)
+        {
+            throw new IllegalArgumentException(
+                    "Achievement manager cannot be null"
+            );
+        }
+
+        Progress progress = load(filePath);
+
+        return progress.restoreController(
+                achievementManager
+        );
     }
 }

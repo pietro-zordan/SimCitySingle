@@ -1,47 +1,91 @@
 package model;
 
-public class MissileDefense extends Construction implements DefenceSystem{
+/*
+ * Rappresenta il sistema di difesa missilistica globale della città.
+ * Non occupa una cella della griglia: viene acquistato come potenziamento
+ * e può assorbire fino a tre impatti prima di richiedere una riparazione.
+ */
+public class MissileDefense
+{
+    public static final int UNLOCK_TICK = 198;
+    public static final int PURCHASE_COST = 20000;
+    public static final int REPAIR_COST = 300;
+    public static final int MAX_HITS = 3;
 
-    private int damageCounter = 3;
-    private int repairCost = 300;
+    private boolean purchased;
+    private int hitsRemaining = MAX_HITS;
 
-    private static final int  MAX_DAMAGE_COUNTER = 3;
-
-    public MissileDefense()
+    public boolean isPurchased()
     {
-        super(0, 0, 20000);
+        return purchased;
     }
 
-    @Override
-    public boolean canRemoveCriminalActivity(int currentTick) {
-        return false;
+    public int getHitsRemaining()
+    {
+        return hitsRemaining;
     }
 
-    @Override
-    public void registerCriminalActivityRemoval(int currentTick) {
-        return;
-    }
-
-    @Override
-    public void setDamage() {
-        damageCounter--;
-    }
-
-    //riporta il numero massimo di missili sopportabili a 3;
-    @Override
-    public void resetDamage() {
-        damageCounter = MAX_DAMAGE_COUNTER;
-    }
-
-    //dice se il sistema missilistico funziona
     public boolean isActive()
     {
-        return damageCounter >= 1;
+        return purchased && hitsRemaining > 0;
     }
 
+    public boolean purchase()
+    {
+        if (purchased)
+        {
+            return false;
+        }
 
+        purchased = true;
+        hitsRemaining = MAX_HITS;
+        return true;
+    }
 
+    // Restituisce true soltanto quando il missile viene realmente intercettato.
+    public boolean absorbMissile()
+    {
+        if (!isActive())
+        {
+            return false;
+        }
 
+        hitsRemaining--;
+        return true;
+    }
 
+    // Ripara un singolo punto di resistenza: anche da 0 il sistema torna operativo.
+    public boolean repairOneHit()
+    {
+        if (!purchased
+                || hitsRemaining >= MAX_HITS)
+        {
+            return false;
+        }
 
+        hitsRemaining++;
+        return true;
+    }
+
+    public void restoreState(
+            boolean purchased,
+            int hitsRemaining)
+    {
+        this.purchased = purchased;
+
+        if (!purchased)
+        {
+            this.hitsRemaining = MAX_HITS;
+            return;
+        }
+
+        this.hitsRemaining =
+                Math.max(
+                        0,
+                        Math.min(
+                                MAX_HITS,
+                                hitsRemaining
+                        )
+                );
+    }
 }

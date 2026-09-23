@@ -618,6 +618,87 @@ public final class Controller
         return simulation.getActiveMissileTargetColumn();
     }
 
+    public boolean isActiveMissileIntercepted()
+    {
+        return simulation.isActiveMissileIntercepted();
+    }
+
+    public boolean isMissileDefenseAvailable()
+    {
+        return simulation.isMissileDefenseAvailable();
+    }
+
+    public boolean canBuyMissileDefense()
+    {
+        return simulation.canBuyMissileDefense();
+    }
+
+    public boolean buyMissileDefense()
+    {
+        boolean bought =
+                simulation.buyMissileDefense();
+
+        if (bought)
+        {
+            notifyObservers();
+        }
+
+        return bought;
+    }
+
+    public boolean canRepairMissileDefense()
+    {
+        return simulation.canRepairMissileDefense();
+    }
+
+    public boolean repairMissileDefense()
+    {
+        boolean repaired =
+                simulation.repairMissileDefense();
+
+        if (repaired)
+        {
+            notifyObservers();
+        }
+
+        return repaired;
+    }
+
+    public boolean isMissileDefensePurchased()
+    {
+        return simulation.isMissileDefensePurchased();
+    }
+
+    public boolean isMissileDefenseActive()
+    {
+        return simulation.isMissileDefenseActive();
+    }
+
+    public int getMissileDefenseHitsRemaining()
+    {
+        return simulation.getMissileDefenseHitsRemaining();
+    }
+
+    public int getMissileDefensePurchaseCost()
+    {
+        return simulation.getMissileDefensePurchaseCost();
+    }
+
+    public int getMissileDefenseRepairCost()
+    {
+        return simulation.getMissileDefenseRepairCost();
+    }
+
+    public void restoreMissileDefenseState(
+            boolean purchased,
+            int hitsRemaining)
+    {
+        simulation.restoreMissileDefenseState(
+                purchased,
+                hitsRemaining
+        );
+    }
+
     // Restituisce il tipo dell'evento attualmente attivo.
     public EventType getActiveEventType()
     {

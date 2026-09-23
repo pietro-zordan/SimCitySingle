@@ -14,6 +14,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import model.AchievementManager;
 import progress.AchievementProgressManager;
@@ -185,9 +187,33 @@ public class Main
         );
 
         root.setBottom(labelInfo);
-        stage.setScene(
-                new Scene(root, 800, 600)
+
+        Scene scene = new Scene(
+                root,
+                800,
+                600
         );
+
+        // Comando nascosto per gli sviluppatori: Command + Shift + A.
+        scene.setOnKeyPressed(
+                new EventHandler<KeyEvent>()
+                {
+                    @Override
+                    public void handle(KeyEvent event)
+                    {
+                        if (event.isMetaDown()
+                                && event.isShiftDown()
+                                && event.getCode()
+                                == KeyCode.A)
+                        {
+                            resetAchievements();
+                            event.consume();
+                        }
+                    }
+                }
+        );
+
+        stage.setScene(scene);
     }
 
     /* Carica la partita dal file e mostra un messaggio
@@ -218,6 +244,30 @@ public class Main
                     exception.getMessage()
             );
             alert.showAndWait();
+        }
+    }
+
+    /* Reset nascosto degli achievement sia in memoria
+       sia nel relativo file JSON. */
+    private void resetAchievements()
+    {
+        try
+        {
+            achievementProgressManager.reset(
+                    achievementManager,
+                    ACHIEVEMENTS_FILE_PATH
+            );
+
+            System.out.println(
+                    "Achievements reset successfully."
+            );
+        }
+        catch (IOException exception)
+        {
+            System.err.println(
+                    "Unable to reset achievements: "
+                            + exception.getMessage()
+            );
         }
     }
 

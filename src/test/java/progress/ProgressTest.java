@@ -210,6 +210,40 @@ class ProgressTest {
     }
 
     @Test
+    void bankruptcyCountdownSurvivesSaveAndLoad()
+    {
+        Grid grid = new Grid();
+        City city = new City(grid, new StandardPolicy());
+        Simulation simulation = new Simulation(city, grid);
+        simulation.restoreBankruptcyState(14);
+
+        Controller restored =
+                Progress.fromGame(grid, city, simulation)
+                        .restoreController();
+
+        assertEquals(14, restored.createProgress().getCriticalTicks());
+        assertFalse(restored.isGameOver());
+    }
+
+    @Test
+    void loadingLostGameKeepsItOver()
+    {
+        Grid grid = new Grid();
+        City city = new City(grid, new StandardPolicy());
+        Simulation simulation = new Simulation(city, grid);
+        simulation.restoreBankruptcyState(15);
+
+        Controller restored =
+                Progress.fromGame(grid, city, simulation)
+                        .restoreController();
+
+        assertTrue(restored.isGameOver());
+        assertThrows(IllegalStateException.class,
+                restored::updateOfOneTick);
+        assertEquals(0, restored.getCurrentTick());
+    }
+
+    @Test
     void pendingTsunamiReconstructionSurvivesSaveAndLoad()
     {
         Grid grid =

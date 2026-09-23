@@ -762,6 +762,11 @@ public final class Controller
         return simulation.isGameOver();
     }
 
+    public void restoreBankruptcyState(int criticalTicks)
+    {
+        simulation.restoreBankruptcyState(criticalTicks);
+    }
+
     public boolean isConstructionUnlocked(
             ConstructionType type)
     {

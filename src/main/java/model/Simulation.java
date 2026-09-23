@@ -331,6 +331,13 @@ public class Simulation{
        Se non ci sono eventi, prova ad avviarne uno casuale e infine incrementa il tick. */
     public boolean updateOfOneTick()
     {
+        if (isGameOver())
+        {
+            throw new IllegalStateException(
+                    "The game is over"
+            );
+        }
+
         if (isFreemasonryInvitationPending())
         {
             throw new IllegalStateException(
@@ -736,6 +743,16 @@ public class Simulation{
     public boolean isGameOver()
     {
         return bankruptcyManager.isBankrupt();
+    }
+
+    public int getCriticalTicks()
+    {
+        return bankruptcyManager.getCriticalTicks();
+    }
+
+    public void restoreBankruptcyState(int criticalTicks)
+    {
+        bankruptcyManager.restoreCriticalTicks(criticalTicks);
     }
 
     public int getRemovedCriminalActivities()

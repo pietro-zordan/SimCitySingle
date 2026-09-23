@@ -240,7 +240,9 @@ public final class GameView implements GameObserver
                     @Override
                     public void run()
                     {
-                        gameRoot.setDisable(false);
+                        gameRoot.setDisable(
+                                controller.isGameOver()
+                        );
                     }
                 }
         );
@@ -1553,6 +1555,7 @@ public final class GameView implements GameObserver
 
         gridView.refresh();
         raEyeView.refresh(controller.getFreemasonryChoice());
+        showGameOverIfNeeded();
 
         // Anche una partita salvata al turno 500 deve mostrare la scelta.
         Platform.runLater(
@@ -1570,11 +1573,21 @@ public final class GameView implements GameObserver
     private void showInvitationIfNeeded()
     {
         if (!closed
+                && !controller.isGameOver()
                 && controller.isFreemasonryInvitationPending()
                 && !invitationView.isShowing())
         {
             gameRoot.setDisable(true);
             invitationView.show();
+        }
+    }
+
+    private void showGameOverIfNeeded()
+    {
+        if (controller.isGameOver())
+        {
+            gameRoot.setDisable(true);
+            gameOverView.show();
         }
     }
 
@@ -1624,10 +1637,7 @@ public final class GameView implements GameObserver
 
                         chartView.refresh();
 
-                        if (controller.isGameOver())
-                        {
-                            gameOverView.show();
-                        }
+                        showGameOverIfNeeded();
 
                         showInvitationIfNeeded();
                     }

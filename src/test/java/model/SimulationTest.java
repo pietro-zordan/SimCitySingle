@@ -64,6 +64,17 @@ class SimulationTest {
     }
 
     @Test
+    void gameOverStopsTheSimulation()
+    {
+        simulation.restoreBankruptcyState(15);
+
+        assertThrows(IllegalStateException.class,
+                simulation::updateOfOneTick);
+        assertEquals(0, simulation.getCurrentTick());
+        verify(city, never()).updateOfOneTick();
+    }
+
+    @Test
     void testCanChangePolicy_AfterInterval_ReturnsTrue() {
         // Creiamo una simulazione dove sono passati esattamente 12 tick dall'ultimo cambio[cite: 33]
         Simulation advancedSimulation = new Simulation(city, grid, 12, 0);

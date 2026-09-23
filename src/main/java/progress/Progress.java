@@ -23,6 +23,8 @@ public class Progress
     private int lastPolicyChangeTick;
     private PolicyType policyType;
     private int budget;
+    // Nei vecchi salvataggi il campo manca e Gson usa zero.
+    private int criticalTicks;
     // Le vecchie partite prive del campo restano in attesa della scelta.
     private FreemasonryChoice freemasonryChoice;
     private boolean tsunamiInsuranceActive;
@@ -197,6 +199,9 @@ public class Progress
         progress.freemasonryChoice =
                 simulation.getFreemasonryChoice();
 
+        progress.criticalTicks =
+                simulation.getCriticalTicks();
+
         return progress;
     }
 
@@ -213,6 +218,11 @@ public class Progress
     public int getBudget()
     {
         return budget;
+    }
+
+    public int getCriticalTicks()
+    {
+        return criticalTicks;
     }
 
     public FreemasonryChoice getFreemasonryChoice()
@@ -306,6 +316,8 @@ public class Progress
                         lastPolicyChangeTick,
                         tsunamiInsuranceActive
                 );
+
+        controller.restoreBankruptcyState(criticalTicks);
 
         if (bankStatePresent)
         {

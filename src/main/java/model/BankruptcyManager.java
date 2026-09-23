@@ -40,4 +40,16 @@ public class BankruptcyManager
     {
         return criticalTicks;
     }
+
+    public void restoreCriticalTicks(int criticalTicks)
+    {
+        if (criticalTicks < 0)
+        {
+            throw new IllegalArgumentException(
+                    "Critical ticks cannot be negative"
+            );
+        }
+
+        this.criticalTicks = criticalTicks;
+    }
 }

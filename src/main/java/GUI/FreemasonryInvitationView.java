@@ -32,10 +32,12 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.QuadCurveTo;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import model.FreemasonryChoice;
 
+import java.net.URL;
 import java.util.Random;
 import java.util.function.Consumer;
 
@@ -89,12 +91,13 @@ public final class FreemasonryInvitationView
         texture.widthProperty().addListener(redraw);
         texture.heightProperty().addListener(redraw);
 
+        String inkFont = loadInkFontFamily();
+
         Label title = new Label("A LETTER FOR YOUR CITY");
         title.setStyle(
-                "-fx-font-family: Georgia;"
-                        + "-fx-font-size: 40px;"
-                        + "-fx-font-weight: bold;"
-                        + "-fx-text-fill: #50351f;"
+                "-fx-font-family: '" + inkFont + "';"
+                        + "-fx-font-size: 44px;"
+                        + "-fx-text-fill: #392517;"
         );
 
         Label message = new Label(
@@ -114,9 +117,9 @@ public final class FreemasonryInvitationView
         message.setAlignment(Pos.CENTER);
         message.setMaxWidth(950);
         message.setStyle(
-                "-fx-font-family: Georgia;"
+                "-fx-font-family: '" + inkFont + "';"
                         + "-fx-font-size: 25px;"
-                        + "-fx-text-fill: #49301d;"
+                        + "-fx-text-fill: #3c2819;"
         );
 
         Label invitation =
@@ -124,14 +127,13 @@ public final class FreemasonryInvitationView
         invitation.setWrapText(true);
         invitation.setTextAlignment(TextAlignment.CENTER);
         invitation.setStyle(
-                "-fx-font-family: Georgia;"
-                        + "-fx-font-size: 29px;"
-                        + "-fx-font-weight: bold;"
-                        + "-fx-text-fill: #56351d;"
+                "-fx-font-family: '" + inkFont + "';"
+                        + "-fx-font-size: 30px;"
+                        + "-fx-text-fill: #392517;"
         );
 
-        configureButton(acceptButton);
-        configureButton(declineButton);
+        configureButton(acceptButton, inkFont);
+        configureButton(declineButton, inkFont);
 
         acceptButton.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -178,7 +180,18 @@ public final class FreemasonryInvitationView
         view.getChildren().addAll(texture, letter, rolls);
     }
 
-    private void configureButton(Button button)
+    private String loadInkFontFamily()
+    {
+        URL fontFile = getClass().getResource(
+                "/fonts/Fondamento-Regular.ttf"
+        );
+        Font font = fontFile == null
+                ? null
+                : Font.loadFont(fontFile.toExternalForm(), 25);
+        return font == null ? "Georgia" : font.getFamily();
+    }
+
+    private void configureButton(Button button, String inkFont)
     {
         button.setPrefSize(205, 55);
         button.setStyle(
@@ -188,8 +201,8 @@ public final class FreemasonryInvitationView
                         + "-fx-background-radius: 4px;"
                         + "-fx-border-radius: 4px;"
                         + "-fx-text-fill: #412b1b;"
-                        + "-fx-font-family: Georgia;"
-                        + "-fx-font-size: 21px;"
+                        + "-fx-font-family: '" + inkFont + "';"
+                        + "-fx-font-size: 24px;"
         );
     }
 

@@ -186,11 +186,11 @@ public final class EventAnimationView
     {
         double radiusX =
                 gridView.getGridVisualWidth() / 2.0
-                        + 10;
+                        + 100;
 
         double radiusY =
                 gridView.getGridVisualHeight() / 2.0
-                        + 10;
+                        + 100;
 
         Ellipse shield =
                 new Ellipse(
@@ -779,11 +779,11 @@ public final class EventAnimationView
     {
         double radiusX =
                 gridView.getGridVisualWidth() / 2.0
-                        + 10;
+                        + 100;
 
         double radiusY =
                 gridView.getGridVisualHeight() / 2.0
-                        + 10;
+                        + 100;
 
         double dx = targetX - startX;
         double dy = targetY - startY;
@@ -859,11 +859,11 @@ public final class EventAnimationView
 
         double radiusX =
                 gridView.getGridVisualWidth() / 2.0
-                        + 10;
+                        + 100;
 
         double radiusY =
                 gridView.getGridVisualHeight() / 2.0
-                        + 10;
+                        + 100;
 
         double normalX =
                 impactX / (radiusX * radiusX);

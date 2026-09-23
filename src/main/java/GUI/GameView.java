@@ -102,6 +102,34 @@ public final class GameView implements GameObserver
 
     private int dismissedNuclearProtectionCount = -1;
 
+    private final Button missileDefenseButton =
+            new Button("Missile Defense");
+
+    private final Label missileDefenseInfoLabel =
+            new Label();
+
+    private final Button confirmMissileDefenseButton =
+            new Button("Buy");
+
+    private final Button cancelMissileDefenseButton =
+            new Button("Not now");
+
+    private final HBox missileDefenseActions =
+            new HBox(
+                    5,
+                    confirmMissileDefenseButton,
+                    cancelMissileDefenseButton
+            );
+
+    private final VBox missileDefenseBox =
+            new VBox(
+                    5,
+                    missileDefenseInfoLabel,
+                    missileDefenseActions
+            );
+
+    private boolean missileDefenseOfferShown;
+
     private final Button demolitionButton =
             new Button("Demolish");
 
@@ -144,6 +172,7 @@ public final class GameView implements GameObserver
         configureLoanButton();
         configureTsunamiInsuranceButton();
         configureNuclearFireProtection();
+        configureMissileDefense();
 
         gridView = new GridView(
                 controller,
@@ -230,7 +259,16 @@ public final class GameView implements GameObserver
                                 controller.getRemovedTerroristicGroups()
                                         - militaryRemovals;
 
-                        if (militaryRemovals > 0)
+                        if (controller.isActiveMissileIntercepted())
+                        {
+                            showToast(
+                                    "Missile intercepted! Missile Defense: "
+                                            + controller
+                                            .getMissileDefenseHitsRemaining()
+                                            + "/3"
+                            );
+                        }
+                        else if (militaryRemovals > 0)
                         {
                             String groupText =
                                     militaryRemovals == 1
@@ -439,6 +477,9 @@ public final class GameView implements GameObserver
         cancelDemolitionWhenUsed(cancelTsunamiInsuranceButton);
         cancelDemolitionWhenUsed(confirmNuclearFireProtectionButton);
         cancelDemolitionWhenUsed(cancelNuclearFireProtectionButton);
+        cancelDemolitionWhenUsed(missileDefenseButton);
+        cancelDemolitionWhenUsed(confirmMissileDefenseButton);
+        cancelDemolitionWhenUsed(cancelMissileDefenseButton);
         cancelDemolitionWhenUsed(saveButton);
         cancelDemolitionWhenUsed(restartButton);
         cancelDemolitionWhenUsed(homeButton);
@@ -482,6 +523,8 @@ public final class GameView implements GameObserver
                 tsunamiInsuranceButton,
                 tsunamiInsuranceBox,
                 nuclearFireProtectionBox,
+                missileDefenseButton,
+                missileDefenseBox,
                 demolitionButton
         );
 
@@ -516,8 +559,16 @@ public final class GameView implements GameObserver
                 new StackPane(
                         gridView.getView(),
                         eventAnimationView
+                                .getMissileShieldNode(),
+                        eventAnimationView
                                 .getMissileNode()
                 );
+
+        StackPane.setAlignment(
+                eventAnimationView
+                        .getMissileShieldNode(),
+                Pos.CENTER
+        );
 
         StackPane.setAlignment(
                 eventAnimationView
@@ -988,6 +1039,232 @@ public final class GameView implements GameObserver
         nuclearFireProtectionBox.setVisible(true);
     }
 
+    private void configureMissileDefense()
+    {
+        missileDefenseButton.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        missileDefenseButton.managedProperty()
+                .bind(
+                        missileDefenseButton
+                                .visibleProperty()
+                );
+
+        missileDefenseButton.setVisible(false);
+
+        missileDefenseBox.setAlignment(Pos.CENTER);
+        missileDefenseBox.managedProperty()
+                .bind(
+                        missileDefenseBox
+                                .visibleProperty()
+                );
+        missileDefenseBox.setVisible(false);
+
+        missileDefenseInfoLabel.setWrapText(true);
+        missileDefenseActions.setAlignment(Pos.CENTER);
+
+        confirmMissileDefenseButton.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        cancelMissileDefenseButton.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        missileDefenseButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        showMissileDefensePanel();
+                    }
+                }
+        );
+
+        confirmMissileDefenseButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        applyMissileDefenseAction();
+                    }
+                }
+        );
+
+        cancelMissileDefenseButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        missileDefenseBox.setVisible(false);
+                    }
+                }
+        );
+    }
+
+    private void showMissileDefensePanel()
+    {
+        if (!controller.isMissileDefensePurchased())
+        {
+            missileDefenseInfoLabel.setText(
+                    "Missile Defense System available."
+                            + "\nRequires at least one Military Base."
+                            + "\nCapacity: 3 missile impacts."
+                            + "\nCost: "
+                            + controller.getMissileDefensePurchaseCost()
+                            + " €"
+                            + "\nBuy it?"
+            );
+
+            confirmMissileDefenseButton.setText("Buy");
+            confirmMissileDefenseButton.setDisable(false);
+            cancelMissileDefenseButton.setText("Not now");
+        }
+        else
+        {
+            int hits =
+                    controller.getMissileDefenseHitsRemaining();
+
+            missileDefenseInfoLabel.setText(
+                    "Missile Defense: "
+                            + hits
+                            + "/3 impacts remaining."
+                            + (hits == 0
+                            ? "\nThe shield is offline until repaired."
+                            : "")
+                            + (hits < 3
+                            ? "\nRepair +1 impact for "
+                            + controller
+                            .getMissileDefenseRepairCost()
+                            + " €?"
+                            : "\nThe shield is fully repaired.")
+            );
+
+            confirmMissileDefenseButton.setText(
+                    hits < 3
+                            ? "Repair +1"
+                            : "Fully repaired"
+            );
+
+            confirmMissileDefenseButton.setDisable(
+                    !controller.canRepairMissileDefense()
+            );
+
+            cancelMissileDefenseButton.setText("Close");
+        }
+
+        missileDefenseBox.setVisible(true);
+    }
+
+    private void applyMissileDefenseAction()
+    {
+        if (!controller.isMissileDefensePurchased())
+        {
+            int cost =
+                    controller.getMissileDefensePurchaseCost();
+
+            if (controller.buyMissileDefense())
+            {
+                missileDefenseBox.setVisible(false);
+
+                showToast(
+                        "Missile Defense activated for "
+                                + cost
+                                + " €. Capacity: 3 missiles."
+                );
+            }
+            else
+            {
+                showToast(
+                        "Unable to buy Missile Defense. Check requirements and budget."
+                );
+            }
+
+            return;
+        }
+
+        int repairCost =
+                controller.getMissileDefenseRepairCost();
+
+        if (controller.repairMissileDefense())
+        {
+            missileDefenseBox.setVisible(false);
+
+            showToast(
+                    "Missile Defense repaired for "
+                            + repairCost
+                            + " €. Capacity: "
+                            + controller
+                            .getMissileDefenseHitsRemaining()
+                            + "/3."
+            );
+        }
+        else
+        {
+            showToast(
+                    "Unable to repair Missile Defense. Check your budget."
+            );
+        }
+    }
+
+    private void refreshMissileDefenseControls()
+    {
+        boolean purchased =
+                controller.isMissileDefensePurchased();
+
+        boolean available =
+                controller.isMissileDefenseAvailable();
+
+        missileDefenseButton.setVisible(
+                purchased || available
+        );
+
+        if (!purchased && !available)
+        {
+            missileDefenseBox.setVisible(false);
+            missileDefenseOfferShown = false;
+            return;
+        }
+
+        if (purchased)
+        {
+            int hits =
+                    controller.getMissileDefenseHitsRemaining();
+
+            if (hits > 0)
+            {
+                missileDefenseButton.setText(
+                        "Missile Defense ("
+                                + hits
+                                + "/3)"
+                );
+            }
+            else
+            {
+                missileDefenseButton.setText(
+                        "Missile Defense (OFF 0/3)"
+                );
+            }
+
+            return;
+        }
+
+        missileDefenseButton.setText(
+                "Buy Missile Defense"
+        );
+
+        if (controller.canBuyMissileDefense()
+                && !missileDefenseOfferShown)
+        {
+            missileDefenseOfferShown = true;
+            showMissileDefensePanel();
+        }
+    }
+
     private void configureDemolitionButton()
     {
         demolitionButton.setMaxWidth(
@@ -1165,6 +1442,7 @@ public final class GameView implements GameObserver
         refreshLoanButton();
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
+        refreshMissileDefenseControls();
         refreshDemolitionButton();
 
         gridView.refresh();
@@ -1205,6 +1483,7 @@ public final class GameView implements GameObserver
                         refreshLoanButton();
                         refreshTsunamiInsuranceButton();
                         refreshNuclearFireProtection();
+                        refreshMissileDefenseControls();
                         refreshDemolitionButton();
 
                         statusView.updateTick();

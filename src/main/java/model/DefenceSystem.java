@@ -1,13 +1,8 @@
 package model;
 
-public interface DefenceSystem {
+public interface DefenceSystem
+{
+    boolean canRemoveCriminalActivity(int currentTick);
 
-    public boolean canRemoveCriminalActivity(int currentTick);
-
-    public void registerCriminalActivityRemoval(int currentTick);
-
-    public void setDamage();
-
-    public void resetDamage();
-
+    void registerCriminalActivityRemoval(int currentTick);
 }

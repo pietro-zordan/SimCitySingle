@@ -51,6 +51,9 @@ public class ConstructionFactory
             case WASTE_TREATMENT_PLANT:
                 return new WasteTreatmentPlant();
 
+            case MILITARY_BASE:
+                return new MilitaryBase();
+
             default:
                 throw new IllegalArgumentException(
                         "Unknown construction type: " + type

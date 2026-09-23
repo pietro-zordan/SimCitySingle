@@ -35,4 +35,5 @@ public class CriminalActivity extends Construction
         return currentTick - creationTick
                 >= MIN_LIFETIME;
     }
+
 }

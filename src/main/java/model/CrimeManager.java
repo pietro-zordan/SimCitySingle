@@ -197,4 +197,6 @@ public class CrimeManager {
     public int getRemovedTerroristicGroups() {
         return removedTerroristicGroups;
     }
+
+
 }

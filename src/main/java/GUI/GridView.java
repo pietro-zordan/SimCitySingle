@@ -12,7 +12,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.ConstructionType;
@@ -22,6 +26,8 @@ import model.ConstructionType;
 public final class GridView
 {
     private static final int CELL_SIZE = 30; // pixel
+    private static final Paint MILITARY_CAMOUFLAGE =
+            createMilitaryCamouflagePattern();
 
     private final Controller controller;
     private final Consumer<String> errorHandler;
@@ -630,8 +636,8 @@ public final class GridView
         demolitionActive = false;
     }
 
-    // Mappa ed ottiene il colore identificativo associato a ciascun tipo di edificio sulla griglia.
-    public static Color getConstructionColor(
+    // Mappa ed ottiene il riempimento grafico associato a ciascun tipo di edificio sulla griglia.
+    public static Paint getConstructionColor(
             ConstructionType type)
     {
         if (type == null)
@@ -657,8 +663,85 @@ public final class GridView
             case GRASS -> Color.web("#9DBB7A");
             case NUCLEAR_PLANT -> Color.PURPLE;
             case WASTE_TREATMENT_PLANT -> Color.web("#A0522D");
-            case MILITARY_BASE -> Color.DARKOLIVEGREEN;
+            case MILITARY_BASE -> MILITARY_CAMOUFLAGE;
         };
+    }
+
+    // Genera una texture mimetica originale usando verdi, marroni e beige.
+    // In questo modo la base militare ha l'aspetto camouflage senza usare immagini o scritte esterne.
+    private static Paint createMilitaryCamouflagePattern()
+    {
+        WritableImage image =
+                new WritableImage(
+                        CELL_SIZE,
+                        CELL_SIZE
+                );
+
+        PixelWriter writer =
+                image.getPixelWriter();
+
+        Color[] colors = {
+                Color.web("#263F26"),
+                Color.web("#4F5634"),
+                Color.web("#66503D"),
+                Color.web("#8A7046"),
+                Color.web("#9B9363"),
+                Color.web("#3E2E2C")
+        };
+
+        for (int y = 0; y < CELL_SIZE; y++)
+        {
+            for (int x = 0; x < CELL_SIZE; x++)
+            {
+                double pattern =
+                        Math.sin(x * 0.34)
+                                + Math.cos(y * 0.31)
+                                + Math.sin((x + y) * 0.20)
+                                + Math.cos((x * 2.0 - y) * 0.13);
+
+                int colorIndex;
+
+                if (pattern < -1.35)
+                {
+                    colorIndex = 5;
+                }
+                else if (pattern < -0.65)
+                {
+                    colorIndex = 0;
+                }
+                else if (pattern < 0.05)
+                {
+                    colorIndex = 2;
+                }
+                else if (pattern < 0.75)
+                {
+                    colorIndex = 1;
+                }
+                else if (pattern < 1.45)
+                {
+                    colorIndex = 3;
+                }
+                else
+                {
+                    colorIndex = 4;
+                }
+
+                writer.setColor(
+                        x,
+                        y,
+                        colors[colorIndex]
+                );
+            }
+        }
+
+        return new ImagePattern(
+                image,
+                0,
+                0,
+                CELL_SIZE,
+                CELL_SIZE,
+                false
+        );
     }
 
     public double getCellCenterOffsetX(int column)

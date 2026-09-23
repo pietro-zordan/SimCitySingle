@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.AchievementManager;
+import progress.AchievementProgressManager;
 import progress.ProgressManager;
 
 /* Avvia l'applicazione e gestisce il passaggio
@@ -27,11 +28,17 @@ public class Main
     private static final String SAVE_FILE_PATH =
             "progress.json";
 
+    private static final String ACHIEVEMENTS_FILE_PATH =
+            "achievements.json";
+
     private final ProgressManager progressManager =
             new ProgressManager();
 
-    private final AchievementManager achievementManager =
-            new AchievementManager();
+    private final AchievementProgressManager
+            achievementProgressManager =
+            new AchievementProgressManager();
+
+    private AchievementManager achievementManager;
 
     private Stage stage;
     private Controller controller;
@@ -49,8 +56,34 @@ public class Main
     {
         this.stage = stage;
         stage.setTitle("SimCity");
+
+        loadAchievements();
+
         showHomeScreen();
         stage.show();
+    }
+
+    /* Carica gli achievement globali. Se il file non esiste,
+       AchievementProgressManager restituisce un manager vuoto. */
+    private void loadAchievements()
+    {
+        try
+        {
+            achievementManager =
+                    achievementProgressManager.load(
+                            ACHIEVEMENTS_FILE_PATH
+                    );
+        }
+        catch (IOException exception)
+        {
+            achievementManager =
+                    new AchievementManager();
+
+            System.err.println(
+                    "Unable to load achievements: "
+                            + exception.getMessage()
+            );
+        }
     }
 
     /* Mostra la schermata iniziale con i comandi per iniziare,
@@ -164,7 +197,8 @@ public class Main
         try
         {
             controller = progressManager.loadGame(
-                    SAVE_FILE_PATH
+                    SAVE_FILE_PATH,
+                    achievementManager
             );
 
             showGameScreen();
@@ -231,6 +265,24 @@ public class Main
     @Override
     public void stop()
     {
+        if (achievementManager != null)
+        {
+            try
+            {
+                achievementProgressManager.save(
+                        achievementManager,
+                        ACHIEVEMENTS_FILE_PATH
+                );
+            }
+            catch (IOException exception)
+            {
+                System.err.println(
+                        "Unable to save achievements: "
+                                + exception.getMessage()
+                );
+            }
+        }
+
         closeGameView();
     }
 }

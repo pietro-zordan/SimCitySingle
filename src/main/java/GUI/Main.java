@@ -2,6 +2,7 @@ package GUI;
 
 import java.io.IOException;
 
+import audio.SoundManager;
 import controller.Controller;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -39,6 +40,9 @@ public class Main
     private final AchievementProgressManager
             achievementProgressManager =
             new AchievementProgressManager();
+
+    private final SoundManager soundManager =
+            new SoundManager();
 
     private AchievementManager achievementManager;
 
@@ -280,7 +284,8 @@ public class Main
                 controller,
                 this,
                 progressManager,
-                SAVE_FILE_PATH
+                SAVE_FILE_PATH,
+                soundManager
         );
 
         stage.setScene(gameView.getScene());

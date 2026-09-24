@@ -1,15 +1,21 @@
 package model;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
 public class AchievementManager {
 
     private final Set<Achievement> unlockedAchievements;
+    private final Queue<Achievement> newlyUnlockedAchievements;
 
     public AchievementManager()
     {
         unlockedAchievements = new HashSet<>();
+
+        //achievements appena sbloccati che la GUI deve ancora mostrare
+        newlyUnlockedAchievements = new ArrayDeque<>();
     }
 
     /* Ricostruisce il manager partendo dagli achievement
@@ -33,7 +39,20 @@ public class AchievementManager {
             throw new IllegalArgumentException("Achievement cannot be null");
         }
 
-        return unlockedAchievements.add(achievement);
+        boolean unlocked = unlockedAchievements.add(achievement);
+
+        if (unlocked)
+        {
+            newlyUnlockedAchievements.add(achievement);
+        }
+
+        return unlocked;
+    }
+
+    //recupera achievement da mostrare
+    public Achievement consumeNewlyUnlockedAchievement()
+    {
+        return newlyUnlockedAchievements.poll();
     }
 
     public boolean isUnlocked(Achievement achievement)

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
+import audio.SoundManager;
 import controller.Controller;
 import controller.GameObserver;
 import javafx.animation.PauseTransition;
@@ -24,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import model.Achievement;
 import model.ConstructionType;
 import model.FreemasonryChoice;
 import policies.PolicyType;
@@ -36,6 +38,7 @@ public final class GameView implements GameObserver
     private final Controller controller;
     private final GameNavigation navigation;
     private final ProgressManager progressManager;
+    private final SoundManager soundManager;
     private final String saveFilePath;
     private final GridView gridView;
     private final ChartView chartView;
@@ -128,12 +131,14 @@ public final class GameView implements GameObserver
             Controller controller,
             GameNavigation navigation,
             ProgressManager progressManager,
-            String saveFilePath)
+            String saveFilePath,
+            SoundManager soundManager)
     {
         if (controller == null
                 || navigation == null
                 || progressManager == null
-                || saveFilePath == null)
+                || saveFilePath == null
+                || soundManager == null)
         {
             throw new IllegalArgumentException(
                     "Game view dependencies cannot be null"
@@ -145,6 +150,7 @@ public final class GameView implements GameObserver
         gameOverView = new GameOverView(navigation);
         this.progressManager = progressManager;
         this.saveFilePath = saveFilePath;
+        this.soundManager = soundManager;
 
         configureToast();
         configureNextTurnButton();
@@ -1346,6 +1352,8 @@ public final class GameView implements GameObserver
 
                         chartView.refresh();
 
+                        checkNewAchievements();
+
                         showGameOverIfNeeded();
 
                         showInvitationIfNeeded();
@@ -1473,5 +1481,22 @@ public final class GameView implements GameObserver
 
         eventAnimationView.stop();
         invitationView.stop();
+    }
+
+    private void checkNewAchievements()
+    {
+        Achievement achievement = controller
+                .consumeNewlyUnlockedAchievement();
+
+        while (achievement != null)
+        {
+            soundManager.playAchievementSound();
+
+            showToast("Achievement unlocked: "
+                            + achievement.getTitle());
+
+            achievement = controller
+                            .consumeNewlyUnlockedAchievement();
+        }
     }
 }

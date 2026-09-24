@@ -518,6 +518,12 @@ public final class Controller
         return grid.consumeExplosions();
     }
 
+    public Achievement consumeNewlyUnlockedAchievement()
+    {
+        return achievementManager
+                .consumeNewlyUnlockedAchievement();
+    }
+
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {

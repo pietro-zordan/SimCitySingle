@@ -19,7 +19,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -44,6 +43,7 @@ public final class GameView implements GameObserver
     private final ChartView chartView;
     private final GameStatusView statusView;
     private final ConstructionToolbarView constructionToolbarView;
+    private final LoanView loanView;
     private final EventAnimationView eventAnimationView;
     private final GameOverView gameOverView;
     private final FreemasonryInvitationView invitationView;
@@ -54,18 +54,6 @@ public final class GameView implements GameObserver
 
     private final Button nextTurnButton =
             new Button("Next Turn");
-
-    private final Button loanButton =
-            new Button("Ask for a loan");
-
-    private final Label loanLimitLabel =
-            new Label();
-
-    private final TextField loanAmountField =
-            new TextField();
-
-    private final Button confirmLoanButton =
-            new Button("Conferma");
 
     private final Button tsunamiInsuranceButton =
             new Button("Tsunami insurance");
@@ -114,14 +102,6 @@ public final class GameView implements GameObserver
     private final Button demolitionButton =
             new Button("Demolish");
 
-    private final VBox loanRequestBox =
-            new VBox(
-                    5,
-                    loanLimitLabel,
-                    loanAmountField,
-                    confirmLoanButton
-            );
-
     private final Scene scene;
     private boolean observerRegistered;
     private boolean closed;
@@ -154,7 +134,16 @@ public final class GameView implements GameObserver
 
         configureToast();
         configureNextTurnButton();
-        configureLoanButton();
+
+        loanView = new LoanView(controller, new Consumer<String>()
+        {
+            @Override
+            public void accept(String message)
+            {
+                showToast(message);
+            }
+        });
+
         configureTsunamiInsuranceButton();
         configureNuclearFireProtection();
         missileDefenseView = new MissileDefenseView(
@@ -340,142 +329,6 @@ public final class GameView implements GameObserver
         );
     }
 
-    // Configura il pulsante e il piccolo pannello utilizzato per richiedere un prestito.
-    private void configureLoanButton()
-    {
-        loanButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        loanButton.managedProperty()
-                .bind(
-                        loanButton.visibleProperty()
-                );
-
-        loanButton.setVisible(false);
-
-        loanRequestBox.setAlignment(
-                Pos.CENTER
-        );
-
-        loanRequestBox.setVisible(false);
-
-        loanRequestBox.managedProperty()
-                .bind(
-                        loanRequestBox.visibleProperty()
-                );
-
-        loanAmountField.setPromptText(
-                "Importo prestito"
-        );
-
-        loanAmountField.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        confirmLoanButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        // Mostra il campo per inserire l'importo.
-        loanButton.setOnAction(
-                new EventHandler<ActionEvent>()
-                {
-                    @Override
-                    public void handle(ActionEvent event)
-                    {
-                        int maxAmount =
-                                controller
-                                        .getMaxLoanAmount();
-
-                        loanLimitLabel.setText(
-                                "Massimo: "
-                                        + maxAmount
-                                        + " €"
-                        );
-
-                        loanAmountField.setText(
-                                String.valueOf(
-                                        maxAmount
-                                )
-                        );
-
-                        loanRequestBox.setVisible(
-                                true
-                        );
-                    }
-                }
-        );
-
-        // Conferma la richiesta del prestito.
-        confirmLoanButton.setOnAction(
-                new EventHandler<ActionEvent>()
-                {
-                    @Override
-                    public void handle(ActionEvent event)
-                    {
-                        requestLoan();
-                    }
-                }
-        );
-    }
-
-    // Legge l'importo inserito dall'utente e prova a richiedere il prestito.
-    private void requestLoan()
-    {
-        try
-        {
-            int amount =
-                    Integer.parseInt(
-                            loanAmountField
-                                    .getText()
-                                    .trim()
-                    );
-
-            int maxAmount =
-                    controller.getMaxLoanAmount();
-
-            if (amount <= 0
-                    || amount > maxAmount)
-            {
-                showToast(
-                        "Inserisci un importo tra 1 e "
-                                + maxAmount
-                                + " €."
-                );
-
-                return;
-            }
-
-            if (controller.requestLoan(amount))
-            {
-                showToast(
-                        "Prestito ricevuto: "
-                                + amount
-                                + " €. Tra 3 tick dovrai restituire "
-                                + Math.round(
-                                        amount * 1.5
-                                )
-                                + " €."
-                );
-
-                loanRequestBox.setVisible(false);
-            }
-            else
-            {
-                showToast(
-                        "You can't ask for a loan."
-                );
-            }
-        }
-        catch (NumberFormatException exception)
-        {
-            showToast(
-                    "Inserisci un numero valido."
-            );
-        }
-    }
-
     // Crea e struttura la scena JavaFX organizzando i pannelli laterali, la griglia centrale e la barra inferiore in un BorderPane.
     private Scene createScene()
     {
@@ -493,8 +346,10 @@ public final class GameView implements GameObserver
 
         cancelDemolitionWhenUsed(nextTurnButton);
         cancelDemolitionWhenUsed(changePolicyButton);
-        cancelDemolitionWhenUsed(loanButton);
-        cancelDemolitionWhenUsed(confirmLoanButton);
+        for (Button button : loanView.getButtons())
+        {
+            cancelDemolitionWhenUsed(button);
+        }
         cancelDemolitionWhenUsed(tsunamiInsuranceButton);
         cancelDemolitionWhenUsed(confirmTsunamiInsuranceButton);
         cancelDemolitionWhenUsed(cancelTsunamiInsuranceButton);
@@ -542,8 +397,8 @@ public final class GameView implements GameObserver
                         .getHackerAttackPanel(),
                 nextTurnButton,
                 changePolicyButton,
-                loanButton,
-                loanRequestBox,
+                loanView.getActionButton(),
+                loanView.getRequestBox(),
                 tsunamiInsuranceButton,
                 tsunamiInsuranceBox,
                 nuclearFireProtectionBox,
@@ -1262,7 +1117,7 @@ public final class GameView implements GameObserver
         constructionToolbarView
                 .refreshAvailability();
 
-        refreshLoanButton();
+        loanView.refresh();
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
         missileDefenseView.refresh();
@@ -1338,7 +1193,7 @@ public final class GameView implements GameObserver
                         constructionToolbarView
                                 .refreshAvailability();
 
-                        refreshLoanButton();
+                        loanView.refresh();
                         refreshTsunamiInsuranceButton();
                         refreshNuclearFireProtection();
                         missileDefenseView.refresh();
@@ -1360,24 +1215,6 @@ public final class GameView implements GameObserver
                     }
                 }
         );
-    }
-
-    // Aggiorna la disponibilita del pulsante del prestito.
-    private void refreshLoanButton()
-    {
-        boolean canRequestLoan =
-                controller.canRequestLoan();
-
-        loanButton.setVisible(
-                canRequestLoan
-        );
-
-        if (!canRequestLoan)
-        {
-            loanRequestBox.setVisible(
-                    false
-            );
-        }
     }
 
     private void refreshTsunamiInsuranceButton()

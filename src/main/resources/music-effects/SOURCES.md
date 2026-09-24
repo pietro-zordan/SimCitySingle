@@ -7,3 +7,6 @@
 - `demolition.wav`: "paper_crushed_-_2.mp3" by Luckius, from
   https://opengameart.org/content/various-paper-sound-effects (CC0 1.0).
   Converted to 22.05 kHz mono PCM WAV, with a short fade and gain adjustment.
+- `placement.wav`: "Click" by qubodup, from
+  https://opengameart.org/content/click (CC0 1.0).
+  Converted from 44.1 kHz 24-bit mono WAV to 22.05 kHz 16-bit mono PCM WAV.

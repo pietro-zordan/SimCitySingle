@@ -50,6 +50,7 @@ public final class GridView
     private final Controller controller;
     private final Consumer<String> errorHandler;
     private final Runnable demolitionSound;
+    private final Runnable placementSound;
     private final GridPane view;
     private final Label infoLabel;
     private final StackPane[][] cells;
@@ -86,10 +87,11 @@ public final class GridView
     public GridView(
             Controller controller,
             Consumer<String> errorHandler,
-            Runnable demolitionSound)
+            Runnable demolitionSound,
+            Runnable placementSound)
     {
         if (controller == null || errorHandler == null
-                || demolitionSound == null)
+                || demolitionSound == null || placementSound == null)
         {
             throw new IllegalArgumentException(
                     "Grid view dependencies cannot be null"
@@ -99,6 +101,7 @@ public final class GridView
         this.controller = controller;
         this.errorHandler = errorHandler;
         this.demolitionSound = demolitionSound;
+        this.placementSound = placementSound;
 
         // ---------- GRIGLIA CENTRATA ----------
         view = new GridPane();
@@ -397,6 +400,7 @@ public final class GridView
                         row,
                         column
                 );
+                placementSound.run();
 
                 infoLabel.setText(
                         "Creato/a un/a "

@@ -9,6 +9,7 @@ public class SoundManager
 
     private final AudioClip achievementSound;
     private final AudioClip demolitionSound;
+    private final AudioClip placementSound;
 
     public SoundManager()
     {
@@ -33,6 +34,17 @@ public class SoundManager
 
         demolitionSound = new AudioClip(
                 demolitionUrl.toExternalForm());
+
+        URL placementUrl = getClass().getResource(
+                "/music-effects/placement.wav");
+
+        if (placementUrl == null)
+        {
+            throw new IllegalStateException("Placement sound not found");
+        }
+
+        placementSound = new AudioClip(
+                placementUrl.toExternalForm());
     }
 
     public void playAchievementSound()
@@ -43,6 +55,11 @@ public class SoundManager
     public void playDemolitionSound()
     {
         demolitionSound.play();
+    }
+
+    public void playPlacementSound()
+    {
+        placementSound.play();
     }
 
 }

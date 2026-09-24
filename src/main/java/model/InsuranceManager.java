@@ -37,6 +37,8 @@ public class InsuranceManager
 
     private boolean tsunamiInsuranceActive;
     private boolean reconstructionActive;
+    private boolean reconstructionRestoredThisTick;
+    private boolean reconstructionCompletedThisTick;
     private String reconstructionDirection;
 
     public InsuranceManager(
@@ -313,6 +315,9 @@ public class InsuranceManager
 
     public void startTsunamiReconstruction()
     {
+        reconstructionRestoredThisTick = false;
+        reconstructionCompletedThisTick = false;
+
         reconstructionActive =
                 !reconstructionQueue.isEmpty();
     }
@@ -323,6 +328,9 @@ public class InsuranceManager
      */
     public void updateReconstruction()
     {
+        reconstructionRestoredThisTick = false;
+        reconstructionCompletedThisTick = false;
+
         if (!reconstructionActive)
         {
             return;
@@ -334,6 +342,7 @@ public class InsuranceManager
         if (entry == null)
         {
             finishReconstruction();
+            reconstructionCompletedThisTick = true;
             return;
         }
 
@@ -353,11 +362,13 @@ public class InsuranceManager
 
             grid.rebuildConnectionsAfterLoad();
             city.refreshStatistics();
+            reconstructionRestoredThisTick = true;
         }
 
         if (reconstructionQueue.isEmpty())
         {
             finishReconstruction();
+            reconstructionCompletedThisTick = true;
         }
     }
 
@@ -406,6 +417,16 @@ public class InsuranceManager
                 );
     }
 
+    public boolean wasReconstructionRestoredThisTick()
+    {
+        return reconstructionRestoredThisTick;
+    }
+
+    public boolean wasReconstructionCompletedThisTick()
+    {
+        return reconstructionCompletedThisTick;
+    }
+
     public List<ReconstructionEntry> getPendingReconstructions()
     {
         return new ArrayList<>(
@@ -431,6 +452,8 @@ public class InsuranceManager
 
         reconstructionDirection = null;
         reconstructionActive = false;
+        reconstructionRestoredThisTick = false;
+        reconstructionCompletedThisTick = false;
 
         if (entries == null
                 || entries.isEmpty())

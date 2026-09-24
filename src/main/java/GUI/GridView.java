@@ -2,6 +2,7 @@ package GUI;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import Events.EventType;
@@ -15,10 +16,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 import model.ConstructionType;
 
@@ -29,6 +32,11 @@ public final class GridView
     private static final int CELL_SIZE = 30; // pixel
     private static final Paint MILITARY_CAMOUFLAGE =
             createMilitaryCamouflagePattern();
+    private static final Image RA_EYE = new Image(
+            Objects.requireNonNull(
+                    GridView.class.getResource("/images/eye-of-ra.png")
+            ).toExternalForm()
+    );
 
     private final Controller controller;
     private final Consumer<String> errorHandler;
@@ -42,7 +50,9 @@ public final class GridView
     private final Rectangle[][] tsunamiOverlays;
     private final Rectangle[][] explosionOverlays;
     private final Label[][] grassIcons;
+    private final StackPane[][] lodgeIcons;
     private final Tooltip[][] grassTooltips;
+    private final Tooltip[][] lodgeTooltips;
     private final Tooltip[][] powerPlantTooltips;
 
     private ConstructionType selectedType =
@@ -87,7 +97,9 @@ public final class GridView
         tsunamiOverlays = new Rectangle[rows][columns];
         explosionOverlays = new Rectangle[rows][columns];
         grassIcons = new Label[rows][columns];
+        lodgeIcons = new StackPane[rows][columns];
         grassTooltips = new Tooltip[rows][columns];
+        lodgeTooltips = new Tooltip[rows][columns];
         powerPlantTooltips = new Tooltip[rows][columns];
 
         // Popolamento celle griglia
@@ -166,6 +178,9 @@ public final class GridView
                 grassIcon.setVisible(false);
                 grassIcon.setMouseTransparent(true);
 
+                StackPane lodgeIcon = createLodgeIcon();
+                lodgeIcon.setVisible(false);
+
                 Tooltip grassTooltip = new Tooltip("Grass");
                 grassTooltip.setShowDelay(
                         Duration.millis(100)
@@ -173,6 +188,10 @@ public final class GridView
                 grassTooltip.setHideDelay(
                         Duration.ZERO
                 );
+
+                Tooltip lodgeTooltip = new Tooltip("Masonic Lodge");
+                lodgeTooltip.setShowDelay(Duration.millis(100));
+                lodgeTooltip.setHideDelay(Duration.ZERO);
 
                 Tooltip powerPlantTooltip = new Tooltip();
                 powerPlantTooltip.setShowDelay(
@@ -187,6 +206,7 @@ public final class GridView
                         noPowerIcon,
                         boostIcon,
                         grassIcon,
+                        lodgeIcon,
                         tsunamiOverlay,
                         tsunamiIcon,
                         explosionOverlay
@@ -219,13 +239,37 @@ public final class GridView
                 explosionOverlays[row][column] =
                         explosionOverlay;
                 grassIcons[row][column] = grassIcon;
+                lodgeIcons[row][column] = lodgeIcon;
                 grassTooltips[row][column] = grassTooltip;
+                lodgeTooltips[row][column] = lodgeTooltip;
                 powerPlantTooltips[row][column] =
                         powerPlantTooltip;
 
                 view.add(cell, column, row);
             }
         }
+    }
+
+    private static StackPane createLodgeIcon()
+    {
+        Polygon triangle = new Polygon(
+                15.0, 2.0,
+                27.0, 26.0,
+                3.0, 26.0
+        );
+        triangle.setFill(Color.TRANSPARENT);
+        triangle.setStroke(Color.web("#483414"));
+        triangle.setStrokeWidth(2);
+
+        ImageView eye = new ImageView(RA_EYE);
+        eye.setFitWidth(15);
+        eye.setPreserveRatio(true);
+        eye.setSmooth(true);
+
+        StackPane icon = new StackPane(triangle, eye);
+        icon.setPrefSize(CELL_SIZE, CELL_SIZE);
+        icon.setMouseTransparent(true);
+        return icon;
     }
 
     // Gestisce il click su una cella provando a posizionare l'edificio selezionato o mostrando le informazioni di riga e colonna.
@@ -402,6 +446,23 @@ public final class GridView
         grassIcons[row][column].setVisible(
                 grassPresent
         );
+
+        boolean lodgePresent =
+                !state.empty()
+                        && state.type() == ConstructionType.MASONIC_LODGE;
+        lodgeIcons[row][column].setVisible(lodgePresent);
+
+        Tooltip.uninstall(
+                cells[row][column],
+                lodgeTooltips[row][column]
+        );
+        if (lodgePresent)
+        {
+            Tooltip.install(
+                    cells[row][column],
+                    lodgeTooltips[row][column]
+            );
+        }
 
         Tooltip.uninstall(
                 cells[row][column],
@@ -665,6 +726,7 @@ public final class GridView
             case NUCLEAR_PLANT -> Color.PURPLE;
             case WASTE_TREATMENT_PLANT -> Color.web("#A0522D");
             case MILITARY_BASE -> MILITARY_CAMOUFLAGE;
+            case MASONIC_LODGE -> Color.YELLOW;
         };
     }
 

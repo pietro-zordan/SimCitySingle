@@ -54,6 +54,9 @@ public class ConstructionFactory
             case MILITARY_BASE:
                 return new MilitaryBase();
 
+            case MASONIC_LODGE:
+                return new MasonicLodge();
+
             default:
                 throw new IllegalArgumentException(
                         "Unknown construction type: " + type

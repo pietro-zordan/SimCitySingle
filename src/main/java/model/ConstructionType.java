@@ -18,5 +18,6 @@ public enum ConstructionType
         TERRORISTIC_GROUP,
         NUCLEAR_PLANT,
         WASTE_TREATMENT_PLANT,
-        MILITARY_BASE
+        MILITARY_BASE,
+        MASONIC_LODGE
 }

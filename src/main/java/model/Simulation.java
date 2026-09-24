@@ -4,6 +4,7 @@ import Events.*;
 import policies.Policy;
 
 import java.util.List;
+import java.util.Comparator;
 import java.util.Random;
 
 /* Gestisce lo scorrere dei tick della partita.
@@ -142,6 +143,7 @@ public class Simulation{
         }
 
         freemasonryChoice = choice;
+        tryToPlaceMasonicLodge();
         return true;
     }
 
@@ -151,6 +153,49 @@ public class Simulation{
         freemasonryChoice = choice == null
                 ? FreemasonryChoice.PENDING
                 : choice;
+        tryToPlaceMasonicLodge();
+    }
+
+    // Occupa la prima casella costruibile quando il giocatore ha accettato.
+    // La loggia non usa budget e non può consumare l'ultima casella destinata alle strade.
+    public void tryToPlaceMasonicLodge()
+    {
+        if (freemasonryChoice != FreemasonryChoice.ACCEPTED
+                || grid.countBuildableCells() <= 1)
+        {
+            return;
+        }
+
+        for (Construction construction : grid.getConstructions())
+        {
+            if (construction instanceof MasonicLodge)
+            {
+                return;
+            }
+        }
+
+        MasonicLodge lodge = new MasonicLodge();
+        if (!grid.canSupportConstruction(lodge))
+        {
+            return;
+        }
+
+        List<Cell> available = grid.getBuildableCells();
+        available.sort(
+                Comparator.comparingInt(Cell::getRow)
+                        .thenComparingInt(Cell::getColumn)
+        );
+
+        if (!available.isEmpty())
+        {
+            Cell cell = available.get(0);
+            grid.placeConstruction(
+                    lodge,
+                    cell.getRow(),
+                    cell.getColumn()
+            );
+            city.refreshStatistics();
+        }
     }
 
     // Cambia la policy se è valida e sono trascorsi abbastanza tick.
@@ -409,6 +454,8 @@ public class Simulation{
         );
 
         terroristicGroupCreated = terrorManager.updateOfOneTick();
+
+        tryToPlaceMasonicLodge();
 
         return criminalActivityCreated;
     }

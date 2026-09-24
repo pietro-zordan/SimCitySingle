@@ -320,6 +320,7 @@ public final class ConstructionToolbarView
             case NUCLEAR_PLANT -> "Nuclear Plant";
             case WASTE_TREATMENT_PLANT -> "Waste Treatment Plant";
             case MILITARY_BASE -> "Military Base";
+            case MASONIC_LODGE -> "Masonic Lodge";
         };
     }
 
@@ -343,6 +344,7 @@ public final class ConstructionToolbarView
             case NUCLEAR_PLANT -> Color.PURPLE;
             case WASTE_TREATMENT_PLANT -> Color.web("#A0522D");
             case MILITARY_BASE -> Color.DARKOLIVEGREEN;
+            case MASONIC_LODGE -> Color.YELLOW;
         };
     }
 

@@ -138,6 +138,10 @@ Nelle fasi avanzate della partita, se hai almeno una **base militare**, puoi acq
 
 Il sistema intercetta fino a **3 missili**. Dopo un'intercettazione puoi ripristinare un utilizzo alla volta oppure premere **Restore to 3** per riportarlo subito alla capacità massima. Ogni utilizzo ripristinato costa **300 €**, senza sconti; se il budget non basta per il ripristino completo, non viene effettuato alcun addebito.
 
+## Loggia massonica
+
+Al turno **500** ricevi un invito alla loggia massonica. Se accetti, una **Masonic Lodge** gialla con l'occhio nel triangolo appare automaticamente non appena c'è una casella costruibile disponibile; la scelta resta nel salvataggio.
+
 ## Attività criminali, terrorismo e polizia
 
 Durante la partita possono comparire delle **attività criminali**, che riducono economia e felicità.

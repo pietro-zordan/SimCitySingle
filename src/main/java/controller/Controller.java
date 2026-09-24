@@ -200,6 +200,13 @@ public final class Controller
             );
         }
 
+        if (type == ConstructionType.MASONIC_LODGE)
+        {
+            throw new IllegalStateException(
+                    "The Masonic Lodge appears automatically"
+            );
+        }
+
         Construction construction =
                 ConstructionFactory.create(type);
 
@@ -218,6 +225,7 @@ public final class Controller
                 column
         );
 
+        simulation.tryToPlaceMasonicLodge();
         achievementManager.onConstructionPlaced(type);
         notifyObservers();
 
@@ -235,6 +243,7 @@ public final class Controller
     {
         grid.removeConstruction(row, column);
         city.refreshStatistics();
+        simulation.tryToPlaceMasonicLodge();
         notifyObservers();
     }
 
@@ -250,6 +259,13 @@ public final class Controller
             );
         }
 
+        if (state.type() == ConstructionType.MASONIC_LODGE)
+        {
+            throw new IllegalStateException(
+                    "The Masonic Lodge cannot be demolished"
+            );
+        }
+
         if (!simulation.canRemoveConstruction())
         {
             throw new IllegalStateException(
@@ -262,6 +278,7 @@ public final class Controller
         simulation.registerRemoval();
 
         city.refreshStatistics();
+        simulation.tryToPlaceMasonicLodge();
         notifyObservers();
     }
 

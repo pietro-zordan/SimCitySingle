@@ -350,10 +350,6 @@ public class Progress
             );
         }
 
-        controller.restoreFreemasonryChoice(
-                getFreemasonryChoice()
-        );
-
         if (pendingTsunamiReconstructions != null
                 && !pendingTsunamiReconstructions.isEmpty())
         {
@@ -379,6 +375,10 @@ public class Progress
                             tsunamiReconstructionDirection
                     );
         }
+
+        controller.restoreFreemasonryChoice(
+                getFreemasonryChoice()
+        );
 
         return controller;
     }

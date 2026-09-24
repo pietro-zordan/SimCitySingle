@@ -168,8 +168,22 @@ public final class GameView implements GameObserver
                         showToast(message);
                     }
                 },
-                soundManager::playDemolitionSound,
-                soundManager::playPlacementSound
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        soundManager.playDemolitionSound();
+                    }
+                },
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        soundManager.playPlacementSound();
+                    }
+                }
         );
 
         configureDemolitionButton();
@@ -195,7 +209,15 @@ public final class GameView implements GameObserver
                 new EventAnimationView(
                         controller,
                         gridView,
-                        nextTurnButton
+                        nextTurnButton,
+                        new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                soundManager.playMissileSound();
+                            }
+                        }
                 );
 
         invitationView = new FreemasonryInvitationView(

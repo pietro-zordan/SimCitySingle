@@ -58,6 +58,7 @@ public final class EventAnimationView
     private final Controller controller;
     private final GridView gridView;
     private final Button nextTurnButton;
+    private final Runnable missileSound;
     private final VBox hackerAttackPanel;
     private final Label hackerBinaryCode;
     private final Group missileNode;
@@ -91,11 +92,13 @@ public final class EventAnimationView
     public EventAnimationView(
             Controller controller,
             GridView gridView,
-            Button nextTurnButton)
+            Button nextTurnButton,
+            Runnable missileSound)
     {
         if (controller == null
                 || gridView == null
-                || nextTurnButton == null)
+                || nextTurnButton == null
+                || missileSound == null)
         {
             throw new IllegalArgumentException(
                     "Animation dependencies cannot be null"
@@ -105,6 +108,7 @@ public final class EventAnimationView
         this.controller = controller;
         this.gridView = gridView;
         this.nextTurnButton = nextTurnButton;
+        this.missileSound = missileSound;
 
         Rectangle monitorScreen = new Rectangle(70, 42);
         monitorScreen.setArcWidth(8);
@@ -892,6 +896,7 @@ public final class EventAnimationView
                 }
         );
 
+        missileSound.run();
         missileTransition.play();
     }
 

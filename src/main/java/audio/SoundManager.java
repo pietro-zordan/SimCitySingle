@@ -11,6 +11,7 @@ public class SoundManager
     private final AudioClip demolitionSound;
     private final AudioClip placementSound;
     private final AudioClip missileSound;
+    private final AudioClip fireSound;
 
     public SoundManager()
     {
@@ -69,6 +70,24 @@ public class SoundManager
         missileSound = new AudioClip(
                 missileUrl.toExternalForm()
         );
+
+        URL fireUrl = getClass().getResource(
+                "/music-effects/fire.wav");
+
+        if (fireUrl == null)
+        {
+            throw new IllegalStateException(
+                    "Fire sound not found"
+            );
+        }
+
+        fireSound = new AudioClip(
+                fireUrl.toExternalForm()
+        );
+
+        fireSound.setCycleCount(
+                AudioClip.INDEFINITE
+        );
     }
 
     public void playAchievementSound()
@@ -89,6 +108,19 @@ public class SoundManager
     public void playMissileSound()
     {
         missileSound.play();
+    }
+
+    public void playFireSound()
+    {
+        if (!fireSound.isPlaying())
+        {
+            fireSound.play();
+        }
+    }
+
+    public void stopFireSound()
+    {
+        fireSound.stop();
     }
 
     public void urlChecker(URL url)

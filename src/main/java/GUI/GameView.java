@@ -217,6 +217,22 @@ public final class GameView implements GameObserver
                             {
                                 soundManager.playMissileSound();
                             }
+                        },
+                        new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                soundManager.playFireSound();
+                            }
+                        },
+                        new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                soundManager.stopFireSound();
+                            }
                         }
                 );
 

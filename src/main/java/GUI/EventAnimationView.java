@@ -59,6 +59,8 @@ public final class EventAnimationView
     private final GridView gridView;
     private final Button nextTurnButton;
     private final Runnable missileSound;
+    private final Runnable fireSoundStart;
+    private final Runnable fireSoundStop;
     private final VBox hackerAttackPanel;
     private final Label hackerBinaryCode;
     private final Group missileNode;
@@ -74,6 +76,7 @@ public final class EventAnimationView
     private boolean missileAnimationStarted;
     private boolean missileAnimationRunning;
     private boolean missileIntercepted;
+    private boolean fireSoundPlaying;
     private boolean explosionAnimationRunning;
     private int tsunamiCurrentStep = -1;
     private String tsunamiDirection;
@@ -93,12 +96,16 @@ public final class EventAnimationView
             Controller controller,
             GridView gridView,
             Button nextTurnButton,
-            Runnable missileSound)
+            Runnable missileSound,
+            Runnable fireSoundStart,
+            Runnable fireSoundStop)
     {
         if (controller == null
                 || gridView == null
                 || nextTurnButton == null
-                || missileSound == null)
+                || missileSound == null
+                || fireSoundStart == null
+                || fireSoundStop == null)
         {
             throw new IllegalArgumentException(
                     "Animation dependencies cannot be null"
@@ -109,6 +116,8 @@ public final class EventAnimationView
         this.gridView = gridView;
         this.nextTurnButton = nextTurnButton;
         this.missileSound = missileSound;
+        this.fireSoundStart = fireSoundStart;
+        this.fireSoundStop = fireSoundStop;
 
         Rectangle monitorScreen = new Rectangle(70, 42);
         monitorScreen.setArcWidth(8);
@@ -196,8 +205,29 @@ public final class EventAnimationView
     {
         updateTsunamiAnimation();
         updateHackerAttackAnimation();
+        updateFireSound();
         updateMissileAnimation();
         updateExplosionAnimation();
+    }
+
+    private void updateFireSound()
+    {
+        boolean fireActive =
+                controller.getActiveEventType()
+                        == EventType.FIRE;
+
+        if (fireActive
+                && !fireSoundPlaying)
+        {
+            fireSoundStart.run();
+            fireSoundPlaying = true;
+        }
+        else if (!fireActive
+                && fireSoundPlaying)
+        {
+            fireSoundStop.run();
+            fireSoundPlaying = false;
+        }
     }
 
     private Group createMissileShieldNode()
@@ -1572,6 +1602,9 @@ public final class EventAnimationView
         }
 
         stopHackerCodeAnimation();
+
+        fireSoundStop.run();
+        fireSoundPlaying = false;
 
         pendingExplosions.clear();
         gridView.clearExplosion();

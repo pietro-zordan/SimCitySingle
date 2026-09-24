@@ -10,3 +10,6 @@
 - `placement.wav`: "Click" by qubodup, from
   https://opengameart.org/content/click (CC0 1.0).
   Converted from 44.1 kHz 24-bit mono WAV to 22.05 kHz 16-bit mono PCM WAV.
+- `fire.wav`: "Fire Crackling" by AntumDeluge, from
+  https://opengameart.org/content/fire-crackling (CC0 1.0).
+  Used as a looping fire ambience while the Fire event is active.

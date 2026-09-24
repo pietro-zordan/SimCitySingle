@@ -12,6 +12,7 @@ public class SoundManager
     private final AudioClip placementSound;
     private final AudioClip missileSound;
     private final AudioClip fireSound;
+    private final AudioClip fireCrackleSound;
     private final AudioClip missileGridImpactSound;
     private final AudioClip missileShieldImpactSound;
     private final AudioClip tsunamiSound;
@@ -27,8 +28,15 @@ public class SoundManager
         missileShieldImpactSound = loadClip("missile_shield_impact.wav");
         tsunamiSound = loadClip("tsunami_wave.wav");
         economicBoomSound = loadClip("economic_boom.wav");
-        fireSound = loadClip("fire.wav");
+        fireSound = loadClip("fire_roar.mp3");
+        fireCrackleSound = loadClip("fire.wav");
+
         fireSound.setCycleCount(AudioClip.INDEFINITE);
+        fireCrackleSound.setCycleCount(AudioClip.INDEFINITE);
+
+        // Il crackle originale resta come secondo livello,
+        // più basso, per rendere l'incendio più vivo.
+        fireCrackleSound.setVolume(0.55);
     }
 
     private AudioClip loadClip(String fileName)
@@ -72,11 +80,17 @@ public class SoundManager
         {
             fireSound.play();
         }
+
+        if (!fireCrackleSound.isPlaying())
+        {
+            fireCrackleSound.play();
+        }
     }
 
     public void stopFireSound()
     {
         fireSound.stop();
+        fireCrackleSound.stop();
     }
 
     public void playMissileGridImpactSound()

@@ -14,6 +14,9 @@
 - `fire.wav`: "Fire Crackling" by AntumDeluge, from
   https://opengameart.org/content/fire-crackling (CC0 1.0).
   Used as a looping fire ambience while the Fire event is active.
+- `fire_roar.mp3`: converted copy of "The Fireplace 3.wav" by NoOneIsReal, from
+  https://freesound.org/people/NoOneIsReal/sounds/387128/ (CC0 1.0).
+  Used as the main, stronger fire layer while the Fire event is active.
 - `missile_grid_impact.wav`: "Explosion" by TinyWorlds, from
   https://opengameart.org/content/explosion-0 (CC0 1.0).
   Converted to 22.05 kHz mono PCM WAV, softened and faded.

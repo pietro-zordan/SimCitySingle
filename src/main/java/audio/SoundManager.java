@@ -19,6 +19,7 @@ public class SoundManager
     private final AudioClip economicBoomSound;
     private final AudioClip hackerAttackSound;
     private final AudioClip energyCrisisSound;
+    private final AudioClip defeatSound;
 
     public SoundManager()
     {
@@ -32,6 +33,16 @@ public class SoundManager
         economicBoomSound = loadClip("economic_boom.wav");
         hackerAttackSound = loadClip("hacker_intrusion.wav");
         energyCrisisSound = loadClip("energy_crisis_alarm.wav");
+        defeatSound = loadFirstAvailableClip(
+                new String[] {
+                        "defeat.wav",
+                        "defeat.mp3",
+                        "defeat_sound.wav",
+                        "defeat_sound.mp3",
+                        "game_over.wav",
+                        "game_over.mp3"
+                }
+        );
         fireSound = loadClip("fire_roar.mp3");
         fireCrackleSound = loadClip("fire.wav");
         fireSound.setCycleCount(AudioClip.INDEFINITE);
@@ -55,6 +66,25 @@ public class SoundManager
         }
 
         return new AudioClip(url.toExternalForm());
+    }
+
+    private AudioClip loadFirstAvailableClip(
+            String[] fileNames)
+    {
+        for (String fileName : fileNames)
+        {
+            URL url = getClass().getResource(
+                    "/music-effects/" + fileName);
+
+            if (url != null)
+            {
+                return new AudioClip(
+                        url.toExternalForm()
+                );
+            }
+        }
+
+        return null;
     }
 
     public void playAchievementSound()
@@ -124,6 +154,29 @@ public class SoundManager
     public void playEnergyCrisisSound()
     {
         energyCrisisSound.play();
+    }
+
+    public void stopGameplaySounds()
+    {
+        achievementSound.stop();
+        demolitionSound.stop();
+        placementSound.stop();
+        missileSound.stop();
+        stopFireSound();
+        missileGridImpactSound.stop();
+        missileShieldImpactSound.stop();
+        tsunamiSound.stop();
+        economicBoomSound.stop();
+        hackerAttackSound.stop();
+        energyCrisisSound.stop();
+    }
+
+    public void playDefeatSound()
+    {
+        if (defeatSound != null)
+        {
+            defeatSound.play();
+        }
     }
 
     public void urlChecker(URL url)

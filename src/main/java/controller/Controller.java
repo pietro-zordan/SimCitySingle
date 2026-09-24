@@ -327,6 +327,11 @@ public final class Controller
         simulation.restoreFreemasonryChoice(choice);
     }
 
+    public void restoreMasonicLodgeRemovedTick(int removedTick)
+    {
+        simulation.restoreMasonicLodgeRemovedTick(removedTick);
+    }
+
     // Verifica se è possibile cambiare la policy attiva.
     public boolean canChangePolicy()
     {

@@ -700,6 +700,7 @@ public final class EventAnimationView
 
     private void startHackerAttackAnimation()
     {
+        soundManager.playHackerAttackSound();
         hackerAttackPanel.setVisible(true);
         hackerAttackPanel.setOpacity(0.0);
 

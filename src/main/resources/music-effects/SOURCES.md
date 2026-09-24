@@ -25,7 +25,13 @@
   Converted to 22.05 kHz mono PCM WAV, with a short fade and gain adjustment.
 - `tsunami_wave.wav`: "wave_02_cc0-11505__transitking__wavesound.flac"
   by transitking, from https://opengameart.org/content/water-waves (CC0 1.0).
-  Converted to 22.05 kHz mono PCM WAV, with fades and gain adjustment.
+  Layered with "underwater_or_space_engine.ogg" by gmason, a filtered
+  recording of the ocean on a windy day, from
+  https://opengameart.org/content/underwater-or-space-engine-rumble
+  (CC0 1.0). Mixed with generated low rumbles and surf, converted to
+  22.05 kHz mono PCM WAV, and timed to the three-second animation.
+- `hacker_intrusion.wav`: Original synthesized digital interference, low
+  sweep, glitch clicks and warning tones; 22.05 kHz mono PCM WAV.
 - `economic_boom.wav`: "Correct Bell" by Fupi, from
   https://opengameart.org/content/correct-bell (CC0 1.0), mixed with
   "Purchasing Sound Effect" by Spring Spring, from

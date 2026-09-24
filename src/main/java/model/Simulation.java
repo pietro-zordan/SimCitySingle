@@ -21,6 +21,8 @@ public class Simulation{
     private int lastPolicyChangeTick;
     private FreemasonryChoice freemasonryChoice =
             FreemasonryChoice.PENDING;
+    private boolean masonicLodgePresent;
+    private int masonicLodgeRemovedTick = -1;
     private final City city;
     private Event activeEvent;
     private int eventTicksPassed;
@@ -127,6 +129,19 @@ public class Simulation{
         return freemasonryChoice;
     }
 
+    public int getMasonicLodgeRemovedTick()
+    {
+        return masonicLodgeRemovedTick;
+    }
+
+    public void restoreMasonicLodgeRemovedTick(int removedTick)
+    {
+        if (removedTick >= 0 && removedTick <= currentTick)
+        {
+            masonicLodgeRemovedTick = removedTick;
+        }
+    }
+
     public boolean isFreemasonryInvitationPending()
     {
         return currentTick >= FREEMASONRY_INVITATION_TICK
@@ -160,18 +175,28 @@ public class Simulation{
     // La loggia non usa budget e non può consumare l'ultima casella destinata alle strade.
     public void tryToPlaceMasonicLodge()
     {
-        if (freemasonryChoice != FreemasonryChoice.ACCEPTED
-                || grid.countBuildableCells() <= 1)
-        {
-            return;
-        }
-
         for (Construction construction : grid.getConstructions())
         {
             if (construction instanceof MasonicLodge)
             {
+                masonicLodgePresent = true;
                 return;
             }
+        }
+
+        if (masonicLodgePresent)
+        {
+            // A removed lodge returns on a later tick, even if its cell is free.
+            masonicLodgePresent = false;
+            masonicLodgeRemovedTick = currentTick;
+            return;
+        }
+
+        if (freemasonryChoice != FreemasonryChoice.ACCEPTED
+                || currentTick <= masonicLodgeRemovedTick
+                || grid.countBuildableCells() <= 1)
+        {
+            return;
         }
 
         MasonicLodge lodge = new MasonicLodge();
@@ -194,6 +219,7 @@ public class Simulation{
                     cell.getRow(),
                     cell.getColumn()
             );
+            masonicLodgePresent = true;
             city.refreshStatistics();
         }
     }

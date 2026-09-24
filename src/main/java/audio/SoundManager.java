@@ -17,6 +17,7 @@ public class SoundManager
     private final AudioClip missileShieldImpactSound;
     private final AudioClip tsunamiSound;
     private final AudioClip economicBoomSound;
+    private final AudioClip hackerAttackSound;
 
     public SoundManager()
     {
@@ -28,9 +29,9 @@ public class SoundManager
         missileShieldImpactSound = loadClip("missile_shield_impact.wav");
         tsunamiSound = loadClip("tsunami_wave.wav");
         economicBoomSound = loadClip("economic_boom.wav");
+        hackerAttackSound = loadClip("hacker_intrusion.wav");
         fireSound = loadClip("fire_roar.mp3");
         fireCrackleSound = loadClip("fire.wav");
-
         fireSound.setCycleCount(AudioClip.INDEFINITE);
         fireCrackleSound.setCycleCount(AudioClip.INDEFINITE);
 
@@ -111,6 +112,11 @@ public class SoundManager
     public void playEconomicBoomSound()
     {
         economicBoomSound.play();
+    }
+
+    public void playHackerAttackSound()
+    {
+        hackerAttackSound.play();
     }
 
     public void urlChecker(URL url)

@@ -28,6 +28,8 @@ public class Progress
     private int criticalTicks;
     // Le vecchie partite prive del campo restano in attesa della scelta.
     private FreemasonryChoice freemasonryChoice;
+    // Nei vecchi salvataggi il valore predefinito 0 non blocca i tick successivi.
+    private int masonicLodgeRemovedTick;
     private boolean tsunamiInsuranceActive;
 
     // Stato dei prestiti. bankStatePresent mantiene compatibili i vecchi salvataggi.
@@ -199,6 +201,8 @@ public class Progress
 
         progress.freemasonryChoice =
                 simulation.getFreemasonryChoice();
+        progress.masonicLodgeRemovedTick =
+                simulation.getMasonicLodgeRemovedTick();
 
         progress.criticalTicks =
                 simulation.getCriticalTicks();
@@ -376,6 +380,9 @@ public class Progress
                     );
         }
 
+        controller.restoreMasonicLodgeRemovedTick(
+                masonicLodgeRemovedTick
+        );
         controller.restoreFreemasonryChoice(
                 getFreemasonryChoice()
         );

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import policies.Policy;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,6 +63,60 @@ class SimulationTest {
                 at500.getFreemasonryChoice());
         assertFalse(at500.isFreemasonryInvitationPending());
         assertFalse(at500.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
+    }
+
+    @Test
+    void removedMasonicLodgeReturnsOnNextTick()
+    {
+        Grid actualGrid = new Grid();
+        actualGrid.placeConstruction(new Road(), 0, 0);
+        Simulation invited = new Simulation(city, actualGrid, 500, 0);
+
+        assertTrue(invited.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
+        assertInstanceOf(MasonicLodge.class,
+                actualGrid.getCell(0, 1).getConstruction());
+
+        actualGrid.removeConstruction(0, 1);
+        invited.tryToPlaceMasonicLodge();
+        assertTrue(actualGrid.getCell(0, 1).isEmpty());
+
+        when(event.canBeChosen(500)).thenReturn(true);
+        when(event.canStart()).thenReturn(true);
+        invited.startEvent(event);
+        invited.updateOfOneTick();
+
+        assertEquals(501, invited.getCurrentTick());
+        assertInstanceOf(MasonicLodge.class,
+                actualGrid.getCell(0, 1).getConstruction());
+    }
+
+    @Test
+    void eventDestructionWaitsUntilFollowingTick()
+    {
+        Grid actualGrid = new Grid();
+        actualGrid.placeConstruction(new Road(), 0, 0);
+        Simulation invited = new Simulation(city, actualGrid, 500, 0);
+        assertTrue(invited.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
+
+        when(event.canBeChosen(500)).thenReturn(true);
+        when(event.canStart()).thenReturn(true);
+        doAnswer(new Answer<Void>()
+        {
+            @Override
+            public Void answer(InvocationOnMock invocation)
+            {
+                actualGrid.removeConstruction(0, 1);
+                return null;
+            }
+        }).doNothing().when(event).updateOfOneTick();
+        invited.startEvent(event);
+
+        invited.updateOfOneTick();
+        assertTrue(actualGrid.getCell(0, 1).isEmpty());
+
+        invited.updateOfOneTick();
+        assertInstanceOf(MasonicLodge.class,
+                actualGrid.getCell(0, 1).getConstruction());
     }
 
     @Test

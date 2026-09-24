@@ -287,7 +287,10 @@ public class InsuranceManager
         {
             if (entry != null
                     && entry.construction()
-                            .isTsunamiInsured())
+                            .isTsunamiInsured()
+                    && isInsurable(
+                            entry.construction().getType()
+                    ))
             {
                 reconstructionQueue.addLast(
                         entry

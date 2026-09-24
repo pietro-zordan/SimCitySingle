@@ -32,9 +32,9 @@ public final class GridView
     private static final int CELL_SIZE = 30; // pixel
     private static final Paint MILITARY_CAMOUFLAGE =
             createMilitaryCamouflagePattern();
-    private static final Image RA_EYE = new Image(
+    private static final Image LODGE_EYE = new Image(
             Objects.requireNonNull(
-                    GridView.class.getResource("/images/eye-of-ra.png")
+                    GridView.class.getResource("/images/lodge-eye.png")
             ).toExternalForm()
     );
 
@@ -261,10 +261,11 @@ public final class GridView
         triangle.setStroke(Color.web("#483414"));
         triangle.setStrokeWidth(2);
 
-        ImageView eye = new ImageView(RA_EYE);
-        eye.setFitWidth(15);
+        ImageView eye = new ImageView(LODGE_EYE);
+        eye.setFitWidth(13);
         eye.setPreserveRatio(true);
         eye.setSmooth(true);
+        eye.setTranslateY(4);
 
         StackPane icon = new StackPane(triangle, eye);
         icon.setPrefSize(CELL_SIZE, CELL_SIZE);

@@ -140,7 +140,7 @@ Il sistema intercetta fino a **3 missili**. Dopo un'intercettazione puoi riprist
 
 ## Loggia massonica
 
-Al turno **500** ricevi un invito alla loggia massonica. Se accetti, una **Masonic Lodge** gialla con l'occhio nel triangolo appare automaticamente non appena c'è una casella costruibile disponibile; la scelta resta nel salvataggio.
+Al turno **500** ricevi un invito alla loggia massonica. Se accetti, una **Masonic Lodge** gialla con un occhio stilizzato nel triangolo appare automaticamente non appena c'è una casella costruibile disponibile; la scelta resta nel salvataggio. La loggia può essere demolita o distrutta dagli eventi e ricompare quando c'è spazio. Non richiede l'assicurazione tsunami.
 
 ## Attività criminali, terrorismo e polizia
 

@@ -259,13 +259,6 @@ public final class Controller
             );
         }
 
-        if (state.type() == ConstructionType.MASONIC_LODGE)
-        {
-            throw new IllegalStateException(
-                    "The Masonic Lodge cannot be demolished"
-            );
-        }
-
         if (!simulation.canRemoveConstruction())
         {
             throw new IllegalStateException(

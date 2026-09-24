@@ -5,6 +5,7 @@ import controller.Controller;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -23,20 +24,23 @@ public final class GameStatusView
     private final VBox infoPanel;
 
     // Costruisce la vista dello stato di gioco inizializzando i componenti grafici e il layout del pannello laterale.
-    public GameStatusView(Controller controller)
+    public GameStatusView(Controller controller, RaEyeView raEyeView)
     {
-        if (controller == null)
+        if (controller == null || raEyeView == null)
         {
-            throw new IllegalArgumentException("controller.Controller cannot be null");
+            throw new IllegalArgumentException("Status view dependencies cannot be null");
         }
 
         this.controller = controller;
         configureLabels();
 
+        HBox tickRow = new HBox(5, tickLabel, raEyeView.getView());
+        tickRow.setAlignment(Pos.CENTER_LEFT);
+
         // ---------- BARRA STATISTICHE (VERTICALE A SINISTRA) ----------
         infoPanel = new VBox(
                 10,
-                tickLabel,
+                tickRow,
                 budgetLabel,
                 statsLabel,
                 policyLabel

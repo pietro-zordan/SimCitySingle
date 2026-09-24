@@ -20,15 +20,15 @@ public final class RaEyeView
         ).toExternalForm());
 
         ImageView symbol = new ImageView(eye);
-        symbol.setFitWidth(96);
+        symbol.setFitWidth(25);
         symbol.setPreserveRatio(true);
         symbol.setSmooth(true);
-        symbol.setEffect(new DropShadow(5, Color.rgb(57, 35, 15, 0.35)));
+        symbol.setEffect(new DropShadow(2, Color.rgb(57, 35, 15, 0.35)));
 
         view.getChildren().add(symbol);
         view.setAlignment(Pos.CENTER);
-        view.setPrefHeight(78);
-        view.setMaxHeight(78);
+        view.setPrefSize(26, 20);
+        view.setMaxSize(26, 20);
         view.setMouseTransparent(true);
         view.setVisible(false);
         view.managedProperty().bind(view.visibleProperty());

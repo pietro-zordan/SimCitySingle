@@ -189,7 +189,7 @@ public final class GameView implements GameObserver
         configureDemolitionButton();
 
         chartView = new ChartView(controller);
-        statusView = new GameStatusView(controller);
+        statusView = new GameStatusView(controller, raEyeView);
 
         constructionToolbarView =
                 new ConstructionToolbarView(
@@ -486,7 +486,6 @@ public final class GameView implements GameObserver
 
         VBox gridColumn = new VBox(
                 4,
-                raEyeView.getView(),
                 gridWithAnimation
         );
         gridColumn.setAlignment(Pos.CENTER);

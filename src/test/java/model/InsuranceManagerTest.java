@@ -178,8 +178,23 @@ class InsuranceManagerTest
         insuranceManager
                 .startTsunamiReconstruction();
 
+        assertFalse(
+                insuranceManager
+                        .wasReconstructionRestoredThisTick()
+        );
+
         insuranceManager
                 .updateReconstruction();
+
+        assertTrue(
+                insuranceManager
+                        .wasReconstructionRestoredThisTick()
+        );
+
+        assertTrue(
+                insuranceManager
+                        .wasReconstructionCompletedThisTick()
+        );
 
         assertSame(
                 residential,

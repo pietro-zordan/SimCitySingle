@@ -37,10 +37,20 @@ public class SoundManager
                 new String[] {
                         "defeat.wav",
                         "defeat.mp3",
+                        "Defeat.wav",
+                        "Defeat.mp3",
                         "defeat_sound.wav",
                         "defeat_sound.mp3",
+                        "defeatSound.wav",
+                        "defeatSound.mp3",
+                        "defeat sound.wav",
+                        "defeat sound.mp3",
+                        "Defeat Sound.wav",
+                        "Defeat Sound.mp3",
                         "game_over.wav",
-                        "game_over.mp3"
+                        "game_over.mp3",
+                        "gameover.wav",
+                        "gameover.mp3"
                 }
         );
         fireSound = loadClip("fire_roar.mp3");

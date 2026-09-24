@@ -9,6 +9,9 @@ public class SoundManager
 {
 
     private final AudioClip achievementSound;
+    private final AudioClip tickAdvanceSound;
+    private final AudioClip blackoutSound;
+    private final AudioClip insuranceRebuildSound;
     private final AudioClip demolitionSound;
     private final AudioClip placementSound;
     private final AudioClip missileSound;
@@ -27,6 +30,11 @@ public class SoundManager
     public SoundManager()
     {
         achievementSound = loadClip("achievement.wav");
+        tickAdvanceSound = loadClip("tick_advance.wav");
+        blackoutSound = loadClip("blackout.wav");
+        insuranceRebuildSound = loadClip(
+                "insurance_rebuild.wav"
+        );
         demolitionSound = loadClip("demolition.wav");
         placementSound = loadClip("placement.wav");
         missileSound = loadClip("missile_flyby.wav");
@@ -67,6 +75,10 @@ public class SoundManager
         // Il crackle originale resta come secondo livello,
         // più basso, per rendere l'incendio più vivo.
         fireCracklePlayer.setVolume(0.55);
+
+        // Il tick deve restare percepibile senza diventare fastidioso
+        // quando Next Turn viene premuto rapidamente.
+        tickAdvanceSound.setVolume(0.72);
     }
 
     private AudioClip loadClip(String fileName)
@@ -123,6 +135,25 @@ public class SoundManager
     public void playAchievementSound()
     {
         achievementSound.play();
+    }
+
+    public void playTickAdvanceSound()
+    {
+        // Riavvia il brevissimo campione invece di sovrapporne molte copie.
+        tickAdvanceSound.stop();
+        tickAdvanceSound.play();
+    }
+
+    public void playBlackoutSound()
+    {
+        blackoutSound.stop();
+        blackoutSound.play();
+    }
+
+    public void playInsuranceRebuildSound()
+    {
+        insuranceRebuildSound.stop();
+        insuranceRebuildSound.play();
     }
 
     public void playDemolitionSound()
@@ -182,6 +213,7 @@ public class SoundManager
         // Se la causa è un missile, il boato nucleare deve dominare
         // l'eventuale coda del normale suono di impatto.
         missileGridImpactSound.stop();
+        blackoutSound.stop();
         nuclearExplosionSound.stop();
         nuclearExplosionSound.play();
     }
@@ -219,6 +251,9 @@ public class SoundManager
     public void stopGameplaySounds()
     {
         achievementSound.stop();
+        tickAdvanceSound.stop();
+        blackoutSound.stop();
+        insuranceRebuildSound.stop();
         demolitionSound.stop();
         placementSound.stop();
         missileSound.stop();

@@ -3,6 +3,7 @@
 - `missile_flyby.wav`: "Rocket Fly By (8-bit)" by Person, from
   https://opengameart.org/content/rocket-fly-8-bit (CC0 1.0).
   Converted from the original 44.1 kHz mono WAV to 22.05 kHz mono PCM WAV.
+  Time-compressed and faded to 1.2 seconds to match the missile flight.
   The clip is the rocket flying past; it contains no impact effect.
 - `demolition.wav`: "paper_crushed_-_2.mp3" by Luckius, from
   https://opengameart.org/content/various-paper-sound-effects (CC0 1.0).
@@ -13,3 +14,17 @@
 - `fire.wav`: "Fire Crackling" by AntumDeluge, from
   https://opengameart.org/content/fire-crackling (CC0 1.0).
   Used as a looping fire ambience while the Fire event is active.
+- `missile_grid_impact.wav`: "Explosion" by TinyWorlds, from
+  https://opengameart.org/content/explosion-0 (CC0 1.0).
+  Converted to 22.05 kHz mono PCM WAV, softened and faded.
+- `missile_shield_impact.wav`: "space shield sounds - 4.wav" by bart, from
+  https://opengameart.org/content/space-ship-shield-sounds (CC0 1.0).
+  Converted to 22.05 kHz mono PCM WAV, with a short fade and gain adjustment.
+- `tsunami_wave.wav`: "wave_02_cc0-11505__transitking__wavesound.flac"
+  by transitking, from https://opengameart.org/content/water-waves (CC0 1.0).
+  Converted to 22.05 kHz mono PCM WAV, with fades and gain adjustment.
+- `economic_boom.wav`: "Correct Bell" by Fupi, from
+  https://opengameart.org/content/correct-bell (CC0 1.0), mixed with
+  "Purchasing Sound Effect" by Spring Spring, from
+  https://opengameart.org/content/purchasing-sound-effect (CC0 1.0).
+  Converted to 22.05 kHz mono PCM WAV with a short fade.

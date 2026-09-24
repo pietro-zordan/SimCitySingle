@@ -4,6 +4,7 @@
 package GUI;
 
 import Events.EventType;
+import audio.SoundManager;
 import controller.Controller;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -58,9 +59,7 @@ public final class EventAnimationView
     private final Controller controller;
     private final GridView gridView;
     private final Button nextTurnButton;
-    private final Runnable missileSound;
-    private final Runnable fireSoundStart;
-    private final Runnable fireSoundStop;
+    private final SoundManager soundManager;
     private final VBox hackerAttackPanel;
     private final Label hackerBinaryCode;
     private final Group missileNode;
@@ -72,6 +71,7 @@ public final class EventAnimationView
 
     private boolean tsunamiAnimationStarted;
     private boolean tsunamiAnimationRunning;
+    private boolean economicBoomSoundStarted;
     private boolean hackerAttackAnimationStarted;
     private boolean missileAnimationStarted;
     private boolean missileAnimationRunning;
@@ -96,16 +96,12 @@ public final class EventAnimationView
             Controller controller,
             GridView gridView,
             Button nextTurnButton,
-            Runnable missileSound,
-            Runnable fireSoundStart,
-            Runnable fireSoundStop)
+            SoundManager soundManager)
     {
         if (controller == null
                 || gridView == null
                 || nextTurnButton == null
-                || missileSound == null
-                || fireSoundStart == null
-                || fireSoundStop == null)
+                || soundManager == null)
         {
             throw new IllegalArgumentException(
                     "Animation dependencies cannot be null"
@@ -115,9 +111,7 @@ public final class EventAnimationView
         this.controller = controller;
         this.gridView = gridView;
         this.nextTurnButton = nextTurnButton;
-        this.missileSound = missileSound;
-        this.fireSoundStart = fireSoundStart;
-        this.fireSoundStop = fireSoundStop;
+        this.soundManager = soundManager;
 
         Rectangle monitorScreen = new Rectangle(70, 42);
         monitorScreen.setArcWidth(8);
@@ -204,6 +198,7 @@ public final class EventAnimationView
     public void refresh()
     {
         updateTsunamiAnimation();
+        updateEconomicBoomSound();
         updateHackerAttackAnimation();
         updateFireSound();
         updateMissileAnimation();
@@ -219,13 +214,13 @@ public final class EventAnimationView
         if (fireActive
                 && !fireSoundPlaying)
         {
-            fireSoundStart.run();
+            soundManager.playFireSound();
             fireSoundPlaying = true;
         }
         else if (!fireActive
                 && fireSoundPlaying)
         {
-            fireSoundStop.run();
+            soundManager.stopFireSound();
             fireSoundPlaying = false;
         }
     }
@@ -534,10 +529,28 @@ public final class EventAnimationView
         }
     }
 
+    private void updateEconomicBoomSound()
+    {
+        boolean economicBoomActive =
+                controller.getActiveEventType()
+                        == EventType.ECONOMIC_BOOM;
+
+        if (economicBoomActive && !economicBoomSoundStarted)
+        {
+            economicBoomSoundStarted = true;
+            soundManager.playEconomicBoomSound();
+        }
+        else if (!economicBoomActive)
+        {
+            economicBoomSoundStarted = false;
+        }
+    }
+
     private void startTsunamiAnimation()
     {
         tsunamiAnimationRunning = true;
         nextTurnButton.setDisable(true);
+        soundManager.playTsunamiSound();
 
         tsunamiDirection =
                 controller.getActiveTsunamiDirection();
@@ -926,7 +939,7 @@ public final class EventAnimationView
                 }
         );
 
-        missileSound.run();
+        soundManager.playMissileSound();
         missileTransition.play();
     }
 
@@ -1035,6 +1048,7 @@ public final class EventAnimationView
             double impactX,
             double impactY)
     {
+        soundManager.playMissileShieldImpactSound();
         showMissileShieldImpact();
 
         double incomingX =
@@ -1267,6 +1281,7 @@ public final class EventAnimationView
 
     private void startMissileImpactAnimation()
     {
+        soundManager.playMissileGridImpactSound();
         gridView.clearExplosion();
 
         missileImpactTimeline = new Timeline(
@@ -1603,7 +1618,7 @@ public final class EventAnimationView
 
         stopHackerCodeAnimation();
 
-        fireSoundStop.run();
+        soundManager.stopFireSound();
         fireSoundPlaying = false;
 
         pendingExplosions.clear();
@@ -1611,6 +1626,7 @@ public final class EventAnimationView
 
         tsunamiAnimationRunning = false;
         tsunamiAnimationStarted = false;
+        economicBoomSoundStarted = false;
         hackerAttackAnimationStarted = false;
         missileAnimationRunning = false;
         missileAnimationStarted = false;

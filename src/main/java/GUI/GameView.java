@@ -210,30 +210,7 @@ public final class GameView implements GameObserver
                         controller,
                         gridView,
                         nextTurnButton,
-                        new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                soundManager.playMissileSound();
-                            }
-                        },
-                        new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                soundManager.playFireSound();
-                            }
-                        },
-                        new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                soundManager.stopFireSound();
-                            }
-                        }
+                        soundManager
                 );
 
         invitationView = new FreemasonryInvitationView(

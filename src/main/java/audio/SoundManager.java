@@ -12,82 +12,38 @@ public class SoundManager
     private final AudioClip placementSound;
     private final AudioClip missileSound;
     private final AudioClip fireSound;
+    private final AudioClip missileGridImpactSound;
+    private final AudioClip missileShieldImpactSound;
+    private final AudioClip tsunamiSound;
+    private final AudioClip economicBoomSound;
 
     public SoundManager()
     {
-        URL achievementUrl = getClass().getResource(
-                "/music-effects/achievement.wav");
+        achievementSound = loadClip("achievement.wav");
+        demolitionSound = loadClip("demolition.wav");
+        placementSound = loadClip("placement.wav");
+        missileSound = loadClip("missile_flyby.wav");
+        missileGridImpactSound = loadClip("missile_grid_impact.wav");
+        missileShieldImpactSound = loadClip("missile_shield_impact.wav");
+        tsunamiSound = loadClip("tsunami_wave.wav");
+        economicBoomSound = loadClip("economic_boom.wav");
+        fireSound = loadClip("fire.wav");
+        fireSound.setCycleCount(AudioClip.INDEFINITE);
+    }
 
-        if (achievementUrl == null)
+    private AudioClip loadClip(String fileName)
+    {
+        URL url = getClass().getResource(
+                "/music-effects/" + fileName);
+
+        if (url == null)
         {
             throw new IllegalStateException(
-                    "Achievement sound not found"
+                    "Sound not found: " + fileName
             );
         }
 
-        achievementSound = new AudioClip(
-                achievementUrl.toExternalForm()
-        );
-
-        URL demolitionUrl = getClass().getResource(
-                "/music-effects/demolition.wav");
-
-        if (demolitionUrl == null)
-        {
-            throw new IllegalStateException(
-                    "Demolition sound not found"
-            );
-        }
-
-        demolitionSound = new AudioClip(
-                demolitionUrl.toExternalForm()
-        );
-
-        URL placementUrl = getClass().getResource(
-                "/music-effects/placement.wav");
-
-        if (placementUrl == null)
-        {
-            throw new IllegalStateException(
-                    "Placement sound not found"
-            );
-        }
-
-        placementSound = new AudioClip(
-                placementUrl.toExternalForm()
-        );
-
-        URL missileUrl = getClass().getResource(
-                "/music-effects/missile_flyby.wav");
-
-        if (missileUrl == null)
-        {
-            throw new IllegalStateException(
-                    "Missile sound not found"
-            );
-        }
-
-        missileSound = new AudioClip(
-                missileUrl.toExternalForm()
-        );
-
-        URL fireUrl = getClass().getResource(
-                "/music-effects/fire.wav");
-
-        if (fireUrl == null)
-        {
-            throw new IllegalStateException(
-                    "Fire sound not found"
-            );
-        }
-
-        fireSound = new AudioClip(
-                fireUrl.toExternalForm()
-        );
-
-        fireSound.setCycleCount(
-                AudioClip.INDEFINITE
-        );
+        return new AudioClip(url.toExternalForm());
     }
 
     public void playAchievementSound()
@@ -121,6 +77,26 @@ public class SoundManager
     public void stopFireSound()
     {
         fireSound.stop();
+    }
+
+    public void playMissileGridImpactSound()
+    {
+        missileGridImpactSound.play();
+    }
+
+    public void playMissileShieldImpactSound()
+    {
+        missileShieldImpactSound.play();
+    }
+
+    public void playTsunamiSound()
+    {
+        tsunamiSound.play();
+    }
+
+    public void playEconomicBoomSound()
+    {
+        economicBoomSound.play();
     }
 
     public void urlChecker(URL url)

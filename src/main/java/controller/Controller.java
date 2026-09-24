@@ -380,6 +380,15 @@ public final class Controller
         );
     }
 
+    public boolean cellConsumesPower(int row, int column)
+    {
+        requireValidPosition(row, column);
+        Construction construction =
+                grid.getCell(row, column).getConstruction();
+        return construction != null
+                && construction.getPowerConsumption() > 0;
+    }
+
     public boolean canPlaceConstructionCompany()
     {
         return simulation.canPlaceConstructionCompany();

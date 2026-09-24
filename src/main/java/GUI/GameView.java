@@ -1171,6 +1171,11 @@ public final class GameView implements GameObserver
                     @Override
                     public void run()
                     {
+                        if (closed)
+                        {
+                            return;
+                        }
+
                         statusView.updateBudget();
 
                         eventAnimationView.refresh();
@@ -1317,6 +1322,7 @@ public final class GameView implements GameObserver
         }
 
         eventAnimationView.stop();
+        gridView.stop();
         invitationView.stop();
     }
 

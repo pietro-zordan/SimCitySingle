@@ -1,17 +1,26 @@
 package GUI;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import Events.EventType;
 import controller.Controller;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -44,6 +53,8 @@ public final class GridView
     private final Label infoLabel;
     private final StackPane[][] cells;
     private final Rectangle[][] graphicCells;
+    private final Rectangle[][] crisisOverlays;
+    private final Label[][] crisisSparkIcons;
     private final Label[][] noPowerIcons;
     private final Label[][] boostIcons;
     private final Label[][] tsunamiIcons;
@@ -54,6 +65,17 @@ public final class GridView
     private final Tooltip[][] grassTooltips;
     private final Tooltip[][] lodgeTooltips;
     private final Tooltip[][] powerPlantTooltips;
+    private final List<Rectangle> crisisAffectedCells = new ArrayList<>();
+    private final List<Rectangle> crisisAffectedOverlays = new ArrayList<>();
+    private final List<Label> crisisEligibleSparks = new ArrayList<>();
+    private final List<Label> crisisVisibleSparks = new ArrayList<>();
+    private final Random crisisRandom = new Random();
+    private final DoubleProperty crisisIntensity =
+            new SimpleDoubleProperty();
+    private Timeline crisisIntroTimeline;
+    private Timeline crisisPulseTimeline;
+    private Timeline crisisSparkTimeline;
+    private boolean energyCrisisActive;
 
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
@@ -91,6 +113,8 @@ public final class GridView
 
         cells = new StackPane[rows][columns];
         graphicCells = new Rectangle[rows][columns];
+        crisisOverlays = new Rectangle[rows][columns];
+        crisisSparkIcons = new Label[rows][columns];
         noPowerIcons = new Label[rows][columns];
         boostIcons = new Label[rows][columns];
         tsunamiIcons = new Label[rows][columns];
@@ -104,6 +128,10 @@ public final class GridView
 
         // Popolamento celle griglia
         createCells();
+        crisisIntensity.addListener(
+                (observable, oldValue, newValue) ->
+                        applyCrisisIntensity(newValue.doubleValue())
+        );
     }
 
     // Instanzia e sovrappone le componenti grafiche per ciascuna cella della griglia agganciando i relativi listener per i click del mouse.
@@ -121,6 +149,24 @@ public final class GridView
                         new Rectangle(CELL_SIZE, CELL_SIZE);
                 graphicCell.setFill(Color.WHITESMOKE);
                 graphicCell.setStroke(Color.LIGHTGRAY);
+
+                Rectangle crisisOverlay =
+                        new Rectangle(CELL_SIZE - 4, CELL_SIZE - 4);
+                crisisOverlay.setFill(Color.web("#171326"));
+                crisisOverlay.setVisible(false);
+                crisisOverlay.setMouseTransparent(true);
+
+                Label crisisSpark = new Label("✦");
+                crisisSpark.setStyle(
+                        "-fx-text-fill: #f0d7ff;"
+                                + "-fx-font-size: 13px;"
+                                + "-fx-font-weight: bold;"
+                );
+                crisisSpark.setVisible(false);
+                crisisSpark.setMouseTransparent(true);
+                StackPane.setAlignment(crisisSpark, Pos.TOP_RIGHT);
+                crisisSpark.setTranslateX(-2);
+                crisisSpark.setTranslateY(1);
 
                 Label noPowerIcon = new Label("⚡");
                 noPowerIcon.setStyle(
@@ -203,10 +249,12 @@ public final class GridView
 
                 StackPane cell = new StackPane(
                         graphicCell,
+                        crisisOverlay,
                         noPowerIcon,
                         boostIcon,
                         grassIcon,
                         lodgeIcon,
+                        crisisSpark,
                         tsunamiOverlay,
                         tsunamiIcon,
                         explosionOverlay
@@ -231,6 +279,8 @@ public final class GridView
 
                 cells[row][column] = cell;
                 graphicCells[row][column] = graphicCell;
+                crisisOverlays[row][column] = crisisOverlay;
+                crisisSparkIcons[row][column] = crisisSpark;
                 noPowerIcons[row][column] = noPowerIcon;
                 boostIcons[row][column] = boostIcon;
                 tsunamiIcons[row][column] = tsunamiIcon;
@@ -377,9 +427,14 @@ public final class GridView
     // Scorrendo l'intera griglia, invoca il rendering grafico di ciascuna cella sincronizzandola con lo stato attuale del modello.
     public void refresh()
     {
-        boolean energyCrisisActive =
+        boolean crisisNowActive =
                 controller.getActiveEventType()
                         == EventType.ENERGY_CRISIS;
+
+        clearCrisisSparks();
+        crisisAffectedCells.clear();
+        crisisAffectedOverlays.clear();
+        crisisEligibleSparks.clear();
 
         for (int row = 0;
              row < controller.getNumberOfRows();
@@ -393,10 +448,143 @@ public final class GridView
                         row,
                         column,
                         controller.getCellState(row, column),
-                        energyCrisisActive
+                        crisisNowActive
                 );
             }
         }
+
+        if (crisisNowActive)
+        {
+            applyCrisisIntensity(crisisIntensity.get());
+            if (!energyCrisisActive)
+            {
+                energyCrisisActive = true;
+                startCrisisIntro();
+            }
+        }
+        else if (energyCrisisActive)
+        {
+            stop();
+        }
+    }
+
+    private void startCrisisIntro()
+    {
+        // Due brevi cali di luce all'inizio dell'evento.
+        crisisIntroTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        event -> crisisIntensity.set(0.10)),
+                new KeyFrame(Duration.millis(130),
+                        event -> crisisIntensity.set(0.46)),
+                new KeyFrame(Duration.millis(290),
+                        event -> crisisIntensity.set(0.07)),
+                new KeyFrame(Duration.millis(470),
+                        event -> crisisIntensity.set(0.36)),
+                new KeyFrame(Duration.millis(760),
+                        event -> crisisIntensity.set(0.11))
+        );
+        crisisIntroTimeline.setOnFinished(event ->
+        {
+            crisisIntroTimeline = null;
+            if (energyCrisisActive)
+            {
+                startCrisisPulse();
+                startCrisisSparks();
+            }
+        });
+        crisisIntroTimeline.play();
+    }
+
+    private void startCrisisPulse()
+    {
+        crisisPulseTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(crisisIntensity, 0.11)),
+                new KeyFrame(Duration.seconds(1.2),
+                        new KeyValue(crisisIntensity, 0.21)),
+                new KeyFrame(Duration.seconds(2.4),
+                        new KeyValue(crisisIntensity, 0.11))
+        );
+        crisisPulseTimeline.setCycleCount(Timeline.INDEFINITE);
+        crisisPulseTimeline.play();
+    }
+
+    private void startCrisisSparks()
+    {
+        crisisSparkTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(1.6),
+                        event -> showCrisisSparks()),
+                new KeyFrame(Duration.seconds(1.75),
+                        event -> clearCrisisSparks())
+        );
+        crisisSparkTimeline.setCycleCount(Timeline.INDEFINITE);
+        crisisSparkTimeline.play();
+    }
+
+    private void applyCrisisIntensity(double intensity)
+    {
+        for (int i = 0; i < crisisAffectedCells.size(); i++)
+        {
+            crisisAffectedOverlays.get(i).setOpacity(intensity);
+            crisisAffectedCells.get(i).setStrokeWidth(
+                    2.2 + Math.min(0.8, intensity * 2.5)
+            );
+        }
+    }
+
+    private void showCrisisSparks()
+    {
+        clearCrisisSparks();
+        int count = crisisEligibleSparks.size();
+        if (count == 0)
+        {
+            return;
+        }
+
+        int first = crisisRandom.nextInt(count);
+        Label spark = crisisEligibleSparks.get(first);
+        spark.setVisible(true);
+        crisisVisibleSparks.add(spark);
+
+        if (count > 6)
+        {
+            int second = (first + 1
+                    + crisisRandom.nextInt(count - 1)) % count;
+            Label secondSpark = crisisEligibleSparks.get(second);
+            secondSpark.setVisible(true);
+            crisisVisibleSparks.add(secondSpark);
+        }
+    }
+
+    private void clearCrisisSparks()
+    {
+        for (Label spark : crisisVisibleSparks)
+        {
+            spark.setVisible(false);
+        }
+        crisisVisibleSparks.clear();
+    }
+
+    public void stop()
+    {
+        energyCrisisActive = false;
+        if (crisisIntroTimeline != null)
+        {
+            crisisIntroTimeline.stop();
+            crisisIntroTimeline = null;
+        }
+        if (crisisPulseTimeline != null)
+        {
+            crisisPulseTimeline.stop();
+            crisisPulseTimeline = null;
+        }
+        if (crisisSparkTimeline != null)
+        {
+            crisisSparkTimeline.stop();
+            crisisSparkTimeline = null;
+        }
+        clearCrisisSparks();
+        crisisIntensity.set(0);
     }
 
     // Applica i colori di sfondo, l'evidenziazione di crisi energetica e visibilita delle icone (incendi, alimentazione, boost) per una specifica cella.
@@ -511,29 +699,28 @@ public final class GridView
 
         // --- EFFETTO GRAFICO ENERGY CRISIS ---
 
-        // Controlliamo che l'edificio sia uno di quelli che consuma energia
-        boolean consumesPower =
-                state.type() == ConstructionType.INDUSTRIAL
-                        || state.type()
-                        == ConstructionType.RESIDENTIAL
-                        || state.type()
-                        == ConstructionType.COMMERCIAL
-                        || state.type()
-                        == ConstructionType.BANK
-                        || state.type()
-                        == ConstructionType.CONSTRUCTION_COMPANY;
-
-        // Applichiamo il bordo solo se c'è la crisi, la cella è alimentata, e l'edificio consuma energia
-        if (energyCrisisActive
+        boolean crisisAffected = energyCrisisActive
                 && !state.empty()
                 && state.powered()
-                && consumesPower)
+                && controller.cellConsumesPower(row, column);
+        crisisOverlays[row][column].setVisible(crisisAffected);
+
+        if (crisisAffected)
         {
-            graphicCell.setStroke(Color.PURPLE); // Cambiato in viola per non confondersi
-            graphicCell.setStrokeWidth(2.5);
+            crisisAffectedCells.add(graphicCell);
+            crisisAffectedOverlays.add(crisisOverlays[row][column]);
+            crisisEligibleSparks.add(crisisSparkIcons[row][column]);
+            graphicCell.setStroke(Color.web("#a76cdd"));
+            graphicCell.setEffect(
+                    new DropShadow(
+                            4,
+                            Color.rgb(137, 67, 190, 0.58)
+                    )
+            );
         }
         else if (grassPresent)
         {
+            graphicCell.setEffect(null);
             graphicCell.setStroke(
                     Color.web("#6F8F55")
             );
@@ -541,6 +728,7 @@ public final class GridView
         }
         else
         {
+            graphicCell.setEffect(null);
             // Altrimenti ripristiniamo il bordo grigio standard
             graphicCell.setStroke(Color.LIGHTGRAY);
             graphicCell.setStrokeWidth(1.0);

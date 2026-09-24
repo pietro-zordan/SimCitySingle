@@ -3,8 +3,6 @@ package audio;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
-
 import java.net.URL;
 
 public class SoundManager
@@ -147,9 +145,6 @@ public class SoundManager
         firePlayer.setVolume(1.0);
         fireCracklePlayer.setVolume(0.55);
 
-        firePlayer.seek(Duration.ZERO);
-        fireCracklePlayer.seek(Duration.ZERO);
-
         firePlayer.play();
         fireCracklePlayer.play();
     }
@@ -174,7 +169,6 @@ public class SoundManager
     {
         tsunamiPlayer.stop();
         tsunamiPlayer.setVolume(1.0);
-        tsunamiPlayer.seek(Duration.ZERO);
         tsunamiPlayer.play();
     }
 

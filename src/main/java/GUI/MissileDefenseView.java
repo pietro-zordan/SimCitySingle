@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 // Gestisce il pannello di acquisto e riparazione della difesa missilistica.
-public final class MissileDefensePanelView
+public final class MissileDefenseView
 {
     private final Controller controller;
     private final Consumer<String> toastHandler;
@@ -50,7 +50,7 @@ public final class MissileDefensePanelView
 
     private boolean missileDefenseOfferShown;
 
-    public MissileDefensePanelView(
+    public MissileDefenseView(
             Controller controller,
             Consumer<String> toastHandler)
     {

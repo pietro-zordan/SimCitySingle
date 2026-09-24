@@ -106,7 +106,7 @@ public final class GameView implements GameObserver
 
     private int dismissedNuclearProtectionCount = -1;
 
-    private final MissileDefensePanelView missileDefensePanelView;
+    private final MissileDefenseView missileDefenseView;
 
     private final Button demolitionButton =
             new Button("Demolish");
@@ -151,7 +151,7 @@ public final class GameView implements GameObserver
         configureLoanButton();
         configureTsunamiInsuranceButton();
         configureNuclearFireProtection();
-        missileDefensePanelView = new MissileDefensePanelView(
+        missileDefenseView = new MissileDefenseView(
                 controller,
                 new Consumer<String>()
                 {
@@ -494,7 +494,7 @@ public final class GameView implements GameObserver
         cancelDemolitionWhenUsed(cancelTsunamiInsuranceButton);
         cancelDemolitionWhenUsed(confirmNuclearFireProtectionButton);
         cancelDemolitionWhenUsed(cancelNuclearFireProtectionButton);
-        for (Button button : missileDefensePanelView.getButtons())
+        for (Button button : missileDefenseView.getButtons())
         {
             cancelDemolitionWhenUsed(button);
         }
@@ -541,8 +541,8 @@ public final class GameView implements GameObserver
                 tsunamiInsuranceButton,
                 tsunamiInsuranceBox,
                 nuclearFireProtectionBox,
-                missileDefensePanelView.getActionButton(),
-                missileDefensePanelView.getView(),
+                missileDefenseView.getActionButton(),
+                missileDefenseView.getView(),
                 demolitionButton
         );
 
@@ -1259,7 +1259,7 @@ public final class GameView implements GameObserver
         refreshLoanButton();
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
-        missileDefensePanelView.refresh();
+        missileDefenseView.refresh();
         refreshDemolitionButton();
 
         gridView.refresh();
@@ -1335,7 +1335,7 @@ public final class GameView implements GameObserver
                         refreshLoanButton();
                         refreshTsunamiInsuranceButton();
                         refreshNuclearFireProtection();
-                        missileDefensePanelView.refresh();
+                        missileDefenseView.refresh();
                         refreshDemolitionButton();
 
                         statusView.updateTick();

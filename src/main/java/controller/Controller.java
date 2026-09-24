@@ -539,6 +539,23 @@ public final class Controller
         simulation.startTsunamiReconstruction();
     }
 
+    public boolean wasTsunamiReconstructionRestoredThisTick()
+    {
+        return simulation
+                .wasTsunamiReconstructionRestoredThisTick();
+    }
+
+    public boolean wasTsunamiReconstructionCompletedThisTick()
+    {
+        return simulation
+                .wasTsunamiReconstructionCompletedThisTick();
+    }
+
+    public boolean didBlackoutOccurThisTick()
+    {
+        return simulation.didBlackoutOccurThisTick();
+    }
+
     public void restoreTsunamiReconstruction(
             List<ReconstructionEntry> entries,
             String direction)

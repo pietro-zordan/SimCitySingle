@@ -1117,7 +1117,7 @@ public final class GameView implements GameObserver
         constructionToolbarView
                 .refreshAvailability();
 
-        refreshLoanButton();
+        loanView.refresh();
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
         missileDefenseView.refresh();
@@ -1193,7 +1193,7 @@ public final class GameView implements GameObserver
                         constructionToolbarView
                                 .refreshAvailability();
 
-                        refreshLoanButton();
+                        loanView.refresh();
                         refreshTsunamiInsuranceButton();
                         refreshNuclearFireProtection();
                         missileDefenseView.refresh();

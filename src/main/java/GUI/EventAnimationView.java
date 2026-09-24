@@ -72,6 +72,7 @@ public final class EventAnimationView
     private boolean tsunamiAnimationStarted;
     private boolean tsunamiAnimationRunning;
     private boolean economicBoomSoundStarted;
+    private boolean energyCrisisSoundStarted;
     private boolean hackerAttackAnimationStarted;
     private boolean missileAnimationStarted;
     private boolean missileAnimationRunning;
@@ -199,6 +200,7 @@ public final class EventAnimationView
     {
         updateTsunamiAnimation();
         updateEconomicBoomSound();
+        updateEnergyCrisisSound();
         updateHackerAttackAnimation();
         updateFireSound();
         updateMissileAnimation();
@@ -543,6 +545,23 @@ public final class EventAnimationView
         else if (!economicBoomActive)
         {
             economicBoomSoundStarted = false;
+        }
+    }
+
+    private void updateEnergyCrisisSound()
+    {
+        boolean energyCrisisActive =
+                controller.getActiveEventType()
+                        == EventType.ENERGY_CRISIS;
+
+        if (energyCrisisActive && !energyCrisisSoundStarted)
+        {
+            energyCrisisSoundStarted = true;
+            soundManager.playEnergyCrisisSound();
+        }
+        else if (!energyCrisisActive)
+        {
+            energyCrisisSoundStarted = false;
         }
     }
 

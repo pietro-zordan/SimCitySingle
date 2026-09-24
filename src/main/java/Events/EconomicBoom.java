@@ -29,7 +29,7 @@ public class EconomicBoom extends Event
     {
         super(TICK_DURATION, city, 0);
         this.grid = grid;
-        launchNumber = 22;
+        launchNumber = 22; //22
     }
 
     // Genera il bonus casuale e lo applica agli edifici compatibili.

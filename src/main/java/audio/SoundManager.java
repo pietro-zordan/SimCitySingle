@@ -20,6 +20,7 @@ public class SoundManager
     private final AudioClip hackerAttackSound;
     private final AudioClip energyCrisisSound;
 
+
     public SoundManager()
     {
         achievementSound = loadClip("achievement.wav");

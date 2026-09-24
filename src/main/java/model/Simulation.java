@@ -4,6 +4,7 @@ import Events.*;
 import policies.Policy;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -35,6 +36,7 @@ public class Simulation{
     private final MissileDefense missileDefense;
     private final TerrorManager terrorManager;
     private boolean terroristicGroupCreated;
+    private boolean blackoutOccurredThisTick;
 
     private final CrimeManager crimeManager;
     private int removedCriminalActivities;
@@ -415,6 +417,12 @@ public class Simulation{
                     "Choose an answer to the invitation before continuing"
             );
         }
+
+        List<Construction> poweredBeforeTick =
+                getPoweredConstructions();
+
+        blackoutOccurredThisTick = false;
+
         city.updateOfOneTick();
 
         if (isEventActive())
@@ -483,7 +491,56 @@ public class Simulation{
 
         tryToPlaceMasonicLodge();
 
+        blackoutOccurredThisTick =
+                hasNewBlackout(poweredBeforeTick);
+
         return criminalActivityCreated;
+    }
+
+    private List<Construction> getPoweredConstructions()
+    {
+        List<Construction> poweredConstructions =
+                new ArrayList<>();
+
+        for (Construction construction
+                : grid.getConstructions())
+        {
+            if (construction.requiresPower()
+                    && construction.isPowered())
+            {
+                poweredConstructions.add(
+                        construction
+                );
+            }
+        }
+
+        return poweredConstructions;
+    }
+
+    private boolean hasNewBlackout(
+            List<Construction> poweredBeforeTick)
+    {
+        List<Construction> currentConstructions =
+                grid.getConstructions();
+
+        for (Construction construction
+                : poweredBeforeTick)
+        {
+            if (currentConstructions.contains(
+                    construction)
+                    && construction.requiresPower()
+                    && !construction.isPowered())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean didBlackoutOccurThisTick()
+    {
+        return blackoutOccurredThisTick;
     }
 
     public void registerRemoval()
@@ -673,6 +730,18 @@ public class Simulation{
     {
         insuranceManager
                 .startTsunamiReconstruction();
+    }
+
+    public boolean wasTsunamiReconstructionRestoredThisTick()
+    {
+        return insuranceManager
+                .wasReconstructionRestoredThisTick();
+    }
+
+    public boolean wasTsunamiReconstructionCompletedThisTick()
+    {
+        return insuranceManager
+                .wasReconstructionCompletedThisTick();
     }
 
     public List<ReconstructionEntry>

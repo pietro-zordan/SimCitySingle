@@ -277,6 +277,8 @@ public final class Controller
 
         grid.removeConstruction(row, column);
 
+        achievementChecker.onConstructionRemovedByPlayer(state.type());
+
         simulation.registerRemoval();
 
         city.refreshStatistics();
@@ -290,11 +292,7 @@ public final class Controller
         boolean criminalActivityCreated =
                 simulation.updateOfOneTick();
 
-        achievementChecker.checkState(
-                city,
-                grid,
-                simulation
-        );
+        achievementChecker.checkState(city, grid, simulation);
 
         notifyObservers();
 
@@ -540,10 +538,7 @@ public final class Controller
             List<ReconstructionEntry> entries,
             String direction)
     {
-        simulation.restoreTsunamiReconstruction(
-                entries,
-                direction
-        );
+        simulation.restoreTsunamiReconstruction(entries, direction);
     }
 
     // Restituisce alla GUI le esplosioni non ancora mostrate e le rimuove dalla coda della griglia.
@@ -554,8 +549,7 @@ public final class Controller
 
     public Achievement consumeNewlyUnlockedAchievement()
     {
-        return achievementManager
-                .consumeNewlyUnlockedAchievement();
+        return achievementManager.consumeNewlyUnlockedAchievement();
     }
 
     // Restituisce il numero di righe della griglia.
@@ -656,8 +650,7 @@ public final class Controller
     {
         requireValidPosition(row, column);
 
-        Construction construction =
-                grid.getCell(row, column).getConstruction();
+        Construction construction = grid.getCell(row, column).getConstruction();
 
         if (construction instanceof PowerPlant powerPlant)
         {
@@ -691,11 +684,8 @@ public final class Controller
         if (!grid.isInside(row, column))
         {
             throw new IllegalArgumentException(
-                    "Position outside the grid: row="
-                            + row
-                            + ", column="
-                            + column
-            );
+                    "Position outside the grid: row=" + row + ", column="
+                            + column);
         }
     }
 

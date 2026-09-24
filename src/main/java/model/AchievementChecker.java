@@ -8,14 +8,10 @@ public class AchievementChecker
 {
     private final AchievementManager achievementManager;
 
-    public AchievementChecker(
-            AchievementManager achievementManager)
+    public AchievementChecker(AchievementManager achievementManager)
     {
-        this.achievementManager =
-                Objects.requireNonNull(
-                        achievementManager,
-                        "Achievement manager cannot be null"
-                );
+        this.achievementManager = Objects.requireNonNull(achievementManager,
+                        "Achievement manager cannot be null");
     }
 
     /* Controlla gli achievement ricavabili dallo stato corrente del gioco.
@@ -25,22 +21,14 @@ public class AchievementChecker
             Grid grid,
             Simulation simulation)
     {
-        Objects.requireNonNull(
-                city,
-                "City cannot be null"
-        );
+        Objects.requireNonNull(city, "City cannot be null");
 
-        Objects.requireNonNull(
-                grid,
-                "Grid cannot be null"
-        );
+        Objects.requireNonNull(grid, "Grid cannot be null");
 
-        Objects.requireNonNull(
-                simulation,
-                "Simulation cannot be null"
-        );
+        Objects.requireNonNull(simulation, "Simulation cannot be null");
 
         checkPopulation(city);
+        checkBudget(city);
     }
 
     /* Riceve il piazzamento riuscito di una costruzione e valuta
@@ -71,9 +59,31 @@ public class AchievementChecker
                 && !achievementManager.isUnlocked(
                         Achievement.FIRST_1000_INHABITANTS))
         {
-            achievementManager.unlock(
-                    Achievement.FIRST_1000_INHABITANTS
-            );
+            achievementManager.unlock(Achievement.FIRST_1000_INHABITANTS);
         }
     }
+
+    private void checkBudget(City city)
+    {
+        if (city.getBudget() >= 50000
+                && !achievementManager.isUnlocked(
+                Achievement.A_LOT_OF_MONEY))
+        {
+            achievementManager.unlock(Achievement.A_LOT_OF_MONEY);
+        }
+    }
+
+    public void onConstructionRemovedByPlayer(
+            ConstructionType type)
+    {
+        if (type == ConstructionType.NUCLEAR_PLANT
+                && !achievementManager.isUnlocked(
+                Achievement.WHY_WOULD_YOU_DO_THAT))
+        {
+            achievementManager.unlock(Achievement.WHY_WOULD_YOU_DO_THAT);
+        }
+    }
+
+
+
 }

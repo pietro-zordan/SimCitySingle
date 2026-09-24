@@ -47,3 +47,13 @@
   Used for nuclear-plant destruction. During this sound, long-running event
   audio such as the tsunami and fire ambience is temporarily ducked so the
   nuclear explosion remains dominant.
+- `tick_advance.wav`: trimmed "Tick and Tock" recording by cemkalyoncu,
+  from https://opengameart.org/content/tick-and-tock (CC0 1.0).
+  A soft, very short clock-like transient used for Next Turn; playback is
+  restarted instead of layered when the player clicks rapidly.
+- `blackout.wav`: original synthesized power-collapse cue created for this
+  project; 22.05 kHz mono PCM WAV. It plays once when a construction that was
+  powered at the beginning of a tick is still present but loses power.
+- `insurance_rebuild.wav`: original synthesized two-tone restoration chime
+  created for this project; 22.05 kHz mono PCM WAV. It plays once for each
+  insured construction actually restored after a tsunami.

@@ -105,6 +105,7 @@ public final class GameView implements GameObserver
     private final Scene scene;
     private boolean observerRegistered;
     private boolean closed;
+    private boolean defeatSoundPlayed;
 
     // Inizializza la vista di gioco istanziando le sotto-viste, configurando i componenti di controllo e registrandosi come observer.
     public GameView(
@@ -1173,6 +1174,15 @@ public final class GameView implements GameObserver
         if (controller.isGameOver())
         {
             gameRoot.setDisable(true);
+            eventAnimationView.stop();
+
+            if (!defeatSoundPlayed)
+            {
+                soundManager.stopGameplaySounds();
+                soundManager.playDefeatSound();
+                defeatSoundPlayed = true;
+            }
+
             gameOverView.show();
         }
     }
@@ -1194,14 +1204,25 @@ public final class GameView implements GameObserver
 
                         statusView.updateBudget();
 
-                        eventAnimationView.refresh();
+                        boolean gameOver =
+                                controller.isGameOver();
 
-                        if (!eventAnimationView
+                        if (gameOver)
+                        {
+                            eventAnimationView.stop();
+                        }
+                        else
+                        {
+                            eventAnimationView.refresh();
+                        }
+
+                        if (gameOver
+                                || (!eventAnimationView
                                 .isTsunamiAnimationRunning()
                                 && !eventAnimationView
                                 .isMissileAnimationRunning()
                                 && !eventAnimationView
-                                .isExplosionAnimationRunning())
+                                .isExplosionAnimationRunning()))
                         {
                             gridView.refresh();
                         }
@@ -1228,7 +1249,10 @@ public final class GameView implements GameObserver
 
                         chartView.refresh();
 
-                        checkNewAchievements();
+                        if (!gameOver)
+                        {
+                            checkNewAchievements();
+                        }
 
                         showGameOverIfNeeded();
 

@@ -5,7 +5,10 @@ public enum Achievement {
     FIRST_NUCLEAR_PLANT(
             "First Steps into the Atomic Age",
             "Place your first Nuclear Power Plant"
-    );
+    ),
+
+    FIRST_1000_INHABITANTS("A small group of friends",
+    " Reach a population of one thousand ");
 
     private final String title;
     private final String description;

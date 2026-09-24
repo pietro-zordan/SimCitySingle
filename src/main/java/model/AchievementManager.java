@@ -85,4 +85,12 @@ public class AchievementManager {
         return false;
     }
 
+    public boolean populationOfThousand(City city)
+    {
+        if(city.getGlobalPopulation() >= 1000)
+            return unlock(Achievement.FIRST_1000_INHABITANTS);
+
+        return false;
+    }
+
 }

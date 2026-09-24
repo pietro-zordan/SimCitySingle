@@ -21,6 +21,7 @@ public final class Controller
     private final City city;
     private final Simulation simulation;
     private final AchievementManager achievementManager;
+    private final AchievementChecker achievementChecker;
     private final List<GameObserver> observers = new ArrayList<>();
 
     /*
@@ -106,6 +107,10 @@ public final class Controller
                         achievementManager,
                         "Achievement manager cannot be null"
                 );
+        this.achievementChecker =
+                new AchievementChecker(
+                        this.achievementManager
+                );
 
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
@@ -134,6 +139,10 @@ public final class Controller
                 Objects.requireNonNull(
                         achievementManager,
                         "Achievement manager cannot be null"
+                );
+        this.achievementChecker =
+                new AchievementChecker(
+                        this.achievementManager
                 );
 
         this.city = new City(
@@ -226,7 +235,7 @@ public final class Controller
         );
 
         simulation.tryToPlaceMasonicLodge();
-        achievementManager.onConstructionPlaced(type);
+        achievementChecker.onConstructionPlaced(type);
         notifyObservers();
 
         return getCellState(
@@ -280,6 +289,12 @@ public final class Controller
     {
         boolean criminalActivityCreated =
                 simulation.updateOfOneTick();
+
+        achievementChecker.checkState(
+                city,
+                grid,
+                simulation
+        );
 
         notifyObservers();
 

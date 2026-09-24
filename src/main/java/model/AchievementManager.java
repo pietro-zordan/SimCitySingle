@@ -72,25 +72,5 @@ public class AchievementManager {
         unlockedAchievements.clear();
     }
 
-    public boolean onConstructionPlaced(
-            ConstructionType type)
-    {
-        if (type == ConstructionType.NUCLEAR_PLANT)
-        {
-            return unlock(
-                    Achievement.FIRST_NUCLEAR_PLANT
-            );
-        }
-
-        return false;
-    }
-
-    public boolean populationOfThousand(City city)
-    {
-        if(city.getGlobalPopulation() >= 1000)
-            return unlock(Achievement.FIRST_1000_INHABITANTS);
-
-        return false;
-    }
 
 }

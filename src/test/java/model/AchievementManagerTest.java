@@ -34,25 +34,6 @@ class AchievementManagerTest
     }
 
     @Test
-    void nuclearPlantPlacementUnlocksAchievement()
-    {
-        AchievementManager manager =
-                new AchievementManager();
-
-        assertTrue(
-                manager.onConstructionPlaced(
-                        ConstructionType.NUCLEAR_PLANT
-                )
-        );
-
-        assertTrue(
-                manager.isUnlocked(
-                        Achievement.FIRST_NUCLEAR_PLANT
-                )
-        );
-    }
-
-    @Test
     void restoresUnlockedAchievements()
     {
         AchievementManager manager =

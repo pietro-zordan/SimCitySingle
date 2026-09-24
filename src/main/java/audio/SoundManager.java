@@ -43,6 +43,8 @@ public class SoundManager
                         "defeat_sound.mp3",
                         "defeatSound.wav",
                         "defeatSound.mp3",
+                        "defeat-sound.wav",
+                        "defeat-sound.mp3",
                         "defeat sound.wav",
                         "defeat sound.mp3",
                         "Defeat Sound.wav",

@@ -279,6 +279,24 @@ public final class GameView implements GameObserver
                         boolean criminalActivityCreated =
                                 controller.updateOfOneTick();
 
+                        if (!controller.isGameOver())
+                        {
+                            soundManager.playTickAdvanceSound();
+
+                            if (controller
+                                    .didBlackoutOccurThisTick())
+                            {
+                                soundManager.playBlackoutSound();
+                            }
+
+                            if (controller
+                                    .wasTsunamiReconstructionRestoredThisTick())
+                            {
+                                soundManager
+                                        .playInsuranceRebuildSound();
+                            }
+                        }
+
                         showInvitationIfNeeded();
 
                         int militaryRemovals =
@@ -296,6 +314,13 @@ public final class GameView implements GameObserver
                                             + controller
                                             .getMissileDefenseHitsRemaining()
                                             + "/3"
+                            );
+                        }
+                        else if (controller
+                                .wasTsunamiReconstructionCompletedThisTick())
+                        {
+                            showToast(
+                                    "Insurance reconstruction completed!"
                             );
                         }
                         else if (militaryRemovals > 0)

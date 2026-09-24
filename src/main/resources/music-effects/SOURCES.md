@@ -37,6 +37,7 @@
   "Purchasing Sound Effect" by Spring Spring, from
   https://opengameart.org/content/purchasing-sound-effect (CC0 1.0).
   Converted to 22.05 kHz mono PCM WAV with a short fade.
-- `energy_crisis_alarm.wav`: Original synthesized two-cycle electronic
-  warning siren with a falling power-down tone; 22.05 kHz mono PCM WAV.
+- `energy_crisis_alarm.wav`: "Alarm" by EZduzziteh, from
+  https://opengameart.org/content/alarm-1 (CC0 1.0).
+  Converted from OGG to 22.05 kHz mono PCM WAV, amplified and faded.
   Plays once when an energy crisis begins.

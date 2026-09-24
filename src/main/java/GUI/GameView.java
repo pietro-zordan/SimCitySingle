@@ -167,7 +167,8 @@ public final class GameView implements GameObserver
                     {
                         showToast(message);
                     }
-                }
+                },
+                soundManager::playDemolitionSound
         );
 
         configureDemolitionButton();

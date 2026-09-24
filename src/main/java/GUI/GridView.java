@@ -49,6 +49,7 @@ public final class GridView
 
     private final Controller controller;
     private final Consumer<String> errorHandler;
+    private final Runnable demolitionSound;
     private final GridPane view;
     private final Label infoLabel;
     private final StackPane[][] cells;
@@ -84,17 +85,20 @@ public final class GridView
     // Inizializza la griglia di gioco, allocando le matrici di componenti grafici per le celle e impostando il layout del GridPane.
     public GridView(
             Controller controller,
-            Consumer<String> errorHandler)
+            Consumer<String> errorHandler,
+            Runnable demolitionSound)
     {
-        if (controller == null || errorHandler == null)
+        if (controller == null || errorHandler == null
+                || demolitionSound == null)
         {
             throw new IllegalArgumentException(
-                    "controller.Controller and error handler cannot be null"
+                    "Grid view dependencies cannot be null"
             );
         }
 
         this.controller = controller;
         this.errorHandler = errorHandler;
+        this.demolitionSound = demolitionSound;
 
         // ---------- GRIGLIA CENTRATA ----------
         view = new GridPane();
@@ -346,6 +350,7 @@ public final class GridView
                         row,
                         column
                 );
+                demolitionSound.run();
 
                 // La modalità resta attiva per permettere
                 // demolizioni consecutive con un solo clic sul pulsante.

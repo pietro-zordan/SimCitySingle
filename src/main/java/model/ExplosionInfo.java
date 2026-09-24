@@ -6,12 +6,23 @@ public class ExplosionInfo
     private final int row;
     private final int column;
     private final int radius;
+    private final boolean nuclear;
 
     public ExplosionInfo(int row, int column, int radius)
+    {
+        this(row, column, radius, false);
+    }
+
+    public ExplosionInfo(
+            int row,
+            int column,
+            int radius,
+            boolean nuclear)
     {
         this.row = row;
         this.column = column;
         this.radius = radius;
+        this.nuclear = nuclear;
     }
 
     public int getRow()
@@ -27,5 +38,10 @@ public class ExplosionInfo
     public int getRadius()
     {
         return radius;
+    }
+
+    public boolean isNuclear()
+    {
+        return nuclear;
     }
 }

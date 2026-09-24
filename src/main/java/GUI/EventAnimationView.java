@@ -10,6 +10,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -89,6 +90,7 @@ public final class EventAnimationView
     private Timeline missileImpactTimeline;
     private Timeline missileShieldTimeline;
     private Timeline explosionTimeline;
+    private PauseTransition nuclearAudioDuckTransition;
     private TranslateTransition missileTransition;
     private ParallelTransition missileDeflectionTransition;
 
@@ -1491,6 +1493,11 @@ public final class EventAnimationView
         nextTurnButton.setDisable(true);
         gridView.clearExplosion();
 
+        if (explosion.isNuclear())
+        {
+            startNuclearExplosionAudio();
+        }
+
         explosionTimeline = new Timeline();
 
         for (int radius = 0;
@@ -1543,6 +1550,40 @@ public final class EventAnimationView
                 .add(resetFrame);
 
         explosionTimeline.play();
+    }
+
+    private void startNuclearExplosionAudio()
+    {
+        if (nuclearAudioDuckTransition != null)
+        {
+            nuclearAudioDuckTransition.stop();
+        }
+
+        soundManager
+                .duckLongEventSoundsForNuclearExplosion();
+
+        soundManager.playNuclearExplosionSound();
+
+        nuclearAudioDuckTransition =
+                new PauseTransition(
+                        Duration.millis(1800)
+                );
+
+        nuclearAudioDuckTransition.setOnFinished(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        soundManager
+                                .restoreLongEventSoundsAfterNuclearExplosion();
+
+                        nuclearAudioDuckTransition = null;
+                    }
+                }
+        );
+
+        nuclearAudioDuckTransition.play();
     }
 
     private void finishExplosionAnimation()
@@ -1636,8 +1677,18 @@ public final class EventAnimationView
             explosionTimeline = null;
         }
 
+        if (nuclearAudioDuckTransition != null)
+        {
+            nuclearAudioDuckTransition.stop();
+            nuclearAudioDuckTransition = null;
+        }
+
+        soundManager
+                .restoreLongEventSoundsAfterNuclearExplosion();
+
         stopHackerCodeAnimation();
 
+        soundManager.stopTsunamiSound();
         soundManager.stopFireSound();
         fireSoundPlaying = false;
 

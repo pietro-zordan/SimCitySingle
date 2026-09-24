@@ -230,7 +230,9 @@ public class Grid
                     new ExplosionInfo(
                             row,
                             column,
-                            destructionRadius
+                            destructionRadius,
+                            construction.getType()
+                                    == ConstructionType.NUCLEAR_PLANT
                     )
             );
 

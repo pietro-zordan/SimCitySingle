@@ -41,3 +41,9 @@
   https://opengameart.org/content/alarm-1 (CC0 1.0).
   Converted from OGG to 22.05 kHz mono PCM WAV, amplified and faded.
   Plays once when an energy crisis begins.
+
+- `nuclear_explosion.wav`: "Muffled Distant Explosion" by NenadSimic, from
+  https://opengameart.org/content/muffled-distant-explosion (CC0 1.0).
+  Used for nuclear-plant destruction. During this sound, long-running event
+  audio such as the tsunami and fire ambience is temporarily ducked so the
+  nuclear explosion remains dominant.

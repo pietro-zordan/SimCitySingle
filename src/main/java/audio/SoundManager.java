@@ -1,6 +1,9 @@
 package audio;
 
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.net.URL;
 
@@ -11,11 +14,12 @@ public class SoundManager
     private final AudioClip demolitionSound;
     private final AudioClip placementSound;
     private final AudioClip missileSound;
-    private final AudioClip fireSound;
-    private final AudioClip fireCrackleSound;
+    private final MediaPlayer firePlayer;
+    private final MediaPlayer fireCracklePlayer;
     private final AudioClip missileGridImpactSound;
     private final AudioClip missileShieldImpactSound;
-    private final AudioClip tsunamiSound;
+    private final MediaPlayer tsunamiPlayer;
+    private final AudioClip nuclearExplosionSound;
     private final AudioClip economicBoomSound;
     private final AudioClip hackerAttackSound;
     private final AudioClip energyCrisisSound;
@@ -30,7 +34,8 @@ public class SoundManager
         missileSound = loadClip("missile_flyby.wav");
         missileGridImpactSound = loadClip("missile_grid_impact.wav");
         missileShieldImpactSound = loadClip("missile_shield_impact.wav");
-        tsunamiSound = loadClip("tsunami_wave.wav");
+        tsunamiPlayer = loadPlayer("tsunami_wave.wav");
+        nuclearExplosionSound = loadClip("nuclear_explosion.wav");
         economicBoomSound = loadClip("economic_boom.wav");
         hackerAttackSound = loadClip("hacker_intrusion.wav");
         energyCrisisSound = loadClip("energy_crisis_alarm.wav");
@@ -56,14 +61,14 @@ public class SoundManager
                         "gameover.mp3"
                 }
         );
-        fireSound = loadClip("fire_roar.mp3");
-        fireCrackleSound = loadClip("fire.wav");
-        fireSound.setCycleCount(AudioClip.INDEFINITE);
-        fireCrackleSound.setCycleCount(AudioClip.INDEFINITE);
+        firePlayer = loadPlayer("fire_roar.mp3");
+        fireCracklePlayer = loadPlayer("fire.wav");
+        firePlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        fireCracklePlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         // Il crackle originale resta come secondo livello,
         // più basso, per rendere l'incendio più vivo.
-        fireCrackleSound.setVolume(0.55);
+        fireCracklePlayer.setVolume(0.55);
     }
 
     private AudioClip loadClip(String fileName)
@@ -79,6 +84,23 @@ public class SoundManager
         }
 
         return new AudioClip(url.toExternalForm());
+    }
+
+    private MediaPlayer loadPlayer(String fileName)
+    {
+        URL url = getClass().getResource(
+                "/music-effects/" + fileName);
+
+        if (url == null)
+        {
+            throw new IllegalStateException(
+                    "Sound not found: " + fileName
+            );
+        }
+
+        return new MediaPlayer(
+                new Media(url.toExternalForm())
+        );
     }
 
     private AudioClip loadFirstAvailableClip(
@@ -122,21 +144,20 @@ public class SoundManager
 
     public void playFireSound()
     {
-        if (!fireSound.isPlaying())
-        {
-            fireSound.play();
-        }
+        firePlayer.setVolume(1.0);
+        fireCracklePlayer.setVolume(0.55);
 
-        if (!fireCrackleSound.isPlaying())
-        {
-            fireCrackleSound.play();
-        }
+        firePlayer.seek(Duration.ZERO);
+        fireCracklePlayer.seek(Duration.ZERO);
+
+        firePlayer.play();
+        fireCracklePlayer.play();
     }
 
     public void stopFireSound()
     {
-        fireSound.stop();
-        fireCrackleSound.stop();
+        firePlayer.stop();
+        fireCracklePlayer.stop();
     }
 
     public void playMissileGridImpactSound()
@@ -151,7 +172,39 @@ public class SoundManager
 
     public void playTsunamiSound()
     {
-        tsunamiSound.play();
+        tsunamiPlayer.stop();
+        tsunamiPlayer.setVolume(1.0);
+        tsunamiPlayer.seek(Duration.ZERO);
+        tsunamiPlayer.play();
+    }
+
+    public void stopTsunamiSound()
+    {
+        tsunamiPlayer.stop();
+    }
+
+    public void playNuclearExplosionSound()
+    {
+        // Se la causa è un missile, il boato nucleare deve dominare
+        // l'eventuale coda del normale suono di impatto.
+        missileGridImpactSound.stop();
+        nuclearExplosionSound.stop();
+        nuclearExplosionSound.play();
+    }
+
+    public void duckLongEventSoundsForNuclearExplosion()
+    {
+        // MediaPlayer applica il volume anche alla riproduzione già in corso.
+        tsunamiPlayer.setVolume(0.24);
+        firePlayer.setVolume(0.24);
+        fireCracklePlayer.setVolume(0.14);
+    }
+
+    public void restoreLongEventSoundsAfterNuclearExplosion()
+    {
+        tsunamiPlayer.setVolume(1.0);
+        firePlayer.setVolume(1.0);
+        fireCracklePlayer.setVolume(0.55);
     }
 
     public void playEconomicBoomSound()
@@ -178,7 +231,8 @@ public class SoundManager
         stopFireSound();
         missileGridImpactSound.stop();
         missileShieldImpactSound.stop();
-        tsunamiSound.stop();
+        tsunamiPlayer.stop();
+        nuclearExplosionSound.stop();
         economicBoomSound.stop();
         hackerAttackSound.stop();
         energyCrisisSound.stop();

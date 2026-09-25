@@ -9,8 +9,7 @@ public class Grid
     private static final int INITIAL_GRID_SIZE = 20;
     private static final int GRID_EXPANSION_STEP = 10;
     private static final int MAX_GRID_SIZE = 40;
-    private static final int numberOfColumns = 20;
-    private static final double EXPANSION_THRESHOLD = 0.95;
+    private static final double EXPANSION_THRESHOLD = 0.999;
 
     private int numberOfRows;
     private int numberOfColumns;
@@ -93,7 +92,7 @@ public class Grid
     public boolean isInside(int row, int column)
     {
         return row >= 0
-                && row < numberOfRows;
+                && row < numberOfRows
                 && column >= 0
                 && column < numberOfColumns;
     }
@@ -211,6 +210,8 @@ public class Grid
         energyManager.updatePowerConnections();
         fillTrappedCellsWithGrass();
 
+        expandIfNeeded();
+
     }
 
     // Rimuove la costruzione e applica l'eventuale effetto di distruzione preparato dalla costruzione stessa.
@@ -282,6 +283,121 @@ public class Grid
                     destructionRadius
             );
         }
+    }
+
+
+    // Conta le celle occupate da strade o costruzioni reali.
+    public int getOccupiedCellCount()
+    {
+        int occupiedCells = 0;
+
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
+        {
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
+            {
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty())
+                {
+                    ConstructionType type =
+                            cell.getConstruction()
+                                    .getType();
+
+                    if (type != ConstructionType.GRASS
+                            && type != ConstructionType.CRIMINAL_ACTIVITY
+                            && type != ConstructionType.TERRORISTIC_GROUP)
+                    {
+                        occupiedCells++;
+                    }
+                }
+            }
+        }
+
+        return occupiedCells;
+    }
+
+
+    // Restituisce la percentuale di griglia realmente occupata.
+    public double getOccupiedPercentage()
+    {
+        int totalCells = numberOfRows * numberOfColumns;
+
+        return (double) getOccupiedCellCount() / totalCells;
+    }
+
+    // Espande la griglia quando almeno il 99% delle celle è occupato.
+    public boolean expandIfNeeded()
+    {
+        if (numberOfRows >= MAX_GRID_SIZE || numberOfColumns >= MAX_GRID_SIZE)
+        {
+            return false;
+        }
+
+        if (getOccupiedPercentage() < EXPANSION_THRESHOLD)
+        {
+            return false;
+        }
+
+        expandGrid();
+
+        return true;
+    }
+
+
+    // Aumenta la griglia di 10 righe e 10 colonne,
+// senza superare il limite massimo di 40x40.
+    private void expandGrid()
+    {
+        int newNumberOfRows =
+                Math.min(numberOfRows + GRID_EXPANSION_STEP,
+                        MAX_GRID_SIZE);
+
+        int newNumberOfColumns = Math.min(numberOfColumns + GRID_EXPANSION_STEP,
+                        MAX_GRID_SIZE);
+
+        Cell[][] newCells = new Cell[newNumberOfRows] [newNumberOfColumns];
+
+        boolean[][] newReconstructionReserved =
+                new boolean
+                        [newNumberOfRows]
+                        [newNumberOfColumns];
+
+        for (int row = 0; row < newNumberOfRows; row++)
+        {
+            for (int column = 0; column < newNumberOfColumns; column++)
+            {
+                if (row < numberOfRows && column < numberOfColumns)
+                {
+                    // Mantiene la vecchia città.
+                    newCells[row][column] = cells[row][column];
+
+                    newReconstructionReserved[row][column] =
+                            reconstructionReserved[row][column];
+                }
+                else
+                {
+                    // Crea le nuove celle aggiunte.
+                    newCells[row][column] = new Cell(row, column);
+                }
+            }
+        }
+
+        cells = newCells;
+
+        reconstructionReserved = newReconstructionReserved;
+
+        numberOfRows = newNumberOfRows;
+
+        numberOfColumns = newNumberOfColumns;
+
+        updateRoadConnections();
+
+        energyManager.rebuildConnections();
     }
 
     // Trova le celle occupate nell'area quadrata dell'esplosione, escludendo centro e strade.

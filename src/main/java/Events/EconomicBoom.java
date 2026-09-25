@@ -5,9 +5,9 @@ import model.Construction;
 import model.EconomyBoostable;
 import model.Grid;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 /* Aumenta temporaneamente la crescita economica degli edifici compatibili.
    Il bonus dura 5 tick e viene scelto casualmente tra il 30% e l'80%. */
@@ -21,8 +21,8 @@ public class EconomicBoom extends Event
     private final Grid grid;
 
     // Edifici che hanno già ricevuto il bonus durante l'evento.
-    private final List<EconomyBoostable> boostedBuildings =
-            new ArrayList<>();
+    private final Set<EconomyBoostable> boostedBuildings =
+            new HashSet<>();
 
     // Inizializza l'evento associandolo alla città e alla griglia.
     public EconomicBoom(City city, Grid grid)

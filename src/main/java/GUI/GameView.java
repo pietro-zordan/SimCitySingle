@@ -710,6 +710,24 @@ public final class GameView implements GameObserver
             }
         });
 
+        // Se carichiamo direttamente un salvataggio già espanso, non avviene
+        // alcuna nuova espansione e quindi il callback sopra non viene chiamato.
+        // In quel caso mostriamo subito i controlli di zoom e adattiamo la
+        // griglia al viewport, esattamente come dopo un'espansione normale.
+        if (controller.getNumberOfRows() > 20
+                || controller.getNumberOfColumns() > 20)
+        {
+            Platform.runLater(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    lockGridAnimationArea(gridWithAnimation);
+                    mapViewport.animateToFit();
+                }
+            });
+        }
+
         VBox gridColumn = new VBox(4, mapViewport.getView());
         gridColumn.setAlignment(Pos.CENTER);
 

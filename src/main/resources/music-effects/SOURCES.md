@@ -37,10 +37,10 @@
   "Purchasing Sound Effect" by Spring Spring, from
   https://opengameart.org/content/purchasing-sound-effect (CC0 1.0).
   Converted to 22.05 kHz mono PCM WAV with a short fade.
-- `energy_crisis_alarm.wav`: "Alarm" by EZduzziteh, from
-  https://opengameart.org/content/alarm-1 (CC0 1.0).
-  Converted from OGG to 22.05 kHz mono PCM WAV, amplified and faded.
-  Plays once when an energy crisis begins.
+- `energy_crisis_alarm.wav`: original synthesized electrical grid-failure cue
+  created for this project; 22.05 kHz mono PCM WAV. It uses a descending power
+  hum, short electrical crackles and a low shutdown impact instead of a siren.
+  It plays once when an energy crisis begins.
 
 - `nuclear_explosion.wav`: "Muffled Distant Explosion" by NenadSimic, from
   https://opengameart.org/content/muffled-distant-explosion (CC0 1.0).

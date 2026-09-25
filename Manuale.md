@@ -4,7 +4,7 @@
 
 SimCity Lite è un piccolo simulatore gestionale in cui bisogna far crescere una città mantenendo sotto controllo **budget, popolazione, economia, inquinamento, felicità, energia e posti di lavoro**.
 
-La città è costruita su una griglia **20 × 20**. Ogni pressione di **Next Turn** fa avanzare la simulazione di un turno e aggiorna edifici, statistiche, eventi e budget.
+La città parte da una griglia **20 × 20**. Ogni pressione di **Next Tick** fa avanzare la simulazione di un tick e aggiorna edifici, statistiche, eventi e budget. Quando la città è quasi completamente occupata, la mappa può espandersi automaticamente fino a **30 × 30** e successivamente **40 × 40**.
 
 La partita inizia con **2500 €**.
 
@@ -34,6 +34,16 @@ Costi base principali:
 Le politiche cittadine possono modificare alcuni prezzi.
 
 Le strade non possono essere demolite. Per demolire le altre costruzioni serve almeno un'**impresa edile alimentata**; il numero di demolizioni disponibili dipende dalle imprese edili presenti e si rinnova periodicamente.
+
+## Espansione, zoom e scorrimento della mappa
+
+La partita inizia sempre con una griglia **20 × 20**. Quando almeno il **99%** delle celle utili è occupato, la griglia si espande automaticamente di 10 righe e 10 colonne:
+
+**20 × 20 → 30 × 30 → 40 × 40**
+
+La dimensione massima attuale è quindi **40 × 40**. Le celle già costruite mantengono la loro posizione e le nuove celle vengono aggiunte sul lato destro e nella parte inferiore della mappa.
+
+Quando avviene un'espansione, la visuale esegue automaticamente uno **zoom-out animato** e si centra in modo da mostrare l'intera nuova griglia. Dalla prima espansione diventano visibili i controlli di zoom **−**, **+** e **Reset**, insieme alla percentuale di ingrandimento. È inoltre possibile usare la rotellina del mouse per cambiare zoom e trascinare la mappa all'interno dell'area visibile per spostarsi nelle zone non immediatamente visibili.
 
 ## Popolazione, lavoro ed economia
 

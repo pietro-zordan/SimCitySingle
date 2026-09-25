@@ -703,7 +703,8 @@ public final class GridView
 
                 if (crisisNowActive && isCrisisAffected(row, column, state))
                 {
-                        }
+                    crisisEligibleSparks.add(crisisSparkIcons[row][column]);
+                }
 
                 if (crisisModeChanged || !Objects.equals(renderedStates[row][column], state))
                 {
@@ -888,7 +889,6 @@ public final class GridView
 
         if (crisisAffected)
         {
-            crisisEligibleSparks.add(crisisSparkIcons[row][column]);
             crisisOverlays[row][column].setOpacity(
                     CRISIS_OVERLAY_OPACITY
             );

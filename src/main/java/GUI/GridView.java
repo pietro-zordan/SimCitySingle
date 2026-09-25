@@ -17,6 +17,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -53,6 +54,7 @@ public final class GridView
     private final Label infoLabel;
     private StackPane[][] cells;
     private Rectangle[][] graphicCells;
+    private Rectangle[][] roadPreviewOverlays;
     private Rectangle[][] crisisOverlays;
     private Label[][] crisisSparkIcons;
     private Label[][] noPowerIcons;
@@ -74,6 +76,11 @@ public final class GridView
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
     private boolean demolitionActive = false;
+    private boolean roadDragActive;
+    private int roadStartRow;
+    private int roadStartColumn;
+    private int roadEndRow;
+    private int roadEndColumn;
 
     // Inizializza la griglia di gioco, allocando le matrici di componenti grafici per le celle e impostando il layout del GridPane.
     public GridView(
@@ -116,6 +123,7 @@ public final class GridView
     // Ricrea la rappresentazione grafica quando cambia la dimensione della griglia.
     private void rebuildCells()
     {
+        roadDragActive = false;
         int rows = controller.getNumberOfRows();
         int columns = controller.getNumberOfColumns();
 
@@ -125,6 +133,7 @@ public final class GridView
 
         cells = new StackPane[rows][columns];
         graphicCells = new Rectangle[rows][columns];
+        roadPreviewOverlays = new Rectangle[rows][columns];
         crisisOverlays = new Rectangle[rows][columns];
         crisisSparkIcons = new Label[rows][columns];
         noPowerIcons = new Label[rows][columns];
@@ -279,6 +288,13 @@ public final class GridView
                         explosionOverlay
                 );
 
+                Rectangle roadPreview =
+                        new Rectangle(CELL_SIZE, CELL_SIZE);
+                roadPreview.setFill(Color.rgb(60, 185, 230, 0.42));
+                roadPreview.setVisible(false);
+                roadPreview.setMouseTransparent(true);
+                cell.getChildren().add(roadPreview);
+
                 final int selectedRow = row;
                 final int selectedColumn = column;
 
@@ -288,16 +304,72 @@ public final class GridView
                             @Override
                             public void handle(MouseEvent event)
                             {
-                                handleCellClick(
-                                        selectedRow,
-                                        selectedColumn
-                                );
+                                if (selectedType != ConstructionType.ROAD
+                                        || demolitionActive)
+                                {
+                                    handleCellClick(
+                                            selectedRow,
+                                            selectedColumn
+                                    );
+                                }
+                            }
+                        }
+                );
+
+                cell.setOnMousePressed(
+                        new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                if (selectedType == ConstructionType.ROAD
+                                        && !demolitionActive
+                                        && event.getButton()
+                                        == MouseButton.PRIMARY)
+                                {
+                                    startRoadDrag(selectedRow, selectedColumn);
+                                    event.consume();
+                                }
+                            }
+                        }
+                );
+
+                cell.setOnMouseDragged(
+                        new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                if (roadDragActive)
+                                {
+                                    updateRoadDrag(event);
+                                    event.consume();
+                                }
+                            }
+                        }
+                );
+
+                cell.setOnMouseReleased(
+                        new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                if (roadDragActive
+                                        && event.getButton()
+                                        == MouseButton.PRIMARY)
+                                {
+                                    updateRoadDrag(event);
+                                    finishRoadDrag();
+                                    event.consume();
+                                }
                             }
                         }
                 );
 
                 cells[row][column] = cell;
                 graphicCells[row][column] = graphicCell;
+                roadPreviewOverlays[row][column] = roadPreview;
                 crisisOverlays[row][column] = crisisOverlay;
                 crisisSparkIcons[row][column] = crisisSpark;
                 noPowerIcons[row][column] = noPowerIcon;
@@ -316,6 +388,133 @@ public final class GridView
 
                 view.add(cell, column, row);
             }
+        }
+    }
+
+    private void startRoadDrag(int row, int column)
+    {
+        roadDragActive = true;
+        roadStartRow = row;
+        roadStartColumn = column;
+        roadEndRow = row;
+        roadEndColumn = column;
+        showRoadPreview(true);
+    }
+
+    // Il punto finale viene letto dalla posizione del mouse, anche se
+    // JavaFX invia il drag alla cella su cui e' iniziato il gesto.
+    private void updateRoadDrag(MouseEvent event)
+    {
+        for (int row = 0; row < cells.length; row++)
+        {
+            for (int column = 0; column < cells[row].length; column++)
+            {
+                StackPane cell = cells[row][column];
+                if (cell.contains(cell.sceneToLocal(
+                        event.getSceneX(), event.getSceneY())))
+                {
+                    int endRow = row;
+                    int endColumn = column;
+                    if (Math.abs(column - roadStartColumn)
+                            >= Math.abs(row - roadStartRow))
+                    {
+                        endRow = roadStartRow;
+                    }
+                    else
+                    {
+                        endColumn = roadStartColumn;
+                    }
+
+                    if (endRow != roadEndRow
+                            || endColumn != roadEndColumn)
+                    {
+                        showRoadPreview(false);
+                        roadEndRow = endRow;
+                        roadEndColumn = endColumn;
+                        showRoadPreview(true);
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    private void showRoadPreview(boolean visible)
+    {
+        int rowStep = Integer.compare(roadEndRow, roadStartRow);
+        int columnStep = Integer.compare(roadEndColumn, roadStartColumn);
+        int length = Math.max(
+                Math.abs(roadEndRow - roadStartRow),
+                Math.abs(roadEndColumn - roadStartColumn));
+
+        for (int i = 0; i <= length; i++)
+        {
+            roadPreviewOverlays[roadStartRow + i * rowStep]
+                    [roadStartColumn + i * columnStep]
+                    .setVisible(visible);
+        }
+    }
+
+    private void finishRoadDrag()
+    {
+        roadDragActive = false;
+        showRoadPreview(false);
+
+        if (roadStartRow == roadEndRow
+                && roadStartColumn == roadEndColumn)
+        {
+            handleCellClick(roadStartRow, roadStartColumn);
+            return;
+        }
+
+        int rowStep = Integer.compare(roadEndRow, roadStartRow);
+        int columnStep = Integer.compare(roadEndColumn, roadStartColumn);
+        int length = Math.max(
+                Math.abs(roadEndRow - roadStartRow),
+                Math.abs(roadEndColumn - roadStartColumn));
+        int previousRows = controller.getNumberOfRows();
+        int previousColumns = controller.getNumberOfColumns();
+        int placed = 0;
+        boolean canContinue = true;
+
+        for (int i = 0; i <= length && canContinue; i++)
+        {
+            int row = roadStartRow + i * rowStep;
+            int column = roadStartColumn + i * columnStep;
+            Controller.CellState state =
+                    controller.getCellState(row, column);
+
+            if (state.empty()
+                    || state.type() != ConstructionType.ROAD)
+            {
+                try
+                {
+                    controller.placeConstruction(
+                            ConstructionType.ROAD, row, column);
+                    placed++;
+                }
+                catch (IllegalStateException
+                       | IllegalArgumentException exception)
+                {
+                    errorHandler.accept(exception.getMessage());
+                    canContinue = false;
+                }
+            }
+        }
+
+        if (placed > 0)
+        {
+            if (controller.getNumberOfRows() != previousRows
+                    || controller.getNumberOfColumns() != previousColumns)
+            {
+                ensureGridSize();
+                expansionSound.run();
+            }
+            else
+            {
+                placementSound.run();
+            }
+            infoLabel.setText("Roads built: " + placed);
         }
     }
 
@@ -713,6 +912,12 @@ public final class GridView
             );
         }
 
+        if (roadDragActive)
+        {
+            showRoadPreview(false);
+            roadDragActive = false;
+        }
+
         this.selectedType = selectedType;
 
         // Se seleziono una costruzione esco dalla modalità demolizione
@@ -852,6 +1057,11 @@ public final class GridView
 
     public void activateDemolition()
     {
+        if (roadDragActive)
+        {
+            showRoadPreview(false);
+            roadDragActive = false;
+        }
         demolitionActive = true;
     }
 

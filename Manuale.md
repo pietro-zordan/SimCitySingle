@@ -10,7 +10,7 @@ La partita inizia con **2500 €**.
 
 ## Costruzione della città
 
-La prima strada può essere costruita liberamente. Tutte le strade successive devono essere adiacenti a una strada già esistente.
+La prima strada può essere costruita liberamente. Tutte le strade successive devono essere adiacenti a una strada già esistente. Per costruire un tratto di strada, seleziona **Road** e trascina dalla casella iniziale a quella finale sulla stessa riga o colonna; il tratto viene costruito quando rilasci il mouse.
 
 Gli altri edifici devono invece essere costruiti accanto a una strada. Alcune costruzioni diventano disponibili solo più avanti nella partita oppure richiedono particolari condizioni, come un numero sufficiente di lavoratori.
 
@@ -137,10 +137,6 @@ Le **basi militari** diventano disponibili dal **turno 80**. Consumano energia e
 Nelle fasi avanzate della partita, se hai almeno una **base militare**, puoi acquistare il sistema di difesa missilistica. Il costo base è di **20000 €**: ogni base militare applica uno **sconto del 5% sull'acquisto**, fino al **30%**.
 
 Il sistema intercetta fino a **3 missili**. Dopo un'intercettazione puoi ripristinare un utilizzo alla volta oppure premere **Restore to 3** per riportarlo subito alla capacità massima. Ogni utilizzo ripristinato costa **300 €**, senza sconti; se il budget non basta per il ripristino completo, non viene effettuato alcun addebito.
-
-## Loggia massonica
-
-Al turno **500** ricevi un invito alla loggia massonica. Se accetti, una **Masonic Lodge** gialla con un occhio stilizzato nel triangolo appare automaticamente non appena c'è una casella costruibile disponibile; la scelta resta nel salvataggio. La loggia può essere demolita o distrutta dagli eventi e ricompare quando c'è spazio. Non richiede l'assicurazione tsunami.
 
 ## Attività criminali, terrorismo e polizia
 

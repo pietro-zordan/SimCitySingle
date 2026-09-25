@@ -633,7 +633,11 @@ public final class GameView implements GameObserver
                 )
         );
 
+        // La comparsa di banner/eventi (es. Hacker Attack) non deve
+        // cambiare la larghezza del pannello laterale e spostare la mappa.
+        rightPanel.setMinWidth(220);
         rightPanel.setPrefWidth(220);
+        rightPanel.setMaxWidth(220);
 
         // ---------- GRIGLIA CENTRATA ----------
         StackPane gridWithAnimation =

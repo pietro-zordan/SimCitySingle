@@ -66,6 +66,12 @@ public final class GridView
     private Label[][] tsunamiIcons;
     private Rectangle[][] tsunamiOverlays;
     private Rectangle[][] explosionOverlays;
+    private final List<Rectangle> visibleTsunamiOverlays =
+            new ArrayList<>();
+    private final List<Label> visibleTsunamiIcons =
+            new ArrayList<>();
+    private final List<Rectangle> visibleExplosionOverlays =
+            new ArrayList<>();
     private Label[][] grassIcons;
     private StackPane[][] lodgeIcons;
     private Tooltip[][] grassTooltips;
@@ -136,6 +142,9 @@ public final class GridView
 
         stop();
         crisisEligibleSparks.clear();
+        visibleTsunamiOverlays.clear();
+        visibleTsunamiIcons.clear();
+        visibleExplosionOverlays.clear();
         view.getChildren().clear();
 
         cells = new StackPane[rows][columns];
@@ -992,36 +1001,42 @@ public final class GridView
      */
     private void showTsunamiCell(int row, int column)
     {
-        tsunamiOverlays[row][column].setVisible(
-                true
-        );
+        Rectangle overlay =
+                tsunamiOverlays[row][column];
 
-        tsunamiIcons[row][column].setVisible(
-                true
-        );
+        Label icon =
+                tsunamiIcons[row][column];
+
+        if (!overlay.isVisible())
+        {
+            overlay.setVisible(true);
+            visibleTsunamiOverlays.add(overlay);
+        }
+
+        if (!icon.isVisible())
+        {
+            icon.setVisible(true);
+            visibleTsunamiIcons.add(icon);
+        }
     }
 
     // Nasconde l'icona dello Tsunami da tutte le celle della griglia al termine dell'evento.
     public void clearTsunami()
     {
         ensureGridSize();
-        for (int row = 0;
-             row < controller.getNumberOfRows();
-             row++)
-        {
-            for (int column = 0;
-                 column < controller.getNumberOfColumns();
-                 column++)
-            {
-                tsunamiOverlays[row][column].setVisible(
-                        false
-                );
 
-                tsunamiIcons[row][column].setVisible(
-                        false
-                );
-            }
+        for (Rectangle overlay : visibleTsunamiOverlays)
+        {
+            overlay.setVisible(false);
         }
+
+        for (Label icon : visibleTsunamiIcons)
+        {
+            icon.setVisible(false);
+        }
+
+        visibleTsunamiOverlays.clear();
+        visibleTsunamiIcons.clear();
     }
 
     // Mostra un anello dell'esplosione e aggiorna le celle solo quando l'onda le raggiunge.
@@ -1052,28 +1067,81 @@ public final class GridView
                 controller.getActiveEventType()
                         == EventType.ENERGY_CRISIS;
 
-        for (int row = 0; row < controller.getNumberOfRows(); row++)
+        int startRow =
+                Math.max(
+                        0,
+                        centerRow - radius
+                );
+
+        int endRow =
+                Math.min(
+                        controller.getNumberOfRows() - 1,
+                        centerRow + radius
+                );
+
+        int startColumn =
+                Math.max(
+                        0,
+                        centerColumn - radius
+                );
+
+        int endColumn =
+                Math.min(
+                        controller.getNumberOfColumns() - 1,
+                        centerColumn + radius
+                );
+
+        for (int row = startRow; row <= endRow; row++)
         {
-            for (int column = 0; column < controller.getNumberOfColumns(); column++)
+            for (int column = startColumn;
+                 column <= endColumn;
+                 column++)
             {
-                int rowDistance = Math.abs(row - centerRow);
-                int columnDistance = Math.abs(column - centerColumn);
+                int rowDistance =
+                        Math.abs(
+                                row - centerRow
+                        );
 
-                if (Math.max(rowDistance, columnDistance) == radius)
+                int columnDistance =
+                        Math.abs(
+                                column - centerColumn
+                        );
+
+                if (Math.max(
+                        rowDistance,
+                        columnDistance
+                ) != radius)
                 {
-                    renderCell(
-                            row,
-                            column,
-                            controller.getCellState(row, column),
-                            energyCrisisActive
-                    );
+                    continue;
+                }
 
-                    Rectangle overlay =
-                            explosionOverlays[row][column];
+                renderCell(
+                        row,
+                        column,
+                        controller.getCellState(
+                                row,
+                                column
+                        ),
+                        energyCrisisActive
+                );
 
-                    overlay.setFill(explosionColor);
-                    overlay.setOpacity(opacity);
+                Rectangle overlay =
+                        explosionOverlays[row][column];
+
+                overlay.setFill(
+                        explosionColor
+                );
+
+                overlay.setOpacity(
+                        opacity
+                );
+
+                if (!overlay.isVisible())
+                {
                     overlay.setVisible(true);
+                    visibleExplosionOverlays.add(
+                            overlay
+                    );
                 }
             }
         }
@@ -1083,13 +1151,14 @@ public final class GridView
     public void clearExplosion()
     {
         ensureGridSize();
-        for (int row = 0; row < controller.getNumberOfRows(); row++)
+
+        for (Rectangle overlay
+                : visibleExplosionOverlays)
         {
-            for (int column = 0; column < controller.getNumberOfColumns(); column++)
-            {
-                explosionOverlays[row][column].setVisible(false);
-            }
+            overlay.setVisible(false);
         }
+
+        visibleExplosionOverlays.clear();
     }
 
     public void activateDemolition()

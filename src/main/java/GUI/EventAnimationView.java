@@ -464,19 +464,25 @@ public final class EventAnimationView
         Point2D center =
                 getRenderedGridCenterInOverlay();
 
-        missileNode.setLayoutX(
-                center.getX()
-        );
-        missileNode.setLayoutY(
-                center.getY()
-        );
+        if (missileNode != null)
+        {
+            missileNode.setLayoutX(
+                    center.getX()
+            );
+            missileNode.setLayoutY(
+                    center.getY()
+            );
+        }
 
-        missileShieldNode.setLayoutX(
-                center.getX()
-        );
-        missileShieldNode.setLayoutY(
-                center.getY()
-        );
+        if (missileShieldNode != null)
+        {
+            missileShieldNode.setLayoutX(
+                    center.getX()
+            );
+            missileShieldNode.setLayoutY(
+                    center.getY()
+            );
+        }
     }
 
     private void updateShieldOutline(

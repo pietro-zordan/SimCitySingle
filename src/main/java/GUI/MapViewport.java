@@ -144,8 +144,11 @@ public final class MapViewport
 
         zoomControls = new HBox(6, zoomOutButton, zoomLabel, zoomInButton, fitGridButton);
         zoomControls.setAlignment(Pos.CENTER);
-        zoomControls.setVisible(false);
-        zoomControls.setManaged(false);
+
+        // I controlli della mappa, incluso Fit, sono disponibili fin
+        // dall'avvio anche sulla griglia iniziale 20x20.
+        zoomControls.setVisible(true);
+        zoomControls.setManaged(true);
 
         view = new VBox(5, viewportLayer, zoomControls);
         view.setAlignment(Pos.CENTER);

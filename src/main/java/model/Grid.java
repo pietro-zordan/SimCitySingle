@@ -9,7 +9,7 @@ public class Grid
     private static final int INITIAL_GRID_SIZE = 20;
     private static final int GRID_EXPANSION_STEP = 10;
     private static final int MAX_GRID_SIZE = 40;
-    private static final double EXPANSION_THRESHOLD = 0.999;
+    private static final double EXPANSION_THRESHOLD = 0.99;
 
     private int numberOfRows;
     private int numberOfColumns;

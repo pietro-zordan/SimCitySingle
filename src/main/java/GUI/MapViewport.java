@@ -17,6 +17,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public final class MapViewport
@@ -33,6 +34,8 @@ public final class MapViewport
     private final Group zoomGroup;
     private final StackPane mapHolder;
     private final ScrollPane scrollPane;
+    private final StackPane viewportLayer;
+    private final StackPane eventOverlay;
     private final Label zoomLabel = new Label();
     private final VBox view;
     private final HBox zoomControls;
@@ -61,6 +64,27 @@ public final class MapViewport
         scrollPane.setFitToHeight(false);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        /*
+         * Le animazioni di evento vivono sopra lo ScrollPane, non dentro
+         * zoomPane. In questo modo il missile mantiene dimensione costante
+         * anche quando una 40x40 viene ridotta con Fit e non può alterare
+         * i bounds usati per zoom, scrollbar o centratura.
+         */
+        eventOverlay = new StackPane();
+        eventOverlay.setMouseTransparent(true);
+        eventOverlay.setPickOnBounds(false);
+
+        Rectangle overlayClip = new Rectangle();
+        overlayClip.widthProperty().bind(eventOverlay.widthProperty());
+        overlayClip.heightProperty().bind(eventOverlay.heightProperty());
+        eventOverlay.setClip(overlayClip);
+
+        viewportLayer = new StackPane(
+                scrollPane,
+                eventOverlay
+        );
+        viewportLayer.setAlignment(Pos.CENTER);
 
         Button zoomOutButton = new Button("-");
         Button zoomInButton = new Button("+");
@@ -123,7 +147,7 @@ public final class MapViewport
         zoomControls.setVisible(false);
         zoomControls.setManaged(false);
 
-        view = new VBox(5, scrollPane, zoomControls);
+        view = new VBox(5, viewportLayer, zoomControls);
         view.setAlignment(Pos.CENTER);
 
         updateZoomLabel();
@@ -247,6 +271,11 @@ public final class MapViewport
                 scrollPane.setVvalue(0.5);
             }
         });
+    }
+
+    public StackPane getEventOverlay()
+    {
+        return eventOverlay;
     }
 
     public VBox getView()

@@ -103,5 +103,65 @@ class AchievementCheckerTest
                         Achievement.FIRST_1000_INHABITANTS
                 )
         );
+    }    @Test
+    void expandedGridUnlocksMetropolis()
+    {
+        AchievementManager manager =
+                new AchievementManager();
+
+        AchievementChecker checker =
+                new AchievementChecker(manager);
+
+        checker.checkMetropolis(
+                new Grid(30, 30)
+        );
+
+        assertTrue(
+                manager.isUnlocked(
+                        Achievement.METROPOLIS
+                )
+        );
     }
+
+    @Test
+    void acceptingFreemasonryUnlocksIlluminated()
+    {
+        AchievementManager manager =
+                new AchievementManager();
+
+        AchievementChecker checker =
+                new AchievementChecker(manager);
+
+        checker.onFreemasonryChoice(
+                FreemasonryChoice.ACCEPTED
+        );
+
+        assertTrue(
+                manager.isUnlocked(
+                        Achievement.ILLUMINATED
+                )
+        );
+    }
+
+    @Test
+    void decliningFreemasonryDoesNotUnlockIlluminated()
+    {
+        AchievementManager manager =
+                new AchievementManager();
+
+        AchievementChecker checker =
+                new AchievementChecker(manager);
+
+        checker.onFreemasonryChoice(
+                FreemasonryChoice.DECLINED
+        );
+
+        assertFalse(
+                manager.isUnlocked(
+                        Achievement.ILLUMINATED
+                )
+        );
+    }
+
+
 }

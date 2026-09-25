@@ -29,6 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.Achievement;
 import model.ConstructionType;
@@ -649,6 +650,14 @@ public final class GameView implements GameObserver
                                 .getMissileNode()
                 );
 
+        /*
+         * Lo strato delle animazioni deve avere SEMPRE esattamente i bounds
+         * della griglia. Il missile parte volontariamente fuori dalla mappa:
+         * senza questo vincolo i suoi translate modificano i bounds del Parent,
+         * lo ScrollPane ricalcola il contenuto e la mappa "balla".
+         */
+        lockGridAnimationArea(gridWithAnimation);
+
         eventAnimationView
                 .getMissileShieldNode()
                 .layoutXProperty()
@@ -694,6 +703,9 @@ public final class GameView implements GameObserver
             @Override
             public void run()
             {
+                // Dopo 20x20 -> 30x30 -> 40x40 aggiorna prima i bounds
+                // dell'area animazioni, poi ricalcola il fitting.
+                lockGridAnimationArea(gridWithAnimation);
                 mapViewport.animateToFit();
             }
         });
@@ -769,6 +781,56 @@ public final class GameView implements GameObserver
                 1400,
                 900
         );
+    }
+
+    /*
+     * Mantiene la geometria dello StackPane indipendente da missile, scudo
+     * ed altri overlay. Il clip impedisce anche ai nodi che volano fuori
+     * dalla griglia di estendere i bounds usati dallo ScrollPane.
+     */
+    private void lockGridAnimationArea(
+            StackPane gridWithAnimation)
+    {
+        double width =
+                gridView.getGridVisualWidth();
+
+        double height =
+                gridView.getGridVisualHeight();
+
+        gridWithAnimation.setMinSize(
+                width,
+                height
+        );
+
+        gridWithAnimation.setPrefSize(
+                width,
+                height
+        );
+
+        gridWithAnimation.setMaxSize(
+                width,
+                height
+        );
+
+        Rectangle clip;
+
+        if (gridWithAnimation.getClip()
+                instanceof Rectangle)
+        {
+            clip =
+                    (Rectangle)
+                            gridWithAnimation.getClip();
+        }
+        else
+        {
+            clip = new Rectangle();
+            gridWithAnimation.setClip(clip);
+        }
+
+        clip.setX(0);
+        clip.setY(0);
+        clip.setWidth(width);
+        clip.setHeight(height);
     }
 
     private void cancelDemolitionWhenUsed(Button button)

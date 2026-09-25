@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import Events.EventType;
@@ -127,6 +128,8 @@ public final class GameView implements GameObserver
     private boolean closed;
     private boolean defeatSoundPlayed;
     private volatile boolean tickInProgress;
+    private final AtomicBoolean refreshScheduled =
+            new AtomicBoolean(false);
 
     // Inizializza la vista di gioco istanziando le sotto-viste, configurando i componenti di controllo e registrandosi come observer.
     public GameView(
@@ -1387,7 +1390,23 @@ public final class GameView implements GameObserver
     @Override
     public void refreshGameView()
     {
-        if (tickInProgress && !Platform.isFxApplicationThread())
+        if (closed
+                || (tickInProgress
+                && !Platform.isFxApplicationThread()))
+        {
+            return;
+        }
+
+        /*
+         * Diverse azioni possono notificare il controller molte volte nello
+         * stesso impulso grafico (per esempio il trascinamento di una lunga
+         * strada). Senza coalescing ogni notifica accodava un refresh completo
+         * della griglia: su 40x40 potevano accumularsi decine di refresh.
+         */
+        if (!refreshScheduled.compareAndSet(
+                false,
+                true
+        ))
         {
             return;
         }
@@ -1398,6 +1417,7 @@ public final class GameView implements GameObserver
                     @Override
                     public void run()
                     {
+                        refreshScheduled.set(false);
                         updateDisplayedState();
                     }
                 }

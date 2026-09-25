@@ -115,7 +115,7 @@ public final class GridView
         view = new GridPane();
         view.setHgap(1);
         view.setVgap(1);
-        view.setPadding(new Insets(10));
+        view.setPadding(Insets.EMPTY);
         view.setAlignment(Pos.CENTER);
 
         infoLabel = new Label(

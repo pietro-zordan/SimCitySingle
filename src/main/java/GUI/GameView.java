@@ -389,6 +389,7 @@ public final class GameView implements GameObserver
         {
             gameRoot.setDisable(controller.isGameOver()
                     || controller.isFreemasonryInvitationPending());
+            clearControlFocus();
         }
     }
 
@@ -413,7 +414,23 @@ public final class GameView implements GameObserver
         {
             gameRoot.setDisable(controller.isGameOver()
                     || controller.isFreemasonryInvitationPending());
+            clearControlFocus();
         }
+    }
+
+    private void clearControlFocus()
+    {
+        Platform.runLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (!closed && gameRoot != null && !gameRoot.isDisabled())
+                {
+                    gameRoot.requestFocus();
+                }
+            }
+        });
     }
 
     // Riproduce i suoni e mostra le notifiche del turno sul thread JavaFX.
@@ -695,6 +712,7 @@ public final class GameView implements GameObserver
 
         // ---------- ORDINE GRAFICO ----------
         gameRoot = new BorderPane();
+        gameRoot.setFocusTraversable(true);
 
         gameRoot.setCenter(
                 centralContent

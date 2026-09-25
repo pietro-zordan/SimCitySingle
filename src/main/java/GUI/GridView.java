@@ -13,7 +13,9 @@ import controller.Controller;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -68,6 +70,9 @@ public final class GridView
     private Tooltip[][] grassTooltips;
     private Tooltip[][] lodgeTooltips;
     private Tooltip[][] powerPlantTooltips;
+    private Controller.CellState[][] renderedStates;
+    private boolean hasRenderedFrame;
+    private boolean lastRenderedCrisisState;
     private final List<Label> crisisEligibleSparks = new ArrayList<>();
     private final List<Label> crisisVisibleSparks = new ArrayList<>();
     private final Random crisisRandom = new Random();
@@ -147,6 +152,8 @@ public final class GridView
         grassTooltips = new Tooltip[rows][columns];
         lodgeTooltips = new Tooltip[rows][columns];
         powerPlantTooltips = new Tooltip[rows][columns];
+        renderedStates = new Controller.CellState[rows][columns];
+        hasRenderedFrame = false;
 
         createCells();
     }
@@ -402,41 +409,53 @@ public final class GridView
         showRoadPreview(true);
     }
 
-    // Il punto finale viene letto dalla posizione del mouse, anche se
-    // JavaFX invia il drag alla cella su cui e' iniziato il gesto.
+    // Converte direttamente la posizione del mouse nella cella corrispondente:
+    // il costo resta costante anche su griglie 30x30 o 40x40.
     private void updateRoadDrag(MouseEvent event)
     {
-        for (int row = 0; row < cells.length; row++)
-        {
-            for (int column = 0; column < cells[row].length; column++)
-            {
-                StackPane cell = cells[row][column];
-                if (cell.contains(cell.sceneToLocal(
-                        event.getSceneX(), event.getSceneY())))
-                {
-                    int endRow = row;
-                    int endColumn = column;
-                    if (Math.abs(column - roadStartColumn)
-                            >= Math.abs(row - roadStartRow))
-                    {
-                        endRow = roadStartRow;
-                    }
-                    else
-                    {
-                        endColumn = roadStartColumn;
-                    }
+        Point2D localPoint = view.sceneToLocal(event.getSceneX(), event.getSceneY());
+        Bounds firstCell = cells[0][0].getBoundsInParent();
+        double relativeX = localPoint.getX() - firstCell.getMinX();
+        double relativeY = localPoint.getY() - firstCell.getMinY();
+        double stepX = CELL_SIZE + view.getHgap();
+        double stepY = CELL_SIZE + view.getVgap();
 
-                    if (endRow != roadEndRow
-                            || endColumn != roadEndColumn)
-                    {
-                        showRoadPreview(false);
-                        roadEndRow = endRow;
-                        roadEndColumn = endColumn;
-                        showRoadPreview(true);
-                    }
-                    return;
-                }
-            }
+        if (relativeX < 0 || relativeY < 0)
+        {
+            return;
+        }
+
+        int column = (int) Math.floor(relativeX / stepX);
+        int row = (int) Math.floor(relativeY / stepY);
+
+        if (row < 0 || row >= cells.length || column < 0 || column >= cells[0].length)
+        {
+            return;
+        }
+
+        // Se il cursore è nello spazio di 1 px tra due celle, manteniamo l'ultima cella valida.
+        if (relativeX - column * stepX > CELL_SIZE || relativeY - row * stepY > CELL_SIZE)
+        {
+            return;
+        }
+
+        int endRow = row;
+        int endColumn = column;
+        if (Math.abs(column - roadStartColumn) >= Math.abs(row - roadStartRow))
+        {
+            endRow = roadStartRow;
+        }
+        else
+        {
+            endColumn = roadStartColumn;
+        }
+
+        if (endRow != roadEndRow || endColumn != roadEndColumn)
+        {
+            showRoadPreview(false);
+            roadEndRow = endRow;
+            roadEndColumn = endColumn;
+            showRoadPreview(true);
         }
     }
 
@@ -509,6 +528,10 @@ public final class GridView
                     || controller.getNumberOfColumns() != previousColumns)
             {
                 ensureGridSize();
+                if (expansionViewAction != null)
+                {
+                    expansionViewAction.run();
+                }
                 expansionSound.run();
             }
             else
@@ -662,43 +685,46 @@ public final class GridView
 
 
 
-    // Scorrendo l'intera griglia, invoca il rendering grafico di ciascuna cella sincronizzandola con lo stato attuale del modello.
+    // Controlla tutte le celle, ma ridisegna soltanto quelle il cui stato visivo è cambiato.
     public void refresh()
     {
         ensureGridSize();
-        boolean crisisNowActive =
-                controller.getActiveEventType()
-                        == EventType.ENERGY_CRISIS;
+        boolean crisisNowActive = controller.getActiveEventType() == EventType.ENERGY_CRISIS;
+        boolean crisisModeChanged = !hasRenderedFrame || crisisNowActive != lastRenderedCrisisState;
 
         clearCrisisSparks();
         crisisEligibleSparks.clear();
 
-        for (int row = 0;
-             row < controller.getNumberOfRows();
-             row++)
+        for (int row = 0; row < controller.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < controller.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < controller.getNumberOfColumns(); column++)
             {
-                renderCell(
-                        row,
-                        column,
-                        controller.getCellState(row, column),
-                        crisisNowActive
-                );
+                Controller.CellState state = controller.getCellState(row, column);
+
+                if (crisisNowActive && isCrisisAffected(row, column, state))
+                {
+                        }
+
+                if (crisisModeChanged || !Objects.equals(renderedStates[row][column], state))
+                {
+                    renderCell(row, column, state, crisisNowActive);
+                }
+                else if (!state.empty() && state.type() == ConstructionType.POWER_PLANT)
+                {
+                    updatePowerPlantTooltip(row, column);
+                }
             }
         }
 
-        if (crisisNowActive)
+        lastRenderedCrisisState = crisisNowActive;
+        hasRenderedFrame = true;
+
+        if (crisisNowActive && !energyCrisisActive)
         {
-            if (!energyCrisisActive)
-            {
-                energyCrisisActive = true;
-                startCrisisSparks();
-            }
+            energyCrisisActive = true;
+            startCrisisSparks();
         }
-        else if (energyCrisisActive)
+        else if (!crisisNowActive && energyCrisisActive)
         {
             stop();
         }
@@ -851,31 +877,13 @@ public final class GridView
 
         if (powerPlantPresent)
         {
-            powerPlantTooltips[row][column].setText(
-                    "Energy: "
-                            + controller.getPowerPlantEnergyConsumed(
-                                    row,
-                                    column
-                            )
-                            + " / "
-                            + controller.getPowerPlantEnergyCapacity(
-                                    row,
-                                    column
-                            )
-            );
-
-            Tooltip.install(
-                    cells[row][column],
-                    powerPlantTooltips[row][column]
-            );
+            updatePowerPlantTooltip(row, column);
+            Tooltip.install(cells[row][column], powerPlantTooltips[row][column]);
         }
 
         // --- EFFETTO GRAFICO ENERGY CRISIS ---
 
-        boolean crisisAffected = energyCrisisActive
-                && !state.empty()
-                && state.powered()
-                && controller.cellConsumesPower(row, column);
+        boolean crisisAffected = energyCrisisActive && isCrisisAffected(row, column, state);
         crisisOverlays[row][column].setVisible(crisisAffected);
 
         if (crisisAffected)
@@ -903,6 +911,21 @@ public final class GridView
             graphicCell.setStroke(Color.LIGHTGRAY);
             graphicCell.setStrokeWidth(1.0);
         }
+
+        renderedStates[row][column] = state;
+    }
+
+    private boolean isCrisisAffected(int row, int column, Controller.CellState state)
+    {
+        return !state.empty() && state.powered() && controller.cellConsumesPower(row, column);
+    }
+
+    private void updatePowerPlantTooltip(int row, int column)
+    {
+        powerPlantTooltips[row][column].setText(
+                "Energy: " + controller.getPowerPlantEnergyConsumed(row, column)
+                        + " / " + controller.getPowerPlantEnergyCapacity(row, column)
+        );
     }
 
     // Imposta il tipo di costruzione corrente da piazzare al momento del click sulla griglia.

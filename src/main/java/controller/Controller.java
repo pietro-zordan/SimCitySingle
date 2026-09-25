@@ -284,6 +284,16 @@ public final class Controller
         notifyObservers();
     }
 
+    public void restoreRemovalState(
+            int usedRemovals,
+            int lastRemovalResetTick)
+    {
+        simulation.restoreRemovalState(
+                usedRemovals,
+                lastRemovalResetTick
+        );
+    }
+
     // Fa avanzare l'intero modello di un tick.
     public boolean updateOfOneTick()
     {

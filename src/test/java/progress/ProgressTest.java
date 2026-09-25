@@ -1,11 +1,17 @@
 package progress;
 
+import com.google.gson.Gson;
 import controller.Controller;
 import model.Cell;
 import model.City;
+import model.ConstructionCompany;
 import model.ConstructionType;
+import model.CriminalActivity;
 import model.Grid;
 import model.Grass;
+import model.Park;
+import model.PoliceStation;
+import model.PowerPlant;
 import model.ReconstructionEntry;
 import model.Residential;
 import model.Road;
@@ -207,6 +213,50 @@ class ProgressTest {
                 ConstructionType.RESIDENTIAL,
                 controller.getCellState(5, 6).type()
         );
+    }
+
+    @Test
+    void demolitionAndPoliceCountdownsSurviveJsonSaveAndLoad()
+    {
+        Grid grid = new Grid();
+        grid.restoreConstruction(new PowerPlant(), 5, 5);
+        grid.restoreConstruction(new ConstructionCompany(), 5, 6);
+        PoliceStation policeStation = new PoliceStation();
+        policeStation.registerCriminalActivityRemoval(42);
+        grid.restoreConstruction(policeStation, 5, 7);
+        grid.restoreConstruction(new Park(), 10, 10);
+
+        CriminalActivity criminalActivity = new CriminalActivity();
+        criminalActivity.setCreationTick(42);
+        grid.restoreConstruction(criminalActivity, 10, 11);
+        grid.rebuildConnectionsAfterLoad();
+
+        City city = new City(grid, new StandardPolicy(), 100000);
+        Simulation simulation = new Simulation(city, grid, 43, 0);
+        simulation.registerRemoval();
+        assertEquals(0, simulation.getAvailableRemovals());
+
+        Gson gson = new Gson();
+        Progress saved = Progress.fromGame(grid, city, simulation);
+        Progress loaded = gson.fromJson(gson.toJson(saved), Progress.class);
+        Controller restored = loaded.restoreController();
+
+        IllegalStateException error = assertThrows(
+                IllegalStateException.class,
+                () -> restored.removeConstructionByPlayer(10, 10)
+        );
+        assertEquals("No demolitions available", error.getMessage());
+
+        Grid restoredGrid = loaded.restoreGrid();
+        PoliceStation restoredPolice = (PoliceStation)
+                restoredGrid.getCell(5, 7).getConstruction();
+        CriminalActivity restoredCriminalActivity = (CriminalActivity)
+                restoredGrid.getCell(10, 11).getConstruction();
+
+        assertFalse(restoredPolice.canRemoveCriminalActivity(56));
+        assertTrue(restoredPolice.canRemoveCriminalActivity(57));
+        assertFalse(restoredCriminalActivity.canBeRemovedByPolice(44));
+        assertTrue(restoredCriminalActivity.canBeRemovedByPolice(45));
     }
 
     @Test

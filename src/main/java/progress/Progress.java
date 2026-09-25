@@ -30,6 +30,10 @@ public class Progress
     private FreemasonryChoice freemasonryChoice;
     // Nei vecchi salvataggi il valore predefinito 0 non blocca i tick successivi.
     private int masonicLodgeRemovedTick;
+    // Nei vecchi salvataggi il flag manca: la quota riparte dalla finestra corrente.
+    private boolean demolitionStatePresent;
+    private int usedRemovals;
+    private int lastRemovalResetTick;
     private boolean tsunamiInsuranceActive;
 
     // Stato dei prestiti. bankStatePresent mantiene compatibili i vecchi salvataggi.
@@ -204,6 +208,12 @@ public class Progress
         progress.masonicLodgeRemovedTick =
                 simulation.getMasonicLodgeRemovedTick();
 
+        progress.demolitionStatePresent = true;
+        progress.usedRemovals =
+                simulation.getUsedRemovals();
+        progress.lastRemovalResetTick =
+                simulation.getLastRemovalResetTick();
+
         progress.criticalTicks =
                 simulation.getCriticalTicks();
 
@@ -334,6 +344,14 @@ public class Progress
                 );
 
         controller.restoreBankruptcyState(criticalTicks);
+
+        if (demolitionStatePresent)
+        {
+            controller.restoreRemovalState(
+                    usedRemovals,
+                    lastRemovalResetTick
+            );
+        }
 
         if (bankStatePresent)
         {

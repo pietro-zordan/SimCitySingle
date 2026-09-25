@@ -3,7 +3,9 @@ package progress;
 import model.Construction;
 import model.ConstructionFactory;
 import model.ConstructionType;
+import model.CriminalActivity;
 import model.NuclearPlant;
+import model.PoliceStation;
 import model.TerroristicGroup;
 
 // Rappresenta lo stato salvato di una costruzione, compresi il tipo, la posizione e gli attributi modificabili
@@ -22,6 +24,8 @@ public class ConstructionProgress {
     private boolean tsunamiInsured;
     private boolean fireProtected;
     private int terroristicGroupLifetimeTicks;
+    private int policeLastRemovalTick;
+    private int criminalActivityCreationTick;
 
     public ConstructionProgress(
             ConstructionType type,
@@ -147,7 +151,7 @@ public class ConstructionProgress {
             terroristicGroupLifetimeTicks = terroristicGroup.getLifetimeTicks();
         }
 
-        return new ConstructionProgress(
+        ConstructionProgress progress = new ConstructionProgress(
                 construction.getType(),
                 row,
                 column,
@@ -160,6 +164,20 @@ public class ConstructionProgress {
                 fireProtected,
                 terroristicGroupLifetimeTicks
         );
+
+        if (construction instanceof PoliceStation)
+        {
+            progress.policeLastRemovalTick =
+                    ((PoliceStation) construction).getLastRemovalTick();
+        }
+
+        if (construction instanceof CriminalActivity)
+        {
+            progress.criminalActivityCreationTick =
+                    ((CriminalActivity) construction).getCreationTick();
+        }
+
+        return progress;
     }
 
     public ConstructionType getType()
@@ -254,6 +272,18 @@ public class ConstructionProgress {
         {
             TerroristicGroup terroristicGroup = (TerroristicGroup) construction;
             terroristicGroup.setLifetimeTicks(terroristicGroupLifetimeTicks);
+        }
+
+        if (construction instanceof PoliceStation)
+        {
+            ((PoliceStation) construction)
+                    .restoreLastRemovalTick(policeLastRemovalTick);
+        }
+
+        if (construction instanceof CriminalActivity)
+        {
+            ((CriminalActivity) construction)
+                    .setCreationTick(criminalActivityCreationTick);
         }
 
         return construction;

@@ -110,6 +110,8 @@ public class Simulation{
         this.grid = grid;
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
+        this.lastRemovalResetTick =
+                currentTick - currentTick % CC_INTERVAL;
         this.bankruptcyManager = new BankruptcyManager();
         this.bankManager = new BankManager(city, grid);
         this.insuranceManager = new InsuranceManager(city, grid, tsunamiInsuranceActive);
@@ -546,6 +548,34 @@ public class Simulation{
     public void registerRemoval()
     {
         usedRemovals++;
+    }
+
+    public int getUsedRemovals()
+    {
+        return usedRemovals;
+    }
+
+    public int getLastRemovalResetTick()
+    {
+        return lastRemovalResetTick;
+    }
+
+    public void restoreRemovalState(
+            int usedRemovals,
+            int lastRemovalResetTick)
+    {
+        if (usedRemovals < 0
+                || lastRemovalResetTick < 0
+                || lastRemovalResetTick > currentTick
+                || currentTick - lastRemovalResetTick >= CC_INTERVAL)
+        {
+            throw new IllegalArgumentException(
+                    "Invalid construction company demolition countdown"
+            );
+        }
+
+        this.usedRemovals = usedRemovals;
+        this.lastRemovalResetTick = lastRemovalResetTick;
     }
 
     public int getMaxLoanAmount()

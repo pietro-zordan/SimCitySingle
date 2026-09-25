@@ -45,4 +45,21 @@ public class PoliceStation extends Construction implements DefenceSystem{
     {
         lastRemovalTick = currentTick;
     }
+
+    public int getLastRemovalTick()
+    {
+        return lastRemovalTick;
+    }
+
+    public void restoreLastRemovalTick(int lastRemovalTick)
+    {
+        if (lastRemovalTick < -1)
+        {
+            throw new IllegalArgumentException(
+                    "Invalid police removal tick"
+            );
+        }
+
+        this.lastRemovalTick = lastRemovalTick;
+    }
 }

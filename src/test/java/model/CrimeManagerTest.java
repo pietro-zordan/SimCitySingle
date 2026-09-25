@@ -146,8 +146,11 @@ class CrimeManagerTest
                 10,
                 10
         );
+        TerroristicGroup terroristicGroup =
+                new TerroristicGroup();
+        terroristicGroup.setLifetimeTicks(5);
         grid.restoreConstruction(
-                new TerroristicGroup(),
+                terroristicGroup,
                 10,
                 11
         );
@@ -178,6 +181,29 @@ class CrimeManagerTest
                 1,
                 countThreats(grid)
         );
+    }
+
+    @Test
+    void policeWaitsFifteenTicksBetweenRemovals()
+    {
+        Grid grid = createGridWithPoweredPoliceStation();
+
+        CriminalActivity first = new CriminalActivity();
+        first.setCreationTick(50);
+        CriminalActivity second = new CriminalActivity();
+        second.setCreationTick(50);
+        grid.restoreConstruction(first, 10, 10);
+        grid.restoreConstruction(second, 10, 11);
+
+        CrimeManager crimeManager = new CrimeManager(
+                new City(grid, new StandardPolicy()), grid
+        );
+
+        assertEquals(1, crimeManager.tryToDestroyCriminalActivities(60));
+        assertEquals(0, crimeManager.tryToDestroyCriminalActivities(74));
+        assertEquals(1, countThreats(grid));
+        assertEquals(1, crimeManager.tryToDestroyCriminalActivities(75));
+        assertEquals(0, countThreats(grid));
     }
 
     private Grid createGridWithPoweredPoliceStation()

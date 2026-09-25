@@ -29,6 +29,11 @@ public class CriminalActivity extends Construction
         this.creationTick = creationTick;
     }
 
+    public int getCreationTick()
+    {
+        return creationTick;
+    }
+
     public boolean canBeRemovedByPolice(
             int currentTick)
     {

@@ -15,8 +15,15 @@ public enum Achievement {
     WHY_WOULD_YOU_DO_THAT("Why would you do that",
             "Try to destroy a nuclear plant"),
 
-    METROPOLIS("Metropolis", "Get your grid expanded " +
-            "fot the first time");
+    METROPOLIS(
+            "Metropolis",
+            "Get your grid expanded for the first time"
+    ),
+
+    ILLUMINATED(
+            "Illuminated",
+            "Accept the Freemasonry invitation"
+    );
 
 
     private final String title;

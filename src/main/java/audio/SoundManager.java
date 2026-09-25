@@ -3,6 +3,7 @@ package audio;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import java.net.URL;
 
 public class SoundManager
@@ -209,7 +210,10 @@ public class SoundManager
 
     public void playTsunamiSound()
     {
+        // Riporta esplicitamente il player all'inizio: in questo modo
+        // anche due tsunami ravvicinati fanno partire entrambi il suono.
         tsunamiPlayer.stop();
+        tsunamiPlayer.seek(Duration.ZERO);
         tsunamiPlayer.setVolume(1.0);
         tsunamiPlayer.play();
     }
@@ -217,6 +221,7 @@ public class SoundManager
     public void stopTsunamiSound()
     {
         tsunamiPlayer.stop();
+        tsunamiPlayer.seek(Duration.ZERO);
     }
 
     public void playNuclearExplosionSound()

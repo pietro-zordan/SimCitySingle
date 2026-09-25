@@ -504,12 +504,29 @@ public class Grid
     {
         int count = 0;
 
-        for (Construction construction : getConstructions())
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
         {
-            if (construction.getType() == ConstructionType.CONSTRUCTION_COMPANY
-            && construction.isPowered())
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
             {
-                count++;
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty())
+                {
+                    Construction construction =
+                            cell.getConstruction();
+
+                    if (construction.getType()
+                            == ConstructionType.CONSTRUCTION_COMPANY
+                            && construction.isPowered())
+                    {
+                        count++;
+                    }
+                }
             }
         }
 
@@ -579,12 +596,29 @@ public class Grid
     {
         int numberOfNuclearPlants = 0;
 
-        for (Construction construction : getConstructions())
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
         {
-            if (construction.getType() == ConstructionType.NUCLEAR_PLANT
-                    && construction.isPowered())
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
             {
-                numberOfNuclearPlants++;
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty())
+                {
+                    Construction construction =
+                            cell.getConstruction();
+
+                    if (construction.getType()
+                            == ConstructionType.NUCLEAR_PLANT
+                            && construction.isPowered())
+                    {
+                        numberOfNuclearPlants++;
+                    }
+                }
             }
         }
 
@@ -684,13 +718,25 @@ public class Grid
         List<PowerPlant> powerPlants =
                 new ArrayList<>();
 
-        for (Construction construction
-                : getConstructions())
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
         {
-            if (construction
-                    instanceof PowerPlant powerPlant)
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
             {
-                powerPlants.add(powerPlant);
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty()
+                        && cell.getConstruction()
+                        instanceof PowerPlant powerPlant)
+                {
+                    powerPlants.add(
+                            powerPlant
+                    );
+                }
             }
         }
 

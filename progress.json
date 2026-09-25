@@ -1,6 +1,6 @@
 {
-  "currentTick": 400,
-  "lastPolicyChangeTick": 396,
+  "currentTick": 498,
+  "lastPolicyChangeTick": 486,
   "policyType": "STANDARD",
   "budget": 5000000,
   "gridRows": 40,

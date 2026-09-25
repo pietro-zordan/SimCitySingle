@@ -34,58 +34,40 @@ public class Grid
     // Crea la griglia iniziale 20x20.
     public Grid()
     {
-        this(
-                INITIAL_GRID_SIZE,
-                INITIAL_GRID_SIZE
-        );
+        this(INITIAL_GRID_SIZE, INITIAL_GRID_SIZE);
     }
 
     // Crea una griglia con una dimensione specifica.
 // Verrà usato anche quando caricheremo una partita salvata.
-    public Grid(
-            int numberOfRows,
-            int numberOfColumns)
+    public Grid(int numberOfRows, int numberOfColumns)
     {
         if (numberOfRows < INITIAL_GRID_SIZE
                 || numberOfColumns < INITIAL_GRID_SIZE
                 || numberOfRows > MAX_GRID_SIZE
                 || numberOfColumns > MAX_GRID_SIZE)
         {
-            throw new IllegalArgumentException(
-                    "Invalid grid size"
-            );
+            throw new IllegalArgumentException("Invalid grid size");
         }
 
-        this.numberOfRows =
-                numberOfRows;
+        this.numberOfRows = numberOfRows;
 
-        this.numberOfColumns =
-                numberOfColumns;
+        this.numberOfColumns = numberOfColumns;
 
-        cells =
-                new Cell[numberOfRows][numberOfColumns];
+        cells = new Cell[numberOfRows][numberOfColumns];
 
-        reconstructionReserved =
-                new boolean[numberOfRows][numberOfColumns];
+        reconstructionReserved = new boolean[numberOfRows][numberOfColumns];
 
-        energyManager =
-                new EnergyManager(this);
+        energyManager = new EnergyManager(this);
 
-        for (int row = 0;
-             row < numberOfRows;
-             row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
-                cells[row][column] =
-                        new Cell(row, column);
+                cells[row][column] = new Cell(row, column);
             }
         }
 
-        grassGenerator =
-                new GrassGenerator(this);
+        grassGenerator = new GrassGenerator(this);
     }
 
     // Verifica se la posizione indicata si trova nella griglia.
@@ -115,28 +97,20 @@ public class Grid
 
     /* Posiziona una costruzione dopo aver controllato la posizione,
        la disponibilità della cella e il collegamento stradale. */
-    public void placeConstruction(
-            Construction construction,
-            int row,
+    public void placeConstruction(Construction construction, int row,
             int column)
     {
         if (construction == null)
         {
-            throw new IllegalArgumentException(
-                    "model.Construction cannot be null"
-            );
+            throw new IllegalArgumentException("model.Construction cannot be null");
         }
 
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid"
-            );
+            throw new IllegalArgumentException("Position outside the grid");
         }
 
-        if (isCellReservedForReconstruction(
-                row,
-                column))
+        if (isCellReservedForReconstruction(row, column))
         {
             throw new IllegalStateException(
                     "Impossibile piazzare un nuovo edificio: ricostruzione in corso"
@@ -186,17 +160,9 @@ public class Grid
 
         cell.placeConstruction(construction);
 
-        construction.initializeAfterPlacement(
-                this,
-                row,
-                column
-        );
+        construction.initializeAfterPlacement(this, row, column);
 
-        energyManager.registerConstruction(
-                construction,
-                row,
-                column
-        );
+        energyManager.registerConstruction(construction, row, column);
 
         if (placingRoad)
         {
@@ -1024,9 +990,7 @@ public class Grid
     {
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid"
-            );
+            throw new IllegalArgumentException("Position outside the grid");
         }
 
         reconstructionReserved[row][column] = true;
@@ -1038,17 +1002,13 @@ public class Grid
     {
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid"
-            );
+            throw new IllegalArgumentException("Position outside the grid");
         }
 
         reconstructionReserved[row][column] = false;
     }
 
-    public boolean isCellReservedForReconstruction(
-            int row,
-            int column)
+    public boolean isCellReservedForReconstruction(int row, int column)
     {
         if (!isInside(row, column))
         {
@@ -1063,9 +1023,7 @@ public class Grid
     {
         for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 reconstructionReserved[row][column] = false;
             }
@@ -1073,11 +1031,9 @@ public class Grid
     }
 
 
-    public void setGrassGenerationSuspended(
-            boolean suspended)
+    public void setGrassGenerationSuspended(boolean suspended)
     {
-        grassGenerationSuspended =
-                suspended;
+        grassGenerationSuspended = suspended;
     }
 
 }

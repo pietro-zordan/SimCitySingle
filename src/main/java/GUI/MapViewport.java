@@ -27,7 +27,7 @@ public final class MapViewport
     private static final double VIEWPORT_WIDTH = 660;
     private static final double VIEWPORT_HEIGHT = 660;
     private static final double EXPANSION_ANIMATION_DURATION = 850;
-    private static final double FIT_MARGIN = 18;
+    private static final double FIT_MARGIN = 0;
 
     private final StackPane zoomPane;
     private final Group zoomGroup;
@@ -64,7 +64,7 @@ public final class MapViewport
 
         Button zoomOutButton = new Button("-");
         Button zoomInButton = new Button("+");
-        Button resetZoomButton = new Button("Reset");
+        Button fitGridButton = new Button("Fit");
         zoomLabel.setMinWidth(48);
         zoomLabel.setAlignment(Pos.CENTER);
 
@@ -86,13 +86,12 @@ public final class MapViewport
             }
         });
 
-        resetZoomButton.setOnAction(new EventHandler<ActionEvent>()
+        fitGridButton.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
-                setZoom(1.0);
-                centerMap();
+                animateToFit();
             }
         });
 
@@ -119,7 +118,7 @@ public final class MapViewport
             }
         });
 
-        zoomControls = new HBox(6, zoomOutButton, zoomLabel, zoomInButton, resetZoomButton);
+        zoomControls = new HBox(6, zoomOutButton, zoomLabel, zoomInButton, fitGridButton);
         zoomControls.setAlignment(Pos.CENTER);
         zoomControls.setVisible(false);
         zoomControls.setManaged(false);

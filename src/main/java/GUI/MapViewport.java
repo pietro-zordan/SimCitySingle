@@ -1,5 +1,9 @@
 package GUI;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +17,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 public final class MapViewport
 {
@@ -21,6 +26,8 @@ public final class MapViewport
     private static final double ZOOM_STEP = 0.10;
     private static final double VIEWPORT_WIDTH = 660;
     private static final double VIEWPORT_HEIGHT = 660;
+    private static final double EXPANSION_ANIMATION_DURATION = 850;
+    private static final double FIT_MARGIN = 18;
 
     private final StackPane zoomPane;
     private final Group zoomGroup;
@@ -29,6 +36,7 @@ public final class MapViewport
     private final Label zoomLabel = new Label();
     private final VBox view;
     private double zoom = 1.0;
+    private Timeline zoomAnimation;
 
     public MapViewport(Node mapContent)
     {
@@ -121,6 +129,12 @@ public final class MapViewport
 
     private void setZoom(double requestedZoom)
     {
+        if (zoomAnimation != null)
+        {
+            zoomAnimation.stop();
+            zoomAnimation = null;
+        }
+
         double newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, requestedZoom));
         if (Math.abs(newZoom - zoom) < 0.0001)
         {
@@ -144,6 +158,68 @@ public final class MapViewport
                 scrollPane.setVvalue(verticalPosition);
             }
         });
+    }
+
+    // Dopo un'espansione riduce dolcemente lo zoom fino a mostrare l'intera nuova griglia e centra la visuale.
+    public void animateToFit()
+    {
+        zoomPane.applyCss();
+        zoomPane.layout();
+        scrollPane.applyCss();
+        scrollPane.layout();
+
+        double contentWidth = zoomPane.getLayoutBounds().getWidth();
+        double contentHeight = zoomPane.getLayoutBounds().getHeight();
+        double viewportWidth = scrollPane.getViewportBounds().getWidth();
+        double viewportHeight = scrollPane.getViewportBounds().getHeight();
+
+        if (contentWidth <= 0 || contentHeight <= 0 || viewportWidth <= 0 || viewportHeight <= 0)
+        {
+            Platform.runLater(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    animateToFit();
+                }
+            });
+            return;
+        }
+
+        double fitZoom = Math.min(
+                (viewportWidth - FIT_MARGIN) / contentWidth,
+                (viewportHeight - FIT_MARGIN) / contentHeight
+        );
+        fitZoom = Math.max(MIN_ZOOM, Math.min(1.0, fitZoom));
+
+        if (zoomAnimation != null)
+        {
+            zoomAnimation.stop();
+        }
+
+        final double targetZoom = fitZoom;
+        zoomAnimation = new Timeline(
+                new KeyFrame(
+                        Duration.millis(EXPANSION_ANIMATION_DURATION),
+                        new KeyValue(zoomPane.scaleXProperty(), targetZoom, Interpolator.EASE_BOTH),
+                        new KeyValue(zoomPane.scaleYProperty(), targetZoom, Interpolator.EASE_BOTH),
+                        new KeyValue(scrollPane.hvalueProperty(), 0.5, Interpolator.EASE_BOTH),
+                        new KeyValue(scrollPane.vvalueProperty(), 0.5, Interpolator.EASE_BOTH)
+                )
+        );
+
+        zoomAnimation.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                zoom = targetZoom;
+                updateZoomLabel();
+                zoomAnimation = null;
+            }
+        });
+
+        zoomAnimation.play();
     }
 
     private void updateZoomLabel()

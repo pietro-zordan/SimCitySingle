@@ -50,6 +50,7 @@ public final class GridView
     private final Runnable demolitionSound;
     private final Runnable placementSound;
     private final Runnable expansionSound;
+    private Runnable expansionViewAction;
     private final GridPane view;
     private final Label infoLabel;
     private StackPane[][] cells;
@@ -617,15 +618,17 @@ public final class GridView
 
                 if (gridExpanded)
                 {
-                    // Prima aggiorna visivamente la mappa, poi avvia il suono:
-                    // l'effetto audio coincide con la comparsa delle nuove celle.
                     ensureGridSize();
+
+                    if (expansionViewAction != null)
+                    {
+                        expansionViewAction.run();
+                    }
+
                     expansionSound.run();
                     infoLabel.setText(
-                            "Grid expanded to "
-                                    + controller.getNumberOfRows()
-                                    + "x"
-                                    + controller.getNumberOfColumns()
+                            "Grid expanded to " + controller.getNumberOfRows()
+                                    + "x" + controller.getNumberOfColumns()
                     );
                 }
                 else
@@ -1184,6 +1187,11 @@ public final class GridView
                 + controller.getNumberOfRows() * CELL_SIZE
                 + (controller.getNumberOfRows() - 1)
                 * view.getVgap();
+    }
+
+    public void setExpansionViewAction(Runnable expansionViewAction)
+    {
+        this.expansionViewAction = expansionViewAction;
     }
 
     // Restituisce il contenitore GridPane che rappresenta la griglia visiva.

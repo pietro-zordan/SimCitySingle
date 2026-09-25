@@ -643,6 +643,15 @@ public final class GameView implements GameObserver
         );
 
         MapViewport mapViewport = new MapViewport(gridWithAnimation);
+        gridView.setExpansionViewAction(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mapViewport.animateToFit();
+            }
+        });
+
         VBox gridColumn = new VBox(4, mapViewport.getView());
         gridColumn.setAlignment(Pos.CENTER);
 

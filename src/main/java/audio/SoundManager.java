@@ -14,6 +14,7 @@ public class SoundManager
     private final AudioClip insuranceRebuildSound;
     private final AudioClip demolitionSound;
     private final AudioClip placementSound;
+    private final AudioClip gridExpansionSound;
     private final AudioClip missileSound;
     private final MediaPlayer firePlayer;
     private final MediaPlayer fireCracklePlayer;
@@ -37,6 +38,7 @@ public class SoundManager
         );
         demolitionSound = loadClip("demolition.wav");
         placementSound = loadClip("placement.wav");
+        gridExpansionSound = loadClip("grid_expansion.wav");
         missileSound = loadClip("missile_flyby.wav");
         missileGridImpactSound = loadClip("missile_grid_impact.wav");
         missileShieldImpactSound = loadClip("missile_shield_impact.wav");
@@ -166,6 +168,15 @@ public class SoundManager
         placementSound.play();
     }
 
+    public void playGridExpansionSound()
+    {
+        // Evita che il normale suono di piazzamento si sovrapponga
+        // al cue speciale dell'espansione.
+        placementSound.stop();
+        gridExpansionSound.stop();
+        gridExpansionSound.play();
+    }
+
     public void playMissileSound()
     {
         missileSound.play();
@@ -256,6 +267,7 @@ public class SoundManager
         insuranceRebuildSound.stop();
         demolitionSound.stop();
         placementSound.stop();
+        gridExpansionSound.stop();
         missileSound.stop();
         stopFireSound();
         missileGridImpactSound.stop();

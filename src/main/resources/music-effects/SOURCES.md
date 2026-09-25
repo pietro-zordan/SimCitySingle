@@ -57,3 +57,7 @@
 - `insurance_rebuild.wav`: original synthesized two-tone restoration chime
   created for this project; 22.05 kHz mono PCM WAV. It plays once for each
   insured construction actually restored after a tsunami.
+
+- `grid_expansion.wav`: original synthesized futuristic expansion cue created
+  for this project; 22.05 kHz mono PCM WAV. A rising electronic sweep and
+  short high-frequency chime play exactly when the grid grows to its next size.

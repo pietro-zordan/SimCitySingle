@@ -48,6 +48,7 @@ public final class GridView
     private final Consumer<String> errorHandler;
     private final Runnable demolitionSound;
     private final Runnable placementSound;
+    private final Runnable expansionSound;
     private final GridPane view;
     private final Label infoLabel;
     private StackPane[][] cells;
@@ -79,10 +80,12 @@ public final class GridView
             Controller controller,
             Consumer<String> errorHandler,
             Runnable demolitionSound,
-            Runnable placementSound)
+            Runnable placementSound,
+            Runnable expansionSound)
     {
         if (controller == null || errorHandler == null
-                || demolitionSound == null || placementSound == null)
+                || demolitionSound == null || placementSound == null
+                || expansionSound == null)
         {
             throw new IllegalArgumentException(
                     "Grid view dependencies cannot be null"
@@ -93,6 +96,7 @@ public final class GridView
         this.errorHandler = errorHandler;
         this.demolitionSound = demolitionSound;
         this.placementSound = placementSound;
+        this.expansionSound = expansionSound;
 
         // ---------- GRIGLIA CENTRATA ----------
         view = new GridPane();
@@ -403,22 +407,37 @@ public final class GridView
         {
             try
             {
-                controller.placeConstruction(
-                        selectedType,
-                        row,
-                        column
-                );
-                placementSound.run();
+                int previousRows = controller.getNumberOfRows();
+                int previousColumns = controller.getNumberOfColumns();
 
-                infoLabel.setText(
-                        "Creato/a un/a "
-                                + selectedType
-                                + " (riga "
-                                + row
-                                + ", colonna "
-                                + column
-                                + ")"
-                );
+                controller.placeConstruction(selectedType, row, column);
+
+                boolean gridExpanded =
+                        controller.getNumberOfRows() != previousRows
+                                || controller.getNumberOfColumns() != previousColumns;
+
+                if (gridExpanded)
+                {
+                    // Prima aggiorna visivamente la mappa, poi avvia il suono:
+                    // l'effetto audio coincide con la comparsa delle nuove celle.
+                    ensureGridSize();
+                    expansionSound.run();
+                    infoLabel.setText(
+                            "Grid expanded to "
+                                    + controller.getNumberOfRows()
+                                    + "x"
+                                    + controller.getNumberOfColumns()
+                    );
+                }
+                else
+                {
+                    placementSound.run();
+                    infoLabel.setText(
+                            "Creato/a un/a " + selectedType
+                                    + " (riga " + row
+                                    + ", colonna " + column + ")"
+                    );
+                }
             }
             catch (IllegalStateException
                    | IllegalArgumentException exception)

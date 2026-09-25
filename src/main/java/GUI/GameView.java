@@ -207,6 +207,14 @@ public final class GameView implements GameObserver
                     {
                         soundManager.playPlacementSound();
                     }
+                },
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        soundManager.playGridExpansionSound();
+                    }
                 }
         );
 

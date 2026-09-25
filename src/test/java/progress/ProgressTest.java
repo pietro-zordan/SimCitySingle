@@ -1,6 +1,7 @@
 package progress;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import controller.Controller;
 import model.Cell;
 import model.City;
@@ -240,6 +241,11 @@ class ProgressTest {
         Progress saved = Progress.fromGame(grid, city, simulation);
         Progress loaded = gson.fromJson(gson.toJson(saved), Progress.class);
         Controller restored = loaded.restoreController();
+        assertEquals(43,
+                gson.toJsonTree(restored.createProgress())
+                        .getAsJsonObject()
+                        .getAsJsonArray("demolitionTicks")
+                        .get(0).getAsInt());
 
         IllegalStateException error = assertThrows(
                 IllegalStateException.class,
@@ -257,6 +263,42 @@ class ProgressTest {
         assertTrue(restoredPolice.canRemoveCriminalActivity(57));
         assertFalse(restoredCriminalActivity.canBeRemovedByPolice(44));
         assertTrue(restoredCriminalActivity.canBeRemovedByPolice(45));
+    }
+
+    @Test
+    void olderSaveKeepsSpentDemolitionQuota()
+    {
+        Grid grid = new Grid();
+        grid.restoreConstruction(new PowerPlant(), 5, 5);
+        grid.restoreConstruction(new ConstructionCompany(), 5, 6);
+        grid.restoreConstruction(new Park(), 10, 10);
+        grid.rebuildConnectionsAfterLoad();
+
+        City city = new City(grid, new StandardPolicy(), 100000);
+        Simulation simulation = new Simulation(city, grid, 49, 0);
+        simulation.registerRemoval();
+
+        Gson gson = new Gson();
+        JsonObject oldSave = gson.toJsonTree(
+                Progress.fromGame(grid, city, simulation)
+        ).getAsJsonObject();
+        oldSave.remove("demolitionTicks");
+        oldSave.addProperty("demolitionStatePresent", true);
+        oldSave.addProperty("usedRemovals", 1);
+
+        Controller restored = gson.fromJson(
+                oldSave, Progress.class
+        ).restoreController();
+
+        IllegalStateException error = assertThrows(
+                IllegalStateException.class,
+                () -> restored.removeConstructionByPlayer(10, 10));
+        assertEquals("No demolitions available", error.getMessage());
+        assertEquals(49,
+                gson.toJsonTree(restored.createProgress())
+                        .getAsJsonObject()
+                        .getAsJsonArray("demolitionTicks")
+                        .get(0).getAsInt());
     }
 
     @Test

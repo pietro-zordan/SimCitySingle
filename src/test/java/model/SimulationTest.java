@@ -10,6 +10,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import policies.Policy;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -41,6 +43,32 @@ class SimulationTest {
         // Al tick 0, non sono passati i 12 tick necessari (POLICY_CHANGE_INTERVAL)[cite: 33]
         assertFalse(simulation.canChangePolicy());
         assertEquals(12, simulation.getTicksToPolicyChange());
+    }
+
+    @Test
+    void demolitionCapacityReturnsTenTicksAfterEachUse() {
+        when(grid.getNumberOfPoweredCC()).thenReturn(1);
+
+        Simulation afterOneTick = new Simulation(city, grid, 50, 0);
+        afterOneTick.restoreRemovalState(List.of(49));
+        assertEquals(0, afterOneTick.getAvailableRemovals());
+
+        Simulation beforeTenTicks = new Simulation(city, grid, 58, 0);
+        beforeTenTicks.restoreRemovalState(List.of(49));
+        assertEquals(0, beforeTenTicks.getAvailableRemovals());
+
+        Simulation afterTenTicks = new Simulation(city, grid, 59, 0);
+        afterTenTicks.restoreRemovalState(List.of(49));
+        assertEquals(1, afterTenTicks.getAvailableRemovals());
+
+        when(grid.getNumberOfPoweredCC()).thenReturn(2);
+        Simulation staggered = new Simulation(city, grid, 50, 0);
+        staggered.restoreRemovalState(List.of(40, 45));
+        assertEquals(1, staggered.getAvailableRemovals());
+
+        Simulation bothReady = new Simulation(city, grid, 55, 0);
+        bothReady.restoreRemovalState(List.of(40, 45));
+        assertEquals(2, bothReady.getAvailableRemovals());
     }
 
     @Test

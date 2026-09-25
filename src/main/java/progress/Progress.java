@@ -13,8 +13,9 @@ import policies.Policy;
 import policies.PolicyFactory;
 import policies.PolicyType;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /* Rappresenta lo stato complessivo di una partita salvata,
 comprendendo tick, budget, policy e costruzioni. */
@@ -30,10 +31,10 @@ public class Progress
     private FreemasonryChoice freemasonryChoice;
     // Nei vecchi salvataggi il valore predefinito 0 non blocca i tick successivi.
     private int masonicLodgeRemovedTick;
-    // Nei vecchi salvataggi il flag manca: la quota riparte dalla finestra corrente.
+    // Campi dei salvataggi precedenti, che conservavano solo il totale usato.
     private boolean demolitionStatePresent;
     private int usedRemovals;
-    private int lastRemovalResetTick;
+    private List<Integer> demolitionTicks;
     private boolean tsunamiInsuranceActive;
 
     // Stato dei prestiti. bankStatePresent mantiene compatibili i vecchi salvataggi.
@@ -208,11 +209,8 @@ public class Progress
         progress.masonicLodgeRemovedTick =
                 simulation.getMasonicLodgeRemovedTick();
 
-        progress.demolitionStatePresent = true;
-        progress.usedRemovals =
-                simulation.getUsedRemovals();
-        progress.lastRemovalResetTick =
-                simulation.getLastRemovalResetTick();
+        progress.demolitionTicks =
+                simulation.getDemolitionTicks();
 
         progress.criticalTicks =
                 simulation.getCriticalTicks();
@@ -345,12 +343,19 @@ public class Progress
 
         controller.restoreBankruptcyState(criticalTicks);
 
-        if (demolitionStatePresent)
+        if (demolitionTicks != null)
         {
-            controller.restoreRemovalState(
-                    usedRemovals,
-                    lastRemovalResetTick
-            );
+            controller.restoreRemovalState(demolitionTicks);
+        }
+        else if (demolitionStatePresent && usedRemovals > 0)
+        {
+            // Il vecchio formato non conosce il tick di ciascuna demolizione.
+            // Conserva la quota usata facendo ripartire i 10 tick dal caricamento.
+            controller.restoreRemovalState(Collections.nCopies(
+                    Math.min(usedRemovals,
+                            restoredGrid.getNumberOfPoweredCC()),
+                    currentTick
+            ));
         }
 
         if (bankStatePresent)

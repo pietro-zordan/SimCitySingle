@@ -3,9 +3,11 @@ package model;
 import Events.*;
 import policies.Policy;
 
-import java.util.List;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Deque;
+import java.util.List;
 import java.util.Random;
 
 /* Gestisce lo scorrere dei tick della partita.
@@ -28,8 +30,8 @@ public class Simulation{
     private Event activeEvent;
     private int eventTicksPassed;
     private final Grid grid;
-    private int usedRemovals = 0;
-    private int lastRemovalResetTick = 0;
+    private final Deque<Integer> demolitionTicks =
+            new ArrayDeque<>();
     private final BankruptcyManager bankruptcyManager;
     private final BankManager bankManager;
     private final InsuranceManager insuranceManager;
@@ -110,8 +112,6 @@ public class Simulation{
         this.grid = grid;
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
-        this.lastRemovalResetTick =
-                currentTick - currentTick % CC_INTERVAL;
         this.bankruptcyManager = new BankruptcyManager();
         this.bankManager = new BankManager(city, grid);
         this.insuranceManager = new InsuranceManager(city, grid, tsunamiInsuranceActive);
@@ -472,14 +472,7 @@ public class Simulation{
                         );
 
         currentTick++;
-
-        if (currentTick
-                - lastRemovalResetTick
-                >= CC_INTERVAL)
-        {
-            usedRemovals = 0;
-            lastRemovalResetTick = currentTick;
-        }
+        expireDemolitions();
 
         bankManager.update(currentTick);
 
@@ -547,35 +540,51 @@ public class Simulation{
 
     public void registerRemoval()
     {
-        usedRemovals++;
+        expireDemolitions();
+        demolitionTicks.addLast(currentTick);
     }
 
-    public int getUsedRemovals()
+    public List<Integer> getDemolitionTicks()
     {
-        return usedRemovals;
+        expireDemolitions();
+        return new ArrayList<>(demolitionTicks);
     }
 
-    public int getLastRemovalResetTick()
+    public void restoreRemovalState(List<Integer> savedTicks)
     {
-        return lastRemovalResetTick;
-    }
-
-    public void restoreRemovalState(
-            int usedRemovals,
-            int lastRemovalResetTick)
-    {
-        if (usedRemovals < 0
-                || lastRemovalResetTick < 0
-                || lastRemovalResetTick > currentTick
-                || currentTick - lastRemovalResetTick >= CC_INTERVAL)
+        if (savedTicks == null)
         {
             throw new IllegalArgumentException(
-                    "Invalid construction company demolition countdown"
+                    "Demolition ticks cannot be null"
             );
         }
 
-        this.usedRemovals = usedRemovals;
-        this.lastRemovalResetTick = lastRemovalResetTick;
+        demolitionTicks.clear();
+        int previousTick = -1;
+        for (Integer tick : savedTicks)
+        {
+            if (tick == null || tick < 0 || tick < previousTick
+                    || tick > currentTick)
+            {
+                throw new IllegalArgumentException(
+                        "Invalid construction company demolition countdown"
+                );
+            }
+
+            demolitionTicks.addLast(tick);
+            previousTick = tick;
+        }
+        expireDemolitions();
+    }
+
+    private void expireDemolitions()
+    {
+        while (!demolitionTicks.isEmpty()
+                && currentTick - demolitionTicks.peekFirst()
+                >= CC_INTERVAL)
+        {
+            demolitionTicks.removeFirst();
+        }
     }
 
     public int getMaxLoanAmount()
@@ -814,9 +823,10 @@ public class Simulation{
 
     public int getAvailableRemovals()
     {
+        expireDemolitions();
         return Math.max(
                 0,
-                grid.getNumberOfPoweredCC() - usedRemovals
+                grid.getNumberOfPoweredCC() - demolitionTicks.size()
         );
     }
 

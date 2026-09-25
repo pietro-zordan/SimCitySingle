@@ -72,7 +72,7 @@ public final class GameView implements GameObserver
             new PauseTransition(Duration.seconds(4));
 
     private final Button nextTurnButton =
-            new Button("Next Turn");
+            new Button("Next Tick");
 
     private final Button tsunamiInsuranceButton =
             new Button("Tsunami insurance");
@@ -309,6 +309,11 @@ public final class GameView implements GameObserver
     private void configureNextTurnButton()
     {
         nextTurnButton.setMaxWidth(Double.MAX_VALUE);
+        nextTurnButton.setFocusTraversable(false);
+        nextTurnButton.setStyle(
+                "-fx-focus-color: transparent;"
+                        + "-fx-faint-focus-color: transparent;"
+        );
         nextTurnButton.setOnAction(
                 new EventHandler<ActionEvent>()
                 {

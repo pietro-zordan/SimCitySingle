@@ -1110,38 +1110,36 @@ public final class GridView
                 if (Math.max(
                         rowDistance,
                         columnDistance
-                ) != radius)
+                ) == radius)
                 {
-                    continue;
-                }
-
-                renderCell(
-                        row,
-                        column,
-                        controller.getCellState(
-                                row,
-                                column
-                        ),
-                        energyCrisisActive
-                );
-
-                Rectangle overlay =
-                        explosionOverlays[row][column];
-
-                overlay.setFill(
-                        explosionColor
-                );
-
-                overlay.setOpacity(
-                        opacity
-                );
-
-                if (!overlay.isVisible())
-                {
-                    overlay.setVisible(true);
-                    visibleExplosionOverlays.add(
-                            overlay
+                    renderCell(
+                            row,
+                            column,
+                            controller.getCellState(
+                                    row,
+                                    column
+                            ),
+                            energyCrisisActive
                     );
+
+                    Rectangle overlay =
+                            explosionOverlays[row][column];
+
+                    overlay.setFill(
+                            explosionColor
+                    );
+
+                    overlay.setOpacity(
+                            opacity
+                    );
+
+                    if (!overlay.isVisible())
+                    {
+                        overlay.setVisible(true);
+                        visibleExplosionOverlays.add(
+                                overlay
+                        );
+                    }
                 }
             }
         }

@@ -30,6 +30,7 @@ public class Grid
     private final List<ExplosionInfo> explosions = new ArrayList<>();
     // Per ora la generazione automatica dell'erba è disattivata, ma il sistema resta disponibile.
     private boolean grassGenerationSuspended = true;
+    
 
     // Crea la griglia iniziale 20x20.
     public Grid()
@@ -362,6 +363,8 @@ public class Grid
         numberOfColumns = newNumberOfColumns;
 
         updateRoadConnections();
+
+
 
         energyManager.rebuildConnections();
     }

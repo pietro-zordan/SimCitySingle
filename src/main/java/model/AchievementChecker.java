@@ -84,6 +84,16 @@ public class AchievementChecker
         }
     }
 
+    public void checkMetropolis(Grid grid)
+    {
+        if(grid.getNumberOfRows()>19 && grid.getNumberOfRows()<30)
+             && !achievementManager.isUnlocked(
+            Achievement.METROPOLIS))
+
+        achievementManager.unlock(Achievement.METROPOLIS);
+
+    }
+
 
 
 }

@@ -336,7 +336,7 @@ public final class GameView implements GameObserver
         }
 
         tickInProgress = true;
-        gameRoot.setDisable(true);
+        gameRoot.setMouseTransparent(true);
 
         Task<Boolean> tickTask = new Task<Boolean>()
         {
@@ -387,6 +387,7 @@ public final class GameView implements GameObserver
         }
         finally
         {
+            gameRoot.setMouseTransparent(false);
             gameRoot.setDisable(controller.isGameOver()
                     || controller.isFreemasonryInvitationPending());
             clearControlFocus();
@@ -412,6 +413,7 @@ public final class GameView implements GameObserver
         }
         finally
         {
+            gameRoot.setMouseTransparent(false);
             gameRoot.setDisable(controller.isGameOver()
                     || controller.isFreemasonryInvitationPending());
             clearControlFocus();

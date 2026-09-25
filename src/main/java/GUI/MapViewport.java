@@ -35,6 +35,7 @@ public final class MapViewport
     private final ScrollPane scrollPane;
     private final Label zoomLabel = new Label();
     private final VBox view;
+    private final HBox zoomControls;
     private double zoom = 1.0;
     private Timeline zoomAnimation;
 
@@ -118,8 +119,11 @@ public final class MapViewport
             }
         });
 
-        HBox zoomControls = new HBox(6, zoomOutButton, zoomLabel, zoomInButton, resetZoomButton);
+        zoomControls = new HBox(6, zoomOutButton, zoomLabel, zoomInButton, resetZoomButton);
         zoomControls.setAlignment(Pos.CENTER);
+        zoomControls.setVisible(false);
+        zoomControls.setManaged(false);
+
         view = new VBox(5, scrollPane, zoomControls);
         view.setAlignment(Pos.CENTER);
 
@@ -163,6 +167,12 @@ public final class MapViewport
     // Dopo un'espansione riduce dolcemente lo zoom fino a mostrare l'intera nuova griglia e centra la visuale.
     public void animateToFit()
     {
+        if (!zoomControls.isVisible())
+        {
+            zoomControls.setVisible(true);
+            zoomControls.setManaged(true);
+        }
+
         zoomPane.applyCss();
         zoomPane.layout();
         scrollPane.applyCss();

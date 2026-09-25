@@ -660,11 +660,26 @@ public final class GameView implements GameObserver
                                 .divide(2.0)
                 );
 
-        StackPane.setAlignment(
-                eventAnimationView
-                        .getMissileNode(),
-                Pos.CENTER
-        );
+        // Anche il missile, come lo scudo, resta centrato rispetto alla griglia
+        // senza partecipare al layout. Le sue traslazioni sono quindi puramente
+        // visive e non possono più far "ballare" lo ScrollPane.
+        eventAnimationView
+                .getMissileNode()
+                .layoutXProperty()
+                .bind(
+                        gridWithAnimation
+                                .widthProperty()
+                                .divide(2.0)
+                );
+
+        eventAnimationView
+                .getMissileNode()
+                .layoutYProperty()
+                .bind(
+                        gridWithAnimation
+                                .heightProperty()
+                                .divide(2.0)
+                );
 
         MapViewport mapViewport = new MapViewport(gridWithAnimation);
         gridView.setExpansionViewAction(new Runnable()

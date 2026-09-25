@@ -1370,6 +1370,8 @@ public final class GameView implements GameObserver
         boolean gameOver =
                 controller.isGameOver();
 
+        gridView.ensureGridSize();
+
         if (gameOver)
         {
             eventAnimationView.stop();

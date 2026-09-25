@@ -1,12 +1,12 @@
 {
-  "currentTick": 0,
-  "lastPolicyChangeTick": 0,
+  "currentTick": 220,
+  "lastPolicyChangeTick": 210,
   "policyType": "STANDARD",
   "budget": 1000000,
   "criticalTicks": 0,
   "freemasonryChoice": "DECLINED",
   "masonicLodgeRemovedTick": -1,
-  "demolitionStatePresent": false,
+  "demolitionStatePresent": true,
   "usedRemovals": 0,
   "demolitionTicks": [],
   "tsunamiInsuranceActive": false,
@@ -17,7 +17,7 @@
   "loanStartTick": 0,
   "remainingDebt": 0,
   "missileDefenseStatePresent": true,
-  "missileDefensePurchased": false,
+  "missileDefensePurchased": true,
   "missileDefenseHitsRemaining": 3,
   "constructions": [
     {
@@ -32,7 +32,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -47,7 +47,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -62,7 +62,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -77,7 +77,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -92,7 +92,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -107,7 +107,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -122,7 +122,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -137,7 +137,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -152,7 +152,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -167,7 +167,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -182,7 +182,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -197,7 +197,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -212,7 +212,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -227,7 +227,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -242,7 +242,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -257,7 +257,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -272,7 +272,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -287,7 +287,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -302,7 +302,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -317,7 +317,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -332,11 +332,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 1,
       "column": 1,
       "population": 0,
@@ -347,22 +347,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 1,
       "column": 2,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -377,11 +377,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 1,
       "column": 4,
       "population": 0,
@@ -392,22 +392,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 1,
       "column": 5,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -422,11 +422,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 1,
       "column": 7,
       "population": 0,
@@ -437,11 +437,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 1,
       "column": 8,
       "population": 0,
@@ -452,7 +452,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -467,11 +467,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 1,
       "column": 10,
       "population": 0,
@@ -482,11 +482,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 1,
       "column": 11,
       "population": 0,
@@ -497,7 +497,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -512,11 +512,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 1,
       "column": 13,
       "population": 0,
@@ -527,11 +527,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 1,
       "column": 14,
       "population": 0,
@@ -542,7 +542,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -557,11 +557,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 1,
       "column": 16,
       "population": 0,
@@ -572,11 +572,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 1,
       "column": 17,
       "population": 0,
@@ -587,7 +587,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -602,11 +602,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 1,
       "column": 19,
       "population": 0,
@@ -617,7 +617,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -632,11 +632,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 2,
       "column": 1,
       "population": 0,
@@ -647,11 +647,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 2,
       "column": 2,
       "population": 0,
@@ -662,7 +662,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -677,11 +677,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 2,
       "column": 4,
       "population": 0,
@@ -690,13 +690,13 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 2,
       "column": 5,
       "population": 0,
@@ -707,7 +707,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -722,11 +722,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 2,
       "column": 7,
       "population": 0,
@@ -737,11 +737,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 2,
       "column": 8,
       "population": 0,
@@ -752,7 +752,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -767,26 +767,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 2,
       "column": 10,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 2,
       "column": 11,
       "population": 0,
@@ -797,7 +797,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -812,26 +812,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 2,
       "column": 13,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 2,
       "column": 14,
       "population": 0,
@@ -842,7 +842,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -857,11 +857,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 2,
       "column": 16,
       "population": 0,
@@ -872,11 +872,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 2,
       "column": 17,
       "population": 0,
@@ -887,7 +887,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -902,11 +902,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 2,
       "column": 19,
       "population": 0,
@@ -917,7 +917,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -932,7 +932,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -947,7 +947,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -962,7 +962,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -977,7 +977,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -992,7 +992,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1007,7 +1007,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1022,7 +1022,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1037,7 +1037,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1052,7 +1052,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1067,7 +1067,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1082,7 +1082,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1097,7 +1097,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1112,7 +1112,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1127,7 +1127,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1142,7 +1142,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1157,7 +1157,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1172,7 +1172,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1187,7 +1187,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1202,7 +1202,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1217,7 +1217,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1232,11 +1232,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 4,
       "column": 1,
       "population": 0,
@@ -1247,11 +1247,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 4,
       "column": 2,
       "population": 0,
@@ -1262,7 +1262,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1277,11 +1277,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 4,
       "column": 4,
       "population": 0,
@@ -1292,11 +1292,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 4,
       "column": 5,
       "population": 0,
@@ -1307,7 +1307,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1322,11 +1322,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 4,
       "column": 7,
       "population": 0,
@@ -1337,11 +1337,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 4,
       "column": 8,
       "population": 0,
@@ -1352,7 +1352,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1367,11 +1367,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 4,
       "column": 10,
       "population": 0,
@@ -1382,11 +1382,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 4,
       "column": 11,
       "population": 0,
@@ -1395,9 +1395,9 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1412,11 +1412,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 4,
       "column": 13,
       "population": 0,
@@ -1427,11 +1427,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 4,
       "column": 14,
       "population": 0,
@@ -1442,7 +1442,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1457,11 +1457,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 4,
       "column": 16,
       "population": 0,
@@ -1472,22 +1472,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 4,
       "column": 17,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1502,11 +1502,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 4,
       "column": 19,
       "population": 0,
@@ -1517,7 +1517,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1532,26 +1532,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 5,
       "column": 1,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 5,
       "column": 2,
       "population": 0,
@@ -1562,7 +1562,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1577,11 +1577,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 5,
       "column": 4,
       "population": 0,
@@ -1592,11 +1592,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 5,
       "column": 5,
       "population": 0,
@@ -1607,7 +1607,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1622,11 +1622,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 5,
       "column": 7,
       "population": 0,
@@ -1637,11 +1637,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 5,
       "column": 8,
       "population": 0,
@@ -1652,7 +1652,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1667,11 +1667,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 5,
       "column": 10,
       "population": 0,
@@ -1682,11 +1682,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 5,
       "column": 11,
       "population": 0,
@@ -1697,7 +1697,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1712,11 +1712,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 5,
       "column": 13,
       "population": 0,
@@ -1727,11 +1727,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 5,
       "column": 14,
       "population": 0,
@@ -1742,7 +1742,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1757,11 +1757,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 5,
       "column": 16,
       "population": 0,
@@ -1772,11 +1772,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 5,
       "column": 17,
       "population": 0,
@@ -1787,7 +1787,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1802,11 +1802,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 5,
       "column": 19,
       "population": 0,
@@ -1815,9 +1815,9 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1832,7 +1832,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1847,7 +1847,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1862,7 +1862,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1877,7 +1877,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1892,7 +1892,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1907,7 +1907,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1922,7 +1922,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1937,7 +1937,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1952,7 +1952,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1967,7 +1967,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1982,7 +1982,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -1997,7 +1997,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2012,7 +2012,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2027,7 +2027,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2042,7 +2042,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2057,7 +2057,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2072,7 +2072,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2087,7 +2087,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2102,7 +2102,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2117,7 +2117,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2132,11 +2132,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 7,
       "column": 1,
       "population": 0,
@@ -2147,11 +2147,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 7,
       "column": 2,
       "population": 0,
@@ -2162,7 +2162,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2177,11 +2177,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 7,
       "column": 4,
       "population": 0,
@@ -2192,22 +2192,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 7,
       "column": 5,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2222,11 +2222,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 7,
       "column": 7,
       "population": 0,
@@ -2237,22 +2237,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 7,
       "column": 8,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2267,11 +2267,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 7,
       "column": 10,
       "population": 0,
@@ -2282,11 +2282,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 7,
       "column": 11,
       "population": 0,
@@ -2297,7 +2297,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2312,11 +2312,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 7,
       "column": 13,
       "population": 0,
@@ -2327,11 +2327,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 7,
       "column": 14,
       "population": 0,
@@ -2342,7 +2342,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2357,11 +2357,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 7,
       "column": 16,
       "population": 0,
@@ -2372,11 +2372,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 7,
       "column": 17,
       "population": 0,
@@ -2387,7 +2387,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2402,11 +2402,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 7,
       "column": 19,
       "population": 0,
@@ -2417,7 +2417,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2432,11 +2432,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 8,
       "column": 1,
       "population": 0,
@@ -2447,11 +2447,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 8,
       "column": 2,
       "population": 0,
@@ -2462,7 +2462,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2477,11 +2477,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 8,
       "column": 4,
       "population": 0,
@@ -2492,11 +2492,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 8,
       "column": 5,
       "population": 0,
@@ -2507,7 +2507,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2522,11 +2522,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 8,
       "column": 7,
       "population": 0,
@@ -2535,13 +2535,13 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 8,
       "column": 8,
       "population": 0,
@@ -2552,7 +2552,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2567,11 +2567,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 8,
       "column": 10,
       "population": 0,
@@ -2582,11 +2582,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 8,
       "column": 11,
       "population": 0,
@@ -2597,7 +2597,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2612,26 +2612,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 8,
       "column": 13,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 8,
       "column": 14,
       "population": 0,
@@ -2642,7 +2642,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2657,26 +2657,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 8,
       "column": 16,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 8,
       "column": 17,
       "population": 0,
@@ -2687,7 +2687,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2702,11 +2702,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 8,
       "column": 19,
       "population": 0,
@@ -2717,7 +2717,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2732,7 +2732,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2747,7 +2747,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2762,7 +2762,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2777,7 +2777,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2792,7 +2792,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2807,7 +2807,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2822,7 +2822,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2837,7 +2837,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2852,7 +2852,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2867,7 +2867,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2882,7 +2882,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2897,7 +2897,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2912,7 +2912,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2927,7 +2927,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2942,7 +2942,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2957,7 +2957,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2972,7 +2972,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -2987,7 +2987,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3002,7 +3002,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3017,7 +3017,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3032,11 +3032,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 10,
       "column": 1,
       "population": 0,
@@ -3047,11 +3047,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 10,
       "column": 2,
       "population": 0,
@@ -3062,7 +3062,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3077,11 +3077,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 10,
       "column": 4,
       "population": 0,
@@ -3092,11 +3092,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 10,
       "column": 5,
       "population": 0,
@@ -3107,7 +3107,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3122,11 +3122,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 10,
       "column": 7,
       "population": 0,
@@ -3137,11 +3137,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 10,
       "column": 8,
       "population": 0,
@@ -3152,7 +3152,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3167,11 +3167,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 10,
       "column": 10,
       "population": 0,
@@ -3182,11 +3182,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 10,
       "column": 11,
       "population": 0,
@@ -3197,7 +3197,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3212,11 +3212,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 10,
       "column": 13,
       "population": 0,
@@ -3227,11 +3227,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 10,
       "column": 14,
       "population": 0,
@@ -3240,9 +3240,9 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3257,11 +3257,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 10,
       "column": 16,
       "population": 0,
@@ -3272,11 +3272,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 10,
       "column": 17,
       "population": 0,
@@ -3287,7 +3287,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3302,11 +3302,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 10,
       "column": 19,
       "population": 0,
@@ -3317,7 +3317,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3332,26 +3332,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 11,
       "column": 1,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 11,
       "column": 2,
       "population": 0,
@@ -3362,7 +3362,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3377,26 +3377,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 11,
       "column": 4,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 11,
       "column": 5,
       "population": 0,
@@ -3407,7 +3407,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3422,11 +3422,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 11,
       "column": 7,
       "population": 0,
@@ -3437,11 +3437,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 11,
       "column": 8,
       "population": 0,
@@ -3452,7 +3452,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3467,11 +3467,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 11,
       "column": 10,
       "population": 0,
@@ -3482,11 +3482,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 11,
       "column": 11,
       "population": 0,
@@ -3497,7 +3497,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3512,11 +3512,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 11,
       "column": 13,
       "population": 0,
@@ -3527,11 +3527,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 11,
       "column": 14,
       "population": 0,
@@ -3542,7 +3542,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3557,11 +3557,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 11,
       "column": 16,
       "population": 0,
@@ -3572,11 +3572,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 11,
       "column": 17,
       "population": 0,
@@ -3587,7 +3587,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3602,11 +3602,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 11,
       "column": 19,
       "population": 0,
@@ -3617,7 +3617,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3632,7 +3632,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3647,7 +3647,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3662,7 +3662,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3677,7 +3677,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3692,7 +3692,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3707,7 +3707,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3722,7 +3722,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3737,7 +3737,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3752,7 +3752,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3767,7 +3767,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3782,7 +3782,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3797,7 +3797,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3812,7 +3812,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3827,7 +3827,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3842,7 +3842,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3857,7 +3857,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3872,7 +3872,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3887,7 +3887,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3902,7 +3902,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3917,7 +3917,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3932,11 +3932,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 13,
       "column": 1,
       "population": 0,
@@ -3947,11 +3947,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 13,
       "column": 2,
       "population": 0,
@@ -3960,9 +3960,9 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -3977,11 +3977,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 13,
       "column": 4,
       "population": 0,
@@ -3992,11 +3992,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 13,
       "column": 5,
       "population": 0,
@@ -4007,7 +4007,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4022,11 +4022,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 13,
       "column": 7,
       "population": 0,
@@ -4037,22 +4037,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 13,
       "column": 8,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4067,11 +4067,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 13,
       "column": 10,
       "population": 0,
@@ -4082,22 +4082,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 13,
       "column": 11,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4112,11 +4112,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 13,
       "column": 13,
       "population": 0,
@@ -4127,11 +4127,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 13,
       "column": 14,
       "population": 0,
@@ -4142,7 +4142,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4157,11 +4157,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 13,
       "column": 16,
       "population": 0,
@@ -4172,11 +4172,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 13,
       "column": 17,
       "population": 0,
@@ -4187,7 +4187,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4202,11 +4202,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 13,
       "column": 19,
       "population": 0,
@@ -4217,7 +4217,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4232,11 +4232,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 14,
       "column": 1,
       "population": 0,
@@ -4247,11 +4247,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 14,
       "column": 2,
       "population": 0,
@@ -4262,7 +4262,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4277,11 +4277,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 14,
       "column": 4,
       "population": 0,
@@ -4292,11 +4292,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 14,
       "column": 5,
       "population": 0,
@@ -4307,7 +4307,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4322,11 +4322,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 14,
       "column": 7,
       "population": 0,
@@ -4337,11 +4337,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 14,
       "column": 8,
       "population": 0,
@@ -4352,7 +4352,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4367,11 +4367,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 14,
       "column": 10,
       "population": 0,
@@ -4380,13 +4380,13 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 14,
       "column": 11,
       "population": 0,
@@ -4397,7 +4397,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4412,11 +4412,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 14,
       "column": 13,
       "population": 0,
@@ -4427,11 +4427,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 14,
       "column": 14,
       "population": 0,
@@ -4442,7 +4442,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4457,26 +4457,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 14,
       "column": 16,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 14,
       "column": 17,
       "population": 0,
@@ -4487,7 +4487,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4502,22 +4502,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 14,
       "column": 19,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4532,7 +4532,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4547,7 +4547,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4562,7 +4562,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4577,7 +4577,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4592,7 +4592,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4607,7 +4607,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4622,7 +4622,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4637,7 +4637,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4652,7 +4652,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4667,7 +4667,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4682,7 +4682,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4697,7 +4697,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4712,7 +4712,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4727,7 +4727,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4742,7 +4742,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4757,7 +4757,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4772,7 +4772,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4787,7 +4787,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4802,7 +4802,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4817,7 +4817,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4832,11 +4832,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 16,
       "column": 1,
       "population": 0,
@@ -4847,11 +4847,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 16,
       "column": 2,
       "population": 0,
@@ -4862,7 +4862,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4877,11 +4877,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 16,
       "column": 4,
       "population": 0,
@@ -4892,11 +4892,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 16,
       "column": 5,
       "population": 0,
@@ -4907,7 +4907,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4922,11 +4922,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 16,
       "column": 7,
       "population": 0,
@@ -4937,11 +4937,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 16,
       "column": 8,
       "population": 0,
@@ -4952,7 +4952,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -4967,11 +4967,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 16,
       "column": 10,
       "population": 0,
@@ -4982,11 +4982,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 16,
       "column": 11,
       "population": 0,
@@ -4997,7 +4997,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5012,11 +5012,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 16,
       "column": 13,
       "population": 0,
@@ -5027,11 +5027,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 16,
       "column": 14,
       "population": 0,
@@ -5042,7 +5042,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5057,11 +5057,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 16,
       "column": 16,
       "population": 0,
@@ -5072,11 +5072,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 16,
       "column": 17,
       "population": 0,
@@ -5085,9 +5085,9 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5102,11 +5102,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 16,
       "column": 19,
       "population": 0,
@@ -5117,7 +5117,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5132,11 +5132,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 17,
       "column": 1,
       "population": 0,
@@ -5147,11 +5147,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 17,
       "column": 2,
       "population": 0,
@@ -5162,7 +5162,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5177,26 +5177,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 17,
       "column": 4,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 17,
       "column": 5,
       "population": 0,
@@ -5207,7 +5207,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5222,26 +5222,26 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "COMMERCIAL",
       "row": 17,
       "column": 7,
       "population": 0,
       "populationGrowthRate": 0,
       "populationDecreaseRate": 0,
-      "economyGrowthRate": 0,
-      "moneyProduction": 0,
+      "economyGrowthRate": 2.5,
+      "moneyProduction": 125,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 17,
       "column": 8,
       "population": 0,
@@ -5252,7 +5252,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5267,11 +5267,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POWER_PLANT",
       "row": 17,
       "column": 10,
       "population": 0,
@@ -5282,11 +5282,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 17,
       "column": 11,
       "population": 0,
@@ -5297,7 +5297,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5312,11 +5312,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "BANK",
       "row": 17,
       "column": 13,
       "population": 0,
@@ -5327,11 +5327,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 17,
       "column": 14,
       "population": 0,
@@ -5342,7 +5342,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5357,11 +5357,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "POLICE_STATION",
       "row": 17,
       "column": 16,
       "population": 0,
@@ -5372,11 +5372,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 17,
       "column": 17,
       "population": 0,
@@ -5387,7 +5387,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5402,11 +5402,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "CONSTRUCTION_COMPANY",
       "row": 17,
       "column": 19,
       "population": 0,
@@ -5417,7 +5417,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5432,7 +5432,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5447,7 +5447,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5462,7 +5462,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5477,7 +5477,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5492,7 +5492,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5507,7 +5507,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5522,7 +5522,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5537,7 +5537,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5552,7 +5552,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5567,7 +5567,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5582,7 +5582,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5597,7 +5597,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5612,7 +5612,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5627,7 +5627,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5642,7 +5642,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5657,7 +5657,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5672,7 +5672,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5687,7 +5687,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5702,7 +5702,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5717,7 +5717,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5732,11 +5732,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 19,
       "column": 1,
       "population": 0,
@@ -5747,11 +5747,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "MILITARY_BASE",
       "row": 19,
       "column": 2,
       "population": 0,
@@ -5762,7 +5762,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5777,11 +5777,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 19,
       "column": 4,
       "population": 0,
@@ -5792,11 +5792,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "NUCLEAR_PLANT",
       "row": 19,
       "column": 5,
       "population": 0,
@@ -5805,9 +5805,9 @@
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
-      "fireProtected": false,
+      "fireProtected": true,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5822,11 +5822,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 19,
       "column": 7,
       "population": 0,
@@ -5837,11 +5837,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "WASTE_TREATMENT_PLANT",
       "row": 19,
       "column": 8,
       "population": 0,
@@ -5852,7 +5852,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5867,11 +5867,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 19,
       "column": 10,
       "population": 0,
@@ -5882,22 +5882,22 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "RESIDENTIAL",
       "row": 19,
       "column": 11,
-      "population": 0,
-      "populationGrowthRate": 0,
-      "populationDecreaseRate": 0,
+      "population": 40,
+      "populationGrowthRate": 4,
+      "populationDecreaseRate": 1,
       "economyGrowthRate": 0,
       "moneyProduction": 0,
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
@@ -5912,11 +5912,11 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     },
     {
-      "type": "ROAD",
+      "type": "PARK",
       "row": 19,
       "column": 13,
       "population": 0,
@@ -5927,7 +5927,7 @@
       "tsunamiInsured": false,
       "fireProtected": false,
       "terroristicGroupLifetimeTicks": 0,
-      "policeLastRemovalTick": 0,
+      "policeLastRemovalTick": -1,
       "criminalActivityCreationTick": 0
     }
   ],

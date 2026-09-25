@@ -103,7 +103,9 @@ class AchievementCheckerTest
                         Achievement.FIRST_1000_INHABITANTS
                 )
         );
-    }    @Test
+    }
+
+    @Test
     void expandedGridUnlocksMetropolis()
     {
         AchievementManager manager =

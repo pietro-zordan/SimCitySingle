@@ -9,8 +9,8 @@ import policies.StandardPolicy;
 import progress.Progress;
 
 import java.util.Objects;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /* Collega la GUI al modello e coordina città, griglia e simulazione.
@@ -22,7 +22,8 @@ public final class Controller
     private final Simulation simulation;
     private final AchievementManager achievementManager;
     private final AchievementChecker achievementChecker;
-    private final List<GameObserver> observers = new ArrayList<>();
+    private final CopyOnWriteArrayList<GameObserver> observers =
+            new CopyOnWriteArrayList<>();
 
     /*
      * Informazioni sufficienti alla GUI per disegnare una cella,
@@ -175,10 +176,7 @@ public final class Controller
             );
         }
 
-        if (!observers.contains(observer))
-        {
-            observers.add(observer);
-        }
+        observers.addIfAbsent(observer);
     }
 
     // Rimuove un osservatore dall'elenco degli osservatori registrati.

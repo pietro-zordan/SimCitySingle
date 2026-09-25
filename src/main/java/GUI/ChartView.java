@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controller.Controller;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.chart.LineChart;
@@ -16,6 +17,8 @@ import javafx.scene.layout.StackPane;
    e permette di passare da un grafico al successivo. */
 public final class ChartView
 {
+    private static final int MAX_CHART_POINTS = 300;
+
     private final Controller controller;
     private final StackPane view = new StackPane();
     private final Button switchButton =
@@ -101,52 +104,48 @@ public final class ChartView
         view.getChildren().add(chart);
     }
 
-    // Aggiunge ai grafici le statistiche del tick corrente.
+    // Mantiene un solo punto per tick e conserva i 300 tick piu recenti.
     public void refresh()
     {
         int tick = controller.getCurrentTick();
 
-        populationSeries.getData().add(
-                new XYChart.Data<>(
-                        tick,
-                        controller.getPopulation()
-                )
-        );
+        record(populationSeries, tick, controller.getPopulation());
+        record(pollutionSeries, tick, controller.getPollution());
+        record(economySeries, tick, controller.getEconomy());
+        record(happinessSeries, tick, controller.getHappiness());
+        record(unemployedSeries, tick, controller.getUnemployed());
+        record(energyConsumptionSeries, tick, controller.getEnergyConsumed());
+    }
 
-        pollutionSeries.getData().add(
-                new XYChart.Data<>(
-                        tick,
-                        controller.getPollution()
-                )
-        );
+    private void record(
+            XYChart.Series<Number, Number> series,
+            int tick,
+            int value)
+    {
+        ObservableList<XYChart.Data<Number, Number>> points =
+                series.getData();
 
-        economySeries.getData().add(
-                new XYChart.Data<>(
-                        tick,
-                        controller.getEconomy()
-                )
-        );
+        if (!points.isEmpty())
+        {
+            XYChart.Data<Number, Number> latest =
+                    points.get(points.size() - 1);
 
-        happinessSeries.getData().add(
-                new XYChart.Data<>(
-                        tick,
-                        controller.getHappiness()
-                )
-        );
+            if (latest.getXValue().intValue() == tick)
+            {
+                if (latest.getYValue().intValue() != value)
+                {
+                    latest.setYValue(value);
+                }
+                return;
+            }
+        }
 
-        unemployedSeries.getData().add(
-                new XYChart.Data<>(
-                        tick,
-                        controller.getUnemployed()
-                )
-        );
+        points.add(new XYChart.Data<>(tick, value));
 
-        energyConsumptionSeries.getData().add(
-                new XYChart.Data<>(
-                        tick,
-                        controller.getEnergyConsumed()
-                )
-        );
+        if (points.size() > MAX_CHART_POINTS)
+        {
+            points.remove(0);
+        }
     }
 
     // Passa al grafico successivo tornando al primo dopo l'ultimo.

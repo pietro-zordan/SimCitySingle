@@ -2,6 +2,9 @@ package GUI;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
 
 import audio.SoundManager;
@@ -9,6 +12,8 @@ import controller.Controller;
 import controller.GameObserver;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -49,6 +54,17 @@ public final class GameView implements GameObserver
     private final GameOverView gameOverView;
     private final FreemasonryInvitationView invitationView;
     private final RaEyeView raEyeView = new RaEyeView();
+    private final ExecutorService tickExecutor =
+            Executors.newSingleThreadExecutor(new ThreadFactory()
+            {
+                @Override
+                public Thread newThread(Runnable runnable)
+                {
+                    Thread thread = new Thread(runnable, "simcity-tick");
+                    thread.setDaemon(true);
+                    return thread;
+                }
+            });
     private BorderPane gameRoot;
 
     private final Label toast = new Label();
@@ -109,6 +125,7 @@ public final class GameView implements GameObserver
     private boolean observerRegistered;
     private boolean closed;
     private boolean defeatSoundPlayed;
+    private volatile boolean tickInProgress;
 
     // Inizializza la vista di gioco istanziando le sotto-viste, configurando i componenti di controllo e registrandosi come observer.
     public GameView(
@@ -280,113 +297,203 @@ public final class GameView implements GameObserver
         );
     }
 
-    // Configura le dimensioni e la gestione del click sul pulsante di avanzamento del turno.
+    // Configura le dimensioni e il click sul pulsante di avanzamento del turno.
     private void configureNextTurnButton()
     {
-        nextTurnButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+        nextTurnButton.setMaxWidth(Double.MAX_VALUE);
         nextTurnButton.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        boolean criminalActivityCreated =
-                                controller.updateOfOneTick();
-
-                        if (!controller.isGameOver())
-                        {
-                            soundManager.playTickAdvanceSound();
-
-                            if (controller
-                                    .didBlackoutOccurThisTick())
-                            {
-                                soundManager.playBlackoutSound();
-                            }
-
-                            if (controller
-                                    .wasTsunamiReconstructionRestoredThisTick())
-                            {
-                                soundManager
-                                        .playInsuranceRebuildSound();
-                            }
-                        }
-
-                        showInvitationIfNeeded();
-
-                        int militaryRemovals =
-                                controller
-                                        .getRemovedTerroristicGroupsByMilitary();
-
-                        int policeTerroristRemovals =
-                                controller.getRemovedTerroristicGroups()
-                                        - militaryRemovals;
-
-                        if (controller.isActiveMissileIntercepted())
-                        {
-                            showToast(
-                                    "Missile intercepted! Missile Defense: "
-                                            + controller
-                                            .getMissileDefenseHitsRemaining()
-                                            + "/3"
-                            );
-                        }
-                        else if (controller
-                                .wasTsunamiReconstructionCompletedThisTick())
-                        {
-                            showToast(
-                                    "Insurance reconstruction completed!"
-                            );
-                        }
-                        else if (militaryRemovals > 0)
-                        {
-                            String groupText =
-                                    militaryRemovals == 1
-                                            ? " terrorist group!"
-                                            : " terrorist groups!";
-
-                            showToast(
-                                    "Military base eliminated "
-                                            + militaryRemovals
-                                            + groupText
-                            );
-                        }
-                        else if (controller.wasTerroristicGroupCreated())
-                        {
-                            showToast(
-                                    "Warning: a terrorist group has appeared!"
-                            );
-                        }
-                        else if (policeTerroristRemovals > 0
-                                && controller.getRemovedCriminalActivities() > 0)
-                        {
-                            showToast(
-                                    "Criminal activity and terrorist group eliminated by the police!"
-                            );
-                        }
-                        else if (policeTerroristRemovals > 0)
-                        {
-                            showToast(
-                                    "Terrorist group eliminated by the police!"
-                            );
-                        }
-                        else if (controller.getRemovedCriminalActivities() > 0)
-                        {
-                            showToast(
-                                    "Criminal activity eliminated by the police!"
-                            );
-                        }
-                        else if (criminalActivityCreated)
-                        {
-                            showToast(
-                                    "Warning: criminal activity has appeared!"
-                            );
-                        }
+                        advanceTickInBackground();
                     }
                 }
         );
+    }
+
+    // Il modello lavora su un solo thread; durante il calcolo la GUI non puo modificarlo.
+    private void advanceTickInBackground()
+    {
+        if (closed || tickInProgress || gameRoot.isDisabled()
+                || nextTurnButton.isDisabled())
+        {
+            return;
+        }
+
+        tickInProgress = true;
+        gameRoot.setDisable(true);
+
+        Task<Boolean> tickTask = new Task<Boolean>()
+        {
+            @Override
+            protected Boolean call()
+            {
+                return controller.updateOfOneTick();
+            }
+        };
+
+        tickTask.setOnSucceeded(
+                new EventHandler<WorkerStateEvent>()
+                {
+                    @Override
+                    public void handle(WorkerStateEvent event)
+                    {
+                        finishTick(tickTask.getValue());
+                    }
+                }
+        );
+        tickTask.setOnFailed(
+                new EventHandler<WorkerStateEvent>()
+                {
+                    @Override
+                    public void handle(WorkerStateEvent event)
+                    {
+                        failTick(tickTask.getException());
+                    }
+                }
+        );
+
+        tickExecutor.execute(tickTask);
+    }
+
+    // Aggiorna la GUI e riabilita i comandi quando il modello ha finito.
+    private void finishTick(boolean criminalActivityCreated)
+    {
+        tickInProgress = false;
+        if (closed)
+        {
+            return;
+        }
+
+        try
+        {
+            showTickFeedback(criminalActivityCreated);
+            updateDisplayedState();
+        }
+        finally
+        {
+            gameRoot.setDisable(controller.isGameOver()
+                    || controller.isFreemasonryInvitationPending());
+        }
+    }
+
+    // Segnala l'errore e sblocca la schermata anche se il calcolo non termina.
+    private void failTick(Throwable error)
+    {
+        tickInProgress = false;
+        if (closed)
+        {
+            return;
+        }
+
+        System.err.println("Unable to advance tick:");
+        error.printStackTrace();
+
+        try
+        {
+            updateDisplayedState();
+            showToast("Unable to advance tick: " + error.getMessage());
+        }
+        finally
+        {
+            gameRoot.setDisable(controller.isGameOver()
+                    || controller.isFreemasonryInvitationPending());
+        }
+    }
+
+    // Riproduce i suoni e mostra le notifiche del turno sul thread JavaFX.
+    private void showTickFeedback(boolean criminalActivityCreated)
+    {
+        if (!controller.isGameOver())
+        {
+            soundManager.playTickAdvanceSound();
+
+            if (controller
+                    .didBlackoutOccurThisTick())
+            {
+                soundManager.playBlackoutSound();
+            }
+
+            if (controller
+                    .wasTsunamiReconstructionRestoredThisTick())
+            {
+                soundManager
+                        .playInsuranceRebuildSound();
+            }
+        }
+
+        showInvitationIfNeeded();
+
+        int militaryRemovals =
+                controller
+                        .getRemovedTerroristicGroupsByMilitary();
+
+        int policeTerroristRemovals =
+                controller.getRemovedTerroristicGroups()
+                        - militaryRemovals;
+
+        if (controller.isActiveMissileIntercepted())
+        {
+            showToast(
+                    "Missile intercepted! Missile Defense: "
+                            + controller
+                            .getMissileDefenseHitsRemaining()
+                            + "/3"
+            );
+        }
+        else if (controller
+                .wasTsunamiReconstructionCompletedThisTick())
+        {
+            showToast(
+                    "Insurance reconstruction completed!"
+            );
+        }
+        else if (militaryRemovals > 0)
+        {
+            String groupText =
+                    militaryRemovals == 1
+                            ? " terrorist group!"
+                            : " terrorist groups!";
+
+            showToast(
+                    "Military base eliminated "
+                            + militaryRemovals
+                            + groupText
+            );
+        }
+        else if (controller.wasTerroristicGroupCreated())
+        {
+            showToast(
+                    "Warning: a terrorist group has appeared!"
+            );
+        }
+        else if (policeTerroristRemovals > 0
+                && controller.getRemovedCriminalActivities() > 0)
+        {
+            showToast(
+                    "Criminal activity and terrorist group eliminated by the police!"
+            );
+        }
+        else if (policeTerroristRemovals > 0)
+        {
+            showToast(
+                    "Terrorist group eliminated by the police!"
+            );
+        }
+        else if (controller.getRemovedCriminalActivities() > 0)
+        {
+            showToast(
+                    "Criminal activity eliminated by the police!"
+            );
+        }
+        else if (criminalActivityCreated)
+        {
+            showToast(
+                    "Warning: criminal activity has appeared!"
+            );
+        }
     }
 
     // Crea e struttura la scena JavaFX organizzando i pannelli laterali, la griglia centrale e la barra inferiore in un BorderPane.
@@ -1229,79 +1336,90 @@ public final class GameView implements GameObserver
         }
     }
 
-    // Aggiorna in modo asincrono nel JavaFX Application Thread tutti i componenti grafici in seguito alle notifiche del modello.
+    // Le notifiche del tick vengono applicate alla fine del lavoro sul modello.
     @Override
     public void refreshGameView()
     {
+        if (tickInProgress && !Platform.isFxApplicationThread())
+        {
+            return;
+        }
+
         Platform.runLater(
                 new Runnable()
                 {
                     @Override
                     public void run()
                     {
-                        if (closed)
-                        {
-                            return;
-                        }
-
-                        statusView.updateBudget();
-
-                        boolean gameOver =
-                                controller.isGameOver();
-
-                        if (gameOver)
-                        {
-                            eventAnimationView.stop();
-                        }
-                        else
-                        {
-                            eventAnimationView.refresh();
-                        }
-
-                        if (gameOver
-                                || (!eventAnimationView
-                                .isTsunamiAnimationRunning()
-                                && !eventAnimationView
-                                .isMissileAnimationRunning()
-                                && !eventAnimationView
-                                .isExplosionAnimationRunning()))
-                        {
-                            gridView.refresh();
-                        }
-
-                        statusView.updateStatistics();
-
-                        constructionToolbarView
-                                .refreshCosts();
-
-                        constructionToolbarView
-                                .refreshAvailability();
-
-                        loanView.refresh();
-                        refreshTsunamiInsuranceButton();
-                        refreshNuclearFireProtection();
-                        missileDefenseView.refresh();
-                        refreshDemolitionButton();
-
-                        statusView.updateTick();
-                        statusView.updateEventBanner();
-                        raEyeView.refresh(
-                                controller.getFreemasonryChoice()
-                        );
-
-                        chartView.refresh();
-
-                        if (!gameOver)
-                        {
-                            checkNewAchievements();
-                        }
-
-                        showGameOverIfNeeded();
-
-                        showInvitationIfNeeded();
+                        updateDisplayedState();
                     }
                 }
         );
+    }
+
+    // Aggiorna tutte le sotto-viste solo dal thread JavaFX.
+    private void updateDisplayedState()
+    {
+        if (closed || tickInProgress)
+        {
+            return;
+        }
+
+        statusView.updateBudget();
+
+        boolean gameOver =
+                controller.isGameOver();
+
+        if (gameOver)
+        {
+            eventAnimationView.stop();
+        }
+        else
+        {
+            eventAnimationView.refresh();
+        }
+
+        if (gameOver
+                || (!eventAnimationView
+                .isTsunamiAnimationRunning()
+                && !eventAnimationView
+                .isMissileAnimationRunning()
+                && !eventAnimationView
+                .isExplosionAnimationRunning()))
+        {
+            gridView.refresh();
+        }
+
+        statusView.updateStatistics();
+
+        constructionToolbarView
+                .refreshCosts();
+
+        constructionToolbarView
+                .refreshAvailability();
+
+        loanView.refresh();
+        refreshTsunamiInsuranceButton();
+        refreshNuclearFireProtection();
+        missileDefenseView.refresh();
+        refreshDemolitionButton();
+
+        statusView.updateTick();
+        statusView.updateEventBanner();
+        raEyeView.refresh(
+                controller.getFreemasonryChoice()
+        );
+
+        chartView.refresh();
+
+        if (!gameOver)
+        {
+            checkNewAchievements();
+        }
+
+        showGameOverIfNeeded();
+
+        showInvitationIfNeeded();
     }
 
     private void refreshTsunamiInsuranceButton()
@@ -1384,6 +1502,7 @@ public final class GameView implements GameObserver
     public void close()
     {
         closed = true;
+        tickExecutor.shutdown();
 
         if (observerRegistered)
         {

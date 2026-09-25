@@ -161,6 +161,61 @@ class ProgressTest {
         assertTrue(residential.isRoadConnected());
     }
 
+    // Verifica che una griglia espansa mantenga le proprie dimensioni nel salvataggio.
+    @Test
+    void expandedGridSizeSurvivesJsonSaveAndLoad()
+    {
+        Grid grid = new Grid(40, 40);
+        grid.restoreConstruction(new Road(), 39, 39);
+
+        City city = new City(grid, new StandardPolicy(), 100000);
+        Simulation simulation = new Simulation(city, grid, 400, 396);
+
+        Gson gson = new Gson();
+        Progress saved = Progress.fromGame(grid, city, simulation);
+        Progress loaded = gson.fromJson(gson.toJson(saved), Progress.class);
+
+        Grid restoredGrid = loaded.restoreGrid();
+
+        assertEquals(40, restoredGrid.getNumberOfRows());
+        assertEquals(40, restoredGrid.getNumberOfColumns());
+        assertEquals(
+                ConstructionType.ROAD,
+                restoredGrid.getCell(39, 39).getConstruction().getType()
+        );
+    }
+
+    // I vecchi JSON senza dimensioni continuano a essere caricati come 20x20.
+    @Test
+    void oldSaveWithoutGridSizeDefaultsToTwenty()
+    {
+        Grid grid = new Grid();
+        grid.restoreConstruction(new Road(), 19, 19);
+
+        City city = new City(grid, new StandardPolicy(), 100000);
+        Simulation simulation = new Simulation(city, grid, 20, 14);
+
+        Gson gson = new Gson();
+        JsonObject oldSave = gson.toJsonTree(
+                Progress.fromGame(grid, city, simulation)
+        ).getAsJsonObject();
+
+        oldSave.remove("gridRows");
+        oldSave.remove("gridColumns");
+
+        Grid restoredGrid = gson.fromJson(
+                oldSave,
+                Progress.class
+        ).restoreGrid();
+
+        assertEquals(20, restoredGrid.getNumberOfRows());
+        assertEquals(20, restoredGrid.getNumberOfColumns());
+        assertEquals(
+                ConstructionType.ROAD,
+                restoredGrid.getCell(19, 19).getConstruction().getType()
+        );
+    }
+
     // Verifica che venga ricreata la policy salvata.
     @Test
     void restorePolicyRestoresCorrectType() {

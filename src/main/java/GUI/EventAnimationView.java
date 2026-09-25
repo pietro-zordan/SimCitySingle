@@ -461,6 +461,24 @@ public final class EventAnimationView
         );
     }
 
+    // Aggiorna il ritaglio dello scudo quando la griglia cambia dimensione.
+    private void updateMissileShieldClip()
+    {
+        if (missileShieldNode == null || !(missileShieldNode.getClip() instanceof Rectangle))
+        {
+            return;
+        }
+
+        Rectangle clip = (Rectangle) missileShieldNode.getClip();
+        double width = gridView.getGridVisualWidth();
+        double height = gridView.getGridVisualHeight();
+
+        clip.setX(-width / 2.0);
+        clip.setY(-height / 2.0);
+        clip.setWidth(width);
+        clip.setHeight(height);
+    }
+
     private Group createMissileNode()
     {
         Rectangle body =
@@ -1239,6 +1257,7 @@ public final class EventAnimationView
     private void showMissileShieldImpact()
     {
         updateMissileShieldGeometry();
+        updateMissileShieldClip();
 
         if (missileShieldTimeline != null)
         {

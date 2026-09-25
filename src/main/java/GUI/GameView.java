@@ -642,10 +642,8 @@ public final class GameView implements GameObserver
                 Pos.CENTER
         );
 
-        VBox gridColumn = new VBox(
-                4,
-                gridWithAnimation
-        );
+        MapViewport mapViewport = new MapViewport(gridWithAnimation);
+        VBox gridColumn = new VBox(4, mapViewport.getView());
         gridColumn.setAlignment(Pos.CENTER);
 
         HBox centralContent =

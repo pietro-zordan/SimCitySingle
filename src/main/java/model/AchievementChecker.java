@@ -29,6 +29,7 @@ public class AchievementChecker
 
         checkPopulation(city);
         checkBudget(city);
+        checkMetropolis(grid);
     }
 
     /* Riceve il piazzamento riuscito di una costruzione e valuta
@@ -86,12 +87,36 @@ public class AchievementChecker
 
     public void checkMetropolis(Grid grid)
     {
-        if(grid.getNumberOfRows()>19 && grid.getNumberOfRows()<30)
-             && !achievementManager.isUnlocked(
-            Achievement.METROPOLIS))
+        Objects.requireNonNull(
+                grid,
+                "Grid cannot be null"
+        );
 
-        achievementManager.unlock(Achievement.METROPOLIS);
+        boolean expanded =
+                grid.getNumberOfRows() > 20
+                        || grid.getNumberOfColumns() > 20;
 
+        if (expanded
+                && !achievementManager.isUnlocked(
+                        Achievement.METROPOLIS))
+        {
+            achievementManager.unlock(
+                    Achievement.METROPOLIS
+            );
+        }
+    }
+
+    public void onFreemasonryChoice(
+            FreemasonryChoice choice)
+    {
+        if (choice == FreemasonryChoice.ACCEPTED
+                && !achievementManager.isUnlocked(
+                        Achievement.ILLUMINATED))
+        {
+            achievementManager.unlock(
+                    Achievement.ILLUMINATED
+            );
+        }
     }
 
 

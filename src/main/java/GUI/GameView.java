@@ -38,6 +38,7 @@ public final class GameView implements GameObserver
     private final GameNavigation navigation;
     private final ProgressManager progressManager;
     private final SoundManager soundManager;
+    private final Runnable achievementSaveAction;
     private final String saveFilePath;
     private final GridView gridView;
     private final ChartView chartView;
@@ -51,6 +52,8 @@ public final class GameView implements GameObserver
     private BorderPane gameRoot;
 
     private final Label toast = new Label();
+    private final PauseTransition toastHidePause =
+            new PauseTransition(Duration.seconds(4));
 
     private final Button nextTurnButton =
             new Button("Next Turn");
@@ -113,13 +116,15 @@ public final class GameView implements GameObserver
             GameNavigation navigation,
             ProgressManager progressManager,
             String saveFilePath,
-            SoundManager soundManager)
+            SoundManager soundManager,
+            Runnable achievementSaveAction)
     {
         if (controller == null
                 || navigation == null
                 || progressManager == null
                 || saveFilePath == null
-                || soundManager == null)
+                || soundManager == null
+                || achievementSaveAction == null)
         {
             throw new IllegalArgumentException(
                     "Game view dependencies cannot be null"
@@ -132,6 +137,7 @@ public final class GameView implements GameObserver
         this.progressManager = progressManager;
         this.saveFilePath = saveFilePath;
         this.soundManager = soundManager;
+        this.achievementSaveAction = achievementSaveAction;
 
         configureToast();
         configureNextTurnButton();
@@ -261,6 +267,17 @@ public final class GameView implements GameObserver
 
         toast.setVisible(false);
         toast.setMouseTransparent(true);
+
+        toastHidePause.setOnFinished(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        toast.setVisible(false);
+                    }
+                }
+        );
     }
 
     // Configura le dimensioni e la gestione del click sul pulsante di avanzamento del turno.
@@ -364,7 +381,7 @@ public final class GameView implements GameObserver
                         else if (criminalActivityCreated)
                         {
                             showToast(
-                                    "Attenzione: è comparsa un'attività criminale!"
+                                    "Warning: criminal activity has appeared!"
                             );
                         }
                     }
@@ -1343,30 +1360,18 @@ public final class GameView implements GameObserver
         }
     }
 
-    // Mostra a schermo un messaggio informativo temporaneo della durata di 2.5 secondi.
+    // Mostra a schermo un messaggio informativo per 4 secondi.
+    // Un nuovo toast riavvia lo stesso timer, evitando che un vecchio timer
+    // nasconda prematuramente il messaggio più recente.
     private void showToast(
             String message)
     {
+        toastHidePause.stop();
+
         toast.setText(message);
         toast.setVisible(true);
 
-        PauseTransition pause =
-                new PauseTransition(
-                        Duration.seconds(4)
-                );
-
-        pause.setOnFinished(
-                new EventHandler<ActionEvent>()
-                {
-                    @Override
-                    public void handle(ActionEvent event)
-                    {
-                        toast.setVisible(false);
-                    }
-                }
-        );
-
-        pause.play();
+        toastHidePause.playFromStart();
     }
 
     // Restituisce l'oggetto Scene principale contenente l'intera interfaccia di gioco.
@@ -1386,6 +1391,7 @@ public final class GameView implements GameObserver
             observerRegistered = false;
         }
 
+        toastHidePause.stop();
         eventAnimationView.stop();
         gridView.stop();
         invitationView.stop();
@@ -1396,8 +1402,12 @@ public final class GameView implements GameObserver
         Achievement achievement = controller
                 .consumeNewlyUnlockedAchievement();
 
+        boolean unlockedSomething = false;
+
         while (achievement != null)
         {
+            unlockedSomething = true;
+
             soundManager.playAchievementSound();
 
             showToast("Achievement unlocked: "
@@ -1405,6 +1415,11 @@ public final class GameView implements GameObserver
 
             achievement = controller
                             .consumeNewlyUnlockedAchievement();
+        }
+
+        if (unlockedSomething)
+        {
+            achievementSaveAction.run();
         }
     }
 }

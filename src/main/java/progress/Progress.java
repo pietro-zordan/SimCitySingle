@@ -25,6 +25,9 @@ public class Progress
     private int lastPolicyChangeTick;
     private PolicyType policyType;
     private int budget;
+    // Dimensioni della griglia salvata. Nei vecchi salvataggi Gson usa zero.
+    private int gridRows;
+    private int gridColumns;
     // Nei vecchi salvataggi il campo manca e Gson usa zero.
     private int criticalTicks;
     // Le vecchie partite prive del campo restano in attesa della scelta.
@@ -107,6 +110,9 @@ public class Progress
         this.budget = budget;
         this.policyType = policyType;
         this.constructions = constructions;
+        // I Progress creati manualmente mantengono il formato storico 20x20.
+        this.gridRows = 20;
+        this.gridColumns = 20;
         this.tsunamiInsuranceActive =
                 tsunamiInsuranceActive;
         this.pendingTsunamiReconstructions =
@@ -185,6 +191,9 @@ public class Progress
                 simulation
                         .getTsunamiReconstructionDirection()
         );
+
+        progress.gridRows = grid.getNumberOfRows();
+        progress.gridColumns = grid.getNumberOfColumns();
 
         progress.bankStatePresent = true;
         progress.lastLoanTick =
@@ -282,7 +291,28 @@ public class Progress
             );
         }
 
-        Grid restoredGrid = new Grid();
+        Grid restoredGrid;
+
+        // Compatibilità con i vecchi salvataggi, che non contenevano
+        // ancora le dimensioni della griglia.
+        if (gridRows == 0 && gridColumns == 0)
+        {
+            restoredGrid = new Grid();
+        }
+        else
+        {
+            if (gridRows == 0 || gridColumns == 0)
+            {
+                throw new IllegalStateException(
+                        "Invalid saved grid size"
+                );
+            }
+
+            restoredGrid = new Grid(
+                    gridRows,
+                    gridColumns
+            );
+        }
 
         for (ConstructionProgress constructionProgress : constructions)
         {

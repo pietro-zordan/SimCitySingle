@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
 
+import Events.EventType;
 import audio.SoundManager;
 import controller.Controller;
 import controller.GameObserver;
@@ -443,7 +444,9 @@ public final class GameView implements GameObserver
             soundManager.playTickAdvanceSound();
 
             if (controller
-                    .didBlackoutOccurThisTick())
+                    .didBlackoutOccurThisTick()
+                    && controller.getActiveEventType()
+                    != EventType.ENERGY_CRISIS)
             {
                 soundManager.playBlackoutSound();
             }

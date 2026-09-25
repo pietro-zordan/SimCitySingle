@@ -50,20 +50,20 @@ public final class GridView
     private final Runnable placementSound;
     private final GridPane view;
     private final Label infoLabel;
-    private final StackPane[][] cells;
-    private final Rectangle[][] graphicCells;
-    private final Rectangle[][] crisisOverlays;
-    private final Label[][] crisisSparkIcons;
-    private final Label[][] noPowerIcons;
-    private final Label[][] boostIcons;
-    private final Label[][] tsunamiIcons;
-    private final Rectangle[][] tsunamiOverlays;
-    private final Rectangle[][] explosionOverlays;
-    private final Label[][] grassIcons;
-    private final StackPane[][] lodgeIcons;
-    private final Tooltip[][] grassTooltips;
-    private final Tooltip[][] lodgeTooltips;
-    private final Tooltip[][] powerPlantTooltips;
+    private StackPane[][] cells;
+    private Rectangle[][] graphicCells;
+    private Rectangle[][] crisisOverlays;
+    private Label[][] crisisSparkIcons;
+    private Label[][] noPowerIcons;
+    private Label[][] boostIcons;
+    private Label[][] tsunamiIcons;
+    private Rectangle[][] tsunamiOverlays;
+    private Rectangle[][] explosionOverlays;
+    private Label[][] grassIcons;
+    private StackPane[][] lodgeIcons;
+    private Tooltip[][] grassTooltips;
+    private Tooltip[][] lodgeTooltips;
+    private Tooltip[][] powerPlantTooltips;
     private final List<Label> crisisEligibleSparks = new ArrayList<>();
     private final List<Label> crisisVisibleSparks = new ArrayList<>();
     private final Random crisisRandom = new Random();
@@ -106,8 +106,18 @@ public final class GridView
         );
         infoLabel.setPadding(new Insets(5));
 
+        rebuildCells();
+    }
+
+    // Ricrea la rappresentazione grafica quando cambia la dimensione della griglia.
+    private void rebuildCells()
+    {
         int rows = controller.getNumberOfRows();
         int columns = controller.getNumberOfColumns();
+
+        stop();
+        crisisEligibleSparks.clear();
+        view.getChildren().clear();
 
         cells = new StackPane[rows][columns];
         graphicCells = new Rectangle[rows][columns];
@@ -124,8 +134,19 @@ public final class GridView
         lodgeTooltips = new Tooltip[rows][columns];
         powerPlantTooltips = new Tooltip[rows][columns];
 
-        // Popolamento celle griglia
         createCells();
+    }
+
+    // Mantiene sincronizzate le dimensioni della GUI con quelle del modello.
+    public void ensureGridSize()
+    {
+        int rows = controller.getNumberOfRows();
+        int columns = controller.getNumberOfColumns();
+
+        if (cells == null || cells.length != rows || cells[0].length != columns)
+        {
+            rebuildCells();
+        }
     }
 
     // Instanzia e sovrappone le componenti grafiche per ciascuna cella della griglia agganciando i relativi listener per i click del mouse.
@@ -423,6 +444,7 @@ public final class GridView
     // Scorrendo l'intera griglia, invoca il rendering grafico di ciascuna cella sincronizzandola con lo stato attuale del modello.
     public void refresh()
     {
+        ensureGridSize();
         boolean crisisNowActive =
                 controller.getActiveEventType()
                         == EventType.ENERGY_CRISIS;
@@ -681,6 +703,7 @@ public final class GridView
     // Mostra l'effetto Tsunami su un'intera riga della griglia.
     public void showTsunamiRow(int row)
     {
+        ensureGridSize();
         for (int column = 0;
              column < controller.getNumberOfColumns();
              column++)
@@ -692,6 +715,7 @@ public final class GridView
     // Mostra l'effetto Tsunami su un'intera colonna della griglia.
     public void showTsunamiColumn(int column)
     {
+        ensureGridSize();
         for (int row = 0;
              row < controller.getNumberOfRows();
              row++)
@@ -719,6 +743,7 @@ public final class GridView
     // Nasconde l'icona dello Tsunami da tutte le celle della griglia al termine dell'evento.
     public void clearTsunami()
     {
+        ensureGridSize();
         for (int row = 0;
              row < controller.getNumberOfRows();
              row++)
@@ -745,6 +770,7 @@ public final class GridView
             int radius,
             int maxRadius)
     {
+        ensureGridSize();
         double progress = 0.0;
 
         if (maxRadius > 0)
@@ -795,6 +821,7 @@ public final class GridView
     // Nasconde l'effetto grafico dell'esplosione da tutta la griglia.
     public void clearExplosion()
     {
+        ensureGridSize();
         for (int row = 0; row < controller.getNumberOfRows(); row++)
         {
             for (int column = 0; column < controller.getNumberOfColumns(); column++)

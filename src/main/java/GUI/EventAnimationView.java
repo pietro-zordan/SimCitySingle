@@ -1003,15 +1003,43 @@ public final class EventAnimationView
         missileAnimationRunning = true;
         nextTurnButton.setDisable(true);
 
-        double targetX =
-                gridView.getCellCenterOffsetX(
+        if (missileOverlayHost == null
+                || missileOverlayHost.getScene() == null)
+        {
+            missileAnimationStarted = false;
+            missileAnimationRunning = false;
+            nextTurnButton.setDisable(false);
+            return;
+        }
+
+        /*
+         * Il bersaglio viene convertito dalla cella reale alle coordinate
+         * dell'overlay sopra lo ScrollPane. Lo zoom della griglia non entra
+         * quindi nella dimensione o nella traiettoria grafica del missile.
+         */
+        positionMissileOverlayNodes();
+
+        Point2D targetInScene =
+                gridView.getCellCenterInScene(
+                        missileTargetRow,
                         missileTargetColumn
                 );
 
-        double targetY =
-                gridView.getCellCenterOffsetY(
-                        missileTargetRow
+        Point2D targetInOverlay =
+                missileOverlayHost.sceneToLocal(
+                        targetInScene
                 );
+
+        Point2D gridCenter =
+                getRenderedGridCenterInOverlay();
+
+        double targetX =
+                targetInOverlay.getX()
+                        - gridCenter.getX();
+
+        double targetY =
+                targetInOverlay.getY()
+                        - gridCenter.getY();
 
         double[] startPosition =
                 getRandomMissileStartPosition(
@@ -1103,57 +1131,91 @@ public final class EventAnimationView
             double targetX,
             double targetY)
     {
-        double[] radii =
-                getMissileShieldRadii();
+        Point2D center =
+                getRenderedGridCenterInOverlay();
 
-        double radiusX = radii[0];
-        double radiusY = radii[1];
+        double width =
+                missileOverlayHost == null
+                        ? 0.0
+                        : missileOverlayHost.getWidth();
 
-        int startSide = random.nextInt(6);
+        double height =
+                missileOverlayHost == null
+                        ? 0.0
+                        : missileOverlayHost.getHeight();
+
+        if (width <= 0 || height <= 0)
+        {
+            double[] radii =
+                    getMissileShieldRadii();
+
+            return new double[] {
+                    -radii[0],
+                    -radii[1]
+            };
+        }
+
+        double margin =
+                Math.min(
+                        MISSILE_START_MARGIN,
+                        Math.min(width, height) * 0.18
+                );
+
+        double horizontalRange =
+                Math.max(
+                        1.0,
+                        width - 2.0 * margin
+                );
+
+        double verticalRange =
+                Math.max(
+                        1.0,
+                        height - 2.0 * margin
+                );
+
+        double absoluteX;
+        double absoluteY;
+
+        int startSide = random.nextInt(4);
 
         if (startSide == 0)
         {
-            return new double[] {
-                    -radiusX - MISSILE_START_MARGIN,
-                    -radiusY - MISSILE_START_MARGIN
-            };
+            absoluteX =
+                    margin
+                            + random.nextDouble()
+                            * horizontalRange;
+            absoluteY = margin;
         }
-
-        if (startSide == 1)
+        else if (startSide == 1)
         {
-            return new double[] {
-                    radiusX + MISSILE_START_MARGIN,
-                    -radiusY - MISSILE_START_MARGIN
-            };
+            absoluteX =
+                    width - margin;
+            absoluteY =
+                    margin
+                            + random.nextDouble()
+                            * verticalRange;
         }
-
-        if (startSide == 2)
+        else if (startSide == 2)
         {
-            return new double[] {
-                    -radiusX - MISSILE_START_MARGIN,
-                    targetY
-            };
+            absoluteX =
+                    margin
+                            + random.nextDouble()
+                            * horizontalRange;
+            absoluteY =
+                    height - margin;
         }
-
-        if (startSide == 3)
+        else
         {
-            return new double[] {
-                    radiusX + MISSILE_START_MARGIN,
-                    targetY
-            };
-        }
-
-        if (startSide == 4)
-        {
-            return new double[] {
-                    -radiusX - MISSILE_START_MARGIN,
-                    radiusY + MISSILE_START_MARGIN
-            };
+            absoluteX = margin;
+            absoluteY =
+                    margin
+                            + random.nextDouble()
+                            * verticalRange;
         }
 
         return new double[] {
-                radiusX + MISSILE_START_MARGIN,
-                radiusY + MISSILE_START_MARGIN
+                absoluteX - center.getX(),
+                absoluteY - center.getY()
         };
     }
 

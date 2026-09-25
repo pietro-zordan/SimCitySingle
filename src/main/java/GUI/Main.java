@@ -285,7 +285,15 @@ public class Main
                 this,
                 progressManager,
                 SAVE_FILE_PATH,
-                soundManager
+                soundManager,
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        saveAchievements();
+                    }
+                }
         );
 
         stage.setScene(gameView.getScene());
@@ -316,28 +324,35 @@ public class Main
         }
     }
 
+    // Salva subito gli achievement globali quando cambia il loro stato.
+    private void saveAchievements()
+    {
+        if (achievementManager == null)
+        {
+            return;
+        }
+
+        try
+        {
+            achievementProgressManager.save(
+                    achievementManager,
+                    ACHIEVEMENTS_FILE_PATH
+            );
+        }
+        catch (IOException exception)
+        {
+            System.err.println(
+                    "Unable to save achievements: "
+                            + exception.getMessage()
+            );
+        }
+    }
+
     // Chiude correttamente la schermata di gioco insieme all'applicazione.
     @Override
     public void stop()
     {
-        if (achievementManager != null)
-        {
-            try
-            {
-                achievementProgressManager.save(
-                        achievementManager,
-                        ACHIEVEMENTS_FILE_PATH
-                );
-            }
-            catch (IOException exception)
-            {
-                System.err.println(
-                        "Unable to save achievements: "
-                                + exception.getMessage()
-                );
-            }
-        }
-
+        saveAchievements();
         closeGameView();
     }
 }

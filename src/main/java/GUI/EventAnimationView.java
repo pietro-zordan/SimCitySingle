@@ -195,6 +195,11 @@ public final class EventAnimationView
 
         missileNode = createMissileNode();
         missileNode.setVisible(false);
+        // L'animazione del missile usa translateX/translateY anche fuori dalla griglia.
+        // Se il nodo resta "managed", StackPane lo considera nel layout e durante
+        // il volo può cambiare le dimensioni del contenuto dello ScrollPane,
+        // facendo comparire le scrollbar e spostando/riscalando visivamente la mappa.
+        missileNode.setManaged(false);
         missileNode.setMouseTransparent(true);
     }
 

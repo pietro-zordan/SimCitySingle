@@ -30,6 +30,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 import model.ConstructionType;
 
@@ -185,6 +186,9 @@ public final class GridView
                         new Rectangle(CELL_SIZE, CELL_SIZE);
                 graphicCell.setFill(Color.WHITESMOKE);
                 graphicCell.setStroke(Color.LIGHTGRAY);
+                // Il bordo resta dentro i 30x30: eventi come Energy Crisis
+                // possono aumentare lo spessore senza cambiare i layout bounds.
+                graphicCell.setStrokeType(StrokeType.INSIDE);
 
                 Rectangle crisisOverlay =
                         new Rectangle(CELL_SIZE - 4, CELL_SIZE - 4);
@@ -295,6 +299,13 @@ public final class GridView
                         tsunamiIcon,
                         explosionOverlay
                 );
+
+                // Ogni cella deve avere sempre esattamente la stessa dimensione.
+                // Icone e overlay degli eventi non possono quindi modificare
+                // nemmeno di un pixel la dimensione complessiva della griglia.
+                cell.setMinSize(CELL_SIZE, CELL_SIZE);
+                cell.setPrefSize(CELL_SIZE, CELL_SIZE);
+                cell.setMaxSize(CELL_SIZE, CELL_SIZE);
 
                 Rectangle roadPreview =
                         new Rectangle(CELL_SIZE, CELL_SIZE);

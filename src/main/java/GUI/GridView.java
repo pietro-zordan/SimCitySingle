@@ -1167,6 +1167,26 @@ public final class GridView
         );
     }
 
+    public Point2D getCellCenterInScene(
+            int row,
+            int column)
+    {
+        if (row < 0
+                || row >= controller.getNumberOfRows()
+                || column < 0
+                || column >= controller.getNumberOfColumns())
+        {
+            throw new IllegalArgumentException(
+                    "Cell outside the grid"
+            );
+        }
+
+        return cells[row][column].localToScene(
+                CELL_SIZE / 2.0,
+                CELL_SIZE / 2.0
+        );
+    }
+
     public double getCellCenterOffsetX(int column)
     {
         if (column < 0

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /* Gestisce l'evento incendio.
@@ -19,7 +20,8 @@ public class Fire extends Event{
     private Grid grid;
 
     // Celle che verranno bruciate durante il tick successivo
-    private final Set<Cell> cellsToBurnNextTick = new HashSet<>();
+    private final Set<Cell> cellsToBurnNextTick =
+            new LinkedHashSet<>();
 
     // Celle già coinvolte nell'incendio
     private final Set<Cell> involvedCells = new HashSet<>();

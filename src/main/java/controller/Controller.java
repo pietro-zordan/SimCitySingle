@@ -234,6 +234,7 @@ public final class Controller
 
         simulation.tryToPlaceMasonicLodge();
         achievementChecker.onConstructionPlaced(type);
+        achievementChecker.checkMetropolis(grid);
         notifyObservers();
 
         return getCellState(
@@ -318,6 +319,7 @@ public final class Controller
 
         if (chosen)
         {
+            achievementChecker.onFreemasonryChoice(choice);
             notifyObservers();
         }
 

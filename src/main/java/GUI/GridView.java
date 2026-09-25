@@ -276,26 +276,6 @@ public final class GridView
                 StackPane lodgeIcon = createLodgeIcon();
                 lodgeIcon.setVisible(false);
 
-                Tooltip grassTooltip = new Tooltip("Grass");
-                grassTooltip.setShowDelay(
-                        Duration.millis(100)
-                );
-                grassTooltip.setHideDelay(
-                        Duration.ZERO
-                );
-
-                Tooltip lodgeTooltip = new Tooltip("Masonic Lodge");
-                lodgeTooltip.setShowDelay(Duration.millis(100));
-                lodgeTooltip.setHideDelay(Duration.ZERO);
-
-                Tooltip powerPlantTooltip = new Tooltip();
-                powerPlantTooltip.setShowDelay(
-                        Duration.millis(100)
-                );
-                powerPlantTooltip.setHideDelay(
-                        Duration.ZERO
-                );
-
                 StackPane cell = new StackPane(
                         graphicCell,
                         crisisOverlay,
@@ -409,10 +389,12 @@ public final class GridView
                         explosionOverlay;
                 grassIcons[row][column] = grassIcon;
                 lodgeIcons[row][column] = lodgeIcon;
-                grassTooltips[row][column] = grassTooltip;
-                lodgeTooltips[row][column] = lodgeTooltip;
-                powerPlantTooltips[row][column] =
-                        powerPlantTooltip;
+                // I tooltip vengono creati soltanto quando la cella ne ha
+                // realmente bisogno. Su una 40x40 evitiamo migliaia di
+                // oggetti JavaFX inutilizzati.
+                grassTooltips[row][column] = null;
+                lodgeTooltips[row][column] = null;
+                powerPlantTooltips[row][column] = null;
 
                 view.add(cell, column, row);
             }
@@ -861,26 +843,77 @@ public final class GridView
                         && state.type() == ConstructionType.MASONIC_LODGE;
         lodgeIcons[row][column].setVisible(lodgePresent);
 
-        Tooltip.uninstall(
-                cells[row][column],
-                lodgeTooltips[row][column]
-        );
         if (lodgePresent)
         {
+            if (lodgeTooltips[row][column] == null)
+            {
+                Tooltip lodgeTooltip =
+                        new Tooltip(
+                                "Masonic Lodge"
+                        );
+
+                lodgeTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+
+                lodgeTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
+                lodgeTooltips[row][column] =
+                        lodgeTooltip;
+            }
+
+            Tooltip.uninstall(
+                    cells[row][column],
+                    lodgeTooltips[row][column]
+            );
+
             Tooltip.install(
                     cells[row][column],
                     lodgeTooltips[row][column]
             );
         }
-
-        Tooltip.uninstall(
-                cells[row][column],
-                grassTooltips[row][column]
-        );
+        else if (lodgeTooltips[row][column] != null)
+        {
+            Tooltip.uninstall(
+                    cells[row][column],
+                    lodgeTooltips[row][column]
+            );
+        }
 
         if (grassPresent)
         {
+            if (grassTooltips[row][column] == null)
+            {
+                Tooltip grassTooltip =
+                        new Tooltip("Grass");
+
+                grassTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+
+                grassTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
+                grassTooltips[row][column] =
+                        grassTooltip;
+            }
+
+            Tooltip.uninstall(
+                    cells[row][column],
+                    grassTooltips[row][column]
+            );
+
             Tooltip.install(
+                    cells[row][column],
+                    grassTooltips[row][column]
+            );
+        }
+        else if (grassTooltips[row][column] != null)
+        {
+            Tooltip.uninstall(
                     cells[row][column],
                     grassTooltips[row][column]
             );
@@ -891,15 +924,46 @@ public final class GridView
                         && state.type()
                         == ConstructionType.POWER_PLANT;
 
-        Tooltip.uninstall(
-                cells[row][column],
-                powerPlantTooltips[row][column]
-        );
-
         if (powerPlantPresent)
         {
-            updatePowerPlantTooltip(row, column);
-            Tooltip.install(cells[row][column], powerPlantTooltips[row][column]);
+            if (powerPlantTooltips[row][column] == null)
+            {
+                Tooltip powerPlantTooltip =
+                        new Tooltip();
+
+                powerPlantTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+
+                powerPlantTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
+                powerPlantTooltips[row][column] =
+                        powerPlantTooltip;
+            }
+
+            Tooltip.uninstall(
+                    cells[row][column],
+                    powerPlantTooltips[row][column]
+            );
+
+            updatePowerPlantTooltip(
+                    row,
+                    column
+            );
+
+            Tooltip.install(
+                    cells[row][column],
+                    powerPlantTooltips[row][column]
+            );
+        }
+        else if (powerPlantTooltips[row][column] != null)
+        {
+            Tooltip.uninstall(
+                    cells[row][column],
+                    powerPlantTooltips[row][column]
+            );
         }
 
         // --- EFFETTO GRAFICO ENERGY CRISIS ---

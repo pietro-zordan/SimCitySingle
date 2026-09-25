@@ -53,6 +53,7 @@ public final class EventAnimationView
     private static final int MISSILE_IMPACT_DELAY = 220;
     private static final int MISSILE_IMPACT_DURATION = 700;
     private static final int MISSILE_START_MARGIN = 80;
+    private static final double MISSILE_OFFSCREEN_START = 40.0;
     private static final double MISSILE_SHIELD_INSET = 4.0;
     private static final double MISSILE_SHIELD_ROUNDNESS = 20.0;
     private static final int MISSILE_SHIELD_SEGMENTS = 128;
@@ -1156,12 +1157,21 @@ public final class EventAnimationView
                     getMissileShieldRadii();
 
             return new double[] {
-                    -radii[0],
-                    -radii[1]
+                    -radii[0] - MISSILE_OFFSCREEN_START,
+                    -radii[1] - MISSILE_OFFSCREEN_START
             };
         }
 
-        double margin =
+        /*
+         * Il punto di partenza deve essere FUORI dallo scudo.
+         * Prima veniva scelto con un margine interno al viewport: su una
+         * 40x40 fittata quel punto cadeva gia dentro lo scudo e il calcolo
+         * dell'intersezione restituiva quasi la posizione iniziale, facendo
+         * sembrare il missile fermo.
+         *
+         * Ora parte appena fuori dal viewport e diventa visibile entrando.
+         */
+        double safeMargin =
                 Math.min(
                         MISSILE_START_MARGIN,
                         Math.min(width, height) * 0.18
@@ -1170,13 +1180,13 @@ public final class EventAnimationView
         double horizontalRange =
                 Math.max(
                         1.0,
-                        width - 2.0 * margin
+                        width - 2.0 * safeMargin
                 );
 
         double verticalRange =
                 Math.max(
                         1.0,
-                        height - 2.0 * margin
+                        height - 2.0 * safeMargin
                 );
 
         double absoluteX;
@@ -1187,34 +1197,36 @@ public final class EventAnimationView
         if (startSide == 0)
         {
             absoluteX =
-                    margin
+                    safeMargin
                             + random.nextDouble()
                             * horizontalRange;
-            absoluteY = margin;
+            absoluteY =
+                    -MISSILE_OFFSCREEN_START;
         }
         else if (startSide == 1)
         {
             absoluteX =
-                    width - margin;
+                    width + MISSILE_OFFSCREEN_START;
             absoluteY =
-                    margin
+                    safeMargin
                             + random.nextDouble()
                             * verticalRange;
         }
         else if (startSide == 2)
         {
             absoluteX =
-                    margin
+                    safeMargin
                             + random.nextDouble()
                             * horizontalRange;
             absoluteY =
-                    height - margin;
+                    height + MISSILE_OFFSCREEN_START;
         }
         else
         {
-            absoluteX = margin;
+            absoluteX =
+                    -MISSILE_OFFSCREEN_START;
             absoluteY =
-                    margin
+                    safeMargin
                             + random.nextDouble()
                             * verticalRange;
         }
@@ -1241,6 +1253,37 @@ public final class EventAnimationView
         double dx = targetX - startX;
         double dy = targetY - startY;
 
+        double startValue =
+                shieldEquation(
+                        startX,
+                        startY,
+                        radiusX,
+                        radiusY
+                );
+
+        double targetValue =
+                shieldEquation(
+                        targetX,
+                        targetY,
+                        radiusX,
+                        radiusY
+                );
+
+        /*
+         * Il caso normale e: partenza fuori (>1), bersaglio dentro (<=1).
+         * Se per una configurazione futura non fosse cosi, evitiamo il
+         * "finto impatto" quasi istantaneo e lasciamo arrivare il missile
+         * verso il bersaglio invece di produrre una geometria instabile.
+         */
+        if (startValue <= 1.0
+                || targetValue > 1.0)
+        {
+            return new double[] {
+                    targetX,
+                    targetY
+            };
+        }
+
         double outside = 0.0;
         double inside = 1.0;
 
@@ -1250,7 +1293,12 @@ public final class EventAnimationView
             double x = startX + dx * middle;
             double y = startY + dy * middle;
 
-            if (shieldEquation(x, y, radiusX, radiusY) > 1.0)
+            if (shieldEquation(
+                    x,
+                    y,
+                    radiusX,
+                    radiusY
+            ) > 1.0)
             {
                 outside = middle;
             }

@@ -35,7 +35,7 @@ public class Progress
     private FreemasonryChoice freemasonryChoice;
     // Nei vecchi salvataggi il valore predefinito 0 non blocca i tick successivi.
     private int masonicLodgeRemovedTick;
-    // Missing in older saves: those games start with an empty mailbox.
+    // Nei vecchi salvataggi il campo manca: la casella sarà vuota.
     private List<MailMessage> mailboxMessages;
     // Campi dei salvataggi precedenti, che conservavano solo il totale usato.
     private boolean demolitionStatePresent;
@@ -221,6 +221,7 @@ public class Progress
         progress.masonicLodgeRemovedTick =
                 simulation.getMasonicLodgeRemovedTick();
 
+        // Salva anche l'indicazione delle lettere già aperte.
         progress.mailboxMessages =
                 simulation.getMailbox().getMessages();
 
@@ -446,6 +447,7 @@ public class Progress
                 getFreemasonryChoice()
         );
 
+        // Un elenco nullo mantiene compatibili le partite precedenti.
         controller.restoreMailbox(mailboxMessages);
 
         return controller;

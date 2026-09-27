@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -29,7 +30,7 @@ import model.Mailbox;
 
 import java.util.List;
 
-/** Compact mailbox card for the right-hand game controls. */
+/** Mostra la posta nel pannello laterale e apre le lettere in un riquadro centrale. */
 public final class MailboxView
 {
     private final Mailbox mailbox;
@@ -38,6 +39,11 @@ public final class MailboxView
     private final Label heading;
     private final ScrollPane scroll;
     private final Button cornerButton;
+    private final StackPane readerOverlay;
+    private final Label readerSubject = new Label();
+    private final Label readerSender = new Label();
+    private final Label readerTick = new Label();
+    private final Label readerBody = new Label();
     private final Pane animationLayer = new Pane();
     private final PauseTransition dockingDelay =
             new PauseTransition(Duration.millis(120));
@@ -46,6 +52,7 @@ public final class MailboxView
     private String expandedId;
     private boolean docked;
 
+    /** Prepara le anteprime, il lettore e l'icona della posta richiusa. */
     public MailboxView(Mailbox mailbox)
     {
         if (mailbox == null)
@@ -85,6 +92,8 @@ public final class MailboxView
         );
 
         cornerButton = createCornerButton();
+        readerOverlay = createReaderOverlay();
+        // La casella si richiude solo dopo la chiusura dell'ultima lettera letta.
         dockingDelay.setOnFinished(new EventHandler<ActionEvent>()
         {
             @Override
@@ -102,25 +111,27 @@ public final class MailboxView
         refresh();
     }
 
+    /** Restituisce il piccolo elenco da mettere sopra il pulsante Next Tick. */
     public VBox getView()
     {
         return view;
     }
 
-    /** Place the corner shortcut above the game without changing its layout. */
+    /** Aggiunge lettore e icona sopra il gioco senza alterare il pannello. */
     public void attachTo(StackPane gameOverlay)
     {
         animationLayer.setMouseTransparent(true);
-        gameOverlay.getChildren().addAll(animationLayer, cornerButton);
+        gameOverlay.getChildren().addAll(
+                animationLayer, cornerButton, readerOverlay);
         StackPane.setAlignment(cornerButton, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(cornerButton, new Insets(0, 16, 16, 0));
 
-        // Previously read mail is already folded when a game is loaded.
+        // Una partita caricata con tutta la posta già letta mostra solo l'icona.
         docked = mailbox.hasMessages() && mailbox.getUnreadCount() == 0;
         refresh();
     }
 
-    /** Rebuild previews and hide the card entirely when the mailbox is empty. */
+    /** Aggiorna anteprime e contatore; nasconde tutto se non ci sono lettere. */
     public void refresh()
     {
         List<MailMessage> messages = mailbox.getMessages();
@@ -128,7 +139,7 @@ public final class MailboxView
         boolean hasMessages = !messages.isEmpty();
         if (docked && mailbox.getUnreadCount() > 0)
         {
-            // New mail brings the card back into the sidebar.
+            // Una nuova lettera fa ricomparire la casella nel pannello laterale.
             stopFoldingAnimation();
             docked = false;
         }
@@ -141,6 +152,7 @@ public final class MailboxView
         if (!hasMessages)
         {
             expandedId = null;
+            readerOverlay.setVisible(false);
             return;
         }
 
@@ -158,15 +170,12 @@ public final class MailboxView
             entries.getChildren().add(createEntry(message));
         }
 
-        // Keep the card scrollable when several messages arrive.
+        // L'elenco resta piccolo e scorre quando arrivano molte lettere.
         int estimatedHeight = 8 + messages.size() * 68;
-        if (expandedId != null)
-        {
-            estimatedHeight += 140;
-        }
         scroll.setPrefViewportHeight(Math.min(230, estimatedHeight));
     }
 
+    /** Crea un'anteprima cliccabile senza mostrare il testo nella colonna stretta. */
     private VBox createEntry(final MailMessage message)
     {
         final String id = message.getId();
@@ -201,48 +210,115 @@ public final class MailboxView
                         + "-fx-border-radius: 7;"
         );
 
-        // Only the selected message displays its full text.
-        if (expanded)
-        {
-            Label body = new Label(message.getBody());
-            body.setWrapText(true);
-            body.setMaxWidth(140);
-            body.setStyle(
-                    "-fx-text-fill: #475569;"
-                            + "-fx-font-size: 11px;"
-            );
-            entry.getChildren().add(body);
-        }
-
+        // Il clic segna la lettera come letta e la apre nel riquadro centrale.
         preview.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
                 dockingDelay.stop();
-                if (id.equals(expandedId))
-                {
-                    expandedId = null;
-                }
-                else
-                {
-                    expandedId = id;
-                    mailbox.markAsRead(id);
-                }
-
+                expandedId = id;
+                mailbox.markAsRead(id);
+                readerSubject.setText(message.getSubject());
+                readerSender.setText("From " + message.getSender());
+                readerTick.setText("Tick " + message.getReceivedTick());
+                readerBody.setText(message.getBody());
                 refresh();
-
-                // Let the player finish reading before folding the last mail.
-                if (expandedId == null && mailbox.getUnreadCount() == 0)
-                {
-                    dockingDelay.playFromStart();
-                }
+                readerOverlay.setVisible(true);
             }
         });
 
         return entry;
     }
 
+    /** Costruisce il lettore centrale con contenuto scorrevole e pulsante Close. */
+    private StackPane createReaderOverlay()
+    {
+        Label eyebrow = new Label("INBOX");
+        eyebrow.setStyle(
+                "-fx-text-fill: #a46c29; -fx-font-size: 11px;"
+                        + "-fx-font-weight: bold;"
+        );
+
+        Button close = new Button("Close");
+        close.setStyle(
+                "-fx-background-color: #f1f5f9; -fx-text-fill: #334155;"
+                        + "-fx-background-radius: 8; -fx-padding: 7 13;"
+                        + "-fx-cursor: hand;"
+        );
+        close.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                readerOverlay.setVisible(false);
+                expandedId = null;
+                refresh();
+
+                if (mailbox.hasMessages()
+                        && mailbox.getUnreadCount() == 0)
+                {
+                    dockingDelay.playFromStart();
+                }
+            }
+        });
+
+        HBox top = new HBox(10, eyebrow, close);
+        top.setAlignment(Pos.CENTER_LEFT);
+        eyebrow.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(eyebrow, javafx.scene.layout.Priority.ALWAYS);
+
+        readerSubject.setWrapText(true);
+        readerSubject.setStyle(
+                "-fx-text-fill: #1e293b; -fx-font-size: 19px;"
+                        + "-fx-font-weight: bold;"
+        );
+        readerSender.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px;");
+        readerTick.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 11px;");
+
+        HBox metadata = new HBox(14, readerSender, readerTick);
+        metadata.setAlignment(Pos.CENTER_LEFT);
+
+        readerBody.setWrapText(true);
+        readerBody.setMaxWidth(Double.MAX_VALUE);
+        readerBody.setStyle(
+                "-fx-text-fill: #334155; -fx-font-size: 13px;"
+                        + "-fx-line-spacing: 3px;"
+        );
+
+        VBox letter = new VBox(12, readerBody);
+        letter.setPadding(new Insets(16, 0, 16, 0));
+        ScrollPane bodyScroll = new ScrollPane(letter);
+        bodyScroll.setFitToWidth(true);
+        bodyScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        bodyScroll.setStyle(
+                "-fx-background: white; -fx-background-color: white;"
+                        + "-fx-border-color: #e4e8ee;"
+                        + "-fx-border-width: 1 0 0 0;"
+        );
+        VBox.setVgrow(bodyScroll, javafx.scene.layout.Priority.ALWAYS);
+
+        VBox card = new VBox(12, top, readerSubject, metadata, bodyScroll);
+        card.setPadding(new Insets(22, 26, 20, 26));
+        card.setMinWidth(320);
+        card.setPrefWidth(560);
+        card.setMaxWidth(560);
+        card.setPrefHeight(400);
+        card.setMaxHeight(400);
+        card.setStyle(
+                "-fx-background-color: white; -fx-background-radius: 12;"
+                        + "-fx-border-color: #dce3eb; -fx-border-radius: 12;"
+                        + "-fx-effect: dropshadow(gaussian,"
+                        + " rgba(15,23,42,0.20), 22, 0, 0, 8);"
+        );
+
+        StackPane overlay = new StackPane(card);
+        overlay.setStyle("-fx-background-color: rgba(15,23,42,0.23);");
+        overlay.setVisible(false);
+        return overlay;
+    }
+
+    /** Disegna un piccolo foglio piegato con il simbolo della posta. */
     private Button createCornerButton()
     {
         Rectangle paper = new Rectangle(36, 40);
@@ -254,7 +330,7 @@ public final class MailboxView
         Label envelope = new Label("✉");
         envelope.setStyle("-fx-text-fill: #334155; -fx-font-size: 23px;");
 
-        // A small folded corner makes the mail symbol look like a page tab.
+        // L'angolo piegato richiama la linguetta di una pagina.
         Polygon fold = new Polygon(0, 0, 11, 0, 11, 11);
         fold.setFill(Color.web("#d9e4f0"));
 
@@ -281,7 +357,7 @@ public final class MailboxView
                 docked = false;
                 refresh();
 
-                // The reopened card gently settles back into the sidebar.
+                // Alla riapertura la casella torna dolcemente nel pannello.
                 view.setOpacity(0);
                 FadeTransition reveal =
                         new FadeTransition(Duration.millis(220), view);
@@ -292,7 +368,7 @@ public final class MailboxView
         return button;
     }
 
-    /** Move a picture of the entire card to the page tab in the corner. */
+    /** Sposta una copia visiva della casella fino all'icona nell'angolo. */
     private void foldIntoCorner()
     {
         if (view.getScene() == null)
@@ -349,6 +425,7 @@ public final class MailboxView
         foldingAnimation.play();
     }
 
+    /** Ferma il movimento e rimuove la copia visiva eventualmente rimasta. */
     private void stopFoldingAnimation()
     {
         dockingDelay.stop();
@@ -361,8 +438,10 @@ public final class MailboxView
         foldingGhost = null;
     }
 
+    /** Rilascia le animazioni quando si lascia la schermata di gioco. */
     public void stop()
     {
         stopFoldingAnimation();
+        readerOverlay.setVisible(false);
     }
 }

@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** Stores messages in delivery order and rejects duplicate message ids. */
+/** Conserva le lettere in ordine di arrivo evitando identificatori duplicati. */
 public class Mailbox
 {
     private final List<MailMessage> messages;
 
+    /** Inizializza una casella di posta vuota. */
     public Mailbox()
     {
         messages = new ArrayList<>();
     }
 
+    /** Aggiunge la lettera; restituisce false se l'id è già presente. */
     public boolean addMessage(MailMessage message)
     {
         if (message == null)
@@ -33,19 +35,21 @@ public class Mailbox
         return true;
     }
 
+    /** Restituisce una copia dell'elenco che non può essere modificata. */
     public List<MailMessage> getMessages()
     {
-        // Return a separate list so callers cannot insert or remove messages.
         return Collections.unmodifiableList(
                 new ArrayList<>(messages)
         );
     }
 
+    /** Indica se almeno una lettera è stata consegnata. */
     public boolean hasMessages()
     {
         return !messages.isEmpty();
     }
 
+    /** Conta le lettere che non sono ancora state aperte. */
     public int getUnreadCount()
     {
         int count = 0;
@@ -61,6 +65,7 @@ public class Mailbox
         return count;
     }
 
+    /** Segna come letta la lettera con questo id, se esiste. */
     public boolean markAsRead(String id)
     {
         if (id == null || id.isBlank())

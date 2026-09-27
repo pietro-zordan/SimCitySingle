@@ -136,6 +136,7 @@ public class Simulation{
         return freemasonryChoice;
     }
 
+    /** Restituisce la casella di posta associata alla simulazione. */
     public Mailbox getMailbox()
     {
         return mailbox;

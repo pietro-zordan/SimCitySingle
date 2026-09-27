@@ -116,31 +116,53 @@ public final class Controller
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
 
-        // Long test messages exercise wrapping, scrolling and the read state.
+        // Tre lettere di prova lunghe verificano scorrimento e stato di lettura.
         simulation.getMailbox().addMessage(new MailMessage(
                 "test_message_1",
                 "City Hall",
                 "Test message",
-                "This is a test message. The city administration is checking "
-                        + "whether long letters remain readable in the narrow "
-                        + "side panel. Please open the message, scroll down to "
-                        + "read the remaining lines, and then close it when "
-                        + "you are finished. The contents of this message "
-                        + "have no effect on the simulation.",
+                "Dear Mayor, this is a test message from City Hall. "
+                        + "We are writing to confirm that the new postal "
+                        + "service can deliver a complete letter without "
+                        + "interrupting your work. A number of departments "
+                        + "have asked to use it for reports, requests, and "
+                        + "occasional updates from around the city.\n\n"
+                        + "For now, there is nothing you need to approve. "
+                        + "Take your time reading, and close this letter "
+                        + "when you are ready to return to the game.",
                 0
         ));
         simulation.getMailbox().addMessage(new MailMessage(
                 "test_message_2",
                 "City Archives",
                 "Second test message",
-                "A second, longer letter has been placed in your inbox "
-                        + "to check what happens when several messages are "
-                        + "present at once. Try switching between previews: "
-                        + "only one letter should be expanded at a time. "
-                        + "Unread messages keep their small dot, and the "
-                        + "inbox should stay visible until you have opened "
-                        + "every letter. This paragraph is deliberately long "
-                        + "enough to require scrolling inside the panel.",
+                "Dear Mayor, the City Archives have completed an initial "
+                        + "inventory of the documents left in the old civic "
+                        + "building. Most records concern ordinary matters: "
+                        + "street repairs, building permits, and the yearly "
+                        + "maintenance of public spaces. Several boxes, "
+                        + "however, were never entered into the official "
+                        + "register. Their labels contain dates but no "
+                        + "department names, and the original delivery "
+                        + "receipts have not yet been located.\n\n"
+                        + "We are checking the contents carefully. Some "
+                        + "pages are damaged, so our staff will photograph "
+                        + "each item before handling it further. This may "
+                        + "take longer than a routine inventory, but it will "
+                        + "allow us to compare the documents with the copies "
+                        + "held at the central records office. Until that "
+                        + "work is complete, no conclusions should be drawn "
+                        + "from the missing labels alone.\n\n"
+                        + "The archive room will remain open during normal "
+                        + "hours. If a department needs access to a specific "
+                        + "record, its staff can submit a request with the "
+                        + "document date and any known reference number. "
+                        + "Urgent requests will be handled first. We will "
+                        + "write again once the inventory is complete and "
+                        + "the records have been properly catalogued.\n\n"
+                        + "This intentionally long letter also gives you "
+                        + "room to check that the reading panel scrolls "
+                        + "smoothly from the first paragraph to the last.",
                 0
         ));
         simulation.getMailbox().addMessage(new MailMessage(
@@ -780,12 +802,13 @@ public final class Controller
         );
     }
 
+    /** Fornisce alla vista la casella di posta della partita corrente. */
     public Mailbox getMailbox()
     {
         return simulation.getMailbox();
     }
 
-    /** Older saves have no messages, so their mailbox stays empty. */
+    /** Ripristina le lettere salvate; i vecchi salvataggi lasciano la posta vuota. */
     public void restoreMailbox(List<MailMessage> messages)
     {
         if (messages == null)

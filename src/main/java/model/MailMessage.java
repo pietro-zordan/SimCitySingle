@@ -1,6 +1,6 @@
 package model;
 
-/** One message delivered to the player's in-game mailbox. */
+/** Rappresenta una lettera ricevuta durante la partita. */
 public class MailMessage {
 
     private final String id;
@@ -10,6 +10,7 @@ public class MailMessage {
     private final int receivedTick;
     private boolean read;
 
+    /** Crea la lettera e controlla che i suoi dati siano validi. */
     public MailMessage(String id, String sender, String subject,
                        String body, int receivedTick)
     {
@@ -36,39 +37,45 @@ public class MailMessage {
         this.read = false;
     }
 
+    /** Restituisce l'identificatore che evita consegne duplicate. */
     public String getId()
     {
         return id;
     }
 
+    /** Restituisce il mittente mostrato nell'anteprima. */
     public String getSender()
     {
         return sender;
     }
 
+    /** Restituisce l'oggetto della lettera. */
     public String getSubject()
     {
         return subject;
     }
 
+    /** Restituisce il testo completo della lettera. */
     public String getBody()
     {
         return body;
     }
 
+    /** Restituisce il tick in cui la lettera è arrivata. */
     public int getReceivedTick()
     {
         return receivedTick;
     }
 
+    /** Indica se il giocatore ha già aperto la lettera. */
     public boolean isRead()
     {
         return read;
     }
 
+    /** Segna la lettera come letta senza modificarne il contenuto. */
     public void markRead()
     {
-        // The text and delivery tick stay the same after opening the message.
         read = true;
     }
 

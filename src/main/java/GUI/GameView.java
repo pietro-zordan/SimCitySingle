@@ -754,6 +754,7 @@ public final class GameView implements GameObserver
                         invitationView.getView()
                 );
 
+        // Il lettore delle lettere e l'icona d'angolo restano sopra al gioco.
         mailboxView.attachTo(rootWithToast);
 
         StackPane.setAlignment(

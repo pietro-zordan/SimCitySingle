@@ -754,6 +754,8 @@ public final class GameView implements GameObserver
                         invitationView.getView()
                 );
 
+        mailboxView.attachTo(rootWithToast);
+
         StackPane.setAlignment(
                 achievementNotificationView.getView(),
                 Pos.TOP_CENTER
@@ -1606,6 +1608,7 @@ public final class GameView implements GameObserver
 
         toastHidePause.stop();
         achievementNotificationView.stop();
+        mailboxView.stop();
         eventAnimationView.stop();
         gridView.stop();
         invitationView.stop();

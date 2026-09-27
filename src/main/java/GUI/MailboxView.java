@@ -1,12 +1,29 @@
 package GUI;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.MailMessage;
 import model.Mailbox;
 
@@ -20,7 +37,14 @@ public final class MailboxView
     private final VBox entries;
     private final Label heading;
     private final ScrollPane scroll;
+    private final Button cornerButton;
+    private final Pane animationLayer = new Pane();
+    private final PauseTransition dockingDelay =
+            new PauseTransition(Duration.millis(120));
+    private ParallelTransition foldingAnimation;
+    private ImageView foldingGhost;
     private String expandedId;
+    private boolean docked;
 
     public MailboxView(Mailbox mailbox)
     {
@@ -60,6 +84,21 @@ public final class MailboxView
                         + "-fx-border-radius: 9;"
         );
 
+        cornerButton = createCornerButton();
+        dockingDelay.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                if (!docked && expandedId == null
+                        && mailbox.hasMessages()
+                        && mailbox.getUnreadCount() == 0)
+                {
+                    foldIntoCorner();
+                }
+            }
+        });
+
         refresh();
     }
 
@@ -68,14 +107,36 @@ public final class MailboxView
         return view;
     }
 
+    /** Place the corner shortcut above the game without changing its layout. */
+    public void attachTo(StackPane gameOverlay)
+    {
+        animationLayer.setMouseTransparent(true);
+        gameOverlay.getChildren().addAll(animationLayer, cornerButton);
+        StackPane.setAlignment(cornerButton, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(cornerButton, new Insets(0, 16, 16, 0));
+
+        // Previously read mail is already folded when a game is loaded.
+        docked = mailbox.hasMessages() && mailbox.getUnreadCount() == 0;
+        refresh();
+    }
+
     /** Rebuild previews and hide the card entirely when the mailbox is empty. */
     public void refresh()
     {
         List<MailMessage> messages = mailbox.getMessages();
 
         boolean hasMessages = !messages.isEmpty();
-        view.setVisible(hasMessages);
-        view.setManaged(hasMessages);
+        if (docked && mailbox.getUnreadCount() > 0)
+        {
+            // New mail brings the card back into the sidebar.
+            stopFoldingAnimation();
+            docked = false;
+        }
+
+        view.setVisible(hasMessages && !docked);
+        view.setManaged(hasMessages && !docked);
+        cornerButton.setVisible(hasMessages && docked
+                && foldingAnimation == null);
 
         if (!hasMessages)
         {
@@ -158,6 +219,7 @@ public final class MailboxView
             @Override
             public void handle(ActionEvent event)
             {
+                dockingDelay.stop();
                 if (id.equals(expandedId))
                 {
                     expandedId = null;
@@ -169,9 +231,138 @@ public final class MailboxView
                 }
 
                 refresh();
+
+                // Let the player finish reading before folding the last mail.
+                if (expandedId == null && mailbox.getUnreadCount() == 0)
+                {
+                    dockingDelay.playFromStart();
+                }
             }
         });
 
         return entry;
+    }
+
+    private Button createCornerButton()
+    {
+        Rectangle paper = new Rectangle(36, 40);
+        paper.setArcWidth(5);
+        paper.setArcHeight(5);
+        paper.setFill(Color.web("#f8fafc"));
+        paper.setStroke(Color.web("#aebdce"));
+
+        Label envelope = new Label("✉");
+        envelope.setStyle("-fx-text-fill: #334155; -fx-font-size: 23px;");
+
+        // A small folded corner makes the mail symbol look like a page tab.
+        Polygon fold = new Polygon(0, 0, 11, 0, 11, 11);
+        fold.setFill(Color.web("#d9e4f0"));
+
+        StackPane graphic = new StackPane(paper, envelope, fold);
+        graphic.setMinSize(42, 44);
+        StackPane.setAlignment(fold, Pos.TOP_RIGHT);
+        StackPane.setMargin(fold, new Insets(4, 4, 0, 0));
+
+        Button button = new Button();
+        button.setGraphic(graphic);
+        button.setTooltip(new Tooltip("Open mail"));
+        button.setAccessibleText("Open mail");
+        button.setStyle(
+                "-fx-background-color: transparent; -fx-padding: 0;"
+                        + "-fx-cursor: hand; -fx-focus-color: transparent;"
+                        + "-fx-faint-focus-color: transparent;"
+        );
+        button.setVisible(false);
+        button.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                docked = false;
+                refresh();
+
+                // The reopened card gently settles back into the sidebar.
+                view.setOpacity(0);
+                FadeTransition reveal =
+                        new FadeTransition(Duration.millis(220), view);
+                reveal.setToValue(1);
+                reveal.play();
+            }
+        });
+        return button;
+    }
+
+    /** Move a picture of the entire card to the page tab in the corner. */
+    private void foldIntoCorner()
+    {
+        if (view.getScene() == null)
+        {
+            docked = true;
+            refresh();
+            return;
+        }
+
+        Bounds from = animationLayer.sceneToLocal(
+                view.localToScene(view.getBoundsInLocal()));
+        Bounds to = animationLayer.sceneToLocal(
+                cornerButton.localToScene(cornerButton.getBoundsInLocal()));
+
+        foldingGhost = new ImageView(
+                view.snapshot(new SnapshotParameters(), null));
+        foldingGhost.setManaged(false);
+        foldingGhost.relocate(from.getMinX(), from.getMinY());
+        animationLayer.getChildren().add(foldingGhost);
+
+        docked = true;
+        refresh();
+
+        Duration duration = Duration.millis(540);
+        TranslateTransition slide =
+                new TranslateTransition(duration, foldingGhost);
+        slide.setToX(to.getMinX() + to.getWidth() / 2
+                - from.getMinX() - from.getWidth() / 2);
+        slide.setToY(to.getMinY() + to.getHeight() / 2
+                - from.getMinY() - from.getHeight() / 2);
+        slide.setInterpolator(Interpolator.EASE_IN);
+
+        ScaleTransition shrink =
+                new ScaleTransition(duration, foldingGhost);
+        shrink.setToX(0.22);
+        shrink.setToY(0.22);
+
+        FadeTransition fade =
+                new FadeTransition(duration, foldingGhost);
+        fade.setToValue(0.35);
+
+        foldingAnimation = new ParallelTransition(slide, shrink, fade);
+        foldingAnimation.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                animationLayer.getChildren().remove(foldingGhost);
+                foldingGhost = null;
+                foldingAnimation = null;
+                refresh();
+            }
+        });
+        foldingAnimation.play();
+    }
+
+    private void stopFoldingAnimation()
+    {
+        dockingDelay.stop();
+        if (foldingAnimation != null)
+        {
+            foldingAnimation.stop();
+            foldingAnimation = null;
+        }
+        animationLayer.getChildren().remove(foldingGhost);
+        foldingGhost = null;
+    }
+
+    public void stop()
+    {
+        stopFoldingAnimation();
     }
 }

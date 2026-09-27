@@ -116,12 +116,45 @@ public final class Controller
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
 
-        // Temporary message for checking the mailbox in a new game.
+        // Long test messages exercise wrapping, scrolling and the read state.
         simulation.getMailbox().addMessage(new MailMessage(
-                "test_message",
+                "test_message_1",
                 "City Hall",
                 "Test message",
-                "This is a test message.",
+                "This is a test message. The city administration is checking "
+                        + "whether long letters remain readable in the narrow "
+                        + "side panel. Please open the message, scroll down to "
+                        + "read the remaining lines, and then close it when "
+                        + "you are finished. The contents of this message "
+                        + "have no effect on the simulation.",
+                0
+        ));
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message_2",
+                "City Archives",
+                "Second test message",
+                "A second, longer letter has been placed in your inbox "
+                        + "to check what happens when several messages are "
+                        + "present at once. Try switching between previews: "
+                        + "only one letter should be expanded at a time. "
+                        + "Unread messages keep their small dot, and the "
+                        + "inbox should stay visible until you have opened "
+                        + "every letter. This paragraph is deliberately long "
+                        + "enough to require scrolling inside the panel.",
+                0
+        ));
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message_3",
+                "Emergency Services",
+                "Third test message",
+                "This final test letter checks the transition from a full "
+                        + "inbox to its compact corner icon. Once you have "
+                        + "opened all three messages, the inbox will remain "
+                        + "available while you are reading. Close the open "
+                        + "letter when you are done: the whole card should "
+                        + "travel toward the lower-right corner and leave "
+                        + "a small folded-page mail icon behind. Click that "
+                        + "icon whenever you want to see the letters again.",
                 0
         ));
     }

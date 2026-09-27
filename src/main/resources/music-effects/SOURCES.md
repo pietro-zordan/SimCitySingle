@@ -68,7 +68,8 @@
 - `mail_dock.wav`: `rollover1.wav` from Kenney's "UI SFX Set" (CC0 1.0),
   mirrored in the V-Sekai repository. It is used as the subtle UI cue while
   the fully-read mailbox folds into the bottom-right corner.
-- `save_game_camera.wav`: `film camera shutter release.wav` by caseymoura,
-  https://freesound.org/people/caseymoura/sounds/445482/ (CC BY 3.0).
-  Used when a manual game save completes successfully.
+- `save_game_camera.wav`: `Shutter-02.wav` from the Kinoma camera sample,
+  https://github.com/Kinoma/KPR-examples/tree/master/camera (Apache License 2.0).
+  This is a short, clean camera-app shutter cue used when a manual game save
+  completes successfully.
 

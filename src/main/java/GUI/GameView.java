@@ -45,6 +45,7 @@ public final class GameView implements GameObserver
     private final GameNavigation navigation;
     private final ProgressManager progressManager;
     private final SoundManager soundManager;
+    private final AchievementNotificationView achievementNotificationView;
     private final Runnable achievementSaveAction;
     private final String saveFilePath;
     private final GridView gridView;
@@ -158,6 +159,8 @@ public final class GameView implements GameObserver
         this.progressManager = progressManager;
         this.saveFilePath = saveFilePath;
         this.soundManager = soundManager;
+        achievementNotificationView =
+                new AchievementNotificationView(soundManager);
         this.achievementSaveAction = achievementSaveAction;
 
         configureToast();
@@ -742,9 +745,19 @@ public final class GameView implements GameObserver
                 new StackPane(
                         gameRoot,
                         toast,
+                        achievementNotificationView.getView(),
                         gameOverView.getView(),
                         invitationView.getView()
                 );
+
+        StackPane.setAlignment(
+                achievementNotificationView.getView(),
+                Pos.TOP_RIGHT
+        );
+        StackPane.setMargin(
+                achievementNotificationView.getView(),
+                new Insets(25, 28, 0, 0)
+        );
 
         StackPane.setAlignment(
                 toast,
@@ -1586,6 +1599,7 @@ public final class GameView implements GameObserver
         }
 
         toastHidePause.stop();
+        achievementNotificationView.stop();
         eventAnimationView.stop();
         gridView.stop();
         invitationView.stop();
@@ -1602,10 +1616,7 @@ public final class GameView implements GameObserver
         {
             unlockedSomething = true;
 
-            soundManager.playAchievementSound();
-
-            showToast("Achievement unlocked: "
-                            + achievement.getTitle());
+            achievementNotificationView.show(achievement);
 
             achievement = controller
                             .consumeNewlyUnlockedAchievement();

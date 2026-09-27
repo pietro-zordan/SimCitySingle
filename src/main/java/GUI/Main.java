@@ -108,6 +108,10 @@ public class Main
                 "Carica simulazione"
         );
 
+        Button achievementsButton = new Button(
+                "Achievements"
+        );
+
         Label labelInfo = new Label(
                 "Created by: Borsetto Daniele, "
                         + "Jiang Jiaxin Luisa, "
@@ -117,6 +121,12 @@ public class Main
 
         startButton.setPrefWidth(200);
         loadButton.setPrefWidth(200);
+        achievementsButton.setPrefWidth(200);
+        achievementsButton.setStyle(
+                "-fx-background-color: #fff7e8; -fx-text-fill: #7d561f;"
+                        + "-fx-border-color: #e5c995; -fx-border-radius: 7;"
+                        + "-fx-background-radius: 7; -fx-cursor: hand;"
+        );
 
         // Avvia una nuova partita.
         startButton.setOnAction(
@@ -143,10 +153,22 @@ public class Main
                 }
         );
 
+        achievementsButton.setOnAction(
+                new EventHandler<ActionEvent>()
+                {
+                    @Override
+                    public void handle(ActionEvent event)
+                    {
+                        showAchievementsScreen();
+                    }
+                }
+        );
+
         VBox layout = new VBox(
                 15,
                 startButton,
-                loadButton
+                loadButton,
+                achievementsButton
         );
 
         // Aggiunge il pulsante per riprendere una partita già iniziata.
@@ -218,6 +240,22 @@ public class Main
         );
 
         stage.setScene(scene);
+    }
+
+    private void showAchievementsScreen()
+    {
+        AchievementsView achievementsView = new AchievementsView(
+                achievementManager,
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        showHomeScreen();
+                    }
+                }
+        );
+        stage.setScene(achievementsView.getScene());
     }
 
     /* Carica la partita dal file e mostra un messaggio

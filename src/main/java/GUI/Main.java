@@ -122,11 +122,15 @@ public class Main
         startButton.setPrefWidth(200);
         loadButton.setPrefWidth(200);
         achievementsButton.setPrefWidth(200);
-        achievementsButton.setStyle(
+        String menuButtonStyle =
                 "-fx-background-color: #fff7e8; -fx-text-fill: #7d561f;"
                         + "-fx-border-color: #e5c995; -fx-border-radius: 7;"
                         + "-fx-background-radius: 7; -fx-cursor: hand;"
-        );
+                        + "-fx-focus-color: #e5c995;"
+                        + "-fx-faint-focus-color: transparent;";
+        startButton.setStyle(menuButtonStyle);
+        loadButton.setStyle(menuButtonStyle);
+        achievementsButton.setStyle(menuButtonStyle);
 
         // Avvia una nuova partita.
         startButton.setOnAction(
@@ -179,6 +183,7 @@ public class Main
             );
 
             resumeButton.setPrefWidth(200);
+            resumeButton.setStyle(menuButtonStyle);
             resumeButton.setOnAction(
                     new EventHandler<ActionEvent>()
                     {

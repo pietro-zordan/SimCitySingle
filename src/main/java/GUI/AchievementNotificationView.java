@@ -29,7 +29,6 @@ public final class AchievementNotificationView
     private final Queue<Achievement> pending = new ArrayDeque<>();
     private final HBox view;
     private final Label title;
-    private final Label description;
     private Timeline animation;
 
     public AchievementNotificationView(SoundManager soundManager)
@@ -41,40 +40,36 @@ public final class AchievementNotificationView
         this.soundManager = soundManager;
 
         Label star = new Label("★");
-        star.setStyle("-fx-font-size: 23px; -fx-text-fill: #f5d48b;");
+        star.setStyle("-fx-font-size: 17px; -fx-text-fill: #a9782f;");
         StackPane medal = new StackPane(star);
-        medal.setMinSize(48, 48);
-        medal.setMaxSize(48, 48);
-        medal.setStyle("-fx-background-color: #705321; -fx-background-radius: 13;");
+        medal.setMinSize(32, 32);
+        medal.setMaxSize(32, 32);
+        medal.setStyle("-fx-background-color: #fff1d8; -fx-background-radius: 16;");
 
-        Label eyebrow = new Label("ACHIEVEMENT UNLOCKED");
+        Label eyebrow = new Label("Achievement unlocked");
         eyebrow.setStyle(
-                "-fx-text-fill: #e8c57e; -fx-font-size: 10px; -fx-font-weight: bold;"
+                "-fx-text-fill: #9a682e; -fx-font-size: 10px;"
         );
         title = new Label();
         title.setWrapText(true);
-        title.setMaxWidth(245);
+        title.setMaxWidth(214);
         title.setStyle(
-                "-fx-text-fill: white; -fx-font-size: 17px; -fx-font-weight: bold;"
+                "-fx-text-fill: #273442; -fx-font-size: 13px; -fx-font-weight: bold;"
         );
-        description = new Label();
-        description.setWrapText(true);
-        description.setMaxWidth(245);
-        description.setStyle("-fx-text-fill: #cbd5e1; -fx-font-size: 12px;");
 
-        VBox words = new VBox(4, eyebrow, title, description);
+        VBox words = new VBox(2, eyebrow, title);
         words.setAlignment(Pos.CENTER_LEFT);
 
-        view = new HBox(15, medal, words);
+        view = new HBox(10, medal, words);
         view.setAlignment(Pos.CENTER_LEFT);
-        view.setPadding(new Insets(17, 20, 17, 18));
-        view.setPrefWidth(360);
+        view.setPadding(new Insets(9, 13, 9, 11));
+        view.setPrefWidth(285);
         view.setMaxWidth(Region.USE_PREF_SIZE);
         view.setStyle(
-                "-fx-background-color: #1b2735; -fx-background-radius: 15;"
-                        + "-fx-border-color: #ba9556; -fx-border-radius: 15;"
+                "-fx-background-color: #fcfcfb; -fx-background-radius: 10;"
+                        + "-fx-border-color: #e8e2d7; -fx-border-radius: 10;"
         );
-        view.setEffect(new DropShadow(18, Color.rgb(20, 30, 45, 0.27)));
+        view.setEffect(new DropShadow(9, Color.rgb(20, 30, 45, 0.14)));
         view.setMouseTransparent(true);
         view.setVisible(false);
     }
@@ -109,27 +104,22 @@ public final class AchievementNotificationView
         }
 
         title.setText(achievement.getTitle());
-        description.setText(achievement.getDescription().trim());
         view.setVisible(true);
         soundManager.playAchievementSound();
 
         animation = new Timeline(
                 new KeyFrame(Duration.ZERO,
                         new KeyValue(view.opacityProperty(), 0),
-                        new KeyValue(view.translateXProperty(), 52),
-                        new KeyValue(view.scaleXProperty(), 0.96),
-                        new KeyValue(view.scaleYProperty(), 0.96)),
-                new KeyFrame(Duration.millis(350),
+                        new KeyValue(view.translateYProperty(), -12)),
+                new KeyFrame(Duration.millis(220),
                         new KeyValue(view.opacityProperty(), 1, Interpolator.EASE_OUT),
-                        new KeyValue(view.translateXProperty(), 0, Interpolator.EASE_OUT),
-                        new KeyValue(view.scaleXProperty(), 1, Interpolator.EASE_OUT),
-                        new KeyValue(view.scaleYProperty(), 1, Interpolator.EASE_OUT)),
-                new KeyFrame(Duration.seconds(3.2),
+                        new KeyValue(view.translateYProperty(), 0, Interpolator.EASE_OUT)),
+                new KeyFrame(Duration.seconds(2.25),
                         new KeyValue(view.opacityProperty(), 1),
-                        new KeyValue(view.translateXProperty(), 0)),
-                new KeyFrame(Duration.seconds(3.55),
+                        new KeyValue(view.translateYProperty(), 0)),
+                new KeyFrame(Duration.seconds(2.50),
                         new KeyValue(view.opacityProperty(), 0),
-                        new KeyValue(view.translateXProperty(), 30))
+                        new KeyValue(view.translateYProperty(), -7))
         );
         animation.setOnFinished(new EventHandler<ActionEvent>()
         {

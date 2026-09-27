@@ -752,11 +752,11 @@ public final class GameView implements GameObserver
 
         StackPane.setAlignment(
                 achievementNotificationView.getView(),
-                Pos.TOP_RIGHT
+                Pos.TOP_CENTER
         );
         StackPane.setMargin(
                 achievementNotificationView.getView(),
-                new Insets(25, 28, 0, 0)
+                new Insets(15, 0, 0, 0)
         );
 
         StackPane.setAlignment(

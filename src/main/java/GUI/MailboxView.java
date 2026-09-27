@@ -28,12 +28,15 @@ import javafx.util.Duration;
 import model.MailMessage;
 import model.Mailbox;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /** Mostra la posta nel pannello laterale e apre le lettere in un riquadro centrale. */
 public final class MailboxView
 {
     private final Mailbox mailbox;
+    private final Set<String> knownMessageIds = new HashSet<>();
     private final VBox view;
     private final VBox entries;
     private final Label heading;
@@ -47,10 +50,13 @@ public final class MailboxView
     private final Pane animationLayer = new Pane();
     private final PauseTransition dockingDelay =
             new PauseTransition(Duration.millis(120));
+    private ParallelTransition arrivalAnimation;
     private ParallelTransition foldingAnimation;
     private ImageView foldingGhost;
     private String expandedId;
     private boolean docked;
+    private boolean attached;
+    private boolean hadMessages;
 
     /** Prepara le anteprime, il lettore e l'icona della posta richiusa. */
     public MailboxView(Mailbox mailbox)
@@ -129,6 +135,7 @@ public final class MailboxView
         // Una partita caricata con tutta la posta già letta mostra solo l'icona.
         docked = mailbox.hasMessages() && mailbox.getUnreadCount() == 0;
         refresh();
+        attached = true;
     }
 
     /** Aggiorna anteprime e contatore; nasconde tutto se non ci sono lettere. */
@@ -137,6 +144,11 @@ public final class MailboxView
         List<MailMessage> messages = mailbox.getMessages();
 
         boolean hasMessages = !messages.isEmpty();
+        boolean wasDocked = docked;
+        boolean animateArrival = attached && hasMessages
+                && (!hadMessages
+                || (docked && mailbox.getUnreadCount() > 0));
+        hadMessages = hasMessages;
         if (docked && mailbox.getUnreadCount() > 0)
         {
             // Una nuova lettera fa ricomparire la casella nel pannello laterale.
@@ -165,14 +177,81 @@ public final class MailboxView
 
         entries.getChildren().clear();
 
-        for (MailMessage message : messages)
+        // La lettera più recente compare in cima, sempre visibile all'arrivo.
+        for (int index = messages.size() - 1; index >= 0; index--)
         {
-            entries.getChildren().add(createEntry(message));
+            MailMessage message = messages.get(index);
+            VBox entry = createEntry(message);
+            entries.getChildren().add(entry);
+
+            if (attached && !wasDocked
+                    && !knownMessageIds.contains(message.getId()))
+            {
+                playNewEntryArrival(entry);
+            }
+            knownMessageIds.add(message.getId());
         }
 
         // L'elenco resta piccolo e scorre quando arrivano molte lettere.
         int estimatedHeight = 8 + messages.size() * 68;
         scroll.setPrefViewportHeight(Math.min(230, estimatedHeight));
+
+        if (animateArrival)
+        {
+            playArrival();
+        }
+    }
+
+    /** Fa scendere dolcemente la casella quando arriva la prima nuova lettera. */
+    private void playArrival()
+    {
+        if (arrivalAnimation != null)
+        {
+            arrivalAnimation.stop();
+        }
+
+        view.setOpacity(0);
+        view.setTranslateY(-16);
+
+        FadeTransition fade =
+                new FadeTransition(Duration.millis(320), view);
+        fade.setToValue(1);
+
+        TranslateTransition slide =
+                new TranslateTransition(Duration.millis(320), view);
+        slide.setToY(0);
+        slide.setInterpolator(Interpolator.EASE_OUT);
+
+        arrivalAnimation = new ParallelTransition(fade, slide);
+        arrivalAnimation.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                view.setOpacity(1);
+                view.setTranslateY(0);
+                arrivalAnimation = null;
+            }
+        });
+        arrivalAnimation.play();
+    }
+
+    /** Anima solo la nuova anteprima se la casella era già aperta. */
+    private void playNewEntryArrival(VBox entry)
+    {
+        entry.setOpacity(0);
+        entry.setTranslateY(-10);
+
+        FadeTransition fade =
+                new FadeTransition(Duration.millis(300), entry);
+        fade.setToValue(1);
+
+        TranslateTransition slide =
+                new TranslateTransition(Duration.millis(300), entry);
+        slide.setToY(0);
+        slide.setInterpolator(Interpolator.EASE_OUT);
+
+        new ParallelTransition(fade, slide).play();
     }
 
     /** Crea un'anteprima cliccabile senza mostrare il testo nella colonna stretta. */
@@ -441,6 +520,11 @@ public final class MailboxView
     /** Rilascia le animazioni quando si lascia la schermata di gioco. */
     public void stop()
     {
+        if (arrivalAnimation != null)
+        {
+            arrivalAnimation.stop();
+            arrivalAnimation = null;
+        }
         stopFoldingAnimation();
         readerOverlay.setVisible(false);
     }

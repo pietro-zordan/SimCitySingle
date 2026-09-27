@@ -115,8 +115,12 @@ public final class Controller
 
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
+        deliverTestMessages();
+    }
 
-        // Tre lettere di prova lunghe verificano scorrimento e stato di lettura.
+    /** Consegna le tre lettere di prova all'inizio di una nuova partita. */
+    private void deliverTestMessages()
+    {
         simulation.getMailbox().addMessage(new MailMessage(
                 "test_message_1",
                 "City Hall",
@@ -178,6 +182,25 @@ public final class Controller
                         + "a small folded-page mail icon behind. Click that "
                         + "icon whenever you want to see the letters again.",
                 0
+        ));
+    }
+
+    /** Aggiunge una nuova lettera al tick 2 per mostrare l'arrivo della posta. */
+    private void deliverNewTestMessage()
+    {
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message_4",
+                "City Hall",
+                "New message at tick 2",
+                "Dear Mayor, this letter was delivered after your second "
+                        + "turn. It has arrived separately from the earlier "
+                        + "messages so you can see how a new preview appears "
+                        + "while the game is already running.\n\n"
+                        + "The message will stay in your inbox until you "
+                        + "open it. You can read the complete text in the "
+                        + "larger panel and return to the city whenever you "
+                        + "are ready.",
+                2
         ));
     }
 
@@ -359,6 +382,11 @@ public final class Controller
     {
         boolean criminalActivityCreated =
                 simulation.updateOfOneTick();
+
+        if (simulation.getCurrentTick() == 2)
+        {
+            deliverNewTestMessage();
+        }
 
         achievementChecker.checkState(city, grid, simulation);
 

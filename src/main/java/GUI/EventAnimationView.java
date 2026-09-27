@@ -52,7 +52,7 @@ public final class EventAnimationView
     private static final int MISSILE_FLIGHT_DURATION = 1200;
     private static final int MISSILE_IMPACT_DELAY = 220;
     private static final int MISSILE_IMPACT_DURATION = 700;
-    private static final int MISSILE_START_MARGIN = 80;
+    private static final int MISSILE_START_MARGIN = 110;
     private static final double MISSILE_SHIELD_INSET = 4.0;
     private static final double MISSILE_SHIELD_ROUNDNESS = 20.0;
     private static final int MISSILE_SHIELD_SEGMENTS = 128;

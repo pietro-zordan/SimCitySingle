@@ -37,6 +37,7 @@ public final class MapViewport
     // Lascia alla 30x30 circa la stessa cornice visibile della vecchia 20x20.
     private static final double FIT_MARGIN = 40;
     private static final double KEYBOARD_PAN_PIXELS = 60;
+    private static final double MISSILE_OVERLAY_RUNWAY = 150;
 
     private final StackPane zoomPane;
     private final Group zoomGroup;
@@ -120,8 +121,16 @@ public final class MapViewport
         eventOverlay.setPickOnBounds(false);
 
         Rectangle overlayClip = new Rectangle();
-        overlayClip.widthProperty().bind(eventOverlay.widthProperty());
-        overlayClip.heightProperty().bind(eventOverlay.heightProperty());
+        // Il missile deve essere visibile prima di raggiungere il bordo della
+        // città; l'overlay rimane fuori dal layout e non allarga il viewport.
+        overlayClip.setX(-MISSILE_OVERLAY_RUNWAY);
+        overlayClip.setY(-MISSILE_OVERLAY_RUNWAY);
+        overlayClip.widthProperty().bind(
+                eventOverlay.widthProperty().add(2 * MISSILE_OVERLAY_RUNWAY)
+        );
+        overlayClip.heightProperty().bind(
+                eventOverlay.heightProperty().add(2 * MISSILE_OVERLAY_RUNWAY)
+        );
         eventOverlay.setClip(overlayClip);
 
         viewportLayer = new StackPane(

@@ -37,10 +37,10 @@
   "Purchasing Sound Effect" by Spring Spring, from
   https://opengameart.org/content/purchasing-sound-effect (CC0 1.0).
   Converted to 22.05 kHz mono PCM WAV with a short fade.
-- `energy_crisis_alarm.wav`: "Alarm" by EZduzziteh, from
-  https://opengameart.org/content/alarm-1 (CC0 1.0).
-  Converted from OGG to 22.05 kHz mono PCM WAV, amplified and faded.
-  Plays once when an energy crisis begins.
+- `energy_crisis_alarm.wav`: original synthesized electrical grid-failure cue
+  created for this project; 22.05 kHz mono PCM WAV. It uses a descending power
+  hum, short electrical crackles and a low shutdown impact instead of a siren.
+  It plays once when an energy crisis begins.
 
 - `nuclear_explosion.wav`: "Muffled Distant Explosion" by NenadSimic, from
   https://opengameart.org/content/muffled-distant-explosion (CC0 1.0).
@@ -57,3 +57,19 @@
 - `insurance_rebuild.wav`: original synthesized two-tone restoration chime
   created for this project; 22.05 kHz mono PCM WAV. It plays once for each
   insured construction actually restored after a tsunami.
+
+- `grid_expansion.wav`: original synthesized futuristic expansion cue created
+  for this project; 22.05 kHz mono PCM WAV. A rising electronic sweep and
+  short high-frequency chime play exactly when the grid grows to its next size.
+- `mail_notification.wav`: `ui-chime-24` from SFXMint (CC0 1.0),
+  https://sfxmint.com/sounds/ui-chime-24 . The included PCM16 WAV copy is
+  the publicly mirrored/resampled version documented by the AIQSA project;
+  it is used as the short incoming-mail bell.
+- `mail_dock.wav`: `rollover1.wav` from Kenney's "UI SFX Set" (CC0 1.0),
+  mirrored in the V-Sekai repository. It is used as the subtle UI cue while
+  the fully-read mailbox folds into the bottom-right corner.
+- `save_game_camera.wav`: `Shutter-02.wav` from the Kinoma camera sample,
+  https://github.com/Kinoma/KPR-examples/tree/master/camera (Apache License 2.0).
+  This is a short, clean camera-app shutter cue used when a manual game save
+  completes successfully.
+

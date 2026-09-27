@@ -1,12 +1,22 @@
 package model;
 
+import Events.EventType;
+
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /* Centralizza tutte le condizioni di sblocco degli achievement.
    Le altre classi comunicano cosa è successo, senza decidere quale achievement sbloccare. */
 public class AchievementChecker
 {
     private final AchievementManager achievementManager;
+
+    private boolean energyCrisisTracked;
+    private boolean energyCrisisFailed;
+    private boolean energyCrisisHadResidential;
+    private final Set<Residential> energyCrisisResidentials =
+            new HashSet<>();
 
     public AchievementChecker(AchievementManager achievementManager)
     {
@@ -29,6 +39,20 @@ public class AchievementChecker
 
         checkPopulation(city);
         checkBudget(city);
+        checkMetropolis(grid);
+
+        EventType activeEventType =
+                simulation.getActiveEventType();
+
+        checkNotToday(
+                simulation,
+                activeEventType
+        );
+
+        checkPowerThrough(
+                grid,
+                activeEventType
+        );
     }
 
     /* Riceve il piazzamento riuscito di una costruzione e valuta
@@ -81,6 +105,147 @@ public class AchievementChecker
                 Achievement.WHY_WOULD_YOU_DO_THAT))
         {
             achievementManager.unlock(Achievement.WHY_WOULD_YOU_DO_THAT);
+        }
+    }
+
+    public void checkMetropolis(Grid grid)
+    {
+        Objects.requireNonNull(
+                grid,
+                "Grid cannot be null"
+        );
+
+        boolean expanded =
+                grid.getNumberOfRows() > 20
+                        || grid.getNumberOfColumns() > 20;
+
+        if (expanded
+                && !achievementManager.isUnlocked(
+                        Achievement.METROPOLIS))
+        {
+            achievementManager.unlock(
+                    Achievement.METROPOLIS
+            );
+        }
+    }
+
+    private void checkNotToday(
+            Simulation simulation,
+            EventType activeEventType)
+    {
+        if (activeEventType == EventType.MISSILE_ATTACK
+                && simulation.isActiveMissileIntercepted()
+                && !achievementManager.isUnlocked(
+                        Achievement.NOT_TODAY))
+        {
+            achievementManager.unlock(
+                    Achievement.NOT_TODAY
+            );
+        }
+    }
+
+    private void checkPowerThrough(
+            Grid grid,
+            EventType activeEventType)
+    {
+        boolean energyCrisisActive =
+                activeEventType == EventType.ENERGY_CRISIS;
+
+        if (energyCrisisActive)
+        {
+            if (!energyCrisisTracked)
+            {
+                energyCrisisTracked = true;
+                energyCrisisFailed = false;
+                energyCrisisResidentials.clear();
+
+                addCurrentResidentials(grid);
+
+                energyCrisisHadResidential =
+                        !energyCrisisResidentials.isEmpty();
+            }
+            else
+            {
+                addCurrentResidentials(grid);
+            }
+
+            if (hasResidentialReachedZeroPopulation())
+            {
+                energyCrisisFailed = true;
+            }
+
+            return;
+        }
+
+        if (!energyCrisisTracked)
+        {
+            return;
+        }
+
+        if (hasResidentialReachedZeroPopulation())
+        {
+            energyCrisisFailed = true;
+        }
+
+        if (energyCrisisHadResidential
+                && !energyCrisisFailed
+                && !achievementManager.isUnlocked(
+                        Achievement.POWER_THROUGH))
+        {
+            achievementManager.unlock(
+                    Achievement.POWER_THROUGH
+            );
+        }
+
+        resetEnergyCrisisTracking();
+    }
+
+    private void addCurrentResidentials(Grid grid)
+    {
+        for (Construction construction
+                : grid.getConstructions())
+        {
+            if (construction instanceof Residential)
+            {
+                energyCrisisResidentials.add(
+                        (Residential) construction
+                );
+            }
+        }
+    }
+
+    private boolean hasResidentialReachedZeroPopulation()
+    {
+        for (Residential residential
+                : energyCrisisResidentials)
+        {
+            if (residential.getPopulation() <= 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void resetEnergyCrisisTracking()
+    {
+        energyCrisisTracked = false;
+        energyCrisisFailed = false;
+        energyCrisisHadResidential = false;
+        energyCrisisResidentials.clear();
+    }
+
+    public void onFreemasonryChoice(
+            FreemasonryChoice choice)
+    {
+        if (choice == FreemasonryChoice.ACCEPTED
+                && !achievementManager.isUnlocked(
+                        Achievement.ILLUMINATED))
+        {
+            achievementManager.unlock(
+                    Achievement.ILLUMINATED
+            );
         }
     }
 

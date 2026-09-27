@@ -6,8 +6,13 @@ import java.util.*;
    Controlla piazzamento, rimozione, collegamenti e aggiornamento dei tick. */
 public class Grid
 {
-    private static final int N_ROW = 20;
-    private static final int N_COL = 20;
+    private static final int INITIAL_GRID_SIZE = 20;
+    private static final int GRID_EXPANSION_STEP = 10;
+    private static final int MAX_GRID_SIZE = 30;
+    private static final double EXPANSION_THRESHOLD = 0.99;
+
+    private int numberOfRows;
+    private int numberOfColumns;
 
     // Spostamenti per raggiungere le quattro celle adiacenti.
     private static final int[][] ORTHOGONAL_DIRECTIONS =
@@ -18,31 +23,51 @@ public class Grid
                     {0, 1}   // Destra
             };
 
-    private final Cell[][] cells;
-    private final boolean[][] reconstructionReserved;
+    private Cell[][] cells;
+    private boolean[][] reconstructionReserved;
     private final EnergyManager energyManager;
     private final GrassGenerator grassGenerator;
     private final List<ExplosionInfo> explosions = new ArrayList<>();
     // Per ora la generazione automatica dell'erba è disattivata, ma il sistema resta disponibile.
     private boolean grassGenerationSuspended = true;
+    
 
-    // Crea e inizializza tutte le celle della griglia.
+    // Crea la griglia iniziale 20x20.
     public Grid()
     {
-        cells = new Cell[N_ROW][N_COL];
-        reconstructionReserved =
-                new boolean[N_ROW][N_COL];
-        energyManager =
-                new EnergyManager(this);
+        this(INITIAL_GRID_SIZE, INITIAL_GRID_SIZE);
+    }
 
-        for (int row = 0; row < N_ROW; row++)
+    // Crea una griglia con una dimensione specifica.
+// Verrà usato anche quando caricheremo una partita salvata.
+    public Grid(int numberOfRows, int numberOfColumns)
+    {
+        if (numberOfRows < INITIAL_GRID_SIZE
+                || numberOfColumns < INITIAL_GRID_SIZE
+                || numberOfRows > MAX_GRID_SIZE
+                || numberOfColumns > MAX_GRID_SIZE)
         {
-            for (int column = 0;
-                 column < N_COL;
-                 column++)
+            throw new IllegalArgumentException(
+                    "Grid dimensions must each be between 20 and 30; "
+                            + "larger saves cannot be loaded without losing cells"
+            );
+        }
+
+        this.numberOfRows = numberOfRows;
+
+        this.numberOfColumns = numberOfColumns;
+
+        cells = new Cell[numberOfRows][numberOfColumns];
+
+        reconstructionReserved = new boolean[numberOfRows][numberOfColumns];
+
+        energyManager = new EnergyManager(this);
+
+        for (int row = 0; row < numberOfRows; row++)
+        {
+            for (int column = 0; column < numberOfColumns; column++)
             {
-                cells[row][column] =
-                        new Cell(row, column);
+                cells[row][column] = new Cell(row, column);
             }
         }
 
@@ -53,9 +78,9 @@ public class Grid
     public boolean isInside(int row, int column)
     {
         return row >= 0
-                && row < N_ROW
+                && row < numberOfRows
                 && column >= 0
-                && column < N_COL;
+                && column < numberOfColumns;
     }
 
     // Restituisce la cella presente nella posizione indicata.
@@ -76,28 +101,20 @@ public class Grid
 
     /* Posiziona una costruzione dopo aver controllato la posizione,
        la disponibilità della cella e il collegamento stradale. */
-    public void placeConstruction(
-            Construction construction,
-            int row,
+    public void placeConstruction(Construction construction, int row,
             int column)
     {
         if (construction == null)
         {
-            throw new IllegalArgumentException(
-                    "model.Construction cannot be null"
-            );
+            throw new IllegalArgumentException("model.Construction cannot be null");
         }
 
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid"
-            );
+            throw new IllegalArgumentException("Position outside the grid");
         }
 
-        if (isCellReservedForReconstruction(
-                row,
-                column))
+        if (isCellReservedForReconstruction(row, column))
         {
             throw new IllegalStateException(
                     "Impossibile piazzare un nuovo edificio: ricostruzione in corso"
@@ -147,17 +164,9 @@ public class Grid
 
         cell.placeConstruction(construction);
 
-        construction.initializeAfterPlacement(
-                this,
-                row,
-                column
-        );
+        construction.initializeAfterPlacement(this, row, column);
 
-        energyManager.registerConstruction(
-                construction,
-                row,
-                column
-        );
+        energyManager.registerConstruction(construction, row, column);
 
         if (placingRoad)
         {
@@ -170,6 +179,8 @@ public class Grid
 
         energyManager.updatePowerConnections();
         fillTrappedCellsWithGrass();
+
+        expandIfNeeded();
 
     }
 
@@ -242,6 +253,123 @@ public class Grid
                     destructionRadius
             );
         }
+    }
+
+
+    // Conta le celle occupate da strade o costruzioni reali.
+    public int getOccupiedCellCount()
+    {
+        int occupiedCells = 0;
+
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
+        {
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
+            {
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty())
+                {
+                    ConstructionType type =
+                            cell.getConstruction()
+                                    .getType();
+
+                    if (type != ConstructionType.GRASS
+                            && type != ConstructionType.CRIMINAL_ACTIVITY
+                            && type != ConstructionType.TERRORISTIC_GROUP)
+                    {
+                        occupiedCells++;
+                    }
+                }
+            }
+        }
+
+        return occupiedCells;
+    }
+
+
+    // Restituisce la percentuale di griglia realmente occupata.
+    public double getOccupiedPercentage()
+    {
+        int totalCells = numberOfRows * numberOfColumns;
+
+        return (double) getOccupiedCellCount() / totalCells;
+    }
+
+    // Espande la griglia quando almeno il 99% delle celle è occupato.
+    public boolean expandIfNeeded()
+    {
+        if (numberOfRows >= MAX_GRID_SIZE || numberOfColumns >= MAX_GRID_SIZE)
+        {
+            return false;
+        }
+
+        if (getOccupiedPercentage() < EXPANSION_THRESHOLD)
+        {
+            return false;
+        }
+
+        expandGrid();
+
+        return true;
+    }
+
+
+    // Aumenta la griglia di 10 righe e 10 colonne,
+// senza superare il limite massimo di 30x30.
+    private void expandGrid()
+    {
+        int newNumberOfRows =
+                Math.min(numberOfRows + GRID_EXPANSION_STEP,
+                        MAX_GRID_SIZE);
+
+        int newNumberOfColumns = Math.min(numberOfColumns + GRID_EXPANSION_STEP,
+                        MAX_GRID_SIZE);
+
+        Cell[][] newCells = new Cell[newNumberOfRows] [newNumberOfColumns];
+
+        boolean[][] newReconstructionReserved =
+                new boolean
+                        [newNumberOfRows]
+                        [newNumberOfColumns];
+
+        for (int row = 0; row < newNumberOfRows; row++)
+        {
+            for (int column = 0; column < newNumberOfColumns; column++)
+            {
+                if (row < numberOfRows && column < numberOfColumns)
+                {
+                    // Mantiene la vecchia città.
+                    newCells[row][column] = cells[row][column];
+
+                    newReconstructionReserved[row][column] =
+                            reconstructionReserved[row][column];
+                }
+                else
+                {
+                    // Crea le nuove celle aggiunte.
+                    newCells[row][column] = new Cell(row, column);
+                }
+            }
+        }
+
+        cells = newCells;
+
+        reconstructionReserved = newReconstructionReserved;
+
+        numberOfRows = newNumberOfRows;
+
+        numberOfColumns = newNumberOfColumns;
+
+        updateRoadConnections();
+
+
+
+        energyManager.rebuildConnections();
     }
 
     // Trova le celle occupate nell'area quadrata dell'esplosione, escludendo centro e strade.
@@ -353,10 +481,10 @@ public class Grid
        Serve per permettere il piazzamento libero della prima strada. */
     public boolean hasAnyRoad()
     {
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
             for (int column = 0;
-                 column < N_COL;
+                 column < numberOfColumns;
                  column++)
             {
                 Construction construction =
@@ -379,12 +507,29 @@ public class Grid
     {
         int count = 0;
 
-        for (Construction construction : getConstructions())
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
         {
-            if (construction.getType() == ConstructionType.CONSTRUCTION_COMPANY
-            && construction.isPowered())
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
             {
-                count++;
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty())
+                {
+                    Construction construction =
+                            cell.getConstruction();
+
+                    if (construction.getType()
+                            == ConstructionType.CONSTRUCTION_COMPANY
+                            && construction.isPowered())
+                    {
+                        count++;
+                    }
+                }
             }
         }
 
@@ -454,12 +599,29 @@ public class Grid
     {
         int numberOfNuclearPlants = 0;
 
-        for (Construction construction : getConstructions())
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
         {
-            if (construction.getType() == ConstructionType.NUCLEAR_PLANT
-                    && construction.isPowered())
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
             {
-                numberOfNuclearPlants++;
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty())
+                {
+                    Construction construction =
+                            cell.getConstruction();
+
+                    if (construction.getType()
+                            == ConstructionType.NUCLEAR_PLANT
+                            && construction.isPowered())
+                    {
+                        numberOfNuclearPlants++;
+                    }
+                }
             }
         }
 
@@ -469,10 +631,10 @@ public class Grid
     // Ricalcola il collegamento stradale di tutte le costruzioni.
     public void updateRoadConnections()
     {
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
             for (int column = 0;
-                 column < N_COL;
+                 column < numberOfColumns;
                  column++)
             {
                 Cell cell = cells[row][column];
@@ -497,10 +659,10 @@ public class Grid
         energyManager.updatePowerConnections();
 
         // Prima fase: aggiorna tutte le centrali elettriche.
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
             for (int column = 0;
-                 column < N_COL;
+                 column < numberOfColumns;
                  column++)
             {
                 Cell cell = cells[row][column];
@@ -524,10 +686,10 @@ public class Grid
         }
 
         // Seconda fase: aggiorna tutte le altre costruzioni.
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
             for (int column = 0;
-                 column < N_COL;
+                 column < numberOfColumns;
                  column++)
             {
                 Cell cell = cells[row][column];
@@ -559,13 +721,25 @@ public class Grid
         List<PowerPlant> powerPlants =
                 new ArrayList<>();
 
-        for (Construction construction
-                : getConstructions())
+        for (int row = 0;
+             row < numberOfRows;
+             row++)
         {
-            if (construction
-                    instanceof PowerPlant powerPlant)
+            for (int column = 0;
+                 column < numberOfColumns;
+                 column++)
             {
-                powerPlants.add(powerPlant);
+                Cell cell =
+                        cells[row][column];
+
+                if (!cell.isEmpty()
+                        && cell.getConstruction()
+                        instanceof PowerPlant powerPlant)
+                {
+                    powerPlants.add(
+                            powerPlant
+                    );
+                }
             }
         }
 
@@ -620,13 +794,13 @@ public class Grid
     // Restituisce il numero di righe della griglia.
     public int getNumberOfRows()
     {
-        return N_ROW;
+        return numberOfRows;
     }
 
     // Restituisce il numero di colonne della griglia.
     public int getNumberOfColumns()
     {
-        return N_COL;
+        return numberOfColumns;
     }
 
     // Conta le celle vuote adiacenti ad almeno una strada.
@@ -635,10 +809,10 @@ public class Grid
         Set<Cell> buildable =
                 new HashSet<>();
 
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
             for (int column = 0;
-                 column < N_COL;
+                 column < numberOfColumns;
                  column++)
             {
                 Cell cell = cells[row][column];
@@ -742,10 +916,10 @@ public class Grid
         List<Construction> constructions =
                 new ArrayList<>();
 
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
             for (int column = 0;
-                 column < N_COL;
+                 column < numberOfColumns;
                  column++)
             {
                 Cell cell = cells[row][column];
@@ -815,9 +989,9 @@ public class Grid
 
         Set<Cell> buildable = new HashSet<>();
 
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0; column < N_COL; column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 Cell cell = cells[row][column];
 
@@ -868,9 +1042,7 @@ public class Grid
     {
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid"
-            );
+            throw new IllegalArgumentException("Position outside the grid");
         }
 
         reconstructionReserved[row][column] = true;
@@ -882,17 +1054,13 @@ public class Grid
     {
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid"
-            );
+            throw new IllegalArgumentException("Position outside the grid");
         }
 
         reconstructionReserved[row][column] = false;
     }
 
-    public boolean isCellReservedForReconstruction(
-            int row,
-            int column)
+    public boolean isCellReservedForReconstruction(int row, int column)
     {
         if (!isInside(row, column))
         {
@@ -905,11 +1073,9 @@ public class Grid
 
     public void releaseAllReconstructionReservations()
     {
-        for (int row = 0; row < N_ROW; row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < N_COL;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 reconstructionReserved[row][column] = false;
             }
@@ -917,11 +1083,9 @@ public class Grid
     }
 
 
-    public void setGrassGenerationSuspended(
-            boolean suspended)
+    public void setGrassGenerationSuspended(boolean suspended)
     {
-        grassGenerationSuspended =
-                suspended;
+        grassGenerationSuspended = suspended;
     }
 
 }

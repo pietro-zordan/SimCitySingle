@@ -13,10 +13,13 @@ import controller.Controller;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -27,6 +30,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 import model.ConstructionType;
 
@@ -48,22 +52,34 @@ public final class GridView
     private final Consumer<String> errorHandler;
     private final Runnable demolitionSound;
     private final Runnable placementSound;
+    private final Runnable expansionSound;
+    private Runnable expansionViewAction;
     private final GridPane view;
     private final Label infoLabel;
-    private final StackPane[][] cells;
-    private final Rectangle[][] graphicCells;
-    private final Rectangle[][] crisisOverlays;
-    private final Label[][] crisisSparkIcons;
-    private final Label[][] noPowerIcons;
-    private final Label[][] boostIcons;
-    private final Label[][] tsunamiIcons;
-    private final Rectangle[][] tsunamiOverlays;
-    private final Rectangle[][] explosionOverlays;
-    private final Label[][] grassIcons;
-    private final StackPane[][] lodgeIcons;
-    private final Tooltip[][] grassTooltips;
-    private final Tooltip[][] lodgeTooltips;
-    private final Tooltip[][] powerPlantTooltips;
+    private StackPane[][] cells;
+    private Rectangle[][] graphicCells;
+    private Rectangle[][] roadPreviewOverlays;
+    private Rectangle[][] crisisOverlays;
+    private Label[][] crisisSparkIcons;
+    private Label[][] noPowerIcons;
+    private Label[][] boostIcons;
+    private Label[][] tsunamiIcons;
+    private Rectangle[][] tsunamiOverlays;
+    private Rectangle[][] explosionOverlays;
+    private final List<Rectangle> visibleTsunamiOverlays =
+            new ArrayList<>();
+    private final List<Label> visibleTsunamiIcons =
+            new ArrayList<>();
+    private final List<Rectangle> visibleExplosionOverlays =
+            new ArrayList<>();
+    private Label[][] grassIcons;
+    private StackPane[][] lodgeIcons;
+    private Tooltip[][] grassTooltips;
+    private Tooltip[][] lodgeTooltips;
+    private Tooltip[][] powerPlantTooltips;
+    private Controller.CellState[][] renderedStates;
+    private boolean hasRenderedFrame;
+    private boolean lastRenderedCrisisState;
     private final List<Label> crisisEligibleSparks = new ArrayList<>();
     private final List<Label> crisisVisibleSparks = new ArrayList<>();
     private final Random crisisRandom = new Random();
@@ -73,16 +89,23 @@ public final class GridView
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
     private boolean demolitionActive = false;
+    private boolean roadDragActive;
+    private int roadStartRow;
+    private int roadStartColumn;
+    private int roadEndRow;
+    private int roadEndColumn;
 
     // Inizializza la griglia di gioco, allocando le matrici di componenti grafici per le celle e impostando il layout del GridPane.
     public GridView(
             Controller controller,
             Consumer<String> errorHandler,
             Runnable demolitionSound,
-            Runnable placementSound)
+            Runnable placementSound,
+            Runnable expansionSound)
     {
         if (controller == null || errorHandler == null
-                || demolitionSound == null || placementSound == null)
+                || demolitionSound == null || placementSound == null
+                || expansionSound == null)
         {
             throw new IllegalArgumentException(
                     "Grid view dependencies cannot be null"
@@ -93,12 +116,13 @@ public final class GridView
         this.errorHandler = errorHandler;
         this.demolitionSound = demolitionSound;
         this.placementSound = placementSound;
+        this.expansionSound = expansionSound;
 
         // ---------- GRIGLIA CENTRATA ----------
         view = new GridPane();
         view.setHgap(1);
         view.setVgap(1);
-        view.setPadding(new Insets(10));
+        view.setPadding(Insets.EMPTY);
         view.setAlignment(Pos.CENTER);
 
         infoLabel = new Label(
@@ -106,11 +130,26 @@ public final class GridView
         );
         infoLabel.setPadding(new Insets(5));
 
+        rebuildCells();
+    }
+
+    // Ricrea la rappresentazione grafica quando cambia la dimensione della griglia.
+    private void rebuildCells()
+    {
+        roadDragActive = false;
         int rows = controller.getNumberOfRows();
         int columns = controller.getNumberOfColumns();
 
+        stop();
+        crisisEligibleSparks.clear();
+        visibleTsunamiOverlays.clear();
+        visibleTsunamiIcons.clear();
+        visibleExplosionOverlays.clear();
+        view.getChildren().clear();
+
         cells = new StackPane[rows][columns];
         graphicCells = new Rectangle[rows][columns];
+        roadPreviewOverlays = new Rectangle[rows][columns];
         crisisOverlays = new Rectangle[rows][columns];
         crisisSparkIcons = new Label[rows][columns];
         noPowerIcons = new Label[rows][columns];
@@ -123,9 +162,22 @@ public final class GridView
         grassTooltips = new Tooltip[rows][columns];
         lodgeTooltips = new Tooltip[rows][columns];
         powerPlantTooltips = new Tooltip[rows][columns];
+        renderedStates = new Controller.CellState[rows][columns];
+        hasRenderedFrame = false;
 
-        // Popolamento celle griglia
         createCells();
+    }
+
+    // Mantiene sincronizzate le dimensioni della GUI con quelle del modello.
+    public void ensureGridSize()
+    {
+        int rows = controller.getNumberOfRows();
+        int columns = controller.getNumberOfColumns();
+
+        if (cells == null || cells.length != rows || cells[0].length != columns)
+        {
+            rebuildCells();
+        }
     }
 
     // Instanzia e sovrappone le componenti grafiche per ciascuna cella della griglia agganciando i relativi listener per i click del mouse.
@@ -143,6 +195,9 @@ public final class GridView
                         new Rectangle(CELL_SIZE, CELL_SIZE);
                 graphicCell.setFill(Color.WHITESMOKE);
                 graphicCell.setStroke(Color.LIGHTGRAY);
+                // Il bordo resta dentro i 30x30: eventi come Energy Crisis
+                // possono aumentare lo spessore senza cambiare i layout bounds.
+                graphicCell.setStrokeType(StrokeType.INSIDE);
 
                 Rectangle crisisOverlay =
                         new Rectangle(CELL_SIZE - 4, CELL_SIZE - 4);
@@ -221,26 +276,6 @@ public final class GridView
                 StackPane lodgeIcon = createLodgeIcon();
                 lodgeIcon.setVisible(false);
 
-                Tooltip grassTooltip = new Tooltip("Grass");
-                grassTooltip.setShowDelay(
-                        Duration.millis(100)
-                );
-                grassTooltip.setHideDelay(
-                        Duration.ZERO
-                );
-
-                Tooltip lodgeTooltip = new Tooltip("Masonic Lodge");
-                lodgeTooltip.setShowDelay(Duration.millis(100));
-                lodgeTooltip.setHideDelay(Duration.ZERO);
-
-                Tooltip powerPlantTooltip = new Tooltip();
-                powerPlantTooltip.setShowDelay(
-                        Duration.millis(100)
-                );
-                powerPlantTooltip.setHideDelay(
-                        Duration.ZERO
-                );
-
                 StackPane cell = new StackPane(
                         graphicCell,
                         crisisOverlay,
@@ -254,6 +289,20 @@ public final class GridView
                         explosionOverlay
                 );
 
+                // Ogni cella deve avere sempre esattamente la stessa dimensione.
+                // Icone e overlay degli eventi non possono quindi modificare
+                // nemmeno di un pixel la dimensione complessiva della griglia.
+                cell.setMinSize(CELL_SIZE, CELL_SIZE);
+                cell.setPrefSize(CELL_SIZE, CELL_SIZE);
+                cell.setMaxSize(CELL_SIZE, CELL_SIZE);
+
+                Rectangle roadPreview =
+                        new Rectangle(CELL_SIZE, CELL_SIZE);
+                roadPreview.setFill(Color.rgb(60, 185, 230, 0.42));
+                roadPreview.setVisible(false);
+                roadPreview.setMouseTransparent(true);
+                cell.getChildren().add(roadPreview);
+
                 final int selectedRow = row;
                 final int selectedColumn = column;
 
@@ -263,16 +312,72 @@ public final class GridView
                             @Override
                             public void handle(MouseEvent event)
                             {
-                                handleCellClick(
-                                        selectedRow,
-                                        selectedColumn
-                                );
+                                if (selectedType != ConstructionType.ROAD
+                                        || demolitionActive)
+                                {
+                                    handleCellClick(
+                                            selectedRow,
+                                            selectedColumn
+                                    );
+                                }
+                            }
+                        }
+                );
+
+                cell.setOnMousePressed(
+                        new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                if (selectedType == ConstructionType.ROAD
+                                        && !demolitionActive
+                                        && event.getButton()
+                                        == MouseButton.PRIMARY)
+                                {
+                                    startRoadDrag(selectedRow, selectedColumn);
+                                    event.consume();
+                                }
+                            }
+                        }
+                );
+
+                cell.setOnMouseDragged(
+                        new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                if (roadDragActive)
+                                {
+                                    updateRoadDrag(event);
+                                    event.consume();
+                                }
+                            }
+                        }
+                );
+
+                cell.setOnMouseReleased(
+                        new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            public void handle(MouseEvent event)
+                            {
+                                if (roadDragActive
+                                        && event.getButton()
+                                        == MouseButton.PRIMARY)
+                                {
+                                    updateRoadDrag(event);
+                                    finishRoadDrag();
+                                    event.consume();
+                                }
                             }
                         }
                 );
 
                 cells[row][column] = cell;
                 graphicCells[row][column] = graphicCell;
+                roadPreviewOverlays[row][column] = roadPreview;
                 crisisOverlays[row][column] = crisisOverlay;
                 crisisSparkIcons[row][column] = crisisSpark;
                 noPowerIcons[row][column] = noPowerIcon;
@@ -284,13 +389,158 @@ public final class GridView
                         explosionOverlay;
                 grassIcons[row][column] = grassIcon;
                 lodgeIcons[row][column] = lodgeIcon;
-                grassTooltips[row][column] = grassTooltip;
-                lodgeTooltips[row][column] = lodgeTooltip;
-                powerPlantTooltips[row][column] =
-                        powerPlantTooltip;
+                // I tooltip vengono creati soltanto quando la cella ne ha
+                // realmente bisogno. Su una 30x30 evitiamo migliaia di
+                // oggetti JavaFX inutilizzati.
+                grassTooltips[row][column] = null;
+                lodgeTooltips[row][column] = null;
+                powerPlantTooltips[row][column] = null;
 
                 view.add(cell, column, row);
             }
+        }
+    }
+
+    private void startRoadDrag(int row, int column)
+    {
+        roadDragActive = true;
+        roadStartRow = row;
+        roadStartColumn = column;
+        roadEndRow = row;
+        roadEndColumn = column;
+        showRoadPreview(true);
+    }
+
+    // Converte direttamente la posizione del mouse nella cella corrispondente:
+    // il costo resta costante anche su griglie 30x30.
+    private void updateRoadDrag(MouseEvent event)
+    {
+        Point2D localPoint = view.sceneToLocal(event.getSceneX(), event.getSceneY());
+        Bounds firstCell = cells[0][0].getBoundsInParent();
+        double relativeX = localPoint.getX() - firstCell.getMinX();
+        double relativeY = localPoint.getY() - firstCell.getMinY();
+        double stepX = CELL_SIZE + view.getHgap();
+        double stepY = CELL_SIZE + view.getVgap();
+
+        if (relativeX < 0 || relativeY < 0)
+        {
+            return;
+        }
+
+        int column = (int) Math.floor(relativeX / stepX);
+        int row = (int) Math.floor(relativeY / stepY);
+
+        if (row < 0 || row >= cells.length || column < 0 || column >= cells[0].length)
+        {
+            return;
+        }
+
+        // Se il cursore è nello spazio di 1 px tra due celle, manteniamo l'ultima cella valida.
+        if (relativeX - column * stepX > CELL_SIZE || relativeY - row * stepY > CELL_SIZE)
+        {
+            return;
+        }
+
+        int endRow = row;
+        int endColumn = column;
+        if (Math.abs(column - roadStartColumn) >= Math.abs(row - roadStartRow))
+        {
+            endRow = roadStartRow;
+        }
+        else
+        {
+            endColumn = roadStartColumn;
+        }
+
+        if (endRow != roadEndRow || endColumn != roadEndColumn)
+        {
+            showRoadPreview(false);
+            roadEndRow = endRow;
+            roadEndColumn = endColumn;
+            showRoadPreview(true);
+        }
+    }
+
+    private void showRoadPreview(boolean visible)
+    {
+        int rowStep = Integer.compare(roadEndRow, roadStartRow);
+        int columnStep = Integer.compare(roadEndColumn, roadStartColumn);
+        int length = Math.max(
+                Math.abs(roadEndRow - roadStartRow),
+                Math.abs(roadEndColumn - roadStartColumn));
+
+        for (int i = 0; i <= length; i++)
+        {
+            roadPreviewOverlays[roadStartRow + i * rowStep]
+                    [roadStartColumn + i * columnStep]
+                    .setVisible(visible);
+        }
+    }
+
+    private void finishRoadDrag()
+    {
+        roadDragActive = false;
+        showRoadPreview(false);
+
+        if (roadStartRow == roadEndRow
+                && roadStartColumn == roadEndColumn)
+        {
+            handleCellClick(roadStartRow, roadStartColumn);
+            return;
+        }
+
+        int rowStep = Integer.compare(roadEndRow, roadStartRow);
+        int columnStep = Integer.compare(roadEndColumn, roadStartColumn);
+        int length = Math.max(
+                Math.abs(roadEndRow - roadStartRow),
+                Math.abs(roadEndColumn - roadStartColumn));
+        int previousRows = controller.getNumberOfRows();
+        int previousColumns = controller.getNumberOfColumns();
+        int placed = 0;
+        boolean canContinue = true;
+
+        for (int i = 0; i <= length && canContinue; i++)
+        {
+            int row = roadStartRow + i * rowStep;
+            int column = roadStartColumn + i * columnStep;
+            Controller.CellState state =
+                    controller.getCellState(row, column);
+
+            if (state.empty()
+                    || state.type() != ConstructionType.ROAD)
+            {
+                try
+                {
+                    controller.placeConstruction(
+                            ConstructionType.ROAD, row, column);
+                    placed++;
+                }
+                catch (IllegalStateException
+                       | IllegalArgumentException exception)
+                {
+                    errorHandler.accept(exception.getMessage());
+                    canContinue = false;
+                }
+            }
+        }
+
+        if (placed > 0)
+        {
+            if (controller.getNumberOfRows() != previousRows
+                    || controller.getNumberOfColumns() != previousColumns)
+            {
+                ensureGridSize();
+                if (expansionViewAction != null)
+                {
+                    expansionViewAction.run();
+                }
+                expansionSound.run();
+            }
+            else
+            {
+                placementSound.run();
+            }
+            infoLabel.setText("Roads built: " + placed);
         }
     }
 
@@ -382,22 +632,39 @@ public final class GridView
         {
             try
             {
-                controller.placeConstruction(
-                        selectedType,
-                        row,
-                        column
-                );
-                placementSound.run();
+                int previousRows = controller.getNumberOfRows();
+                int previousColumns = controller.getNumberOfColumns();
 
-                infoLabel.setText(
-                        "Creato/a un/a "
-                                + selectedType
-                                + " (riga "
-                                + row
-                                + ", colonna "
-                                + column
-                                + ")"
-                );
+                controller.placeConstruction(selectedType, row, column);
+
+                boolean gridExpanded =
+                        controller.getNumberOfRows() != previousRows
+                                || controller.getNumberOfColumns() != previousColumns;
+
+                if (gridExpanded)
+                {
+                    ensureGridSize();
+
+                    if (expansionViewAction != null)
+                    {
+                        expansionViewAction.run();
+                    }
+
+                    expansionSound.run();
+                    infoLabel.setText(
+                            "Grid expanded to " + controller.getNumberOfRows()
+                                    + "x" + controller.getNumberOfColumns()
+                    );
+                }
+                else
+                {
+                    placementSound.run();
+                    infoLabel.setText(
+                            "Creato/a un/a " + selectedType
+                                    + " (riga " + row
+                                    + ", colonna " + column + ")"
+                    );
+                }
             }
             catch (IllegalStateException
                    | IllegalArgumentException exception)
@@ -420,42 +687,47 @@ public final class GridView
 
 
 
-    // Scorrendo l'intera griglia, invoca il rendering grafico di ciascuna cella sincronizzandola con lo stato attuale del modello.
+    // Controlla tutte le celle, ma ridisegna soltanto quelle il cui stato visivo è cambiato.
     public void refresh()
     {
-        boolean crisisNowActive =
-                controller.getActiveEventType()
-                        == EventType.ENERGY_CRISIS;
+        ensureGridSize();
+        boolean crisisNowActive = controller.getActiveEventType() == EventType.ENERGY_CRISIS;
+        boolean crisisModeChanged = !hasRenderedFrame || crisisNowActive != lastRenderedCrisisState;
 
         clearCrisisSparks();
         crisisEligibleSparks.clear();
 
-        for (int row = 0;
-             row < controller.getNumberOfRows();
-             row++)
+        for (int row = 0; row < controller.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < controller.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < controller.getNumberOfColumns(); column++)
             {
-                renderCell(
-                        row,
-                        column,
-                        controller.getCellState(row, column),
-                        crisisNowActive
-                );
+                Controller.CellState state = controller.getCellState(row, column);
+
+                if (crisisNowActive && isCrisisAffected(row, column, state))
+                {
+                    crisisEligibleSparks.add(crisisSparkIcons[row][column]);
+                }
+
+                if (crisisModeChanged || !Objects.equals(renderedStates[row][column], state))
+                {
+                    renderCell(row, column, state, crisisNowActive);
+                }
+                else if (!state.empty() && state.type() == ConstructionType.POWER_PLANT)
+                {
+                    updatePowerPlantTooltip(row, column);
+                }
             }
         }
 
-        if (crisisNowActive)
+        lastRenderedCrisisState = crisisNowActive;
+        hasRenderedFrame = true;
+
+        if (crisisNowActive && !energyCrisisActive)
         {
-            if (!energyCrisisActive)
-            {
-                energyCrisisActive = true;
-                startCrisisSparks();
-            }
+            energyCrisisActive = true;
+            startCrisisSparks();
         }
-        else if (energyCrisisActive)
+        else if (!crisisNowActive && energyCrisisActive)
         {
             stop();
         }
@@ -571,26 +843,77 @@ public final class GridView
                         && state.type() == ConstructionType.MASONIC_LODGE;
         lodgeIcons[row][column].setVisible(lodgePresent);
 
-        Tooltip.uninstall(
-                cells[row][column],
-                lodgeTooltips[row][column]
-        );
         if (lodgePresent)
         {
+            if (lodgeTooltips[row][column] == null)
+            {
+                Tooltip lodgeTooltip =
+                        new Tooltip(
+                                "Masonic Lodge"
+                        );
+
+                lodgeTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+
+                lodgeTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
+                lodgeTooltips[row][column] =
+                        lodgeTooltip;
+            }
+
+            Tooltip.uninstall(
+                    cells[row][column],
+                    lodgeTooltips[row][column]
+            );
+
             Tooltip.install(
                     cells[row][column],
                     lodgeTooltips[row][column]
             );
         }
-
-        Tooltip.uninstall(
-                cells[row][column],
-                grassTooltips[row][column]
-        );
+        else if (lodgeTooltips[row][column] != null)
+        {
+            Tooltip.uninstall(
+                    cells[row][column],
+                    lodgeTooltips[row][column]
+            );
+        }
 
         if (grassPresent)
         {
+            if (grassTooltips[row][column] == null)
+            {
+                Tooltip grassTooltip =
+                        new Tooltip("Grass");
+
+                grassTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+
+                grassTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
+                grassTooltips[row][column] =
+                        grassTooltip;
+            }
+
+            Tooltip.uninstall(
+                    cells[row][column],
+                    grassTooltips[row][column]
+            );
+
             Tooltip.install(
+                    cells[row][column],
+                    grassTooltips[row][column]
+            );
+        }
+        else if (grassTooltips[row][column] != null)
+        {
+            Tooltip.uninstall(
                     cells[row][column],
                     grassTooltips[row][column]
             );
@@ -601,24 +924,33 @@ public final class GridView
                         && state.type()
                         == ConstructionType.POWER_PLANT;
 
-        Tooltip.uninstall(
-                cells[row][column],
-                powerPlantTooltips[row][column]
-        );
-
         if (powerPlantPresent)
         {
-            powerPlantTooltips[row][column].setText(
-                    "Energy: "
-                            + controller.getPowerPlantEnergyConsumed(
-                                    row,
-                                    column
-                            )
-                            + " / "
-                            + controller.getPowerPlantEnergyCapacity(
-                                    row,
-                                    column
-                            )
+            if (powerPlantTooltips[row][column] == null)
+            {
+                Tooltip powerPlantTooltip =
+                        new Tooltip();
+
+                powerPlantTooltip.setShowDelay(
+                        Duration.millis(100)
+                );
+
+                powerPlantTooltip.setHideDelay(
+                        Duration.ZERO
+                );
+
+                powerPlantTooltips[row][column] =
+                        powerPlantTooltip;
+            }
+
+            Tooltip.uninstall(
+                    cells[row][column],
+                    powerPlantTooltips[row][column]
+            );
+
+            updatePowerPlantTooltip(
+                    row,
+                    column
             );
 
             Tooltip.install(
@@ -626,18 +958,21 @@ public final class GridView
                     powerPlantTooltips[row][column]
             );
         }
+        else if (powerPlantTooltips[row][column] != null)
+        {
+            Tooltip.uninstall(
+                    cells[row][column],
+                    powerPlantTooltips[row][column]
+            );
+        }
 
         // --- EFFETTO GRAFICO ENERGY CRISIS ---
 
-        boolean crisisAffected = energyCrisisActive
-                && !state.empty()
-                && state.powered()
-                && controller.cellConsumesPower(row, column);
+        boolean crisisAffected = energyCrisisActive && isCrisisAffected(row, column, state);
         crisisOverlays[row][column].setVisible(crisisAffected);
 
         if (crisisAffected)
         {
-            crisisEligibleSparks.add(crisisSparkIcons[row][column]);
             crisisOverlays[row][column].setOpacity(
                     CRISIS_OVERLAY_OPACITY
             );
@@ -660,6 +995,21 @@ public final class GridView
             graphicCell.setStroke(Color.LIGHTGRAY);
             graphicCell.setStrokeWidth(1.0);
         }
+
+        renderedStates[row][column] = state;
+    }
+
+    private boolean isCrisisAffected(int row, int column, Controller.CellState state)
+    {
+        return !state.empty() && state.powered() && controller.cellConsumesPower(row, column);
+    }
+
+    private void updatePowerPlantTooltip(int row, int column)
+    {
+        powerPlantTooltips[row][column].setText(
+                "Energy: " + controller.getPowerPlantEnergyConsumed(row, column)
+                        + " / " + controller.getPowerPlantEnergyCapacity(row, column)
+        );
     }
 
     // Imposta il tipo di costruzione corrente da piazzare al momento del click sulla griglia.
@@ -672,6 +1022,12 @@ public final class GridView
             );
         }
 
+        if (roadDragActive)
+        {
+            showRoadPreview(false);
+            roadDragActive = false;
+        }
+
         this.selectedType = selectedType;
 
         // Se seleziono una costruzione esco dalla modalità demolizione
@@ -681,6 +1037,7 @@ public final class GridView
     // Mostra l'effetto Tsunami su un'intera riga della griglia.
     public void showTsunamiRow(int row)
     {
+        ensureGridSize();
         for (int column = 0;
              column < controller.getNumberOfColumns();
              column++)
@@ -692,6 +1049,7 @@ public final class GridView
     // Mostra l'effetto Tsunami su un'intera colonna della griglia.
     public void showTsunamiColumn(int column)
     {
+        ensureGridSize();
         for (int row = 0;
              row < controller.getNumberOfRows();
              row++)
@@ -707,35 +1065,42 @@ public final class GridView
      */
     private void showTsunamiCell(int row, int column)
     {
-        tsunamiOverlays[row][column].setVisible(
-                true
-        );
+        Rectangle overlay =
+                tsunamiOverlays[row][column];
 
-        tsunamiIcons[row][column].setVisible(
-                true
-        );
+        Label icon =
+                tsunamiIcons[row][column];
+
+        if (!overlay.isVisible())
+        {
+            overlay.setVisible(true);
+            visibleTsunamiOverlays.add(overlay);
+        }
+
+        if (!icon.isVisible())
+        {
+            icon.setVisible(true);
+            visibleTsunamiIcons.add(icon);
+        }
     }
 
     // Nasconde l'icona dello Tsunami da tutte le celle della griglia al termine dell'evento.
     public void clearTsunami()
     {
-        for (int row = 0;
-             row < controller.getNumberOfRows();
-             row++)
-        {
-            for (int column = 0;
-                 column < controller.getNumberOfColumns();
-                 column++)
-            {
-                tsunamiOverlays[row][column].setVisible(
-                        false
-                );
+        ensureGridSize();
 
-                tsunamiIcons[row][column].setVisible(
-                        false
-                );
-            }
+        for (Rectangle overlay : visibleTsunamiOverlays)
+        {
+            overlay.setVisible(false);
         }
+
+        for (Label icon : visibleTsunamiIcons)
+        {
+            icon.setVisible(false);
+        }
+
+        visibleTsunamiOverlays.clear();
+        visibleTsunamiIcons.clear();
     }
 
     // Mostra un anello dell'esplosione e aggiorna le celle solo quando l'onda le raggiunge.
@@ -745,6 +1110,7 @@ public final class GridView
             int radius,
             int maxRadius)
     {
+        ensureGridSize();
         double progress = 0.0;
 
         if (maxRadius > 0)
@@ -765,28 +1131,79 @@ public final class GridView
                 controller.getActiveEventType()
                         == EventType.ENERGY_CRISIS;
 
-        for (int row = 0; row < controller.getNumberOfRows(); row++)
-        {
-            for (int column = 0; column < controller.getNumberOfColumns(); column++)
-            {
-                int rowDistance = Math.abs(row - centerRow);
-                int columnDistance = Math.abs(column - centerColumn);
+        int startRow =
+                Math.max(
+                        0,
+                        centerRow - radius
+                );
 
-                if (Math.max(rowDistance, columnDistance) == radius)
+        int endRow =
+                Math.min(
+                        controller.getNumberOfRows() - 1,
+                        centerRow + radius
+                );
+
+        int startColumn =
+                Math.max(
+                        0,
+                        centerColumn - radius
+                );
+
+        int endColumn =
+                Math.min(
+                        controller.getNumberOfColumns() - 1,
+                        centerColumn + radius
+                );
+
+        for (int row = startRow; row <= endRow; row++)
+        {
+            for (int column = startColumn;
+                 column <= endColumn;
+                 column++)
+            {
+                int rowDistance =
+                        Math.abs(
+                                row - centerRow
+                        );
+
+                int columnDistance =
+                        Math.abs(
+                                column - centerColumn
+                        );
+
+                if (Math.max(
+                        rowDistance,
+                        columnDistance
+                ) == radius)
                 {
                     renderCell(
                             row,
                             column,
-                            controller.getCellState(row, column),
+                            controller.getCellState(
+                                    row,
+                                    column
+                            ),
                             energyCrisisActive
                     );
 
                     Rectangle overlay =
                             explosionOverlays[row][column];
 
-                    overlay.setFill(explosionColor);
-                    overlay.setOpacity(opacity);
-                    overlay.setVisible(true);
+                    overlay.setFill(
+                            explosionColor
+                    );
+
+                    overlay.setOpacity(
+                            opacity
+                    );
+
+                    if (!overlay.isVisible())
+                    {
+                        overlay.setVisible(true);
+                        visibleExplosionOverlays.add(
+                                overlay
+                        );
+                    }
                 }
             }
         }
@@ -795,17 +1212,24 @@ public final class GridView
     // Nasconde l'effetto grafico dell'esplosione da tutta la griglia.
     public void clearExplosion()
     {
-        for (int row = 0; row < controller.getNumberOfRows(); row++)
+        ensureGridSize();
+
+        for (Rectangle overlay
+                : visibleExplosionOverlays)
         {
-            for (int column = 0; column < controller.getNumberOfColumns(); column++)
-            {
-                explosionOverlays[row][column].setVisible(false);
-            }
+            overlay.setVisible(false);
         }
+
+        visibleExplosionOverlays.clear();
     }
 
     public void activateDemolition()
     {
+        if (roadDragActive)
+        {
+            showRoadPreview(false);
+            roadDragActive = false;
+        }
         demolitionActive = true;
     }
 
@@ -874,6 +1298,26 @@ public final class GridView
         );
     }
 
+    public Point2D getCellCenterInScene(
+            int row,
+            int column)
+    {
+        if (row < 0
+                || row >= controller.getNumberOfRows()
+                || column < 0
+                || column >= controller.getNumberOfColumns())
+        {
+            throw new IllegalArgumentException(
+                    "Cell outside the grid"
+            );
+        }
+
+        return cells[row][column].localToScene(
+                CELL_SIZE / 2.0,
+                CELL_SIZE / 2.0
+        );
+    }
+
     public double getCellCenterOffsetX(int column)
     {
         if (column < 0
@@ -928,6 +1372,11 @@ public final class GridView
                 + controller.getNumberOfRows() * CELL_SIZE
                 + (controller.getNumberOfRows() - 1)
                 * view.getVgap();
+    }
+
+    public void setExpansionViewAction(Runnable expansionViewAction)
+    {
+        this.expansionViewAction = expansionViewAction;
     }
 
     // Restituisce il contenitore GridPane che rappresenta la griglia visiva.

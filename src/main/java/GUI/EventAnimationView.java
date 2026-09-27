@@ -16,6 +16,8 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
@@ -50,7 +52,7 @@ public final class EventAnimationView
     private static final int MISSILE_FLIGHT_DURATION = 1200;
     private static final int MISSILE_IMPACT_DELAY = 220;
     private static final int MISSILE_IMPACT_DURATION = 700;
-    private static final int MISSILE_START_MARGIN = 80;
+    private static final int MISSILE_START_MARGIN = 110;
     private static final double MISSILE_SHIELD_INSET = 4.0;
     private static final double MISSILE_SHIELD_ROUNDNESS = 20.0;
     private static final int MISSILE_SHIELD_SEGMENTS = 128;
@@ -65,6 +67,7 @@ public final class EventAnimationView
     private final Label hackerBinaryCode;
     private final Group missileNode;
     private final Group missileShieldNode;
+    private StackPane missileOverlayHost;
     private Path missileShieldOuter;
     private Ellipse missileShieldHighlight;
     private final Random random = new Random();
@@ -195,7 +198,25 @@ public final class EventAnimationView
 
         missileNode = createMissileNode();
         missileNode.setVisible(false);
+        // L'animazione del missile usa translateX/translateY anche fuori dalla griglia.
+        // Se il nodo resta "managed", StackPane lo considera nel layout e durante
+        // il volo può cambiare le dimensioni del contenuto dello ScrollPane,
+        // facendo comparire le scrollbar e spostando/riscalando visivamente la mappa.
+        missileNode.setManaged(false);
         missileNode.setMouseTransparent(true);
+    }
+
+    public void setMissileOverlayHost(
+            StackPane missileOverlayHost)
+    {
+        if (missileOverlayHost == null)
+        {
+            throw new IllegalArgumentException(
+                    "Missile overlay host cannot be null"
+            );
+        }
+
+        this.missileOverlayHost = missileOverlayHost;
     }
 
     public void refresh()
@@ -360,16 +381,120 @@ public final class EventAnimationView
      */
     private double[] getMissileShieldRadii()
     {
-        double halfWidth =
-                gridView.getGridVisualWidth() / 2.0;
+        Bounds renderedBounds =
+                getRenderedGridBoundsInOverlay();
 
-        double halfHeight =
-                gridView.getGridVisualHeight() / 2.0;
+        double halfWidth;
+        double halfHeight;
+
+        if (renderedBounds != null)
+        {
+            halfWidth =
+                    renderedBounds.getWidth() / 2.0;
+            halfHeight =
+                    renderedBounds.getHeight() / 2.0;
+        }
+        else
+        {
+            halfWidth =
+                    gridView.getGridVisualWidth() / 2.0;
+            halfHeight =
+                    gridView.getGridVisualHeight() / 2.0;
+        }
 
         return new double[] {
-                halfWidth - MISSILE_SHIELD_INSET,
-                halfHeight - MISSILE_SHIELD_INSET
+                Math.max(
+                        1.0,
+                        halfWidth - MISSILE_SHIELD_INSET
+                ),
+                Math.max(
+                        1.0,
+                        halfHeight - MISSILE_SHIELD_INSET
+                )
         };
+    }
+
+    // Riporta missile e distanze grafiche alla proporzione delle celle: sulla
+    // 20x20 resta 1, sulla 30x30 fittata si riduce insieme alla mappa.
+    private double getRenderedMapScale()
+    {
+        Bounds renderedBounds = getRenderedGridBoundsInOverlay();
+        if (renderedBounds == null)
+        {
+            return 1.0;
+        }
+        return renderedBounds.getWidth() / gridView.getGridVisualWidth();
+    }
+
+    private Bounds getRenderedGridBoundsInOverlay()
+    {
+        if (missileOverlayHost == null
+                || missileOverlayHost.getScene() == null
+                || gridView.getView().getScene() == null)
+        {
+            return null;
+        }
+
+        Bounds sceneBounds =
+                gridView.getView().localToScene(
+                        gridView.getView()
+                                .getBoundsInLocal()
+                );
+
+        return missileOverlayHost.sceneToLocal(
+                sceneBounds
+        );
+    }
+
+    private Point2D getRenderedGridCenterInOverlay()
+    {
+        Bounds bounds =
+                getRenderedGridBoundsInOverlay();
+
+        if (bounds == null)
+        {
+            return new Point2D(
+                    missileOverlayHost == null
+                            ? 0.0
+                            : missileOverlayHost.getWidth() / 2.0,
+                    missileOverlayHost == null
+                            ? 0.0
+                            : missileOverlayHost.getHeight() / 2.0
+            );
+        }
+
+        return new Point2D(
+                (bounds.getMinX()
+                        + bounds.getMaxX()) / 2.0,
+                (bounds.getMinY()
+                        + bounds.getMaxY()) / 2.0
+        );
+    }
+
+    private void positionMissileOverlayNodes()
+    {
+        Point2D center =
+                getRenderedGridCenterInOverlay();
+
+        if (missileNode != null)
+        {
+            missileNode.setLayoutX(
+                    center.getX()
+            );
+            missileNode.setLayoutY(
+                    center.getY()
+            );
+        }
+
+        if (missileShieldNode != null)
+        {
+            missileShieldNode.setLayoutX(
+                    center.getX()
+            );
+            missileShieldNode.setLayoutY(
+                    center.getY()
+            );
+        }
     }
 
     private void updateShieldOutline(
@@ -434,6 +559,8 @@ public final class EventAnimationView
 
     private void updateMissileShieldGeometry()
     {
+        positionMissileOverlayNodes();
+
         double[] radii =
                 getMissileShieldRadii();
 
@@ -459,6 +586,31 @@ public final class EventAnimationView
         missileShieldHighlight.setCenterY(
                 -radiusY * 0.32
         );
+    }
+
+    // Aggiorna il ritaglio dello scudo quando la griglia cambia dimensione.
+    private void updateMissileShieldClip()
+    {
+        if (missileShieldNode == null || !(missileShieldNode.getClip() instanceof Rectangle))
+        {
+            return;
+        }
+
+        Rectangle clip = (Rectangle) missileShieldNode.getClip();
+
+        double[] radii =
+                getMissileShieldRadii();
+
+        double width =
+                (radii[0] + MISSILE_SHIELD_INSET) * 2.0;
+
+        double height =
+                (radii[1] + MISSILE_SHIELD_INSET) * 2.0;
+
+        clip.setX(-width / 2.0);
+        clip.setY(-height / 2.0);
+        clip.setWidth(width);
+        clip.setHeight(height);
     }
 
     private Group createMissileNode()
@@ -869,15 +1021,43 @@ public final class EventAnimationView
         missileAnimationRunning = true;
         nextTurnButton.setDisable(true);
 
-        double targetX =
-                gridView.getCellCenterOffsetX(
+        if (missileOverlayHost == null
+                || missileOverlayHost.getScene() == null)
+        {
+            missileAnimationStarted = false;
+            missileAnimationRunning = false;
+            nextTurnButton.setDisable(false);
+            return;
+        }
+
+        /*
+         * Il bersaglio viene convertito dalla cella reale alle coordinate
+         * dell'overlay sopra lo ScrollPane. Lo zoom della griglia non entra
+         * quindi nella dimensione o nella traiettoria grafica del missile.
+         */
+        positionMissileOverlayNodes();
+
+        Point2D targetInScene =
+                gridView.getCellCenterInScene(
+                        missileTargetRow,
                         missileTargetColumn
                 );
 
-        double targetY =
-                gridView.getCellCenterOffsetY(
-                        missileTargetRow
+        Point2D targetInOverlay =
+                missileOverlayHost.sceneToLocal(
+                        targetInScene
                 );
+
+        Point2D gridCenter =
+                getRenderedGridCenterInOverlay();
+
+        double targetX =
+                targetInOverlay.getX()
+                        - gridCenter.getX();
+
+        double targetY =
+                targetInOverlay.getY()
+                        - gridCenter.getY();
 
         double[] startPosition =
                 getRandomMissileStartPosition(
@@ -913,6 +1093,9 @@ public final class EventAnimationView
                         )
                 );
 
+        double missileScale = getRenderedMapScale();
+        missileNode.setScaleX(missileScale);
+        missileNode.setScaleY(missileScale);
         missileNode.setOpacity(1.0);
         missileNode.setRotate(angle);
         missileNode.setVisible(true);
@@ -969,58 +1152,34 @@ public final class EventAnimationView
             double targetX,
             double targetY)
     {
-        double[] radii =
-                getMissileShieldRadii();
-
+        double[] radii = getMissileShieldRadii();
         double radiusX = radii[0];
         double radiusY = radii[1];
+        double margin = MISSILE_START_MARGIN * getRenderedMapScale();
 
+        // Le sei provenienze della vecchia 20x20, sempre oltre lo scudo.
         int startSide = random.nextInt(6);
-
         if (startSide == 0)
         {
-            return new double[] {
-                    -radiusX - MISSILE_START_MARGIN,
-                    -radiusY - MISSILE_START_MARGIN
-            };
+            return new double[] {-radiusX - margin, -radiusY - margin};
         }
-
         if (startSide == 1)
         {
-            return new double[] {
-                    radiusX + MISSILE_START_MARGIN,
-                    -radiusY - MISSILE_START_MARGIN
-            };
+            return new double[] {radiusX + margin, -radiusY - margin};
         }
-
         if (startSide == 2)
         {
-            return new double[] {
-                    -radiusX - MISSILE_START_MARGIN,
-                    targetY
-            };
+            return new double[] {-radiusX - margin, targetY};
         }
-
         if (startSide == 3)
         {
-            return new double[] {
-                    radiusX + MISSILE_START_MARGIN,
-                    targetY
-            };
+            return new double[] {radiusX + margin, targetY};
         }
-
         if (startSide == 4)
         {
-            return new double[] {
-                    -radiusX - MISSILE_START_MARGIN,
-                    radiusY + MISSILE_START_MARGIN
-            };
+            return new double[] {-radiusX - margin, radiusY + margin};
         }
-
-        return new double[] {
-                radiusX + MISSILE_START_MARGIN,
-                radiusY + MISSILE_START_MARGIN
-        };
+        return new double[] {radiusX + margin, radiusY + margin};
     }
 
     // Trova il bordo della stessa superellisse disegnata sulla griglia.
@@ -1039,6 +1198,37 @@ public final class EventAnimationView
         double dx = targetX - startX;
         double dy = targetY - startY;
 
+        double startValue =
+                shieldEquation(
+                        startX,
+                        startY,
+                        radiusX,
+                        radiusY
+                );
+
+        double targetValue =
+                shieldEquation(
+                        targetX,
+                        targetY,
+                        radiusX,
+                        radiusY
+                );
+
+        /*
+         * Il caso normale e: partenza fuori (>1), bersaglio dentro (<=1).
+         * Se per una configurazione futura non fosse cosi, evitiamo il
+         * "finto impatto" quasi istantaneo e lasciamo arrivare il missile
+         * verso il bersaglio invece di produrre una geometria instabile.
+         */
+        if (startValue <= 1.0
+                || targetValue > 1.0)
+        {
+            return new double[] {
+                    targetX,
+                    targetY
+            };
+        }
+
         double outside = 0.0;
         double inside = 1.0;
 
@@ -1048,7 +1238,12 @@ public final class EventAnimationView
             double x = startX + dx * middle;
             double y = startY + dy * middle;
 
-            if (shieldEquation(x, y, radiusX, radiusY) > 1.0)
+            if (shieldEquation(
+                    x,
+                    y,
+                    radiusX,
+                    radiusY
+            ) > 1.0)
             {
                 outside = middle;
             }
@@ -1145,7 +1340,7 @@ public final class EventAnimationView
 
         double bounceDistance =
                 Math.max(
-                        140,
+                        140 * getRenderedMapScale(),
                         Math.min(
                                 radiusX,
                                 radiusY
@@ -1154,7 +1349,7 @@ public final class EventAnimationView
 
         double downwardFall =
                 Math.max(
-                        55,
+                        55 * getRenderedMapScale(),
                         radiusY * 0.10
                 );
 
@@ -1239,6 +1434,7 @@ public final class EventAnimationView
     private void showMissileShieldImpact()
     {
         updateMissileShieldGeometry();
+        updateMissileShieldClip();
 
         if (missileShieldTimeline != null)
         {

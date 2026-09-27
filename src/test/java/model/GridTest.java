@@ -314,6 +314,24 @@ class GridTest {
         assertEquals(20, grid.getNumberOfColumns());
     }
 
+    @Test
+    void gridStopsAtThirtyByThirty()
+    {
+        Grid expandedGrid = new Grid();
+        for (int index = 0; index < 396; index++)
+        {
+            expandedGrid.restoreConstruction(
+                    new Road(), index / 20, index % 20);
+        }
+
+        assertTrue(expandedGrid.expandIfNeeded());
+        assertEquals(30, expandedGrid.getNumberOfRows());
+        assertEquals(30, expandedGrid.getNumberOfColumns());
+        assertFalse(expandedGrid.expandIfNeeded());
+        assertThrows(IllegalArgumentException.class,
+                () -> new Grid(40, 40));
+    }
+
     // ---------- countBuildableCells ----------
 
     @Test

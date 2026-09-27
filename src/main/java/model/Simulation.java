@@ -7,8 +7,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /* Gestisce lo scorrere dei tick della partita.
    Aggiorna la città e gli eventi e controlla quando è possibile cambiare policy. */
@@ -27,6 +29,7 @@ public class Simulation{
     private boolean masonicLodgePresent;
     private int masonicLodgeRemovedTick = -1;
     private final City city;
+    private final Mailbox mailbox = new Mailbox();
     private Event activeEvent;
     private int eventTicksPassed;
     private final Grid grid;
@@ -131,6 +134,12 @@ public class Simulation{
     public FreemasonryChoice getFreemasonryChoice()
     {
         return freemasonryChoice;
+    }
+
+    /** Restituisce la casella di posta associata alla simulazione. */
+    public Mailbox getMailbox()
+    {
+        return mailbox;
     }
 
     public int getMasonicLodgeRemovedTick()
@@ -515,8 +524,10 @@ public class Simulation{
     private boolean hasNewBlackout(
             List<Construction> poweredBeforeTick)
     {
-        List<Construction> currentConstructions =
-                grid.getConstructions();
+        Set<Construction> currentConstructions =
+                new HashSet<>(
+                        grid.getConstructions()
+                );
 
         for (Construction construction
                 : poweredBeforeTick)

@@ -7,6 +7,7 @@ import model.Construction;
 import model.ConstructionType;
 import model.Grid;
 import model.FreemasonryChoice;
+import model.MailMessage;
 import model.ReconstructionEntry;
 import model.Simulation;
 import policies.Policy;
@@ -25,12 +26,17 @@ public class Progress
     private int lastPolicyChangeTick;
     private PolicyType policyType;
     private int budget;
+    // Dimensioni della griglia salvata. Nei vecchi salvataggi Gson usa zero.
+    private int gridRows;
+    private int gridColumns;
     // Nei vecchi salvataggi il campo manca e Gson usa zero.
     private int criticalTicks;
     // Le vecchie partite prive del campo restano in attesa della scelta.
     private FreemasonryChoice freemasonryChoice;
     // Nei vecchi salvataggi il valore predefinito 0 non blocca i tick successivi.
     private int masonicLodgeRemovedTick;
+    // Nei vecchi salvataggi il campo manca: la casella sarà vuota.
+    private List<MailMessage> mailboxMessages;
     // Campi dei salvataggi precedenti, che conservavano solo il totale usato.
     private boolean demolitionStatePresent;
     private int usedRemovals;
@@ -107,6 +113,9 @@ public class Progress
         this.budget = budget;
         this.policyType = policyType;
         this.constructions = constructions;
+        // I Progress creati manualmente mantengono il formato storico 20x20.
+        this.gridRows = 20;
+        this.gridColumns = 20;
         this.tsunamiInsuranceActive =
                 tsunamiInsuranceActive;
         this.pendingTsunamiReconstructions =
@@ -186,6 +195,9 @@ public class Progress
                         .getTsunamiReconstructionDirection()
         );
 
+        progress.gridRows = grid.getNumberOfRows();
+        progress.gridColumns = grid.getNumberOfColumns();
+
         progress.bankStatePresent = true;
         progress.lastLoanTick =
                 simulation.getLastLoanTick();
@@ -208,6 +220,10 @@ public class Progress
                 simulation.getFreemasonryChoice();
         progress.masonicLodgeRemovedTick =
                 simulation.getMasonicLodgeRemovedTick();
+
+        // Salva anche l'indicazione delle lettere già aperte.
+        progress.mailboxMessages =
+                simulation.getMailbox().getMessages();
 
         progress.demolitionTicks =
                 simulation.getDemolitionTicks();
@@ -282,7 +298,28 @@ public class Progress
             );
         }
 
-        Grid restoredGrid = new Grid();
+        Grid restoredGrid;
+
+        // Compatibilità con i vecchi salvataggi, che non contenevano
+        // ancora le dimensioni della griglia.
+        if (gridRows == 0 && gridColumns == 0)
+        {
+            restoredGrid = new Grid();
+        }
+        else
+        {
+            if (gridRows == 0 || gridColumns == 0)
+            {
+                throw new IllegalStateException(
+                        "Invalid saved grid size"
+                );
+            }
+
+            restoredGrid = new Grid(
+                    gridRows,
+                    gridColumns
+            );
+        }
 
         for (ConstructionProgress constructionProgress : constructions)
         {
@@ -409,6 +446,9 @@ public class Progress
         controller.restoreFreemasonryChoice(
                 getFreemasonryChoice()
         );
+
+        // Un elenco nullo mantiene compatibili le partite precedenti.
+        controller.restoreMailbox(mailboxMessages);
 
         return controller;
     }

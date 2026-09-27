@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import Events.EventType;
@@ -44,6 +45,7 @@ public final class GameView implements GameObserver
     private final GameNavigation navigation;
     private final ProgressManager progressManager;
     private final SoundManager soundManager;
+    private final AchievementNotificationView achievementNotificationView;
     private final Runnable achievementSaveAction;
     private final String saveFilePath;
     private final GridView gridView;
@@ -52,6 +54,7 @@ public final class GameView implements GameObserver
     private final ConstructionToolbarView constructionToolbarView;
     private final LoanView loanView;
     private final EventAnimationView eventAnimationView;
+    private final MailboxView mailboxView;
     private final GameOverView gameOverView;
     private final FreemasonryInvitationView invitationView;
     private final RaEyeView raEyeView = new RaEyeView();
@@ -73,7 +76,7 @@ public final class GameView implements GameObserver
             new PauseTransition(Duration.seconds(4));
 
     private final Button nextTurnButton =
-            new Button("Next Turn");
+            new Button("Next Tick");
 
     private final Button tsunamiInsuranceButton =
             new Button("Tsunami insurance");
@@ -127,6 +130,8 @@ public final class GameView implements GameObserver
     private boolean closed;
     private boolean defeatSoundPlayed;
     private volatile boolean tickInProgress;
+    private final AtomicBoolean refreshScheduled =
+            new AtomicBoolean(false);
 
     // Inizializza la vista di gioco istanziando le sotto-viste, configurando i componenti di controllo e registrandosi come observer.
     public GameView(
@@ -155,6 +160,8 @@ public final class GameView implements GameObserver
         this.progressManager = progressManager;
         this.saveFilePath = saveFilePath;
         this.soundManager = soundManager;
+        achievementNotificationView =
+                new AchievementNotificationView(soundManager);
         this.achievementSaveAction = achievementSaveAction;
 
         configureToast();
@@ -208,6 +215,14 @@ public final class GameView implements GameObserver
                     {
                         soundManager.playPlacementSound();
                     }
+                },
+                new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        soundManager.playGridExpansionSound();
+                    }
                 }
         );
 
@@ -237,6 +252,11 @@ public final class GameView implements GameObserver
                         nextTurnButton,
                         soundManager
                 );
+
+        mailboxView = new MailboxView(
+                controller.getMailbox(),
+                soundManager
+        );
 
         invitationView = new FreemasonryInvitationView(
                 new Consumer<FreemasonryChoice>()
@@ -302,6 +322,11 @@ public final class GameView implements GameObserver
     private void configureNextTurnButton()
     {
         nextTurnButton.setMaxWidth(Double.MAX_VALUE);
+        nextTurnButton.setFocusTraversable(false);
+        nextTurnButton.setStyle(
+                "-fx-focus-color: transparent;"
+                        + "-fx-faint-focus-color: transparent;"
+        );
         nextTurnButton.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
@@ -324,7 +349,7 @@ public final class GameView implements GameObserver
         }
 
         tickInProgress = true;
-        gameRoot.setDisable(true);
+        gameRoot.setMouseTransparent(true);
 
         Task<Boolean> tickTask = new Task<Boolean>()
         {
@@ -375,8 +400,10 @@ public final class GameView implements GameObserver
         }
         finally
         {
+            gameRoot.setMouseTransparent(false);
             gameRoot.setDisable(controller.isGameOver()
                     || controller.isFreemasonryInvitationPending());
+            clearControlFocus();
         }
     }
 
@@ -399,9 +426,26 @@ public final class GameView implements GameObserver
         }
         finally
         {
+            gameRoot.setMouseTransparent(false);
             gameRoot.setDisable(controller.isGameOver()
                     || controller.isFreemasonryInvitationPending());
+            clearControlFocus();
         }
+    }
+
+    private void clearControlFocus()
+    {
+        Platform.runLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (!closed && gameRoot != null && !gameRoot.isDisabled())
+                {
+                    gameRoot.requestFocus();
+                }
+            }
+        });
     }
 
     // Riproduce i suoni e mostra le notifiche del turno sul thread JavaFX.
@@ -565,6 +609,7 @@ public final class GameView implements GameObserver
                 10,
                 eventAnimationView
                         .getHackerAttackPanel(),
+                mailboxView.getView(),
                 nextTurnButton,
                 changePolicyButton,
                 loanView.getActionButton(),
@@ -601,46 +646,61 @@ public final class GameView implements GameObserver
                 )
         );
 
+        // La comparsa di banner/eventi (es. Hacker Attack) non deve
+        // cambiare la larghezza del pannello laterale e spostare la mappa.
+        rightPanel.setMinWidth(220);
         rightPanel.setPrefWidth(220);
+        rightPanel.setMaxWidth(220);
 
         // ---------- GRIGLIA CENTRATA ----------
-        StackPane gridWithAnimation =
-                new StackPane(
+        MapViewport mapViewport =
+                new MapViewport(
                         gridView.getView(),
-                        eventAnimationView
-                                .getMissileShieldNode(),
-                        eventAnimationView
-                                .getMissileNode()
+                        gridView.getGridVisualWidth(),
+                        gridView.getGridVisualHeight(),
+                        controller.getNumberOfRows() > 20
+                                || controller.getNumberOfColumns() > 20
                 );
 
-        eventAnimationView
-                .getMissileShieldNode()
-                .layoutXProperty()
-                .bind(
-                        gridWithAnimation
-                                .widthProperty()
-                                .divide(2.0)
+        // Missile e scudo stanno sopra il viewport; la loro geometria viene
+        // adattata alla scala della griglia al momento dell'evento.
+        mapViewport.getEventOverlay()
+                .getChildren()
+                .addAll(
+                        eventAnimationView.getMissileShieldNode(),
+                        eventAnimationView.getMissileNode()
                 );
 
-        eventAnimationView
-                .getMissileShieldNode()
-                .layoutYProperty()
-                .bind(
-                        gridWithAnimation
-                                .heightProperty()
-                                .divide(2.0)
-                );
-
-        StackPane.setAlignment(
-                eventAnimationView
-                        .getMissileNode(),
-                Pos.CENTER
+        eventAnimationView.setMissileOverlayHost(
+                mapViewport.getEventOverlay()
         );
+        gridView.setExpansionViewAction(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mapViewport.animateToFit();
+            }
+        });
 
-        VBox gridColumn = new VBox(
-                4,
-                gridWithAnimation
-        );
+        // Se carichiamo direttamente un salvataggio già espanso, non avviene
+        // alcuna nuova espansione e quindi il callback sopra non viene chiamato.
+        // In quel caso mostriamo subito i controlli di zoom e adattiamo la
+        // griglia al viewport, esattamente come dopo un'espansione normale.
+        if (controller.getNumberOfRows() > 20
+                || controller.getNumberOfColumns() > 20)
+        {
+            Platform.runLater(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mapViewport.animateToFit();
+                }
+            });
+        }
+
+        VBox gridColumn = new VBox(4, mapViewport.getView());
         gridColumn.setAlignment(Pos.CENTER);
 
         HBox centralContent =
@@ -678,6 +738,7 @@ public final class GameView implements GameObserver
 
         // ---------- ORDINE GRAFICO ----------
         gameRoot = new BorderPane();
+        gameRoot.setFocusTraversable(true);
 
         gameRoot.setCenter(
                 centralContent
@@ -691,9 +752,22 @@ public final class GameView implements GameObserver
                 new StackPane(
                         gameRoot,
                         toast,
+                        achievementNotificationView.getView(),
                         gameOverView.getView(),
                         invitationView.getView()
                 );
+
+        // Il lettore delle lettere e l'icona d'angolo restano sopra al gioco.
+        mailboxView.attachTo(rootWithToast);
+
+        StackPane.setAlignment(
+                achievementNotificationView.getView(),
+                Pos.TOP_CENTER
+        );
+        StackPane.setMargin(
+                achievementNotificationView.getView(),
+                Insets.EMPTY
+        );
 
         StackPane.setAlignment(
                 toast,
@@ -705,11 +779,13 @@ public final class GameView implements GameObserver
                 Pos.CENTER
         );
 
-        return new Scene(
+        Scene gameScene = new Scene(
                 rootWithToast,
                 1400,
                 900
         );
+        mapViewport.installKeyboardShortcuts(gameScene);
+        return gameScene;
     }
 
     private void cancelDemolitionWhenUsed(Button button)
@@ -1202,6 +1278,9 @@ public final class GameView implements GameObserver
                     saveFilePath
             );
 
+            // Lo scatto conferma acusticamente solo i salvataggi riusciti.
+            soundManager.playSaveGameSound();
+
             showToast(
                     "Game saved successfully"
             );
@@ -1290,6 +1369,7 @@ public final class GameView implements GameObserver
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
         missileDefenseView.refresh();
+        mailboxView.refresh();
         refreshDemolitionButton();
 
         gridView.refresh();
@@ -1343,7 +1423,23 @@ public final class GameView implements GameObserver
     @Override
     public void refreshGameView()
     {
-        if (tickInProgress && !Platform.isFxApplicationThread())
+        if (closed
+                || (tickInProgress
+                && !Platform.isFxApplicationThread()))
+        {
+            return;
+        }
+
+        /*
+         * Diverse azioni possono notificare il controller molte volte nello
+         * stesso impulso grafico (per esempio il trascinamento di una lunga
+         * strada). Senza coalescing ogni notifica accodava un refresh completo
+         * della griglia: su 30x30 potevano accumularsi decine di refresh.
+         */
+        if (!refreshScheduled.compareAndSet(
+                false,
+                true
+        ))
         {
             return;
         }
@@ -1354,6 +1450,7 @@ public final class GameView implements GameObserver
                     @Override
                     public void run()
                     {
+                        refreshScheduled.set(false);
                         updateDisplayedState();
                     }
                 }
@@ -1372,6 +1469,8 @@ public final class GameView implements GameObserver
 
         boolean gameOver =
                 controller.isGameOver();
+
+        gridView.ensureGridSize();
 
         if (gameOver)
         {
@@ -1405,6 +1504,7 @@ public final class GameView implements GameObserver
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
         missileDefenseView.refresh();
+        mailboxView.refresh();
         refreshDemolitionButton();
 
         statusView.updateTick();
@@ -1514,6 +1614,8 @@ public final class GameView implements GameObserver
         }
 
         toastHidePause.stop();
+        achievementNotificationView.stop();
+        mailboxView.stop();
         eventAnimationView.stop();
         gridView.stop();
         invitationView.stop();
@@ -1530,10 +1632,7 @@ public final class GameView implements GameObserver
         {
             unlockedSomething = true;
 
-            soundManager.playAchievementSound();
-
-            showToast("Achievement unlocked: "
-                            + achievement.getTitle());
+            achievementNotificationView.show(achievement);
 
             achievement = controller
                             .consumeNewlyUnlockedAchievement();

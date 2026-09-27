@@ -4,13 +4,13 @@
 
 SimCity Lite è un piccolo simulatore gestionale in cui bisogna far crescere una città mantenendo sotto controllo **budget, popolazione, economia, inquinamento, felicità, energia e posti di lavoro**.
 
-La città è costruita su una griglia **20 × 20**. Ogni pressione di **Next Turn** fa avanzare la simulazione di un turno e aggiorna edifici, statistiche, eventi e budget.
+La città si sviluppa su una griglia che può espandersi automaticamente quando lo spazio disponibile sta per esaurirsi.
 
 La partita inizia con **2500 €**.
 
 ## Costruzione della città
 
-La prima strada può essere costruita liberamente. Tutte le strade successive devono essere adiacenti a una strada già esistente.
+La prima strada può essere costruita liberamente. Tutte le strade successive devono essere adiacenti a una strada già esistente. Per costruire un tratto di strada, seleziona **Road** e trascina dalla casella iniziale a quella finale sulla stessa riga o colonna; il tratto viene costruito quando rilasci il mouse.
 
 Gli altri edifici devono invece essere costruiti accanto a una strada. Alcune costruzioni diventano disponibili solo più avanti nella partita oppure richiedono particolari condizioni, come un numero sufficiente di lavoratori.
 
@@ -34,6 +34,10 @@ Costi base principali:
 Le politiche cittadine possono modificare alcuni prezzi.
 
 Le strade non possono essere demolite. Per demolire le altre costruzioni serve almeno un'**impresa edile alimentata**; il numero di demolizioni disponibili dipende dalle imprese edili presenti e si rinnova periodicamente.
+
+## Espansione della mappa
+
+Quando la città è quasi completamente occupata, la griglia si espande automaticamente senza modificare le costruzioni già presenti. Dopo la prima espansione diventano disponibili i controlli per zoomare e spostarsi sulla mappa.
 
 ## Popolazione, lavoro ed economia
 

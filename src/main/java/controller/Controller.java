@@ -115,6 +115,93 @@ public final class Controller
 
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
+        deliverTestMessages();
+    }
+
+    /** Consegna le tre lettere di prova all'inizio di una nuova partita. */
+    private void deliverTestMessages()
+    {
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message_1",
+                "City Hall",
+                "Test message",
+                "Dear Mayor, this is a test message from City Hall. "
+                        + "We are writing to confirm that the new postal "
+                        + "service can deliver a complete letter without "
+                        + "interrupting your work. A number of departments "
+                        + "have asked to use it for reports, requests, and "
+                        + "occasional updates from around the city.\n\n"
+                        + "For now, there is nothing you need to approve. "
+                        + "Take your time reading, and close this letter "
+                        + "when you are ready to return to the game.",
+                0
+        ));
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message_2",
+                "City Archives",
+                "Second test message",
+                "Dear Mayor, the City Archives have completed an initial "
+                        + "inventory of the documents left in the old civic "
+                        + "building. Most records concern ordinary matters: "
+                        + "street repairs, building permits, and the yearly "
+                        + "maintenance of public spaces. Several boxes, "
+                        + "however, were never entered into the official "
+                        + "register. Their labels contain dates but no "
+                        + "department names, and the original delivery "
+                        + "receipts have not yet been located.\n\n"
+                        + "We are checking the contents carefully. Some "
+                        + "pages are damaged, so our staff will photograph "
+                        + "each item before handling it further. This may "
+                        + "take longer than a routine inventory, but it will "
+                        + "allow us to compare the documents with the copies "
+                        + "held at the central records office. Until that "
+                        + "work is complete, no conclusions should be drawn "
+                        + "from the missing labels alone.\n\n"
+                        + "The archive room will remain open during normal "
+                        + "hours. If a department needs access to a specific "
+                        + "record, its staff can submit a request with the "
+                        + "document date and any known reference number. "
+                        + "Urgent requests will be handled first. We will "
+                        + "write again once the inventory is complete and "
+                        + "the records have been properly catalogued.\n\n"
+                        + "This intentionally long letter also gives you "
+                        + "room to check that the reading panel scrolls "
+                        + "smoothly from the first paragraph to the last.",
+                0
+        ));
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message_3",
+                "Emergency Services",
+                "Third test message",
+                "This final test letter checks the transition from a full "
+                        + "inbox to its compact corner icon. Once you have "
+                        + "opened all three messages, the inbox will remain "
+                        + "available while you are reading. Close the open "
+                        + "letter when you are done: the whole card should "
+                        + "travel toward the lower-right corner and leave "
+                        + "a small folded-page mail icon behind. Click that "
+                        + "icon whenever you want to see the letters again.",
+                0
+        ));
+    }
+
+    /** Aggiunge una nuova lettera al tick 2 per mostrare l'arrivo della posta. */
+    private void deliverNewTestMessage()
+    {
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message_4",
+                "City Hall",
+                "New message at tick 2",
+                "Dear Mayor, this letter was delivered after your second "
+                        + "turn. It has arrived separately from the earlier "
+                        + "messages so you can see how a new preview appears "
+                        + "while the game is already running.\n\n"
+                        + "The message will stay in your inbox until you "
+                        + "open it. You can read the complete text in the "
+                        + "larger panel and return to the city whenever you "
+                        + "are ready.",
+                2
+        ));
     }
 
     public Controller(
@@ -234,6 +321,7 @@ public final class Controller
 
         simulation.tryToPlaceMasonicLodge();
         achievementChecker.onConstructionPlaced(type);
+        achievementChecker.checkMetropolis(grid);
         notifyObservers();
 
         return getCellState(
@@ -295,6 +383,11 @@ public final class Controller
         boolean criminalActivityCreated =
                 simulation.updateOfOneTick();
 
+        if (simulation.getCurrentTick() == 2)
+        {
+            deliverNewTestMessage();
+        }
+
         achievementChecker.checkState(city, grid, simulation);
 
         notifyObservers();
@@ -318,6 +411,7 @@ public final class Controller
 
         if (chosen)
         {
+            achievementChecker.onFreemasonryChoice(choice);
             notifyObservers();
         }
 
@@ -734,6 +828,26 @@ public final class Controller
                 city,
                 simulation
         );
+    }
+
+    /** Fornisce alla vista la casella di posta della partita corrente. */
+    public Mailbox getMailbox()
+    {
+        return simulation.getMailbox();
+    }
+
+    /** Ripristina le lettere salvate; i vecchi salvataggi lasciano la posta vuota. */
+    public void restoreMailbox(List<MailMessage> messages)
+    {
+        if (messages == null)
+        {
+            return;
+        }
+
+        for (MailMessage message : messages)
+        {
+            simulation.getMailbox().addMessage(message);
+        }
     }
 
     public int getActiveMissileTargetRow()

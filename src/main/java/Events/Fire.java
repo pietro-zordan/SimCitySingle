@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /* Gestisce l'evento incendio.
@@ -19,7 +20,8 @@ public class Fire extends Event{
     private Grid grid;
 
     // Celle che verranno bruciate durante il tick successivo
-    private List<Cell> cellsToBurnNextTick = new ArrayList<>();
+    private final Set<Cell> cellsToBurnNextTick =
+            new LinkedHashSet<>();
 
     // Celle già coinvolte nell'incendio
     private final Set<Cell> involvedCells = new HashSet<>();
@@ -142,15 +144,14 @@ public class Fire extends Event{
 
     // Verifica se la cella indicata è coinvolta nell'incendio.
     public boolean isCellOnFire(int row, int column) {
-        for (Cell cell : cellsToBurnNextTick)
+        if (!grid.isInside(row, column))
         {
-            if (cell.getRow() == row && cell.getColumn() == column)
-            {
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        return cellsToBurnNextTick.contains(
+                grid.getCell(row, column)
+        );
     }
     //l'evento finisce quando la lista che contiene le celle che bruceranno il prossimo turno è vuota
     @Override

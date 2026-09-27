@@ -13,7 +13,27 @@ public enum Achievement {
     A_LOT_OF_MONEY("Loaded", "Reach a budget of 50000"),
 
     WHY_WOULD_YOU_DO_THAT("Why would you do that",
-            "Try to destroy a nuclear plant");
+            "Try to destroy a nuclear plant"),
+
+    METROPOLIS(
+            "Metropolis",
+            "Get your grid expanded for the first time"
+    ),
+
+    ILLUMINATED(
+            "Illuminated",
+            "Accept the Freemasonry invitation"
+    ),
+
+    NOT_TODAY(
+            "Not Today",
+            "Intercept a missile with the anti-missile defense system"
+    ),
+
+    POWER_THROUGH(
+            "Power Through",
+            "Survive an Energy Crisis without any residential building reaching zero population"
+    );
 
 
     private final String title;

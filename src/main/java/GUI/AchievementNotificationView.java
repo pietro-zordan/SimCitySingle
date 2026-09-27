@@ -40,38 +40,39 @@ public final class AchievementNotificationView
         this.soundManager = soundManager;
 
         Label star = new Label("★");
-        star.setStyle("-fx-font-size: 17px; -fx-text-fill: #a9782f;");
+        star.setStyle("-fx-font-size: 15px; -fx-text-fill: #a9782f;");
         StackPane medal = new StackPane(star);
-        medal.setMinSize(32, 32);
-        medal.setMaxSize(32, 32);
-        medal.setStyle("-fx-background-color: #fff1d8; -fx-background-radius: 16;");
+        medal.setMinSize(26, 26);
+        medal.setMaxSize(26, 26);
+        medal.setStyle("-fx-background-color: #f9ebcf; -fx-background-radius: 13;");
 
         Label eyebrow = new Label("Achievement unlocked");
         eyebrow.setStyle(
-                "-fx-text-fill: #9a682e; -fx-font-size: 10px;"
+                "-fx-text-fill: #9a682e; -fx-font-size: 9px;"
         );
         title = new Label();
         title.setWrapText(true);
-        title.setMaxWidth(214);
+        title.setMaxWidth(185);
         title.setStyle(
-                "-fx-text-fill: #273442; -fx-font-size: 13px; -fx-font-weight: bold;"
+                "-fx-text-fill: #273442; -fx-font-size: 12px; -fx-font-weight: bold;"
         );
 
         VBox words = new VBox(2, eyebrow, title);
         words.setAlignment(Pos.CENTER_LEFT);
 
-        view = new HBox(10, medal, words);
+        view = new HBox(8, medal, words);
         view.setAlignment(Pos.CENTER_LEFT);
-        view.setPadding(new Insets(9, 13, 9, 11));
-        view.setPrefWidth(285);
+        view.setPadding(new Insets(7, 12, 8, 10));
+        view.setPrefWidth(255);
         view.setMaxWidth(Region.USE_PREF_SIZE);
         view.setStyle(
-                "-fx-background-color: #fcfcfb; -fx-background-radius: 10;"
-                        + "-fx-border-color: #e8e2d7; -fx-border-radius: 10;"
+                "-fx-background-color: #fffaf1; -fx-background-radius: 0 0 10 10;"
+                        + "-fx-border-color: #d5b175; -fx-border-width: 0 0 2 0;"
         );
-        view.setEffect(new DropShadow(9, Color.rgb(20, 30, 45, 0.14)));
+        view.setEffect(new DropShadow(7, Color.rgb(20, 30, 45, 0.13)));
         view.setMouseTransparent(true);
         view.setVisible(false);
+        view.setTranslateY(-100);
     }
 
     public HBox getView()
@@ -104,22 +105,19 @@ public final class AchievementNotificationView
         }
 
         title.setText(achievement.getTitle());
+        view.setTranslateY(-100);
         view.setVisible(true);
         soundManager.playAchievementSound();
 
         animation = new Timeline(
                 new KeyFrame(Duration.ZERO,
-                        new KeyValue(view.opacityProperty(), 0),
-                        new KeyValue(view.translateYProperty(), -12)),
-                new KeyFrame(Duration.millis(220),
-                        new KeyValue(view.opacityProperty(), 1, Interpolator.EASE_OUT),
+                        new KeyValue(view.translateYProperty(), -100)),
+                new KeyFrame(Duration.millis(320),
                         new KeyValue(view.translateYProperty(), 0, Interpolator.EASE_OUT)),
-                new KeyFrame(Duration.seconds(2.25),
-                        new KeyValue(view.opacityProperty(), 1),
+                new KeyFrame(Duration.seconds(2.35),
                         new KeyValue(view.translateYProperty(), 0)),
-                new KeyFrame(Duration.seconds(2.50),
-                        new KeyValue(view.opacityProperty(), 0),
-                        new KeyValue(view.translateYProperty(), -7))
+                new KeyFrame(Duration.seconds(2.68),
+                        new KeyValue(view.translateYProperty(), -100, Interpolator.EASE_IN))
         );
         animation.setOnFinished(new EventHandler<ActionEvent>()
         {

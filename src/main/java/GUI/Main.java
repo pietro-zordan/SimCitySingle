@@ -119,14 +119,28 @@ public class Main
                         + "Zordan Pietro"
         );
 
-        startButton.setPrefWidth(200);
-        loadButton.setPrefWidth(200);
-        achievementsButton.setPrefWidth(200);
+        String primaryButtonStyle =
+                "-fx-background-color: #263446; -fx-text-fill: white;"
+                        + "-fx-background-radius: 9; -fx-font-size: 14px;"
+                        + "-fx-font-weight: bold; -fx-cursor: hand;";
+        String secondaryButtonStyle =
+                "-fx-background-color: white; -fx-text-fill: #334155;"
+                        + "-fx-border-color: #e2e8f0; -fx-border-radius: 9;"
+                        + "-fx-background-radius: 9; -fx-font-size: 14px;"
+                        + "-fx-cursor: hand;";
+
+        startButton.setPrefSize(230, 43);
+        loadButton.setPrefSize(230, 43);
+        achievementsButton.setPrefSize(230, 43);
+        startButton.setStyle(primaryButtonStyle);
+        loadButton.setStyle(secondaryButtonStyle);
         achievementsButton.setStyle(
                 "-fx-background-color: #fff7e8; -fx-text-fill: #7d561f;"
-                        + "-fx-border-color: #e5c995; -fx-border-radius: 7;"
-                        + "-fx-background-radius: 7; -fx-cursor: hand;"
+                        + "-fx-border-color: #e5c995; -fx-border-radius: 9;"
+                        + "-fx-background-radius: 9; -fx-font-size: 14px;"
+                        + "-fx-cursor: hand;"
         );
+        labelInfo.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 11px;");
 
         // Avvia una nuova partita.
         startButton.setOnAction(
@@ -165,7 +179,7 @@ public class Main
         );
 
         VBox layout = new VBox(
-                15,
+                10,
                 startButton,
                 loadButton,
                 achievementsButton
@@ -178,7 +192,9 @@ public class Main
                     "Riprendi partita"
             );
 
-            resumeButton.setPrefWidth(200);
+            resumeButton.setPrefSize(230, 43);
+            resumeButton.setStyle(primaryButtonStyle);
+            startButton.setStyle(secondaryButtonStyle);
             resumeButton.setOnAction(
                     new EventHandler<ActionEvent>()
                     {
@@ -197,10 +213,24 @@ public class Main
         }
 
         layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
+
+        Label heading = new Label("SimCity");
+        heading.setStyle(
+                "-fx-text-fill: #182438; -fx-font-size: 32px;"
+                        + "-fx-font-weight: bold;"
+        );
+        Label subtitle = new Label("Gestisci la tua città");
+        subtitle.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px;");
+        VBox header = new VBox(4, heading, subtitle);
+        header.setAlignment(Pos.CENTER);
+
+        VBox content = new VBox(30, header, layout);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(25));
 
         BorderPane root = new BorderPane();
-        root.setCenter(layout);
+        root.setStyle("-fx-background-color: #f5f7fa;");
+        root.setCenter(content);
 
         BorderPane.setAlignment(
                 labelInfo,

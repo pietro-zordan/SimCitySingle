@@ -23,6 +23,16 @@ public enum Achievement {
     ILLUMINATED(
             "Illuminated",
             "Accept the Freemasonry invitation"
+    ),
+
+    NOT_TODAY(
+            "Not Today",
+            "Intercept a missile with the anti-missile defense system"
+    ),
+
+    POWER_THROUGH(
+            "Power Through",
+            "Survive an Energy Crisis without any residential building reaching zero population"
     );
 
 

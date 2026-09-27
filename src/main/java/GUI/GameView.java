@@ -648,8 +648,8 @@ public final class GameView implements GameObserver
                         gridView.getView()
                 );
 
-        // Missile e scudo stanno sopra il viewport e NON vengono zoomati
-        // insieme alla griglia.
+        // Missile e scudo stanno sopra il viewport; la loro geometria viene
+        // adattata alla scala della griglia al momento dell'evento.
         mapViewport.getEventOverlay()
                 .getChildren()
                 .addAll(
@@ -752,11 +752,13 @@ public final class GameView implements GameObserver
                 Pos.CENTER
         );
 
-        return new Scene(
+        Scene gameScene = new Scene(
                 rootWithToast,
                 1400,
                 900
         );
+        mapViewport.installKeyboardShortcuts(gameScene);
+        return gameScene;
     }
 
     private void cancelDemolitionWhenUsed(Button button)
@@ -1401,7 +1403,7 @@ public final class GameView implements GameObserver
          * Diverse azioni possono notificare il controller molte volte nello
          * stesso impulso grafico (per esempio il trascinamento di una lunga
          * strada). Senza coalescing ogni notifica accodava un refresh completo
-         * della griglia: su 40x40 potevano accumularsi decine di refresh.
+         * della griglia: su 30x30 potevano accumularsi decine di refresh.
          */
         if (!refreshScheduled.compareAndSet(
                 false,

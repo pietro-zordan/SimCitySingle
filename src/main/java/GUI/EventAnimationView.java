@@ -53,7 +53,6 @@ public final class EventAnimationView
     private static final int MISSILE_IMPACT_DELAY = 220;
     private static final int MISSILE_IMPACT_DURATION = 700;
     private static final int MISSILE_START_MARGIN = 80;
-    private static final double MISSILE_OFFSCREEN_START = 40.0;
     private static final double MISSILE_SHIELD_INSET = 4.0;
     private static final double MISSILE_SHIELD_ROUNDNESS = 20.0;
     private static final int MISSILE_SHIELD_SEGMENTS = 128;
@@ -413,6 +412,18 @@ public final class EventAnimationView
                         halfHeight - MISSILE_SHIELD_INSET
                 )
         };
+    }
+
+    // Riporta missile e distanze grafiche alla proporzione delle celle: sulla
+    // 20x20 resta 1, sulla 30x30 fittata si riduce insieme alla mappa.
+    private double getRenderedMapScale()
+    {
+        Bounds renderedBounds = getRenderedGridBoundsInOverlay();
+        if (renderedBounds == null)
+        {
+            return 1.0;
+        }
+        return renderedBounds.getWidth() / gridView.getGridVisualWidth();
     }
 
     private Bounds getRenderedGridBoundsInOverlay()
@@ -1082,6 +1093,9 @@ public final class EventAnimationView
                         )
                 );
 
+        double missileScale = getRenderedMapScale();
+        missileNode.setScaleX(missileScale);
+        missileNode.setScaleY(missileScale);
         missileNode.setOpacity(1.0);
         missileNode.setRotate(angle);
         missileNode.setVisible(true);
@@ -1138,103 +1152,34 @@ public final class EventAnimationView
             double targetX,
             double targetY)
     {
-        Point2D center =
-                getRenderedGridCenterInOverlay();
+        double[] radii = getMissileShieldRadii();
+        double radiusX = radii[0];
+        double radiusY = radii[1];
+        double margin = MISSILE_START_MARGIN * getRenderedMapScale();
 
-        double width =
-                missileOverlayHost == null
-                        ? 0.0
-                        : missileOverlayHost.getWidth();
-
-        double height =
-                missileOverlayHost == null
-                        ? 0.0
-                        : missileOverlayHost.getHeight();
-
-        if (width <= 0 || height <= 0)
-        {
-            double[] radii =
-                    getMissileShieldRadii();
-
-            return new double[] {
-                    -radii[0] - MISSILE_OFFSCREEN_START,
-                    -radii[1] - MISSILE_OFFSCREEN_START
-            };
-        }
-
-        /*
-         * Il punto di partenza deve essere FUORI dallo scudo.
-         * Prima veniva scelto con un margine interno al viewport: su una
-         * 40x40 fittata quel punto cadeva gia dentro lo scudo e il calcolo
-         * dell'intersezione restituiva quasi la posizione iniziale, facendo
-         * sembrare il missile fermo.
-         *
-         * Ora parte appena fuori dal viewport e diventa visibile entrando.
-         */
-        double safeMargin =
-                Math.min(
-                        MISSILE_START_MARGIN,
-                        Math.min(width, height) * 0.18
-                );
-
-        double horizontalRange =
-                Math.max(
-                        1.0,
-                        width - 2.0 * safeMargin
-                );
-
-        double verticalRange =
-                Math.max(
-                        1.0,
-                        height - 2.0 * safeMargin
-                );
-
-        double absoluteX;
-        double absoluteY;
-
-        int startSide = random.nextInt(4);
-
+        // Le sei provenienze della vecchia 20x20, sempre oltre lo scudo.
+        int startSide = random.nextInt(6);
         if (startSide == 0)
         {
-            absoluteX =
-                    safeMargin
-                            + random.nextDouble()
-                            * horizontalRange;
-            absoluteY =
-                    -MISSILE_OFFSCREEN_START;
+            return new double[] {-radiusX - margin, -radiusY - margin};
         }
-        else if (startSide == 1)
+        if (startSide == 1)
         {
-            absoluteX =
-                    width + MISSILE_OFFSCREEN_START;
-            absoluteY =
-                    safeMargin
-                            + random.nextDouble()
-                            * verticalRange;
+            return new double[] {radiusX + margin, -radiusY - margin};
         }
-        else if (startSide == 2)
+        if (startSide == 2)
         {
-            absoluteX =
-                    safeMargin
-                            + random.nextDouble()
-                            * horizontalRange;
-            absoluteY =
-                    height + MISSILE_OFFSCREEN_START;
+            return new double[] {-radiusX - margin, targetY};
         }
-        else
+        if (startSide == 3)
         {
-            absoluteX =
-                    -MISSILE_OFFSCREEN_START;
-            absoluteY =
-                    safeMargin
-                            + random.nextDouble()
-                            * verticalRange;
+            return new double[] {radiusX + margin, targetY};
         }
-
-        return new double[] {
-                absoluteX - center.getX(),
-                absoluteY - center.getY()
-        };
+        if (startSide == 4)
+        {
+            return new double[] {-radiusX - margin, radiusY + margin};
+        }
+        return new double[] {radiusX + margin, radiusY + margin};
     }
 
     // Trova il bordo della stessa superellisse disegnata sulla griglia.
@@ -1395,7 +1340,7 @@ public final class EventAnimationView
 
         double bounceDistance =
                 Math.max(
-                        140,
+                        140 * getRenderedMapScale(),
                         Math.min(
                                 radiusX,
                                 radiusY
@@ -1404,7 +1349,7 @@ public final class EventAnimationView
 
         double downwardFall =
                 Math.max(
-                        55,
+                        55 * getRenderedMapScale(),
                         radiusY * 0.10
                 );
 

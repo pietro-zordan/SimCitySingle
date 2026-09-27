@@ -390,7 +390,7 @@ public final class GridView
                 grassIcons[row][column] = grassIcon;
                 lodgeIcons[row][column] = lodgeIcon;
                 // I tooltip vengono creati soltanto quando la cella ne ha
-                // realmente bisogno. Su una 40x40 evitiamo migliaia di
+                // realmente bisogno. Su una 30x30 evitiamo migliaia di
                 // oggetti JavaFX inutilizzati.
                 grassTooltips[row][column] = null;
                 lodgeTooltips[row][column] = null;
@@ -412,7 +412,7 @@ public final class GridView
     }
 
     // Converte direttamente la posizione del mouse nella cella corrispondente:
-    // il costo resta costante anche su griglie 30x30 o 40x40.
+    // il costo resta costante anche su griglie 30x30.
     private void updateRoadDrag(MouseEvent event)
     {
         Point2D localPoint = view.sceneToLocal(event.getSceneX(), event.getSceneY());

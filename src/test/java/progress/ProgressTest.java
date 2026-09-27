@@ -165,8 +165,8 @@ class ProgressTest {
     @Test
     void expandedGridSizeSurvivesJsonSaveAndLoad()
     {
-        Grid grid = new Grid(40, 40);
-        grid.restoreConstruction(new Road(), 39, 39);
+        Grid grid = new Grid(30, 30);
+        grid.restoreConstruction(new Road(), 29, 29);
 
         City city = new City(grid, new StandardPolicy(), 100000);
         Simulation simulation = new Simulation(city, grid, 400, 396);
@@ -177,11 +177,11 @@ class ProgressTest {
 
         Grid restoredGrid = loaded.restoreGrid();
 
-        assertEquals(40, restoredGrid.getNumberOfRows());
-        assertEquals(40, restoredGrid.getNumberOfColumns());
+        assertEquals(30, restoredGrid.getNumberOfRows());
+        assertEquals(30, restoredGrid.getNumberOfColumns());
         assertEquals(
                 ConstructionType.ROAD,
-                restoredGrid.getCell(39, 39).getConstruction().getType()
+                restoredGrid.getCell(29, 29).getConstruction().getType()
         );
     }
 

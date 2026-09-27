@@ -8,7 +8,7 @@ public class Grid
 {
     private static final int INITIAL_GRID_SIZE = 20;
     private static final int GRID_EXPANSION_STEP = 10;
-    private static final int MAX_GRID_SIZE = 40;
+    private static final int MAX_GRID_SIZE = 30;
     private static final double EXPANSION_THRESHOLD = 0.99;
 
     private int numberOfRows;
@@ -47,7 +47,10 @@ public class Grid
                 || numberOfRows > MAX_GRID_SIZE
                 || numberOfColumns > MAX_GRID_SIZE)
         {
-            throw new IllegalArgumentException("Invalid grid size");
+            throw new IllegalArgumentException(
+                    "Grid dimensions must each be between 20 and 30; "
+                            + "larger saves cannot be loaded without losing cells"
+            );
         }
 
         this.numberOfRows = numberOfRows;
@@ -317,7 +320,7 @@ public class Grid
 
 
     // Aumenta la griglia di 10 righe e 10 colonne,
-// senza superare il limite massimo di 40x40.
+// senza superare il limite massimo di 30x30.
     private void expandGrid()
     {
         int newNumberOfRows =

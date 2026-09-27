@@ -394,6 +394,14 @@ public final class GameView implements GameObserver
         try
         {
             showTickFeedback(criminalActivityCreated);
+            if (controller.getCurrentTick() == 508
+                    && controller.getFreemasonryChoice()
+                    == FreemasonryChoice.ACCEPTED)
+            {
+                // Arresta anche l'eventuale animazione iniziata prima
+                // dei cinque turni riservati all'avvistamento.
+                eventAnimationView.stop();
+            }
             updateDisplayedState();
             // L'incontro si avvia solo avanzando al tick 510, non ricaricando
             // una partita già salvata su quel numero di tick.
@@ -763,7 +771,7 @@ public final class GameView implements GameObserver
 
         // Il buio dell'incontro UFO copre anche i pannelli laterali.
         ufoEncounterView = new UfoEncounterView(
-                controller, gridView, mapViewport);
+                controller, gridView, mapViewport, soundManager);
         rootWithToast.getChildren().add(ufoEncounterView.getView());
 
         StackPane.setAlignment(

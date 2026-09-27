@@ -1,5 +1,6 @@
 package GUI;
 
+import audio.SoundManager;
 import controller.Controller;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
@@ -27,11 +28,13 @@ public final class UfoEncounterView
 {
     private static final int ENCOUNTER_TICK = 510;
     private static final double FLIGHT_MILLIS = 3900;
-    private static final double FADE_MILLIS = 380;
+    private static final double DARKEN_MILLIS = 1750;
+    private static final double LIGHTEN_MILLIS = 850;
 
     private final Controller controller;
     private final GridView gridView;
     private final MapViewport mapViewport;
+    private final SoundManager soundManager;
     private final Pane overlay = new Pane();
     private final Canvas canvas = new Canvas();
     private final List<int[]> diagonalBuildings = new ArrayList<>();
@@ -45,9 +48,11 @@ public final class UfoEncounterView
     public UfoEncounterView(
             Controller controller,
             GridView gridView,
-            MapViewport mapViewport)
+            MapViewport mapViewport,
+            SoundManager soundManager)
     {
-        if (controller == null || gridView == null || mapViewport == null)
+        if (controller == null || gridView == null
+                || mapViewport == null || soundManager == null)
         {
             throw new IllegalArgumentException(
                     "UFO encounter dependencies cannot be null"
@@ -57,6 +62,7 @@ public final class UfoEncounterView
         this.controller = controller;
         this.gridView = gridView;
         this.mapViewport = mapViewport;
+        this.soundManager = soundManager;
         canvas.widthProperty().bind(overlay.widthProperty());
         canvas.heightProperty().bind(overlay.heightProperty());
         overlay.getChildren().add(canvas);
@@ -88,9 +94,11 @@ public final class UfoEncounterView
         overlay.setVisible(true);
         overlay.requestFocus();
         paintDarkness();
+        soundManager.playUfoPowerdownSound();
 
-        fadeIn = new FadeTransition(Duration.millis(FADE_MILLIS), overlay);
+        fadeIn = new FadeTransition(Duration.millis(DARKEN_MILLIS), overlay);
         fadeIn.setToValue(1);
+        fadeIn.setInterpolator(Interpolator.EASE_BOTH);
         fadeIn.play();
 
         boolean expanded = controller.getNumberOfRows() > 20
@@ -102,8 +110,9 @@ public final class UfoEncounterView
             mapViewport.animateToFit();
         }
 
-        flightDelay = new PauseTransition(
-                Duration.millis(expanded ? 950 : 420));
+        // Il disco entra solo quando il buio è completo, anche se la
+        // griglia allargata sta terminando la propria centratura.
+        flightDelay = new PauseTransition(Duration.millis(1950));
         flightDelay.setOnFinished(new EventHandler<ActionEvent>()
         {
             @Override
@@ -152,6 +161,7 @@ public final class UfoEncounterView
         }
 
         findDiagonalBuildings();
+        soundManager.playUfoHowlSound();
         flight = new AnimationTimer()
         {
             private long firstFrame;
@@ -187,7 +197,7 @@ public final class UfoEncounterView
                     flight.stop();
                     flight = null;
                     fadeOut = new FadeTransition(
-                            Duration.millis(FADE_MILLIS), overlay);
+                            Duration.millis(LIGHTEN_MILLIS), overlay);
                     fadeOut.setFromValue(1);
                     fadeOut.setToValue(0);
                     fadeOut.setInterpolator(Interpolator.EASE_BOTH);
@@ -343,6 +353,7 @@ public final class UfoEncounterView
     /** Arresta attese e disegno quando si chiude la partita. */
     public void stop()
     {
+        soundManager.stopUfoEncounterSounds();
         if (flightDelay != null)
         {
             flightDelay.stop();

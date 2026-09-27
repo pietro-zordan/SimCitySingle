@@ -204,6 +204,20 @@ public final class Controller
         ));
     }
 
+    /** Avvisa il sindaco massone due tick prima del passaggio dell'UFO. */
+    private void deliverLodgeWarning()
+    {
+        simulation.getMailbox().addMessage(new MailMessage(
+                "lodge_ufo_warning",
+                "The Lodge",
+                "A precaution for the next three nights",
+                "Dear Mayor, tonight and for the next two nights, "
+                        + "keep all electrical appliances unplugged. "
+                        + "We will be in touch.",
+                508
+        ));
+    }
+
     public Controller(
             Grid grid,
             Policy initialPolicy,
@@ -386,6 +400,13 @@ public final class Controller
         if (simulation.getCurrentTick() == 2)
         {
             deliverNewTestMessage();
+        }
+
+        if (simulation.getCurrentTick() == 508
+                && simulation.getFreemasonryChoice()
+                == FreemasonryChoice.ACCEPTED)
+        {
+            deliverLodgeWarning();
         }
 
         achievementChecker.checkState(city, grid, simulation);

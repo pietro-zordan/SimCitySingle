@@ -132,6 +132,34 @@ class ControllerTest {
         assertEquals(1, observer.getRefreshCount());
     }
 
+    /** Verifica la consegna al tick 508, la scelta e il salvataggio della posta. */
+    @Test
+    void lodgeWarningArrivesAt508OnlyForMembersAndSurvivesSaving() {
+        Controller member = new Controller(
+                new Grid(), new StandardPolicy(), 2500, 507, 0
+        );
+        assertTrue(member.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
+        assertFalse(member.getMailbox().hasMessages());
+
+        member.updateOfOneTick();
+
+        assertEquals(508, member.getCurrentTick());
+        assertEquals(1, member.getMailbox().getMessages().size());
+        assertEquals("lodge_ufo_warning",
+                member.getMailbox().getMessages().get(0).getId());
+        assertEquals(508,
+                member.getMailbox().getMessages().get(0).getReceivedTick());
+        assertEquals(1, member.createProgress()
+                .restoreController().getMailbox().getMessages().size());
+
+        Controller nonMember = new Controller(
+                new Grid(), new StandardPolicy(), 2500, 507, 0
+        );
+        assertTrue(nonMember.chooseFreemasonry(FreemasonryChoice.DECLINED));
+        nonMember.updateOfOneTick();
+        assertFalse(nonMember.getMailbox().hasMessages());
+    }
+
     @Test
     void canChangePolicy() {
         Controller controller = new Controller();
@@ -238,4 +266,3 @@ class ControllerTest {
         assertNull(controller.getActiveEventType());
     }
 }
-

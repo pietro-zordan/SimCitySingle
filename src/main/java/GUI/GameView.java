@@ -645,7 +645,11 @@ public final class GameView implements GameObserver
         // ---------- GRIGLIA CENTRATA ----------
         MapViewport mapViewport =
                 new MapViewport(
-                        gridView.getView()
+                        gridView.getView(),
+                        gridView.getGridVisualWidth(),
+                        gridView.getGridVisualHeight(),
+                        controller.getNumberOfRows() > 20
+                                || controller.getNumberOfColumns() > 20
                 );
 
         // Missile e scudo stanno sopra il viewport; la loro geometria viene

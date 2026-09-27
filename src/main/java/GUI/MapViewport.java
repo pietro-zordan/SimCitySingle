@@ -5,6 +5,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -45,21 +47,28 @@ public final class MapViewport
     private final Label zoomLabel = new Label();
     private final VBox view;
     private final HBox zoomControls;
+    private boolean expanded;
     private double zoom = 1.0;
     private Timeline zoomAnimation;
 
-    public MapViewport(Node mapContent)
+    public MapViewport(Node mapContent,
+            double initialGridWidth,
+            double initialGridHeight,
+            boolean expanded)
     {
         if (mapContent == null)
         {
             throw new IllegalArgumentException("Map content cannot be null");
         }
 
+        this.expanded = expanded;
         zoomPane = new StackPane(mapContent);
         zoomGroup = new Group(zoomPane);
         mapHolder = new StackPane(zoomGroup);
         mapHolder.setAlignment(Pos.CENTER);
-        mapHolder.setMinSize(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+        mapHolder.setMinSize(
+                expanded ? VIEWPORT_WIDTH : initialGridWidth,
+                expanded ? VIEWPORT_HEIGHT : initialGridHeight);
 
         scrollPane = new ScrollPane(mapHolder);
         // Il focus azzurro dello ScrollPane disegnava un secondo quadrato
@@ -74,14 +83,31 @@ public final class MapViewport
                         + "-fx-faint-focus-color: transparent;"
                         + "-fx-padding: 0;"
         );
-        scrollPane.setPrefViewportWidth(VIEWPORT_WIDTH);
-        scrollPane.setPrefViewportHeight(VIEWPORT_HEIGHT);
-        scrollPane.setMaxSize(VIEWPORT_WIDTH + 18, VIEWPORT_HEIGHT + 18);
+        scrollPane.setPrefViewportWidth(
+                expanded ? VIEWPORT_WIDTH : initialGridWidth);
+        scrollPane.setPrefViewportHeight(
+                expanded ? VIEWPORT_HEIGHT : initialGridHeight);
+        scrollPane.setMaxSize(
+                expanded ? VIEWPORT_WIDTH + 18 : initialGridWidth,
+                expanded ? VIEWPORT_HEIGHT + 18 : initialGridHeight);
         scrollPane.setPannable(true);
         scrollPane.setFitToWidth(false);
         scrollPane.setFitToHeight(false);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        // Anche se JavaFX non ricalcola subito il prefWidth di un Group
+        // scalato, lo ScrollPane deve conoscere la nuova area scorrevole.
+        zoomPane.scaleXProperty().addListener(new ChangeListener<Number>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Number> value,
+                    Number oldScale,
+                    Number newScale)
+            {
+                updateMapHolderSize();
+            }
+        });
 
         /*
          * Le animazioni di evento vivono sopra lo ScrollPane, non dentro
@@ -142,7 +168,7 @@ public final class MapViewport
             @Override
             public void handle(ScrollEvent event)
             {
-                if (event.getDeltaY() == 0)
+                if (!MapViewport.this.expanded || event.getDeltaY() == 0)
                 {
                     return;
                 }
@@ -163,10 +189,8 @@ public final class MapViewport
         zoomControls = new HBox(6, zoomOutButton, zoomLabel, zoomInButton, fitGridButton);
         zoomControls.setAlignment(Pos.CENTER);
 
-        // I controlli della mappa, incluso Fit, sono disponibili fin
-        // dall'avvio anche sulla griglia iniziale 20x20.
-        zoomControls.setVisible(true);
-        zoomControls.setManaged(true);
+        zoomControls.setVisible(expanded);
+        zoomControls.setManaged(expanded);
 
         view = new VBox(5, viewportLayer, zoomControls);
         view.setAlignment(Pos.CENTER);
@@ -177,6 +201,11 @@ public final class MapViewport
 
     private void setZoom(double requestedZoom)
     {
+        if (!expanded)
+        {
+            return;
+        }
+
         if (zoomAnimation != null)
         {
             zoomAnimation.stop();
@@ -189,33 +218,47 @@ public final class MapViewport
             return;
         }
 
-        double horizontalPosition = scrollPane.getHvalue();
-        double verticalPosition = scrollPane.getVvalue();
-
         zoom = newZoom;
         zoomPane.setScaleX(zoom);
         zoomPane.setScaleY(zoom);
         updateZoomLabel();
-
-        Platform.runLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                scrollPane.setHvalue(horizontalPosition);
-                scrollPane.setVvalue(verticalPosition);
-            }
-        });
     }
 
     public void installKeyboardShortcuts(Scene scene)
     {
+        scene.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
+        {
+            @Override
+            public void handle(KeyEvent event)
+            {
+                if (!expanded || event.getTarget() instanceof TextInputControl
+                        || event.isAltDown() || event.isControlDown()
+                        || event.isMetaDown())
+                {
+                    return;
+                }
+
+                // KEY_TYPED usa il carattere reale della tastiera: funziona
+                // anche con layout italiani e tastierini Mac/Windows.
+                if ("+".equals(event.getCharacter()))
+                {
+                    setZoom(zoom + ZOOM_STEP);
+                    event.consume();
+                }
+                else if ("-".equals(event.getCharacter()))
+                {
+                    setZoom(zoom - ZOOM_STEP);
+                    event.consume();
+                }
+            }
+        });
+
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>()
         {
             @Override
             public void handle(KeyEvent event)
             {
-                if (event.getTarget() instanceof TextInputControl
+                if (!expanded || event.getTarget() instanceof TextInputControl
                         || event.isAltDown() || event.isControlDown()
                         || event.isMetaDown())
                 {
@@ -223,16 +266,7 @@ public final class MapViewport
                 }
 
                 KeyCode key = event.getCode();
-                if (key == KeyCode.PLUS || key == KeyCode.ADD
-                        || (key == KeyCode.EQUALS && event.isShiftDown()))
-                {
-                    setZoom(zoom + ZOOM_STEP);
-                }
-                else if (key == KeyCode.MINUS || key == KeyCode.SUBTRACT)
-                {
-                    setZoom(zoom - ZOOM_STEP);
-                }
-                else if (key == KeyCode.LEFT || key == KeyCode.RIGHT)
+                if (key == KeyCode.LEFT || key == KeyCode.RIGHT)
                 {
                     panHorizontally(key == KeyCode.LEFT ? -1 : 1);
                 }
@@ -252,6 +286,7 @@ public final class MapViewport
 
     private void panHorizontally(int direction)
     {
+        scrollPane.layout();
         double overflow = mapHolder.getBoundsInLocal().getWidth()
                 - scrollPane.getViewportBounds().getWidth();
         if (overflow > 0)
@@ -262,8 +297,24 @@ public final class MapViewport
         }
     }
 
+    private void updateMapHolderSize()
+    {
+        if (!expanded)
+        {
+            return;
+        }
+
+        double scale = zoomPane.getScaleX();
+        mapHolder.setPrefSize(
+                Math.max(VIEWPORT_WIDTH,
+                        zoomPane.getLayoutBounds().getWidth() * scale),
+                Math.max(VIEWPORT_HEIGHT,
+                        zoomPane.getLayoutBounds().getHeight() * scale));
+    }
+
     private void panVertically(int direction)
     {
+        scrollPane.layout();
         double overflow = mapHolder.getBoundsInLocal().getHeight()
                 - scrollPane.getViewportBounds().getHeight();
         if (overflow > 0)
@@ -277,8 +328,13 @@ public final class MapViewport
     // Dopo un'espansione riduce dolcemente lo zoom fino a mostrare l'intera nuova griglia e centra la visuale.
     public void animateToFit()
     {
-        if (!zoomControls.isVisible())
+        if (!expanded)
         {
+            expanded = true;
+            mapHolder.setMinSize(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+            scrollPane.setPrefViewportWidth(VIEWPORT_WIDTH);
+            scrollPane.setPrefViewportHeight(VIEWPORT_HEIGHT);
+            scrollPane.setMaxSize(VIEWPORT_WIDTH + 18, VIEWPORT_HEIGHT + 18);
             zoomControls.setVisible(true);
             zoomControls.setManaged(true);
         }
@@ -287,11 +343,14 @@ public final class MapViewport
         zoomPane.layout();
         scrollPane.applyCss();
         scrollPane.layout();
+        updateMapHolderSize();
 
         double contentWidth = zoomPane.getLayoutBounds().getWidth();
         double contentHeight = zoomPane.getLayoutBounds().getHeight();
-        double viewportWidth = scrollPane.getViewportBounds().getWidth();
-        double viewportHeight = scrollPane.getViewportBounds().getHeight();
+        // Durante il passaggio 20x20 -> 30x30 il vecchio viewport può ancora
+        // avere le dimensioni della 20x20 fino al prossimo impulso grafico.
+        double viewportWidth = VIEWPORT_WIDTH;
+        double viewportHeight = VIEWPORT_HEIGHT;
 
         if (contentWidth <= 0 || contentHeight <= 0 || viewportWidth <= 0 || viewportHeight <= 0)
         {

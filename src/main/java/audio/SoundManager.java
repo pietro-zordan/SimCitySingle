@@ -26,6 +26,9 @@ public class SoundManager
     private final AudioClip economicBoomSound;
     private final AudioClip hackerAttackSound;
     private final AudioClip energyCrisisSound;
+    private final AudioClip mailNotificationSound;
+    private final AudioClip mailDockSound;
+    private final AudioClip saveGameSound;
     private final AudioClip defeatSound;
 
 
@@ -48,6 +51,9 @@ public class SoundManager
         economicBoomSound = loadClip("economic_boom.wav");
         hackerAttackSound = loadClip("hacker_intrusion.wav");
         energyCrisisSound = loadClip("energy_crisis_alarm.wav");
+        mailNotificationSound = loadClip("mail_notification.wav");
+        mailDockSound = loadClip("mail_dock.wav");
+        saveGameSound = loadClip("save_game_camera.wav");
         defeatSound = loadFirstAvailableClip(
                 new String[] {
                         "defeat.wav",
@@ -82,6 +88,11 @@ public class SoundManager
         // Il tick deve restare percepibile senza diventare fastidioso
         // quando Next Turn viene premuto rapidamente.
         tickAdvanceSound.setVolume(0.72);
+
+        // I suoni dell'interfaccia restano presenti ma non coprono gli eventi di gioco.
+        mailNotificationSound.setVolume(0.68);
+        mailDockSound.setVolume(0.52);
+        saveGameSound.setVolume(0.78);
     }
 
     private AudioClip loadClip(String fileName)
@@ -264,6 +275,27 @@ public class SoundManager
         energyCrisisSound.play();
     }
 
+    // Riproduce un breve campanello quando arriva una nuova lettera.
+    public void playMailNotificationSound()
+    {
+        mailNotificationSound.stop();
+        mailNotificationSound.play();
+    }
+
+    // Accompagna la casella mentre si richiude nell'angolo dopo aver letto tutto.
+    public void playMailDockSound()
+    {
+        mailDockSound.stop();
+        mailDockSound.play();
+    }
+
+    // Simula lo scatto di una fotocamera quando il salvataggio termina correttamente.
+    public void playSaveGameSound()
+    {
+        saveGameSound.stop();
+        saveGameSound.play();
+    }
+
     public void stopGameplaySounds()
     {
         achievementSound.stop();
@@ -282,6 +314,9 @@ public class SoundManager
         economicBoomSound.stop();
         hackerAttackSound.stop();
         energyCrisisSound.stop();
+        mailNotificationSound.stop();
+        mailDockSound.stop();
+        saveGameSound.stop();
     }
 
     public void playDefeatSound()

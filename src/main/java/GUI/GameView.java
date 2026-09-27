@@ -253,7 +253,10 @@ public final class GameView implements GameObserver
                         soundManager
                 );
 
-        mailboxView = new MailboxView(controller.getMailbox());
+        mailboxView = new MailboxView(
+                controller.getMailbox(),
+                soundManager
+        );
 
         invitationView = new FreemasonryInvitationView(
                 new Consumer<FreemasonryChoice>()
@@ -1274,6 +1277,9 @@ public final class GameView implements GameObserver
                     controller,
                     saveFilePath
             );
+
+            // Lo scatto conferma acusticamente solo i salvataggi riusciti.
+            soundManager.playSaveGameSound();
 
             showToast(
                     "Game saved successfully"

@@ -1,5 +1,6 @@
 package GUI;
 
+import audio.SoundManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -36,6 +37,7 @@ import java.util.Set;
 public final class MailboxView
 {
     private final Mailbox mailbox;
+    private final SoundManager soundManager;
     private final Set<String> knownMessageIds = new HashSet<>();
     private final VBox view;
     private final VBox entries;
@@ -59,14 +61,17 @@ public final class MailboxView
     private boolean hadMessages;
 
     /** Prepara le anteprime, il lettore e l'icona della posta richiusa. */
-    public MailboxView(Mailbox mailbox)
+    public MailboxView(Mailbox mailbox, SoundManager soundManager)
     {
-        if (mailbox == null)
+        if (mailbox == null || soundManager == null)
         {
-            throw new IllegalArgumentException("Mailbox cannot be null");
+            throw new IllegalArgumentException(
+                    "Mailbox and sound manager cannot be null"
+            );
         }
 
         this.mailbox = mailbox;
+        this.soundManager = soundManager;
 
         heading = new Label();
         heading.setStyle(
@@ -177,6 +182,8 @@ public final class MailboxView
 
         entries.getChildren().clear();
 
+        boolean newMessageArrived = false;
+
         // La lettera più recente compare in cima, sempre visibile all'arrivo.
         for (int index = messages.size() - 1; index >= 0; index--)
         {
@@ -184,12 +191,20 @@ public final class MailboxView
             VBox entry = createEntry(message);
             entries.getChildren().add(entry);
 
-            if (attached && !wasDocked
-                    && !knownMessageIds.contains(message.getId()))
+            if (attached && !knownMessageIds.contains(message.getId()))
             {
-                playNewEntryArrival(entry);
+                newMessageArrived = true;
+                if (!wasDocked)
+                {
+                    playNewEntryArrival(entry);
+                }
             }
             knownMessageIds.add(message.getId());
+        }
+
+        if (newMessageArrived)
+        {
+            soundManager.playMailNotificationSound();
         }
 
         // L'elenco resta piccolo e scorre quando arrivano molte lettere.
@@ -456,6 +471,9 @@ public final class MailboxView
             refresh();
             return;
         }
+
+        // Il cue parte esattamente quando inizia il movimento verso l'angolo.
+        soundManager.playMailDockSound();
 
         Bounds from = animationLayer.sceneToLocal(
                 view.localToScene(view.getBoundsInLocal()));

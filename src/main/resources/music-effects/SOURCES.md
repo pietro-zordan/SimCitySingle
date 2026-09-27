@@ -61,3 +61,14 @@
 - `grid_expansion.wav`: original synthesized futuristic expansion cue created
   for this project; 22.05 kHz mono PCM WAV. A rising electronic sweep and
   short high-frequency chime play exactly when the grid grows to its next size.
+- `mail_notification.wav`: `ui-chime-24` from SFXMint (CC0 1.0),
+  https://sfxmint.com/sounds/ui-chime-24 . The included PCM16 WAV copy is
+  the publicly mirrored/resampled version documented by the AIQSA project;
+  it is used as the short incoming-mail bell.
+- `mail_dock.wav`: `rollover1.wav` from Kenney's "UI SFX Set" (CC0 1.0),
+  mirrored in the V-Sekai repository. It is used as the subtle UI cue while
+  the fully-read mailbox folds into the bottom-right corner.
+- `save_game_camera.wav`: `film camera shutter release.wav` by caseymoura,
+  https://freesound.org/people/caseymoura/sounds/445482/ (CC BY 3.0).
+  Used when a manual game save completes successfully.
+

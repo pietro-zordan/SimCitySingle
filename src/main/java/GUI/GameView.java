@@ -54,6 +54,7 @@ public final class GameView implements GameObserver
     private final ConstructionToolbarView constructionToolbarView;
     private final LoanView loanView;
     private final EventAnimationView eventAnimationView;
+    private final MailboxView mailboxView;
     private final GameOverView gameOverView;
     private final FreemasonryInvitationView invitationView;
     private final RaEyeView raEyeView = new RaEyeView();
@@ -251,6 +252,8 @@ public final class GameView implements GameObserver
                         nextTurnButton,
                         soundManager
                 );
+
+        mailboxView = new MailboxView(controller.getMailbox());
 
         invitationView = new FreemasonryInvitationView(
                 new Consumer<FreemasonryChoice>()
@@ -603,6 +606,7 @@ public final class GameView implements GameObserver
                 10,
                 eventAnimationView
                         .getHackerAttackPanel(),
+                mailboxView.getView(),
                 nextTurnButton,
                 changePolicyButton,
                 loanView.getActionButton(),
@@ -1356,6 +1360,7 @@ public final class GameView implements GameObserver
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
         missileDefenseView.refresh();
+        mailboxView.refresh();
         refreshDemolitionButton();
 
         gridView.refresh();
@@ -1490,6 +1495,7 @@ public final class GameView implements GameObserver
         refreshTsunamiInsuranceButton();
         refreshNuclearFireProtection();
         missileDefenseView.refresh();
+        mailboxView.refresh();
         refreshDemolitionButton();
 
         statusView.updateTick();

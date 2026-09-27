@@ -115,6 +115,15 @@ public final class Controller
 
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
+
+        // Temporary message for checking the mailbox in a new game.
+        simulation.getMailbox().addMessage(new MailMessage(
+                "test_message",
+                "City Hall",
+                "Test message",
+                "This is a test message.",
+                0
+        ));
     }
 
     public Controller(
@@ -736,6 +745,25 @@ public final class Controller
                 city,
                 simulation
         );
+    }
+
+    public Mailbox getMailbox()
+    {
+        return simulation.getMailbox();
+    }
+
+    /** Older saves have no messages, so their mailbox stays empty. */
+    public void restoreMailbox(List<MailMessage> messages)
+    {
+        if (messages == null)
+        {
+            return;
+        }
+
+        for (MailMessage message : messages)
+        {
+            simulation.getMailbox().addMessage(message);
+        }
     }
 
     public int getActiveMissileTargetRow()

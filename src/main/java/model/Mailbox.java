@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/** Stores messages in delivery order and rejects duplicate message ids. */
 public class Mailbox
 {
     private final List<MailMessage> messages;
@@ -17,7 +18,7 @@ public class Mailbox
     {
         if (message == null)
         {
-            throw new IllegalArgumentException("Il messaggio non può essere null");
+            throw new IllegalArgumentException("Message cannot be null");
         }
 
         for (MailMessage existing : messages)
@@ -34,6 +35,7 @@ public class Mailbox
 
     public List<MailMessage> getMessages()
     {
+        // Return a separate list so callers cannot insert or remove messages.
         return Collections.unmodifiableList(
                 new ArrayList<>(messages)
         );
@@ -63,7 +65,7 @@ public class Mailbox
     {
         if (id == null || id.isBlank())
         {
-            throw new IllegalArgumentException("L'id non può essere vuoto");
+            throw new IllegalArgumentException("Id cannot be empty");
         }
 
         for (MailMessage message : messages)

@@ -7,6 +7,7 @@ import model.Construction;
 import model.ConstructionType;
 import model.Grid;
 import model.FreemasonryChoice;
+import model.MailMessage;
 import model.ReconstructionEntry;
 import model.Simulation;
 import policies.Policy;
@@ -34,6 +35,8 @@ public class Progress
     private FreemasonryChoice freemasonryChoice;
     // Nei vecchi salvataggi il valore predefinito 0 non blocca i tick successivi.
     private int masonicLodgeRemovedTick;
+    // Missing in older saves: those games start with an empty mailbox.
+    private List<MailMessage> mailboxMessages;
     // Campi dei salvataggi precedenti, che conservavano solo il totale usato.
     private boolean demolitionStatePresent;
     private int usedRemovals;
@@ -217,6 +220,9 @@ public class Progress
                 simulation.getFreemasonryChoice();
         progress.masonicLodgeRemovedTick =
                 simulation.getMasonicLodgeRemovedTick();
+
+        progress.mailboxMessages =
+                simulation.getMailbox().getMessages();
 
         progress.demolitionTicks =
                 simulation.getDemolitionTicks();
@@ -439,6 +445,8 @@ public class Progress
         controller.restoreFreemasonryChoice(
                 getFreemasonryChoice()
         );
+
+        controller.restoreMailbox(mailboxMessages);
 
         return controller;
     }

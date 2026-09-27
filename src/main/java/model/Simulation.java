@@ -29,6 +29,7 @@ public class Simulation{
     private boolean masonicLodgePresent;
     private int masonicLodgeRemovedTick = -1;
     private final City city;
+    private final Mailbox mailbox = new Mailbox();
     private Event activeEvent;
     private int eventTicksPassed;
     private final Grid grid;
@@ -133,6 +134,11 @@ public class Simulation{
     public FreemasonryChoice getFreemasonryChoice()
     {
         return freemasonryChoice;
+    }
+
+    public Mailbox getMailbox()
+    {
+        return mailbox;
     }
 
     public int getMasonicLodgeRemovedTick()

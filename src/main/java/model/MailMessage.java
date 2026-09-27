@@ -1,5 +1,6 @@
 package model;
 
+/** One message delivered to the player's in-game mailbox. */
 public class MailMessage {
 
     private final String id;
@@ -18,13 +19,13 @@ public class MailMessage {
                 || body == null || body.isBlank())
         {
             throw new IllegalArgumentException(
-                    "Id, mittente, oggetto e testo non possono essere vuoti");
+                    "Id, sender, subject and body cannot be empty");
         }
 
         if (receivedTick < 0)
         {
             throw new IllegalArgumentException(
-                    "Il tick di ricezione non può essere negativo");
+                    "Received tick cannot be negative");
         }
 
         this.id = id;
@@ -67,6 +68,7 @@ public class MailMessage {
 
     public void markRead()
     {
+        // The text and delivery tick stay the same after opening the message.
         read = true;
     }
 

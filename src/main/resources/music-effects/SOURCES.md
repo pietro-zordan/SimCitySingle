@@ -70,4 +70,5 @@
 - License: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
 - Adaptation: high-quality MP3 preview converted to mono PCM WAV, 44.1 kHz,
   trimmed to 5.8 seconds, with a 0.18-second fade-in and 1.3-second fade-out.
+  Gain increased by 40%, with peaks limited to 0.95 to avoid clipping.
   The sound begins with the shake and ends with the animation.

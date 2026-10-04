@@ -1,5 +1,5 @@
 // La classe EventAnimationView gestisce le animazioni visive degli eventi speciali di gioco.
-// Controlla Tsunami, Hacker Attack, Missile Attack ed esplosioni nucleari, bloccando i comandi quando necessario.
+// Controlla terremoti, Tsunami, Hacker Attack, Missile Attack ed esplosioni nucleari.
 
 package GUI;
 
@@ -7,6 +7,8 @@ import Events.EventType;
 import audio.SoundManager;
 import controller.Controller;
 import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.Transition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;
@@ -74,6 +76,9 @@ public final class EventAnimationView
     private final Queue<ExplosionInfo> pendingExplosions = new ArrayDeque<>();
 
     private boolean tsunamiAnimationStarted;
+    private boolean earthquakeAnimationStarted;
+    private boolean earthquakeAnimationRunning;
+    private Transition earthquakeTransition;
     private boolean tsunamiAnimationRunning;
     private boolean economicBoomSoundStarted;
     private boolean energyCrisisSoundStarted;
@@ -221,6 +226,7 @@ public final class EventAnimationView
 
     public void refresh()
     {
+        updateEarthquakeAnimation();
         updateTsunamiAnimation();
         updateEconomicBoomSound();
         updateEnergyCrisisSound();
@@ -666,6 +672,57 @@ public final class EventAnimationView
                 body,
                 nose
         );
+    }
+
+    private void updateEarthquakeAnimation()
+    {
+        boolean active = controller.getActiveEventType() == EventType.EARTHQUAKE;
+        if (active && !earthquakeAnimationStarted)
+        {
+            earthquakeAnimationStarted = true;
+            earthquakeAnimationRunning = true;
+            nextTurnButton.setDisable(true);
+            gridView.prepareEarthquake(controller.getActiveEarthquakeDirection(),
+                    controller.getActiveEarthquakeLineIndex());
+            soundManager.playEarthquakeSound();
+            earthquakeTransition = new Transition()
+            {
+                {
+                    setCycleDuration(Duration.seconds(5.8));
+                    setInterpolator(Interpolator.LINEAR);
+                }
+
+                @Override
+                protected void interpolate(double fraction)
+                {
+                    gridView.renderEarthquake(fraction);
+                }
+            };
+            earthquakeTransition.setOnFinished(new EventHandler<ActionEvent>()
+            {
+                @Override
+                public void handle(ActionEvent event)
+                {
+                    gridView.clearEarthquake();
+                    earthquakeAnimationRunning = false;
+                    earthquakeTransition = null;
+                    soundManager.stopEarthquakeSound();
+                    gridView.refresh();
+                    // Una centrale nucleare colpita esplode dopo la scossa.
+                    startWaitingExplosionIfReady();
+                    if (!explosionAnimationRunning && !missileAnimationRunning
+                            && !tsunamiAnimationRunning)
+                    {
+                        nextTurnButton.setDisable(false);
+                    }
+                }
+            });
+            earthquakeTransition.play();
+        }
+        else if (!active)
+        {
+            earthquakeAnimationStarted = false;
+        }
     }
 
     private void updateTsunamiAnimation()
@@ -1591,6 +1648,7 @@ public final class EventAnimationView
     {
         if (explosionAnimationRunning
                 || missileAnimationRunning
+                || earthquakeAnimationRunning
                 || pendingExplosions.isEmpty())
         {
             return;
@@ -1810,6 +1868,11 @@ public final class EventAnimationView
         return tsunamiAnimationRunning;
     }
 
+    public boolean isEarthquakeAnimationRunning()
+    {
+        return earthquakeAnimationRunning;
+    }
+
     public boolean isMissileAnimationRunning()
     {
         return missileAnimationRunning;
@@ -1837,6 +1900,15 @@ public final class EventAnimationView
 
     public void stop()
     {
+        if (earthquakeTransition != null)
+        {
+            earthquakeTransition.stop();
+            earthquakeTransition = null;
+        }
+        gridView.clearEarthquake();
+        soundManager.stopEarthquakeSound();
+        earthquakeAnimationRunning = false;
+        earthquakeAnimationStarted = false;
         if (tsunamiTimeline != null)
         {
             tsunamiTimeline.stop();

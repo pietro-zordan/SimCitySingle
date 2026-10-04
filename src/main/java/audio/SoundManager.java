@@ -28,6 +28,7 @@ public class SoundManager
     private final AudioClip economicBoomSound;
     private final AudioClip hackerAttackSound;
     private final AudioClip energyCrisisSound;
+    private final AudioClip earthquakeSound;
     private final AudioClip defeatSound;
 
 
@@ -52,6 +53,8 @@ public class SoundManager
         economicBoomSound = loadClip("economic_boom.wav");
         hackerAttackSound = loadClip("hacker_intrusion.wav");
         energyCrisisSound = loadClip("energy_crisis_alarm.wav");
+        earthquakeSound = loadClip("earthquake_rumble.wav");
+        earthquakeSound.setVolume(0.85);
         defeatSound = loadFirstAvailableClip(
                 new String[] {
                         "defeat.wav",
@@ -308,6 +311,18 @@ public class SoundManager
         economicBoomSound.stop();
         hackerAttackSound.stop();
         energyCrisisSound.stop();
+        stopEarthquakeSound();
+    }
+
+    public void playEarthquakeSound()
+    {
+        earthquakeSound.stop();
+        earthquakeSound.play();
+    }
+
+    public void stopEarthquakeSound()
+    {
+        earthquakeSound.stop();
     }
 
     public void playDefeatSound()

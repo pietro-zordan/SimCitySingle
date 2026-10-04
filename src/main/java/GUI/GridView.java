@@ -3,6 +3,7 @@ package GUI;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -85,6 +86,13 @@ public final class GridView
     private final Random crisisRandom = new Random();
     private Timeline crisisSparkTimeline;
     private boolean energyCrisisActive;
+    private boolean earthquakeActive;
+    private boolean mouseTransparentBeforeEarthquake;
+    private final List<StackPane> earthquakeCells = new ArrayList<>();
+    private final List<EarthquakeGhost> earthquakeGhosts = new ArrayList<>();
+
+    private record EarthquakeGhost(StackPane cell, StackPane overlay,
+                                   ImageView image, double delay, double duration) { }
 
     private ConstructionType selectedType =
             ConstructionType.COMMERCIAL;
@@ -136,6 +144,7 @@ public final class GridView
     // Ricrea la rappresentazione grafica quando cambia la dimensione della griglia.
     private void rebuildCells()
     {
+        clearEarthquake();
         roadDragActive = false;
         int rows = controller.getNumberOfRows();
         int columns = controller.getNumberOfColumns();
@@ -691,6 +700,11 @@ public final class GridView
     public void refresh()
     {
         ensureGridSize();
+        // Mantiene il fotogramma precedente finché i colori non si sono dissolti.
+        if (earthquakeActive)
+        {
+            return;
+        }
         boolean crisisNowActive = controller.getActiveEventType() == EventType.ENERGY_CRISIS;
         boolean crisisModeChanged = !hasRenderedFrame || crisisNowActive != lastRenderedCrisisState;
 
@@ -1032,6 +1046,103 @@ public final class GridView
 
         // Se seleziono una costruzione esco dalla modalità demolizione
         demolitionActive = false;
+    }
+
+    /** Conserva l'aspetto delle costruzioni già distrutte nel modello.
+     *  Gli snapshot includono anche texture e simboli; il fondo vuoto resta fermo. */
+    public void prepareEarthquake(String direction, int lineIndex)
+    {
+        clearEarthquake();
+        boolean vertical = "vertical".equals(direction);
+        int lineCount = vertical ? cells[0].length : cells.length;
+        if (lineIndex < 0 || lineIndex >= lineCount)
+        {
+            return;
+        }
+
+        earthquakeActive = true;
+        mouseTransparentBeforeEarthquake = view.isMouseTransparent();
+        view.setMouseTransparent(true);
+        List<StackPane> destroyedCells = new ArrayList<>();
+        int length = vertical ? cells.length : cells[0].length;
+        for (int i = 0; i < length; i++)
+        {
+            int row = vertical ? i : lineIndex;
+            int column = vertical ? lineIndex : i;
+            StackPane cell = cells[row][column];
+            earthquakeCells.add(cell);
+            Controller.CellState previous = renderedStates[row][column];
+            if (previous != null && !previous.empty()
+                    && previous.type() != ConstructionType.ROAD
+                    && controller.getCellState(row, column).empty())
+            {
+                destroyedCells.add(cell);
+            }
+        }
+
+        Collections.shuffle(destroyedCells);
+        Random random = new Random();
+        for (int i = 0; i < destroyedCells.size(); i++)
+        {
+            StackPane cell = destroyedCells.get(i);
+            ImageView ghost = new ImageView(cell.snapshot(null, null));
+            ghost.setFitWidth(CELL_SIZE);
+            ghost.setFitHeight(CELL_SIZE);
+            Rectangle emptyCell = new Rectangle(CELL_SIZE, CELL_SIZE);
+            emptyCell.setFill(Color.WHITESMOKE);
+            emptyCell.setStroke(Color.LIGHTGRAY);
+            emptyCell.setStrokeType(StrokeType.INSIDE);
+            StackPane overlay = new StackPane(emptyCell, ghost);
+            overlay.setMouseTransparent(true);
+            cell.getChildren().add(overlay);
+            // I ritardi occupano solo la prima metà della scossa; ogni dissolvenza
+            // dura oltre due secondi e si conclude prima del termine dell'animazione.
+            double delay = 0.12 + 0.36 * i / Math.max(1, destroyedCells.size() - 1);
+            double duration = 0.40 + random.nextDouble() * 0.10;
+            earthquakeGhosts.add(new EarthquakeGhost(cell, overlay, ghost, delay, duration));
+        }
+    }
+
+    /** Scuote esclusivamente la linea colpita, con una scossa che si attenua. */
+    public void renderEarthquake(double progress)
+    {
+        double attack = Math.min(1.0, progress / 0.06);
+        double release = Math.min(1.0, (1.0 - progress) / 0.25);
+        double amplitude = 4.8 * attack * release;
+        double phase = progress * Math.PI * 2 * 58;
+        double x = amplitude * (0.72 * Math.sin(phase) + 0.28 * Math.sin(phase * 1.73));
+        double y = amplitude * 0.55 * Math.sin(phase * 1.29);
+        for (StackPane cell : earthquakeCells)
+        {
+            cell.setTranslateX(x);
+            cell.setTranslateY(y);
+        }
+        for (EarthquakeGhost ghost : earthquakeGhosts)
+        {
+            double fade = Math.max(0, Math.min(1, (progress - ghost.delay()) / ghost.duration()));
+            // Smoothstep evita uno scatto all'inizio e alla fine della dissolvenza.
+            ghost.image().setOpacity(1.0 - fade * fade * (3.0 - 2.0 * fade));
+        }
+    }
+
+    public void clearEarthquake()
+    {
+        for (StackPane cell : earthquakeCells)
+        {
+            cell.setTranslateX(0);
+            cell.setTranslateY(0);
+        }
+        for (EarthquakeGhost ghost : earthquakeGhosts)
+        {
+            ghost.cell().getChildren().remove(ghost.overlay());
+        }
+        earthquakeCells.clear();
+        earthquakeGhosts.clear();
+        if (earthquakeActive)
+        {
+            view.setMouseTransparent(mouseTransparentBeforeEarthquake);
+        }
+        earthquakeActive = false;
     }
 
     // Mostra l'effetto Tsunami su un'intera riga della griglia.

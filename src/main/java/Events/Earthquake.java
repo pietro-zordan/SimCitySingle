@@ -14,10 +14,14 @@ public class Earthquake extends Event{
 
     Random random = new Random();
 
+    public static final int HAPPINESS_DECREASE_AMOUNT = 700;
+
     public Earthquake(City city, Grid grid)
     {
         super(3, city,555 );
         this.grid=grid;
+
+        launchNumber = 1; //25;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class Earthquake extends Event{
     public String getRandomDirection()
     {
 
-        int rand = random.nextInt();
+        int rand = random.nextInt(directions.length);
 
         direction=directions[rand];
 
@@ -47,11 +51,11 @@ public class Earthquake extends Event{
 
     public Cell[] getEarthquakeCells(Grid grid)
     {
-        Cell[] EarthquakeCells;
+        Cell[] EarthquakeCells = new Cell[grid.getNumberOfColumns()];
 
         Cell startCell= getStartCell(grid);
 
-        if(direction == "horizontal")
+        if("vertical".equals(direction))
         {
             for(int i = 0; i < grid.getNumberOfColumns(); i++) {
                 if (grid.isInside(i, startCell.getColumn()))
@@ -61,7 +65,7 @@ public class Earthquake extends Event{
 
         else {
 
-            for (int j = 0, j <grid.getNumberOfRows(); j++)
+            for (int j = 0; j <grid.getNumberOfRows(); j++)
             {
                 if (grid.isInside(startCell.getRow(), j))
                     EarthquakeCells[j] = grid.getCell(startCell.getRow(), j);
@@ -71,6 +75,29 @@ public class Earthquake extends Event{
         return EarthquakeCells;
     }
 
-    
+    public void getDestruction()
+    {
+        Cell[] earthquakeCells = getEarthquakeCells(grid);
 
+        for (Cell cell: earthquakeCells)
+        {
+            grid.removeConstruction(cell.getRow(), cell.getColumn());
+        }
+    }
+
+    @Override
+    public void start() {
+        getStartCell(grid);
+        getEarthquakeCells(grid);
+    }
+
+    public void getHappinessImpact()
+    {
+        city.decreaseGlobalHappiness(HAPPINESS_DECREASE_AMOUNT);
+    }
+
+    @Override
+    public void updateOfOneTick() {
+        getHappinessImpact();
+    }
 }

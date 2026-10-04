@@ -226,14 +226,61 @@ public final class EventAnimationView
 
     public void refresh()
     {
-        updateEarthquakeAnimation();
-        updateTsunamiAnimation();
-        updateEconomicBoomSound();
-        updateEnergyCrisisSound();
-        updateHackerAttackAnimation();
-        updateFireSound();
-        updateMissileAnimation();
-        updateExplosionAnimation();
+        try
+        {
+            updateEarthquakeAnimation();
+            updateTsunamiAnimation();
+            updateEconomicBoomSound();
+            updateEnergyCrisisSound();
+            updateHackerAttackAnimation();
+            updateFireSound();
+            updateMissileAnimation();
+            updateExplosionAnimation();
+        }
+        catch (RuntimeException error)
+        {
+            recoverAnimation(error);
+        }
+    }
+
+    // Anche i fotogrammi eseguiti dopo refresh devono sbloccare i comandi in caso di errore.
+    private abstract class AnimationHandler implements EventHandler<ActionEvent>
+    {
+        @Override
+        public final void handle(ActionEvent event)
+        {
+            try
+            {
+                run();
+            }
+            catch (RuntimeException error)
+            {
+                recoverAnimation(error);
+            }
+        }
+
+        protected abstract void run();
+    }
+
+    private void recoverAnimation(RuntimeException error)
+    {
+        System.err.println("Unable to animate event at tick " + controller.getCurrentTick());
+        error.printStackTrace();
+        boolean tsunamiInterrupted = tsunamiAnimationRunning;
+        try
+        {
+            stop();
+        }
+        catch (RuntimeException cleanupError)
+        {
+            // I comandi vengono ripristinati prima di arrestare i suoni.
+            cleanupError.printStackTrace();
+        }
+        if (tsunamiInterrupted)
+        {
+            controller.startTsunamiReconstruction();
+        }
+        gridView.refresh();
     }
 
     private void updateFireSound()
@@ -695,13 +742,20 @@ public final class EventAnimationView
                 @Override
                 protected void interpolate(double fraction)
                 {
-                    gridView.renderEarthquake(fraction);
+                    try
+                    {
+                        gridView.renderEarthquake(fraction);
+                    }
+                    catch (RuntimeException error)
+                    {
+                        recoverAnimation(error);
+                    }
                 }
             };
-            earthquakeTransition.setOnFinished(new EventHandler<ActionEvent>()
+            earthquakeTransition.setOnFinished(new AnimationHandler()
             {
                 @Override
-                public void handle(ActionEvent event)
+                protected void run()
                 {
                     gridView.clearEarthquake();
                     earthquakeAnimationRunning = false;
@@ -802,10 +856,10 @@ public final class EventAnimationView
                     Duration.millis(
                             (step + 1) * TSUNAMI_LINE_DELAY
                     ),
-                    new EventHandler<ActionEvent>()
+                    new AnimationHandler()
                     {
                         @Override
-                        public void handle(ActionEvent event)
+                        protected void run()
                         {
                             showTsunamiLine(
                                     tsunamiDirection,
@@ -826,10 +880,10 @@ public final class EventAnimationView
                         (tsunamiAdvancementLength + 1)
                                 * TSUNAMI_LINE_DELAY
                 ),
-                new EventHandler<ActionEvent>()
+                new AnimationHandler()
                 {
                     @Override
-                    public void handle(ActionEvent event)
+                    protected void run()
                     {
                         tsunamiCurrentStep =
                                 tsunamiAdvancementLength;
@@ -847,10 +901,10 @@ public final class EventAnimationView
                         (tsunamiAdvancementLength + 2)
                                 * TSUNAMI_LINE_DELAY
                 ),
-                new EventHandler<ActionEvent>()
+                new AnimationHandler()
                 {
                     @Override
-                    public void handle(ActionEvent event)
+                    protected void run()
                     {
                         clearTsunamiAnimation();
                     }
@@ -988,10 +1042,10 @@ public final class EventAnimationView
         hackerCodeTimeline = new Timeline(
                 new KeyFrame(
                         Duration.millis(180),
-                        new EventHandler<ActionEvent>()
+                        new AnimationHandler()
                         {
                             @Override
-                            public void handle(ActionEvent event)
+                            protected void run()
                             {
                                 hackerBinaryCode.setText(
                                         generateBinaryCode()
@@ -1176,10 +1230,10 @@ public final class EventAnimationView
         final double missileEndY = endY;
 
         missileTransition.setOnFinished(
-                new EventHandler<ActionEvent>()
+                new AnimationHandler()
                 {
                     @Override
-                    public void handle(ActionEvent event)
+                    protected void run()
                     {
                         missileTransition = null;
 
@@ -1472,10 +1526,10 @@ public final class EventAnimationView
                 );
 
         missileDeflectionTransition.setOnFinished(
-                new EventHandler<ActionEvent>()
+                new AnimationHandler()
                 {
                     @Override
-                    public void handle(ActionEvent event)
+                    protected void run()
                     {
                         missileDeflectionTransition = null;
                         missileNode.setVisible(false);
@@ -1540,10 +1594,10 @@ public final class EventAnimationView
                 );
 
         missileShieldTimeline.setOnFinished(
-                new EventHandler<ActionEvent>()
+                new AnimationHandler()
                 {
                     @Override
-                    public void handle(ActionEvent event)
+                    protected void run()
                     {
                         missileShieldNode.setVisible(false);
                         missileShieldTimeline = null;
@@ -1562,10 +1616,10 @@ public final class EventAnimationView
         missileImpactTimeline = new Timeline(
                 new KeyFrame(
                         Duration.ZERO,
-                        new EventHandler<ActionEvent>()
+                        new AnimationHandler()
                         {
                             @Override
-                            public void handle(ActionEvent event)
+                            protected void run()
                             {
                                 gridView.showExplosionRing(
                                         missileTargetRow,
@@ -1580,10 +1634,10 @@ public final class EventAnimationView
                         Duration.millis(
                                 MISSILE_IMPACT_DELAY
                         ),
-                        new EventHandler<ActionEvent>()
+                        new AnimationHandler()
                         {
                             @Override
-                            public void handle(ActionEvent event)
+                            protected void run()
                             {
                                 gridView.showExplosionRing(
                                         missileTargetRow,
@@ -1598,10 +1652,10 @@ public final class EventAnimationView
                         Duration.millis(
                                 MISSILE_IMPACT_DURATION
                         ),
-                        new EventHandler<ActionEvent>()
+                        new AnimationHandler()
                         {
                             @Override
-                            public void handle(ActionEvent event)
+                            protected void run()
                             {
                                 finishMissileAnimation();
                             }
@@ -1764,10 +1818,10 @@ public final class EventAnimationView
                     Duration.millis(
                             radius * EXPLOSION_RING_DELAY
                     ),
-                    new EventHandler<ActionEvent>()
+                    new AnimationHandler()
                     {
                         @Override
-                        public void handle(ActionEvent event)
+                        protected void run()
                         {
                             gridView.showExplosionRing(
                                     explosion.getRow(),
@@ -1789,10 +1843,10 @@ public final class EventAnimationView
                         (explosion.getRadius() + 2)
                                 * EXPLOSION_RING_DELAY
                 ),
-                new EventHandler<ActionEvent>()
+                new AnimationHandler()
                 {
                     @Override
-                    public void handle(ActionEvent event)
+                    protected void run()
                     {
                         finishExplosionAnimation();
                     }
@@ -1824,10 +1878,10 @@ public final class EventAnimationView
                 );
 
         nuclearAudioDuckTransition.setOnFinished(
-                new EventHandler<ActionEvent>()
+                new AnimationHandler()
                 {
                     @Override
-                    public void handle(ActionEvent event)
+                    protected void run()
                     {
                         soundManager
                                 .restoreLongEventSoundsAfterNuclearExplosion();
@@ -1906,7 +1960,6 @@ public final class EventAnimationView
             earthquakeTransition = null;
         }
         gridView.clearEarthquake();
-        soundManager.stopEarthquakeSound();
         earthquakeAnimationRunning = false;
         earthquakeAnimationStarted = false;
         if (tsunamiTimeline != null)
@@ -1951,17 +2004,12 @@ public final class EventAnimationView
             nuclearAudioDuckTransition = null;
         }
 
-        soundManager
-                .restoreLongEventSoundsAfterNuclearExplosion();
-
         stopHackerCodeAnimation();
-
-        soundManager.stopTsunamiSound();
-        soundManager.stopFireSound();
         fireSoundPlaying = false;
 
         pendingExplosions.clear();
         gridView.clearExplosion();
+        gridView.clearTsunami();
 
         tsunamiAnimationRunning = false;
         tsunamiAnimationStarted = false;
@@ -1987,5 +2035,10 @@ public final class EventAnimationView
 
         nextTurnButton.setDisable(false);
         hackerAttackPanel.setVisible(false);
+
+        soundManager.stopEarthquakeSound();
+        soundManager.restoreLongEventSoundsAfterNuclearExplosion();
+        soundManager.stopTsunamiSound();
+        soundManager.stopFireSound();
     }
 }

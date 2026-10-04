@@ -19,7 +19,7 @@ public class Earthquake extends Event{
 
     public Earthquake(City city, Grid grid)
     {
-        super(3, city,555 );
+        super(3, city,500 );
         this.grid=grid;
 
         launchNumber = 1; //25;

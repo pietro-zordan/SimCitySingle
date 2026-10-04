@@ -884,14 +884,22 @@ public class Simulation{
     // Espone la linea del terremoto alla GUI senza farle accedere alle celle del modello.
     public String getActiveEarthquakeDirection()
     {
-        return activeEvent instanceof Earthquake
-                ? ((Earthquake) activeEvent).getDirection() : null;
+        if (activeEvent instanceof Earthquake)
+        {
+            Earthquake earthquake = (Earthquake) activeEvent;
+            return earthquake.getDirection();
+        }
+        return null;
     }
 
     public int getActiveEarthquakeLineIndex()
     {
-        return activeEvent instanceof Earthquake
-                ? ((Earthquake) activeEvent).getAffectedLineIndex() : -1;
+        if (activeEvent instanceof Earthquake)
+        {
+            Earthquake earthquake = (Earthquake) activeEvent;
+            return earthquake.getAffectedLineIndex();
+        }
+        return -1;
     }
 
     // Restituisce il lato da cui arriva lo tsunami attivo.

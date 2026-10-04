@@ -31,9 +31,15 @@ public class Earthquake extends Event{
     }
 
     // La GUI usa la stessa linea scelta dal modello, senza estrarre nuove coordinate.
-    public String getDirection() { return direction; }
+    public String getDirection()
+    {
+        return direction;
+    }
 
-    public int getAffectedLineIndex() { return affectedLineIndex; }
+    public int getAffectedLineIndex()
+    {
+        return affectedLineIndex;
+    }
 
     public String getRandomDirection()
     {
@@ -57,14 +63,15 @@ public class Earthquake extends Event{
 
     public Cell[] getEarthquakeCells(Grid grid)
     {
+        Cell[] EarthquakeCells;
+
         Cell startCell= getStartCell(grid);
-        boolean vertical = "vertical".equals(direction);
-        int length = vertical ? grid.getNumberOfRows() : grid.getNumberOfColumns();
-        Cell[] EarthquakeCells = new Cell[length];
-        affectedLineIndex = vertical ? startCell.getColumn() : startCell.getRow();
 
         if("vertical".equals(direction))
         {
+            EarthquakeCells = new Cell[grid.getNumberOfRows()];
+            affectedLineIndex = startCell.getColumn();
+
             for(int i = 0; i < grid.getNumberOfRows(); i++) {
                 if (grid.isInside(i, startCell.getColumn()))
                     EarthquakeCells[i] = grid.getCell(i, startCell.getColumn());
@@ -72,6 +79,8 @@ public class Earthquake extends Event{
         }
 
         else {
+            EarthquakeCells = new Cell[grid.getNumberOfColumns()];
+            affectedLineIndex = startCell.getRow();
 
             for (int j = 0; j <grid.getNumberOfColumns(); j++)
             {

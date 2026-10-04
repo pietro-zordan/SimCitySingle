@@ -1054,7 +1054,13 @@ public final class GridView
     {
         clearEarthquake();
         boolean vertical = "vertical".equals(direction);
-        int lineCount = vertical ? cells[0].length : cells.length;
+        int lineCount = cells.length;
+        int length = cells[0].length;
+        if (vertical)
+        {
+            lineCount = cells[0].length;
+            length = cells.length;
+        }
         if (lineIndex < 0 || lineIndex >= lineCount)
         {
             return;
@@ -1064,11 +1070,15 @@ public final class GridView
         mouseTransparentBeforeEarthquake = view.isMouseTransparent();
         view.setMouseTransparent(true);
         List<StackPane> destroyedCells = new ArrayList<>();
-        int length = vertical ? cells.length : cells[0].length;
         for (int i = 0; i < length; i++)
         {
-            int row = vertical ? i : lineIndex;
-            int column = vertical ? lineIndex : i;
+            int row = lineIndex;
+            int column = i;
+            if (vertical)
+            {
+                row = i;
+                column = lineIndex;
+            }
             StackPane cell = cells[row][column];
             earthquakeCells.add(cell);
             Controller.CellState previous = renderedStates[row][column];
@@ -1114,8 +1124,24 @@ public final class GridView
         double y = amplitude * 0.55 * Math.sin(phase * 1.29);
         for (StackPane cell : earthquakeCells)
         {
-            cell.setTranslateX(x);
-            cell.setTranslateY(y);
+            int row = GridPane.getRowIndex(cell);
+            int column = GridPane.getColumnIndex(cell);
+            double cellX = x;
+            double cellY = y;
+
+            // I bordi esterni restano nella posizione originale: la scossa
+            // non allarga i bounds della mappa e non attiva le scrollbar.
+            if (column == 0 || column == cells[0].length - 1)
+            {
+                cellX = 0;
+            }
+            if (row == 0 || row == cells.length - 1)
+            {
+                cellY = 0;
+            }
+
+            cell.setTranslateX(cellX);
+            cell.setTranslateY(cellY);
         }
         for (EarthquakeGhost ghost : earthquakeGhosts)
         {

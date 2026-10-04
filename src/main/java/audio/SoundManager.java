@@ -54,7 +54,7 @@ public class SoundManager
         hackerAttackSound = loadClip("hacker_intrusion.wav");
         energyCrisisSound = loadClip("energy_crisis_alarm.wav");
         earthquakeSound = loadClip("earthquake_rumble.wav");
-        earthquakeSound.setVolume(0.85);
+        earthquakeSound.setVolume(1.0);
         defeatSound = loadFirstAvailableClip(
                 new String[] {
                         "defeat.wav",

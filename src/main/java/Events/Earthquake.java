@@ -87,8 +87,9 @@ public class Earthquake extends Event{
 
     @Override
     public void start() {
-        getStartCell(grid);
-        getEarthquakeCells(grid);
+        getRandomDirection();
+        getDestruction();
+        city.refreshStatistics();
     }
 
     public void getHappinessImpact()

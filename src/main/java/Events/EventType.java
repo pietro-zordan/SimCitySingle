@@ -9,7 +9,8 @@ public enum EventType
     FIRE("Fire"),
     TSUNAMI("Tsunami"),
     ECONOMIC_BOOM("Economic boom"),
-    MISSILE_ATTACK("Missile Attack");
+    MISSILE_ATTACK("Missile Attack"),
+    EARTHQUAKE("Earth Quake");
 
     private final String displayName;
 

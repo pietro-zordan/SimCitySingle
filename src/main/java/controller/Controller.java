@@ -829,6 +829,17 @@ public final class Controller
         }
     }
 
+    // Restituisce i dati della linea colpita dal terremoto attivo.
+    public String getActiveEarthquakeDirection()
+    {
+        return simulation.getActiveEarthquakeDirection();
+    }
+
+    public int getActiveEarthquakeLineIndex()
+    {
+        return simulation.getActiveEarthquakeLineIndex();
+    }
+
     // Restituisce la direzione dello tsunami attivo.
     public String getActiveTsunamiDirection()
     {

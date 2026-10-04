@@ -1496,6 +1496,8 @@ public final class GameView implements GameObserver
                 || (!eventAnimationView
                 .isTsunamiAnimationRunning()
                 && !eventAnimationView
+                .isEarthquakeAnimationRunning()
+                && !eventAnimationView
                 .isMissileAnimationRunning()
                 && !eventAnimationView
                 .isExplosionAnimationRunning()))

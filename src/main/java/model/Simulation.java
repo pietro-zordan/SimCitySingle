@@ -401,6 +401,7 @@ public class Simulation{
                 new Fire(city, grid),
                 new Tsunami(city, grid),
                 new EconomicBoom(city, grid),
+                new Earthquake(city, grid),
                 new MissileAttack(
                         city,
                         grid,
@@ -878,6 +879,19 @@ public class Simulation{
     public int getCurrentTick()
     {
         return currentTick;
+    }
+
+    // Espone la linea del terremoto alla GUI senza farle accedere alle celle del modello.
+    public String getActiveEarthquakeDirection()
+    {
+        return activeEvent instanceof Earthquake
+                ? ((Earthquake) activeEvent).getDirection() : null;
+    }
+
+    public int getActiveEarthquakeLineIndex()
+    {
+        return activeEvent instanceof Earthquake
+                ? ((Earthquake) activeEvent).getAffectedLineIndex() : -1;
     }
 
     // Restituisce il lato da cui arriva lo tsunami attivo.

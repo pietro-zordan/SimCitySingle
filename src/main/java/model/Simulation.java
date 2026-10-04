@@ -20,6 +20,8 @@ public class Simulation{
     private static final int CC_UNLOCK_TICK = 40;
     private static final int CC_INTERVAL = 10;
     private static final int FREEMASONRY_INVITATION_TICK = 500;
+    private static final int UFO_QUIET_START_TICK = 508;
+    private static final int UFO_QUIET_END_TICK = 512;
 
     private final Random random = new Random();
     private int currentTick;
@@ -399,6 +401,7 @@ public class Simulation{
                 new Fire(city, grid),
                 new Tsunami(city, grid),
                 new EconomicBoom(city, grid),
+                new Earthquake(city, grid),
                 new MissileAttack(
                         city,
                         grid,
@@ -433,10 +436,20 @@ public class Simulation{
                 getPoweredConstructions();
 
         blackoutOccurredThisTick = false;
+        boolean quietPeriod = isUfoQuietPeriod(currentTick + 1);
+
+        if (quietPeriod && isEventActive())
+        {
+            // Gli eventi già in corso terminano prima dei due turni di
+            // preparazione; la città resta libera da eventi fino al 512.
+            activeEvent.end();
+            activeEvent = null;
+            eventTicksPassed = 0;
+        }
 
         city.updateOfOneTick();
 
-        if (isEventActive())
+        if (!quietPeriod && isEventActive())
         {
             activeEvent.updateOfOneTick();
             eventTicksPassed++;
@@ -448,9 +461,9 @@ public class Simulation{
                 eventTicksPassed = 0;
             }
         }
-        else
+        else if (!quietPeriod)
         {
-            startEvent(createRandomEvent());
+            startEventForTick(createRandomEvent(), currentTick + 1);
         }
 
         insuranceManager.updateReconstruction();
@@ -658,7 +671,14 @@ public class Simulation{
     // Avvia l'evento ricevuto se non ci sono altri eventi attivi e l'estrazione ha successo.
     public void startEvent(Event event)
     {
-        if (event == null || isEventActive())
+        startEventForTick(event, currentTick);
+    }
+
+    /** Avvia un evento solo se il turno in cui agirebbe non è riservato. */
+    private void startEventForTick(Event event, int eventTick)
+    {
+        if (event == null || isEventActive()
+                || isUfoQuietPeriod(eventTick))
             return;
 
         if (!event.canBeChosen(currentTick))
@@ -682,6 +702,14 @@ public class Simulation{
                 );
             }
         }
+    }
+
+    /** Riserva i due turni prima e dopo l'avvistamento al sindaco massone. */
+    private boolean isUfoQuietPeriod(int tick)
+    {
+        return freemasonryChoice == FreemasonryChoice.ACCEPTED
+                && tick >= UFO_QUIET_START_TICK
+                && tick <= UFO_QUIET_END_TICK;
     }
 
     // Controlla se una cella è coinvolta nell'incendio attivo.
@@ -851,6 +879,27 @@ public class Simulation{
     public int getCurrentTick()
     {
         return currentTick;
+    }
+
+    // Espone la linea del terremoto alla GUI senza farle accedere alle celle del modello.
+    public String getActiveEarthquakeDirection()
+    {
+        if (activeEvent instanceof Earthquake)
+        {
+            Earthquake earthquake = (Earthquake) activeEvent;
+            return earthquake.getDirection();
+        }
+        return null;
+    }
+
+    public int getActiveEarthquakeLineIndex()
+    {
+        if (activeEvent instanceof Earthquake)
+        {
+            Earthquake earthquake = (Earthquake) activeEvent;
+            return earthquake.getAffectedLineIndex();
+        }
+        return -1;
     }
 
     // Restituisce il lato da cui arriva lo tsunami attivo.

@@ -55,6 +55,7 @@ public final class GameView implements GameObserver
     private final LoanView loanView;
     private final EventAnimationView eventAnimationView;
     private final MailboxView mailboxView;
+    private UfoEncounterView ufoEncounterView;
     private final GameOverView gameOverView;
     private final FreemasonryInvitationView invitationView;
     private final RaEyeView raEyeView = new RaEyeView();
@@ -396,7 +397,18 @@ public final class GameView implements GameObserver
         try
         {
             showTickFeedback(criminalActivityCreated);
+            if (controller.getCurrentTick() == 508
+                    && controller.getFreemasonryChoice()
+                    == FreemasonryChoice.ACCEPTED)
+            {
+                // Arresta anche l'eventuale animazione iniziata prima
+                // dei cinque turni riservati all'avvistamento.
+                eventAnimationView.stop();
+            }
             updateDisplayedState();
+            // L'incontro si avvia solo avanzando al tick 510, non ricaricando
+            // una partita già salvata su quel numero di tick.
+            ufoEncounterView.playIfNeeded();
         }
         finally
         {
@@ -759,6 +771,11 @@ public final class GameView implements GameObserver
 
         // Il lettore delle lettere e l'icona d'angolo restano sopra al gioco.
         mailboxView.attachTo(rootWithToast);
+
+        // Il buio dell'incontro UFO copre anche i pannelli laterali.
+        ufoEncounterView = new UfoEncounterView(
+                controller, gridView, mapViewport, soundManager);
+        rootWithToast.getChildren().add(ufoEncounterView.getView());
 
         StackPane.setAlignment(
                 achievementNotificationView.getView(),
@@ -1485,6 +1502,8 @@ public final class GameView implements GameObserver
                 || (!eventAnimationView
                 .isTsunamiAnimationRunning()
                 && !eventAnimationView
+                .isEarthquakeAnimationRunning()
+                && !eventAnimationView
                 .isMissileAnimationRunning()
                 && !eventAnimationView
                 .isExplosionAnimationRunning()))
@@ -1616,6 +1635,7 @@ public final class GameView implements GameObserver
         toastHidePause.stop();
         achievementNotificationView.stop();
         mailboxView.stop();
+        ufoEncounterView.stop();
         eventAnimationView.stop();
         gridView.stop();
         invitationView.stop();

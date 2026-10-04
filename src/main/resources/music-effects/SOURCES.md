@@ -73,3 +73,14 @@
   This is a short, clean camera-app shutter cue used when a manual game save
   completes successfully.
 
+
+## Earthquake
+
+- `earthquake_rumble.wav`: "Cinematic Rumble.flac" by qubodup.
+- Source: https://freesound.org/people/qubodup/sounds/184936/
+- Download: https://cdn.freesound.org/previews/184/184936_71257-hq.mp3
+- License: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+- Adaptation: high-quality MP3 preview converted to mono PCM WAV, 44.1 kHz,
+  trimmed to 5.8 seconds, with a 0.18-second fade-in and 1.3-second fade-out.
+  Gain increased by 40%, with peaks limited to 0.95 to avoid clipping.
+  The sound begins with the shake and ends with the animation.

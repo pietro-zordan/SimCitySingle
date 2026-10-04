@@ -93,6 +93,42 @@ class SimulationTest {
         assertFalse(at500.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
     }
 
+    /** Verifica la pausa degli eventi nei cinque turni attorno all'UFO. */
+    @Test
+    void ufoQuietPeriodStopsActiveEventAndBlocksNewEventsThroughTick512()
+    {
+        Simulation member = new Simulation(city, grid, 506, 0);
+        member.restoreFreemasonryChoice(FreemasonryChoice.ACCEPTED);
+        when(event.canBeChosen(506)).thenReturn(true);
+        when(event.canStart()).thenReturn(true);
+        member.startEvent(event);
+        assertTrue(member.isEventActive());
+
+        member.updateOfOneTick();
+        assertEquals(507, member.getCurrentTick());
+        verify(event).updateOfOneTick();
+
+        for (int tick = 508; tick <= 512; tick++)
+        {
+            member.updateOfOneTick();
+            assertEquals(tick, member.getCurrentTick());
+            assertFalse(member.isEventActive());
+            member.startEvent(event);
+            assertFalse(member.isEventActive());
+        }
+
+        verify(event).end();
+        verify(event).updateOfOneTick();
+
+        Simulation nonMember = new Simulation(city, grid, 508, 0);
+        nonMember.restoreFreemasonryChoice(FreemasonryChoice.DECLINED);
+        Event ordinaryEvent = mock(Event.class);
+        when(ordinaryEvent.canBeChosen(508)).thenReturn(true);
+        when(ordinaryEvent.canStart()).thenReturn(true);
+        nonMember.startEvent(ordinaryEvent);
+        assertTrue(nonMember.isEventActive());
+    }
+
     @Test
     void removedMasonicLodgeReturnsOnNextTick()
     {

@@ -12,6 +12,8 @@ public class SoundManager
     private final AudioClip achievementSound;
     private final AudioClip tickAdvanceSound;
     private final AudioClip blackoutSound;
+    private final AudioClip ufoPowerdownSound;
+    private final AudioClip ufoHowlSound;
     private final AudioClip insuranceRebuildSound;
     private final AudioClip demolitionSound;
     private final AudioClip placementSound;
@@ -29,6 +31,7 @@ public class SoundManager
     private final AudioClip mailNotificationSound;
     private final AudioClip mailDockSound;
     private final AudioClip saveGameSound;
+    private final AudioClip earthquakeSound;
     private final AudioClip defeatSound;
 
 
@@ -37,6 +40,8 @@ public class SoundManager
         achievementSound = loadClip("achievement.wav");
         tickAdvanceSound = loadClip("tick_advance.wav");
         blackoutSound = loadClip("blackout.wav");
+        ufoPowerdownSound = loadClip("ufo_powerdown.mp3");
+        ufoHowlSound = loadClip("ufo_howl.mp3");
         insuranceRebuildSound = loadClip(
                 "insurance_rebuild.wav"
         );
@@ -54,6 +59,8 @@ public class SoundManager
         mailNotificationSound = loadClip("mail_notification.wav");
         mailDockSound = loadClip("mail_dock.wav");
         saveGameSound = loadClip("save_game_camera.wav");
+        earthquakeSound = loadClip("earthquake_rumble.wav");
+        earthquakeSound.setVolume(1.0);
         defeatSound = loadFirstAvailableClip(
                 new String[] {
                         "defeat.wav",
@@ -162,6 +169,27 @@ public class SoundManager
     {
         blackoutSound.stop();
         blackoutSound.play();
+    }
+
+    /** Accompagna il graduale spegnimento della schermata dell'avvistamento. */
+    public void playUfoPowerdownSound()
+    {
+        ufoPowerdownSound.stop();
+        ufoPowerdownSound.play();
+    }
+
+    /** Avvia l'ululato dell'UFO insieme al suo movimento sulla griglia. */
+    public void playUfoHowlSound()
+    {
+        ufoHowlSound.stop();
+        ufoHowlSound.play();
+    }
+
+    /** Interrompe i due suoni se la partita termina durante la scena. */
+    public void stopUfoEncounterSounds()
+    {
+        ufoPowerdownSound.stop();
+        ufoHowlSound.stop();
     }
 
     public void playInsuranceRebuildSound()
@@ -301,6 +329,7 @@ public class SoundManager
         achievementSound.stop();
         tickAdvanceSound.stop();
         blackoutSound.stop();
+        stopUfoEncounterSounds();
         insuranceRebuildSound.stop();
         demolitionSound.stop();
         placementSound.stop();
@@ -317,6 +346,18 @@ public class SoundManager
         mailNotificationSound.stop();
         mailDockSound.stop();
         saveGameSound.stop();
+        stopEarthquakeSound();
+    }
+
+    public void playEarthquakeSound()
+    {
+        earthquakeSound.stop();
+        earthquakeSound.play();
+    }
+
+    public void stopEarthquakeSound()
+    {
+        earthquakeSound.stop();
     }
 
     public void playDefeatSound()

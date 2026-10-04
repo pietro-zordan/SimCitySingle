@@ -81,7 +81,14 @@ public class Earthquake extends Event{
 
         for (Cell cell: earthquakeCells)
         {
-            grid.removeConstruction(cell.getRow(), cell.getColumn());
+            if (cell != null)
+            {
+                grid.destroyArea(
+                        cell.getRow(),
+                        cell.getColumn(),
+                        0
+                );
+            }
         }
     }
 

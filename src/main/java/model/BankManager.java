@@ -48,6 +48,7 @@ public class BankManager
         return currentTick >= BANK_UNLOCK_TICK;
     }
 
+    // Controlla lo sblocco della banca, la presenza di una banca alimentata e l'attesa dall'ultimo prestito.
     public boolean canRequestLoan(int currentTick)
     {
         int passedTicks = currentTick - lastLoanTick;
@@ -55,6 +56,7 @@ public class BankManager
         return canPlaceBank(currentTick) && grid.getNumberOfPoweredBanks() > 0 && passedTicks >= LOAN_INTERVAL;
     }
 
+    // Accredita l'importo richiesto e registra il tick dal quale decorre il termine di restituzione.
     public boolean requestLoan(int amount, int currentTick)
     {
         if (!canRequestLoan(currentTick) || amount <= 0 || amount > getMaxLoanAmount())
@@ -72,6 +74,7 @@ public class BankManager
         return true;
     }
 
+    // Calcola il limite del prestito in base al numero di banche alimentate.
     public int getMaxLoanAmount()
     {
         return BASE_LOAN_AMOUNT * grid.getNumberOfPoweredBanks();

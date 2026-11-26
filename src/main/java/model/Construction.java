@@ -133,10 +133,15 @@ public abstract class Construction {
         return roadConnected;
     }
 
-    //verifica se una costruzione sta ricevendo l'energia da lei richiesta
+    // Considera alimentata una costruzione che non richiede energia o che è collegata a una centrale attiva.
     public boolean isPowered()
     {
-        return !requiresPower() || (connectedPowerPlant != null && connectedPowerPlant.isActive());
+        if (!requiresPower())
+        {
+            return true;
+        }
+
+        return connectedPowerPlant != null && connectedPowerPlant.isActive();
     }
 
     /* Restituisce il numero di posti di lavoro offerti.

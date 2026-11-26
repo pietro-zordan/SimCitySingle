@@ -115,7 +115,7 @@ public final class UfoEncounterView
         flightDelay.play();
     }
 
-    /** Individua gli edifici sulla diagonale, escludendo strade e celle vuote. */
+    // Individua gli edifici da illuminare lungo la diagonale, anche se la griglia è rettangolare.
     private void findDiagonalBuildings()
     {
         diagonalBuildings.clear();
@@ -130,7 +130,9 @@ public final class UfoEncounterView
                 double horizontalPosition = (double) column / (columns - 1);
                 Controller.CellState cell = controller.getCellState(row, column);
 
-                if (Math.abs(verticalPosition - horizontalPosition) <= 0.55 / Math.max(rows, columns) && !cell.empty()
+                double distanceFromDiagonal = Math.abs(verticalPosition - horizontalPosition);
+                double diagonalTolerance = 0.55 / Math.max(rows, columns);
+                if (distanceFromDiagonal <= diagonalTolerance && !cell.empty()
                         && cell.type() != ConstructionType.ROAD && cell.type() != ConstructionType.GRASS)
                 {
                     diagonalBuildings.add(new int[]{row, column});

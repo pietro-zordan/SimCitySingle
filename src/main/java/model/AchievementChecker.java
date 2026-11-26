@@ -94,6 +94,7 @@ public class AchievementChecker
         }
     }
 
+    // Sblocca l'obiettivo quando il sistema di difesa intercetta il missile dell'evento attivo.
     private void checkNotToday(Simulation simulation, EventType activeEventType)
     {
         if (activeEventType == EventType.MISSILE_ATTACK
@@ -103,6 +104,7 @@ public class AchievementChecker
         }
     }
 
+    // Segue la popolazione delle case durante la crisi energetica per valutare lo sblocco dell'obiettivo.
     private void checkPowerThrough(Grid grid, EventType activeEventType)
     {
         boolean energyCrisisActive = activeEventType == EventType.ENERGY_CRISIS;
@@ -151,6 +153,7 @@ public class AchievementChecker
         resetEnergyCrisisTracking();
     }
 
+    // Aggiunge le case presenti in griglia all'insieme di quelle monitorate durante la crisi.
     private void addCurrentResidentials(Grid grid)
     {
         for (Construction construction : grid.getConstructions())
@@ -175,6 +178,7 @@ public class AchievementChecker
         return false;
     }
 
+    // Elimina i dati della crisi appena valutata prima di iniziare a monitorarne un'altra.
     private void resetEnergyCrisisTracking()
     {
         energyCrisisTracked = false;

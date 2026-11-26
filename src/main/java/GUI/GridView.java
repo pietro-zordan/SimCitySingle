@@ -940,12 +940,15 @@ public final class GridView
         }
         for (EarthquakeGhost ghost : earthquakeGhosts)
         {
-            double fade = Math.max(0, Math.min(1, (progress - ghost.delay()) / ghost.duration()));
+            double fadeProgress = (progress - ghost.delay()) / ghost.duration();
+            double fade = Math.max(0, Math.min(1, fadeProgress));
             // Smoothstep evita uno scatto all'inizio e alla fine della dissolvenza.
-            ghost.image().setOpacity(1.0 - fade * fade * (3.0 - 2.0 * fade));
+            double smoothFade = fade * fade * (3.0 - 2.0 * fade);
+            ghost.image().setOpacity(1.0 - smoothFade);
         }
     }
 
+    // Rimuove le immagini temporanee e ripristina la posizione delle celle e lo stato del mouse.
     public void clearEarthquake()
     {
         for (StackPane cell : earthquakeCells)

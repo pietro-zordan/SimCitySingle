@@ -192,6 +192,7 @@ public final class MapViewport
         centerMap();
     }
 
+    // Applica lo zoom alla mappa espansa rispettando i limiti di ingrandimento.
     private void setZoom(double requestedZoom)
     {
         if (!expanded)
@@ -275,14 +276,15 @@ public final class MapViewport
         });
     }
 
+    // Sposta la visuale in orizzontale quando la mappa supera la larghezza dell'area visibile.
     private void panHorizontally(int direction)
     {
         scrollPane.layout();
         double overflow = mapHolder.getBoundsInLocal().getWidth() - scrollPane.getViewportBounds().getWidth();
         if (overflow > 0)
         {
-            scrollPane.setHvalue(Math.max(0, Math.min(1,
-                    scrollPane.getHvalue() + direction * KEYBOARD_PAN_PIXELS / overflow)));
+            double requestedPosition = scrollPane.getHvalue() + direction * KEYBOARD_PAN_PIXELS / overflow;
+            scrollPane.setHvalue(Math.max(0, Math.min(1, requestedPosition)));
         }
     }
 
@@ -298,14 +300,15 @@ public final class MapViewport
                 Math.max(VIEWPORT_HEIGHT, zoomPane.getLayoutBounds().getHeight() * scale));
     }
 
+    // Sposta la visuale in verticale quando la mappa supera l'altezza dell'area visibile.
     private void panVertically(int direction)
     {
         scrollPane.layout();
         double overflow = mapHolder.getBoundsInLocal().getHeight() - scrollPane.getViewportBounds().getHeight();
         if (overflow > 0)
         {
-            scrollPane.setVvalue(Math.max(0, Math.min(1,
-                    scrollPane.getVvalue() + direction * KEYBOARD_PAN_PIXELS / overflow)));
+            double requestedPosition = scrollPane.getVvalue() + direction * KEYBOARD_PAN_PIXELS / overflow;
+            scrollPane.setVvalue(Math.max(0, Math.min(1, requestedPosition)));
         }
     }
 

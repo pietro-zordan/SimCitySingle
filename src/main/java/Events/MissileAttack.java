@@ -37,6 +37,7 @@ public class MissileAttack extends Event
     {
     }
 
+    // Sceglie il bersaglio e applica i danni solo se la difesa non intercetta il missile.
     @Override
     public void start()
     {
@@ -67,6 +68,7 @@ public class MissileAttack extends Event
         return targetColumn;
     }
 
+    // Indica se la difesa ha assorbito il missile lanciato da questo evento.
     public boolean isIntercepted()
     {
         return intercepted;

@@ -115,6 +115,7 @@ public final class MissileDefenseView
         );
     }
 
+    // Mostra il prezzo d'acquisto o le opzioni di riparazione in base allo stato della difesa.
     private void showMissileDefensePanel()
     {
         if (!controller.isMissileDefensePurchased())
@@ -142,23 +143,24 @@ public final class MissileDefenseView
         {
             int hits = controller.getMissileDefenseHitsRemaining();
 
-            missileDefenseInfoLabel.setText(
-                    "Missile Defense: "
-                            + hits
-                            + "/3 impacts remaining."
-                            + (hits == 0
-                            ? "\nThe shield is offline until repaired."
-                            : "")
-                            + (hits < 3
-                            ? "\nRepair +1 impact for "
-                            + controller
-                            .getMissileDefenseRepairCost()
-                            + " € or restore to 3 for "
-                            + controller
-                            .getMissileDefenseFullRepairCost()
-                            + " € (no discount)."
-                            : "\nThe shield is fully repaired.")
-            );
+            String shieldStatus = "Missile Defense: " + hits + "/3 impacts remaining.";
+            if (hits == 0)
+            {
+                shieldStatus += "\nThe shield is offline until repaired.";
+            }
+
+            if (hits < 3)
+            {
+                shieldStatus += "\nRepair +1 impact for " + controller.getMissileDefenseRepairCost()
+                        + " € or restore to 3 for " + controller.getMissileDefenseFullRepairCost()
+                        + " € (no discount).";
+            }
+            else
+            {
+                shieldStatus += "\nThe shield is fully repaired.";
+            }
+
+            missileDefenseInfoLabel.setText(shieldStatus);
 
             confirmMissileDefenseButton.setText(hits < 3 ? "Repair +1" : "Fully repaired");
 
@@ -173,6 +175,7 @@ public final class MissileDefenseView
         missileDefenseBox.setVisible(true);
     }
 
+    // Esegue l'acquisto o la riparazione di un punto quando il giocatore conferma.
     private void applyMissileDefenseAction()
     {
         if (!controller.isMissileDefensePurchased())

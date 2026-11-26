@@ -312,7 +312,8 @@ public class Grid
         {
             for (int column = centerColumn - radius; column <= centerColumn + radius; column++)
             {
-                if (isInside(row, column) && (row != centerRow || column != centerColumn))
+                boolean isCenter = row == centerRow && column == centerColumn;
+                if (isInside(row, column) && !isCenter)
                 {
                     Cell cell = getCell(row, column);
 

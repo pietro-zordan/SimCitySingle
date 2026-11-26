@@ -30,17 +30,19 @@ public class Earthquake extends Event{
         return EventType.EARTHQUAKE;
     }
 
-    // La GUI usa la stessa linea scelta dal modello, senza estrarre nuove coordinate.
+    // Indica se il terremoto colpisce una riga o una colonna.
     public String getDirection()
     {
         return direction;
     }
 
+    // Restituisce l'indice della riga o colonna colpita, usato per disegnare la scossa.
     public int getAffectedLineIndex()
     {
         return affectedLineIndex;
     }
 
+    // Estrae e memorizza l'orientamento della scossa.
     public String getRandomDirection()
     {
 
@@ -51,47 +53,54 @@ public class Earthquake extends Event{
         return direction;
     }
 
+    // Estrae una cella che determina quale riga o colonna verrà colpita.
     public Cell getStartCell(Grid grid)
     {
-        int randX = random.nextInt(grid.getNumberOfRows());
-        int randY = random.nextInt(grid.getNumberOfColumns());
+        int row = random.nextInt(grid.getNumberOfRows());
+        int column = random.nextInt(grid.getNumberOfColumns());
 
-        return grid.getCell(randX, randY);
+        return grid.getCell(row, column);
 
     }
 
 
+    // Raccoglie le celle lungo la riga o colonna scelta e ne memorizza l'indice.
     public Cell[] getEarthquakeCells(Grid grid)
     {
-        Cell[] EarthquakeCells;
+        Cell[] affectedCells;
+        Cell startCell = getStartCell(grid);
 
-        Cell startCell= getStartCell(grid);
-
-        if("vertical".equals(direction))
+        if ("vertical".equals(direction))
         {
-            EarthquakeCells = new Cell[grid.getNumberOfRows()];
+            affectedCells = new Cell[grid.getNumberOfRows()];
             affectedLineIndex = startCell.getColumn();
 
-            for(int i = 0; i < grid.getNumberOfRows(); i++) {
-                if (grid.isInside(i, startCell.getColumn()))
-                    EarthquakeCells[i] = grid.getCell(i, startCell.getColumn());
+            for (int row = 0; row < grid.getNumberOfRows(); row++)
+            {
+                if (grid.isInside(row, startCell.getColumn()))
+                {
+                    affectedCells[row] = grid.getCell(row, startCell.getColumn());
+                }
             }
         }
-
-        else {
-            EarthquakeCells = new Cell[grid.getNumberOfColumns()];
+        else
+        {
+            affectedCells = new Cell[grid.getNumberOfColumns()];
             affectedLineIndex = startCell.getRow();
 
-            for (int j = 0; j <grid.getNumberOfColumns(); j++)
+            for (int column = 0; column < grid.getNumberOfColumns(); column++)
             {
-                if (grid.isInside(startCell.getRow(), j))
-                    EarthquakeCells[j] = grid.getCell(startCell.getRow(), j);
+                if (grid.isInside(startCell.getRow(), column))
+                {
+                    affectedCells[column] = grid.getCell(startCell.getRow(), column);
+                }
             }
         }
 
-        return EarthquakeCells;
+        return affectedCells;
     }
 
+    // Distrugge le costruzioni lungo la linea colpita, lasciando alla griglia gli eventuali effetti a catena.
     public void getDestruction()
     {
         Cell[] earthquakeCells = getEarthquakeCells(grid);
@@ -112,6 +121,7 @@ public class Earthquake extends Event{
         city.refreshStatistics();
     }
 
+    // Applica alla città la perdita di felicità dovuta al terremoto.
     public void getHappinessImpact()
     {
         city.decreaseGlobalHappiness(HAPPINESS_DECREASE_AMOUNT);

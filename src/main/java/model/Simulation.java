@@ -300,11 +300,14 @@ public class Simulation{
         return missileDefense.getHitsRemaining();
     }
 
+    // Calcola il prezzo della difesa dopo aver applicato lo sconto delle basi militari.
     public int getMissileDefensePurchaseCost()
     {
-        return MissileDefense.PURCHASE_COST * (100 - getMissileDefensePurchaseDiscountPercentage()) / 100;
+        int payablePercentage = 100 - getMissileDefensePurchaseDiscountPercentage();
+        return MissileDefense.PURCHASE_COST * payablePercentage / 100;
     }
 
+    // Somma 5 punti percentuali di sconto per base militare, fino a sei basi.
     public int getMissileDefensePurchaseDiscountPercentage()
     {
         return Math.min(grid.getNumberOfMilitaryBases(), 6) * 5;
@@ -315,9 +318,11 @@ public class Simulation{
         return MissileDefense.REPAIR_COST;
     }
 
+    // Moltiplica i punti di resistenza mancanti per il costo di una riparazione singola.
     public int getMissileDefenseFullRepairCost()
     {
-        return (MissileDefense.MAX_HITS - missileDefense.getHitsRemaining()) * MissileDefense.REPAIR_COST;
+        int missingHits = MissileDefense.MAX_HITS - missileDefense.getHitsRemaining();
+        return missingHits * MissileDefense.REPAIR_COST;
     }
 
     public void restoreMissileDefenseState(boolean purchased, int hitsRemaining)
@@ -423,6 +428,7 @@ public class Simulation{
         return criminalActivityCreated;
     }
 
+    // Raccoglie gli edifici che richiedono energia e che risultano alimentati prima del tick.
     private List<Construction> getPoweredConstructions()
     {
         List<Construction> poweredConstructions = new ArrayList<>();
@@ -438,6 +444,7 @@ public class Simulation{
         return poweredConstructions;
     }
 
+    // Verifica se un edificio ancora presente ha perso l'alimentazione durante il tick.
     private boolean hasNewBlackout(List<Construction> poweredBeforeTick)
     {
         Set<Construction> currentConstructions = new HashSet<>(grid.getConstructions());
@@ -459,18 +466,21 @@ public class Simulation{
         return blackoutOccurredThisTick;
     }
 
+    // Registra una demolizione al tick corrente, occupando uno dei posti disponibili.
     public void registerRemoval()
     {
         expireDemolitions();
         demolitionTicks.addLast(currentTick);
     }
 
+    // Restituisce una copia dei tick delle demolizioni che occupano ancora un posto.
     public List<Integer> getDemolitionTicks()
     {
         expireDemolitions();
         return new ArrayList<>(demolitionTicks);
     }
 
+    // Ripristina i tick di demolizione in ordine cronologico e scarta quelli ormai scaduti.
     public void restoreRemovalState(List<Integer> savedTicks)
     {
         if (savedTicks == null)
@@ -493,6 +503,7 @@ public class Simulation{
         expireDemolitions();
     }
 
+    // Libera un posto per ogni demolizione il cui periodo di attesa è terminato.
     private void expireDemolitions()
     {
         while (!demolitionTicks.isEmpty() && currentTick - demolitionTicks.peekFirst() >= CC_INTERVAL)
@@ -714,10 +725,12 @@ public class Simulation{
         return false;
     }
 
+    // Calcola quante demolizioni si possono ancora fare con le imprese edili alimentate.
     public int getAvailableRemovals()
     {
         expireDemolitions();
-        return Math.max(0, grid.getNumberOfPoweredCC() - demolitionTicks.size());
+        int freeSlots = grid.getNumberOfPoweredCC() - demolitionTicks.size();
+        return Math.max(0, freeSlots);
     }
 
     public boolean canRemoveConstruction()

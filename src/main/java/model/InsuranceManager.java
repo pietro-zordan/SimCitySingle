@@ -229,6 +229,7 @@ public class InsuranceManager
         return true;
     }
 
+    // Accoda gli edifici assicurati da ricostruire e riserva le celle della zona colpita.
     public void registerTsunamiDamage(List<ReconstructionEntry> destroyedBuildings, String direction)
     {
         if (!tsunamiInsuranceActive || destroyedBuildings == null)
@@ -256,6 +257,7 @@ public class InsuranceManager
         }
     }
 
+    // Avvia la ricostruzione se ci sono edifici in coda e azzera gli esiti del tick precedente.
     public void startTsunamiReconstruction()
     {
         reconstructionRestoredThisTick = false;
@@ -396,6 +398,7 @@ public class InsuranceManager
         reconstructionActive = true;
     }
 
+    // Chiude la ricostruzione e rende di nuovo utilizzabili le celle riservate.
     private void finishReconstruction()
     {
         reconstructionActive = false;
@@ -403,6 +406,7 @@ public class InsuranceManager
         grid.releaseAllReconstructionReservations();
     }
 
+    // Riserva le righe o le colonne colpite in base al lato da cui è arrivato lo tsunami.
     private void reserveTsunamiArea(String direction)
     {
         int depth = Tsunami.ADVANCEMENT_LENGTH;

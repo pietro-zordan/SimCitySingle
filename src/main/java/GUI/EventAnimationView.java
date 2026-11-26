@@ -331,6 +331,7 @@ public final class EventAnimationView
         return renderedBounds.getWidth() / gridView.getGridVisualWidth();
     }
 
+    // Converte il rettangolo visibile della griglia nelle coordinate del pannello delle animazioni.
     private Bounds getRenderedGridBoundsInOverlay()
     {
         if (missileOverlayHost == null || missileOverlayHost.getScene() == null
@@ -344,17 +345,21 @@ public final class EventAnimationView
         return missileOverlayHost.sceneToLocal(sceneBounds);
     }
 
+    // Calcola il centro della griglia per allineare il missile e lo scudo.
     private Point2D getRenderedGridCenterInOverlay()
     {
         Bounds bounds = getRenderedGridBoundsInOverlay();
 
         if (bounds == null)
         {
-            return new Point2D(missileOverlayHost == null ? 0.0 : missileOverlayHost.getWidth() / 2.0,
-                    missileOverlayHost == null ? 0.0 : missileOverlayHost.getHeight() / 2.0);
+            double centerX = missileOverlayHost == null ? 0.0 : missileOverlayHost.getWidth() / 2.0;
+            double centerY = missileOverlayHost == null ? 0.0 : missileOverlayHost.getHeight() / 2.0;
+            return new Point2D(centerX, centerY);
         }
 
-        return new Point2D((bounds.getMinX() + bounds.getMaxX()) / 2.0, (bounds.getMinY() + bounds.getMaxY()) / 2.0);
+        double centerX = (bounds.getMinX() + bounds.getMaxX()) / 2.0;
+        double centerY = (bounds.getMinY() + bounds.getMaxY()) / 2.0;
+        return new Point2D(centerX, centerY);
     }
 
     private void positionMissileOverlayNodes()
@@ -402,10 +407,12 @@ public final class EventAnimationView
         outline.getElements().add(new ClosePath());
     }
 
+    // Valuta la posizione di un punto rispetto allo scudo: il valore 1 corrisponde al bordo.
     private double shieldEquation(double x, double y, double radiusX, double radiusY)
     {
-        return Math.pow(Math.abs(x / radiusX), MISSILE_SHIELD_ROUNDNESS) + Math.pow(Math.abs(y / radiusY),
-                MISSILE_SHIELD_ROUNDNESS);
+        double horizontalTerm = Math.pow(Math.abs(x / radiusX), MISSILE_SHIELD_ROUNDNESS);
+        double verticalTerm = Math.pow(Math.abs(y / radiusY), MISSILE_SHIELD_ROUNDNESS);
+        return horizontalTerm + verticalTerm;
     }
 
     private void updateMissileShieldGeometry()

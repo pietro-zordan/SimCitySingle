@@ -74,6 +74,7 @@ public class Tsunami extends Event{
         }
     }
 
+    // Salva edificio e coordinate per la ricostruzione prima di togliere l'edificio dalla griglia.
     private void destroyBuildingIfNeeded(Grid targetGrid, int row, int column)
     {
         Cell cell = targetGrid.getCell(row, column);
@@ -88,6 +89,7 @@ public class Tsunami extends Event{
         }
     }
 
+    // Restituisce una copia dell'elenco dei danni da passare al gestore dell'assicurazione.
     public List<ReconstructionEntry> getDestroyedBuildings()
     {
         return new ArrayList<>(destroyedBuildings);

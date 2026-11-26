@@ -66,6 +66,7 @@ public class MissileDefense
         return true;
     }
 
+    // Ripristina tutti i punti di resistenza se la difesa è stata acquistata ed è danneggiata.
     public boolean repairAllHits()
     {
         if (!purchased || hitsRemaining >= MAX_HITS)
@@ -77,6 +78,7 @@ public class MissileDefense
         return true;
     }
 
+    // Carica lo stato della difesa e limita i punti di resistenza all'intervallo ammesso.
     public void restoreState(boolean purchased, int hitsRemaining)
     {
         this.purchased = purchased;
@@ -87,6 +89,7 @@ public class MissileDefense
             return;
         }
 
-        this.hitsRemaining = Math.max(0, Math.min(MAX_HITS, hitsRemaining));
+        int cappedHits = Math.min(MAX_HITS, hitsRemaining);
+        this.hitsRemaining = Math.max(0, cappedHits);
     }
 }

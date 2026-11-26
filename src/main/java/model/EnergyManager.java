@@ -38,7 +38,8 @@ public class EnergyManager {
 
         for (int row = plantRow - 3; row <= plantRow + 3; row++) {
             for (int column = plantColumn - 3; column <= plantColumn + 3; column++) {
-                if (grid.isInside(row, column) && (row != plantRow || column != plantColumn)) {
+                boolean isPlantCell = row == plantRow && column == plantColumn;
+                if (grid.isInside(row, column) && !isPlantCell) {
                     cellsInRange[numberOfNearbyCells] = grid.getCell(row, column);
                     numberOfNearbyCells++;
                 }

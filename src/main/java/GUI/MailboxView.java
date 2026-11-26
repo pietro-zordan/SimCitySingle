@@ -255,8 +255,9 @@ public final class MailboxView
         final String id = message.getId();
         boolean expanded = id.equals(expandedId);
 
-        Button preview = new Button((message.isRead() ? "" : "●  ")
-                + message.getSender() + "\n" + message.getSubject());
+        String unreadMarker = message.isRead() ? "" : "●  ";
+        String previewText = unreadMarker + message.getSender() + "\n" + message.getSubject();
+        Button preview = new Button(previewText);
         preview.setWrapText(true);
         preview.setMaxWidth(Double.MAX_VALUE);
         preview.setStyle(

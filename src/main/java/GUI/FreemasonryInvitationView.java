@@ -167,10 +167,16 @@ public final class FreemasonryInvitationView
         view.getChildren().addAll(parchment, upperRoll, lowerRoll);
     }
 
+    // Carica il carattere della lettera e usa Georgia se il file manca o il caricamento fallisce.
     private String loadInkFontFamily()
     {
         URL fontFile = getClass().getResource("/fonts/Fondamento-Regular.ttf");
-        Font font = fontFile == null ? null : Font.loadFont(fontFile.toExternalForm(), 25);
+        if (fontFile == null)
+        {
+            return "Georgia";
+        }
+
+        Font font = Font.loadFont(fontFile.toExternalForm(), 25);
         return font == null ? "Georgia" : font.getFamily();
     }
 

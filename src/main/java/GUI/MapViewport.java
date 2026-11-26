@@ -52,10 +52,7 @@ public final class MapViewport
     private double zoom = 1.0;
     private Timeline zoomAnimation;
 
-    public MapViewport(Node mapContent,
-            double initialGridWidth,
-            double initialGridHeight,
-            boolean expanded)
+    public MapViewport(Node mapContent, double initialGridWidth, double initialGridHeight, boolean expanded)
     {
         if (mapContent == null)
         {
@@ -67,8 +64,7 @@ public final class MapViewport
         zoomGroup = new Group(zoomPane);
         mapHolder = new StackPane(zoomGroup);
         mapHolder.setAlignment(Pos.CENTER);
-        mapHolder.setMinSize(
-                expanded ? VIEWPORT_WIDTH : initialGridWidth,
+        mapHolder.setMinSize(expanded ? VIEWPORT_WIDTH : initialGridWidth,
                 expanded ? VIEWPORT_HEIGHT : initialGridHeight);
 
         scrollPane = new ScrollPane(mapHolder);
@@ -84,12 +80,9 @@ public final class MapViewport
                         + "-fx-faint-focus-color: transparent;"
                         + "-fx-padding: 0;"
         );
-        scrollPane.setPrefViewportWidth(
-                expanded ? VIEWPORT_WIDTH : initialGridWidth);
-        scrollPane.setPrefViewportHeight(
-                expanded ? VIEWPORT_HEIGHT : initialGridHeight);
-        scrollPane.setMaxSize(
-                expanded ? VIEWPORT_WIDTH + 18 : initialGridWidth,
+        scrollPane.setPrefViewportWidth(expanded ? VIEWPORT_WIDTH : initialGridWidth);
+        scrollPane.setPrefViewportHeight(expanded ? VIEWPORT_HEIGHT : initialGridHeight);
+        scrollPane.setMaxSize(expanded ? VIEWPORT_WIDTH + 18 : initialGridWidth,
                 expanded ? VIEWPORT_HEIGHT + 18 : initialGridHeight);
         scrollPane.setPannable(true);
         scrollPane.setFitToWidth(false);
@@ -102,9 +95,7 @@ public final class MapViewport
         zoomPane.scaleXProperty().addListener(new ChangeListener<Number>()
         {
             @Override
-            public void changed(ObservableValue<? extends Number> value,
-                    Number oldScale,
-                    Number newScale)
+            public void changed(ObservableValue<? extends Number> value, Number oldScale, Number newScale)
             {
                 updateMapHolderSize();
             }
@@ -125,18 +116,11 @@ public final class MapViewport
         // città; l'overlay rimane fuori dal layout e non allarga il viewport.
         overlayClip.setX(-MISSILE_OVERLAY_RUNWAY);
         overlayClip.setY(-MISSILE_OVERLAY_RUNWAY);
-        overlayClip.widthProperty().bind(
-                eventOverlay.widthProperty().add(2 * MISSILE_OVERLAY_RUNWAY)
-        );
-        overlayClip.heightProperty().bind(
-                eventOverlay.heightProperty().add(2 * MISSILE_OVERLAY_RUNWAY)
-        );
+        overlayClip.widthProperty().bind(eventOverlay.widthProperty().add(2 * MISSILE_OVERLAY_RUNWAY));
+        overlayClip.heightProperty().bind(eventOverlay.heightProperty().add(2 * MISSILE_OVERLAY_RUNWAY));
         eventOverlay.setClip(overlayClip);
 
-        viewportLayer = new StackPane(
-                scrollPane,
-                eventOverlay
-        );
+        viewportLayer = new StackPane(scrollPane, eventOverlay);
         viewportLayer.setAlignment(Pos.CENTER);
 
         Button zoomOutButton = new Button("-");
@@ -241,8 +225,7 @@ public final class MapViewport
             public void handle(KeyEvent event)
             {
                 if (!expanded || event.getTarget() instanceof TextInputControl
-                        || event.isAltDown() || event.isControlDown()
-                        || event.isMetaDown())
+                        || event.isAltDown() || event.isControlDown() || event.isMetaDown())
                 {
                     return;
                 }
@@ -268,8 +251,7 @@ public final class MapViewport
             public void handle(KeyEvent event)
             {
                 if (!expanded || event.getTarget() instanceof TextInputControl
-                        || event.isAltDown() || event.isControlDown()
-                        || event.isMetaDown())
+                        || event.isAltDown() || event.isControlDown() || event.isMetaDown())
                 {
                     return;
                 }
@@ -296,13 +278,11 @@ public final class MapViewport
     private void panHorizontally(int direction)
     {
         scrollPane.layout();
-        double overflow = mapHolder.getBoundsInLocal().getWidth()
-                - scrollPane.getViewportBounds().getWidth();
+        double overflow = mapHolder.getBoundsInLocal().getWidth() - scrollPane.getViewportBounds().getWidth();
         if (overflow > 0)
         {
             scrollPane.setHvalue(Math.max(0, Math.min(1,
-                    scrollPane.getHvalue()
-                            + direction * KEYBOARD_PAN_PIXELS / overflow)));
+                    scrollPane.getHvalue() + direction * KEYBOARD_PAN_PIXELS / overflow)));
         }
     }
 
@@ -314,23 +294,18 @@ public final class MapViewport
         }
 
         double scale = zoomPane.getScaleX();
-        mapHolder.setPrefSize(
-                Math.max(VIEWPORT_WIDTH,
-                        zoomPane.getLayoutBounds().getWidth() * scale),
-                Math.max(VIEWPORT_HEIGHT,
-                        zoomPane.getLayoutBounds().getHeight() * scale));
+        mapHolder.setPrefSize(Math.max(VIEWPORT_WIDTH, zoomPane.getLayoutBounds().getWidth() * scale),
+                Math.max(VIEWPORT_HEIGHT, zoomPane.getLayoutBounds().getHeight() * scale));
     }
 
     private void panVertically(int direction)
     {
         scrollPane.layout();
-        double overflow = mapHolder.getBoundsInLocal().getHeight()
-                - scrollPane.getViewportBounds().getHeight();
+        double overflow = mapHolder.getBoundsInLocal().getHeight() - scrollPane.getViewportBounds().getHeight();
         if (overflow > 0)
         {
             scrollPane.setVvalue(Math.max(0, Math.min(1,
-                    scrollPane.getVvalue()
-                            + direction * KEYBOARD_PAN_PIXELS / overflow)));
+                    scrollPane.getVvalue() + direction * KEYBOARD_PAN_PIXELS / overflow)));
         }
     }
 
@@ -374,10 +349,8 @@ public final class MapViewport
             return;
         }
 
-        double fitZoom = Math.min(
-                (viewportWidth - FIT_MARGIN) / contentWidth,
-                (viewportHeight - FIT_MARGIN) / contentHeight
-        );
+        double fitZoom = Math.min((viewportWidth - FIT_MARGIN) / contentWidth,
+                (viewportHeight - FIT_MARGIN) / contentHeight);
         fitZoom = Math.max(MIN_ZOOM, Math.min(1.0, fitZoom));
 
         if (zoomAnimation != null)
@@ -386,15 +359,11 @@ public final class MapViewport
         }
 
         final double targetZoom = fitZoom;
-        zoomAnimation = new Timeline(
-                new KeyFrame(
-                        Duration.millis(EXPANSION_ANIMATION_DURATION),
-                        new KeyValue(zoomPane.scaleXProperty(), targetZoom, Interpolator.EASE_BOTH),
-                        new KeyValue(zoomPane.scaleYProperty(), targetZoom, Interpolator.EASE_BOTH),
-                        new KeyValue(scrollPane.hvalueProperty(), 0.5, Interpolator.EASE_BOTH),
-                        new KeyValue(scrollPane.vvalueProperty(), 0.5, Interpolator.EASE_BOTH)
-                )
-        );
+        zoomAnimation = new Timeline(new KeyFrame(Duration.millis(EXPANSION_ANIMATION_DURATION),
+                new KeyValue(zoomPane.scaleXProperty(), targetZoom, Interpolator.EASE_BOTH),
+                new KeyValue(zoomPane.scaleYProperty(), targetZoom, Interpolator.EASE_BOTH),
+                new KeyValue(scrollPane.hvalueProperty(), 0.5, Interpolator.EASE_BOTH),
+                new KeyValue(scrollPane.vvalueProperty(), 0.5, Interpolator.EASE_BOTH)));
 
         zoomAnimation.setOnFinished(new EventHandler<ActionEvent>()
         {

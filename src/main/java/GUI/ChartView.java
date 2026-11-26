@@ -21,12 +21,10 @@ public final class ChartView
 
     private final Controller controller;
     private final StackPane view = new StackPane();
-    private final Button switchButton =
-            new Button("➞Next Graph➞");
+    private final Button switchButton = new Button("➞Next Graph➞");
 
     // Contiene i sei grafici mostrati a rotazione.
-    private final List<LineChart<Number, Number>> charts =
-            new ArrayList<>();
+    private final List<LineChart<Number, Number>> charts = new ArrayList<>();
 
     // Serie contenenti i valori registrati a ogni tick.
     private final XYChart.Series<Number, Number>
@@ -49,9 +47,7 @@ public final class ChartView
     {
         if (controller == null)
         {
-            throw new IllegalArgumentException(
-                    "controller.Controller cannot be null"
-            );
+            throw new IllegalArgumentException("controller.Controller cannot be null");
         }
 
         this.controller = controller;
@@ -79,9 +75,7 @@ public final class ChartView
     }
 
     // Crea un grafico e lo aggiunge alla vista.
-    private void createChart(
-            String statisticName,
-            XYChart.Series<Number, Number> series)
+    private void createChart(String statisticName, XYChart.Series<Number, Number> series)
     {
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Tick");
@@ -89,8 +83,7 @@ public final class ChartView
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel(statisticName);
 
-        LineChart<Number, Number> chart =
-                new LineChart<>(xAxis, yAxis);
+        LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
 
         chart.setTitle(statisticName + " Graph");
         chart.setLegendVisible(false);
@@ -117,18 +110,13 @@ public final class ChartView
         record(energyConsumptionSeries, tick, controller.getEnergyConsumed());
     }
 
-    private void record(
-            XYChart.Series<Number, Number> series,
-            int tick,
-            int value)
+    private void record(XYChart.Series<Number, Number> series, int tick, int value)
     {
-        ObservableList<XYChart.Data<Number, Number>> points =
-                series.getData();
+        ObservableList<XYChart.Data<Number, Number>> points = series.getData();
 
         if (!points.isEmpty())
         {
-            XYChart.Data<Number, Number> latest =
-                    points.get(points.size() - 1);
+            XYChart.Data<Number, Number> latest = points.get(points.size() - 1);
 
             if (latest.getXValue().intValue() == tick)
             {
@@ -151,8 +139,7 @@ public final class ChartView
     // Passa al grafico successivo tornando al primo dopo l'ultimo.
     private void showNextChart()
     {
-        currentChartIndex =
-                (currentChartIndex + 1) % charts.size();
+        currentChartIndex = (currentChartIndex + 1) % charts.size();
 
         showOnlyCurrentChart();
         switchButton.setText("➞Next Graph➞");
@@ -161,12 +148,9 @@ public final class ChartView
     // Mostra solamente il grafico corrispondente all'indice corrente.
     private void showOnlyCurrentChart()
     {
-        for (int index = 0;
-             index < charts.size();
-             index++)
+        for (int index = 0; index < charts.size(); index++)
         {
-            boolean current =
-                    index == currentChartIndex;
+            boolean current = index == currentChartIndex;
 
             charts.get(index).setVisible(current);
             charts.get(index).setManaged(current);

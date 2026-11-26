@@ -32,8 +32,7 @@ public class InsuranceManager
     private final Grid grid;
 
     private final ArrayDeque<ReconstructionEntry>
-            reconstructionQueue =
-            new ArrayDeque<>();
+            reconstructionQueue = new ArrayDeque<>();
 
     private boolean tsunamiInsuranceActive;
     private boolean reconstructionActive;
@@ -41,36 +40,26 @@ public class InsuranceManager
     private boolean reconstructionCompletedThisTick;
     private String reconstructionDirection;
 
-    public InsuranceManager(
-            City city,
-            Grid grid)
+    public InsuranceManager(City city, Grid grid)
     {
         this(city, grid, false);
     }
 
-    public InsuranceManager(
-            City city,
-            Grid grid,
-            boolean tsunamiInsuranceActive)
+    public InsuranceManager(City city, Grid grid, boolean tsunamiInsuranceActive)
     {
         if (city == null)
         {
-            throw new IllegalArgumentException(
-                    "The city cannot be null"
-            );
+            throw new IllegalArgumentException("The city cannot be null");
         }
 
         if (grid == null)
         {
-            throw new IllegalArgumentException(
-                    "The grid cannot be null"
-            );
+            throw new IllegalArgumentException("The grid cannot be null");
         }
 
         this.city = city;
         this.grid = grid;
-        this.tsunamiInsuranceActive =
-                tsunamiInsuranceActive;
+        this.tsunamiInsuranceActive = tsunamiInsuranceActive;
     }
 
     public boolean hasBanks()
@@ -85,8 +74,7 @@ public class InsuranceManager
      */
     public boolean canBuyTsunamiInsurance()
     {
-        return hasBanks()
-                && getTsunamiInsuranceBuildingCount() > 0;
+        return hasBanks() && getTsunamiInsuranceBuildingCount() > 0;
     }
 
     public boolean isTsunamiInsuranceActive()
@@ -102,37 +90,20 @@ public class InsuranceManager
     {
         int baseCost = 0;
 
-        for (int row = 0;
-             row < grid.getNumberOfRows();
-             row++)
+        for (int row = 0; row < grid.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < grid.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < grid.getNumberOfColumns(); column++)
             {
-                Construction construction =
-                        grid.getCell(
-                                row,
-                                column
-                        ).getConstruction();
+                Construction construction = grid.getCell(row, column).getConstruction();
 
-                if (needsTsunamiCoverage(
-                        construction,
-                        row,
-                        column))
+                if (needsTsunamiCoverage(construction, row, column))
                 {
-                    baseCost +=
-                            getBuildingInsuranceCost(
-                                    construction.getType()
-                            );
+                    baseCost += getBuildingInsuranceCost(construction.getType());
                 }
             }
         }
 
-        return applyBankDiscount(
-                baseCost,
-                grid.getNumberOfBanks()
-        );
+        return applyBankDiscount(baseCost, grid.getNumberOfBanks());
     }
 
     /*
@@ -143,24 +114,13 @@ public class InsuranceManager
     {
         int count = 0;
 
-        for (int row = 0;
-             row < grid.getNumberOfRows();
-             row++)
+        for (int row = 0; row < grid.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < grid.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < grid.getNumberOfColumns(); column++)
             {
-                Construction construction =
-                        grid.getCell(
-                                row,
-                                column
-                        ).getConstruction();
+                Construction construction = grid.getCell(row, column).getConstruction();
 
-                if (needsTsunamiCoverage(
-                        construction,
-                        row,
-                        column))
+                if (needsTsunamiCoverage(construction, row, column))
                 {
                     count++;
                 }
@@ -172,10 +132,7 @@ public class InsuranceManager
 
     public int getBankDiscountPercentage()
     {
-        return Math.min(
-                grid.getNumberOfBanks() * 5,
-                (int) (MAX_BANK_DISCOUNT * 100)
-        );
+        return Math.min(grid.getNumberOfBanks() * 5, (int) (MAX_BANK_DISCOUNT * 100));
     }
 
     // Restituisce quante centrali nucleari non hanno ancora la protezione avanzata contro gli incendi.
@@ -272,31 +229,20 @@ public class InsuranceManager
         return true;
     }
 
-    public void registerTsunamiDamage(
-            List<ReconstructionEntry> destroyedBuildings,
-            String direction)
+    public void registerTsunamiDamage(List<ReconstructionEntry> destroyedBuildings, String direction)
     {
-        if (!tsunamiInsuranceActive
-                || destroyedBuildings == null)
+        if (!tsunamiInsuranceActive || destroyedBuildings == null)
         {
             return;
         }
 
         boolean hasCoveredDamage = false;
 
-        for (ReconstructionEntry entry
-                : destroyedBuildings)
+        for (ReconstructionEntry entry : destroyedBuildings)
         {
-            if (entry != null
-                    && entry.construction()
-                            .isTsunamiInsured()
-                    && isInsurable(
-                            entry.construction().getType()
-                    ))
+            if (entry != null && entry.construction().isTsunamiInsured() && isInsurable(entry.construction().getType()))
             {
-                reconstructionQueue.addLast(
-                        entry
-                );
+                reconstructionQueue.addLast(entry);
 
                 hasCoveredDamage = true;
             }
@@ -304,12 +250,9 @@ public class InsuranceManager
 
         if (hasCoveredDamage)
         {
-            reconstructionDirection =
-                    direction;
+            reconstructionDirection = direction;
 
-            reserveTsunamiArea(
-                    direction
-            );
+            reserveTsunamiArea(direction);
         }
     }
 
@@ -318,8 +261,7 @@ public class InsuranceManager
         reconstructionRestoredThisTick = false;
         reconstructionCompletedThisTick = false;
 
-        reconstructionActive =
-                !reconstructionQueue.isEmpty();
+        reconstructionActive = !reconstructionQueue.isEmpty();
     }
 
     /*
@@ -336,8 +278,7 @@ public class InsuranceManager
             return;
         }
 
-        ReconstructionEntry entry =
-                reconstructionQueue.pollFirst();
+        ReconstructionEntry entry = reconstructionQueue.pollFirst();
 
         if (entry == null)
         {
@@ -346,19 +287,11 @@ public class InsuranceManager
             return;
         }
 
-        Cell cell =
-                grid.getCell(
-                        entry.row(),
-                        entry.column()
-                );
+        Cell cell = grid.getCell(entry.row(), entry.column());
 
         if (cell.isEmpty())
         {
-            grid.restoreConstruction(
-                    entry.construction(),
-                    entry.row(),
-                    entry.column()
-            );
+            grid.restoreConstruction(entry.construction(), entry.row(), entry.column());
 
             grid.rebuildConnectionsAfterLoad();
             city.refreshStatistics();
@@ -374,47 +307,24 @@ public class InsuranceManager
 
     private void insureCurrentlyUncoveredBuildings()
     {
-        for (int row = 0;
-             row < grid.getNumberOfRows();
-             row++)
+        for (int row = 0; row < grid.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < grid.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < grid.getNumberOfColumns(); column++)
             {
-                Construction construction =
-                        grid.getCell(
-                                row,
-                                column
-                        ).getConstruction();
+                Construction construction = grid.getCell(row, column).getConstruction();
 
-                if (needsTsunamiCoverage(
-                        construction,
-                        row,
-                        column))
+                if (needsTsunamiCoverage(construction, row, column))
                 {
-                    construction.setTsunamiInsured(
-                            true
-                    );
+                    construction.setTsunamiInsured(true);
                 }
             }
         }
     }
 
-    private boolean needsTsunamiCoverage(
-            Construction construction,
-            int row,
-            int column)
+    private boolean needsTsunamiCoverage(Construction construction, int row, int column)
     {
-        return construction != null
-                && !construction.isTsunamiInsured()
-                && isAtTsunamiRisk(
-                        row,
-                        column
-                )
-                && isInsurable(
-                        construction.getType()
-                );
+        return construction != null && !construction.isTsunamiInsured()
+                && isAtTsunamiRisk(row, column) && isInsurable(construction.getType());
     }
 
     public boolean wasReconstructionRestoredThisTick()
@@ -429,9 +339,7 @@ public class InsuranceManager
 
     public List<ReconstructionEntry> getPendingReconstructions()
     {
-        return new ArrayList<>(
-                reconstructionQueue
-        );
+        return new ArrayList<>(reconstructionQueue);
     }
 
     public String getReconstructionDirection()
@@ -443,9 +351,7 @@ public class InsuranceManager
      * Ripristina una ricostruzione salvata.
      * Dopo il caricamento la ricostruzione riprende subito dal prossimo tick.
      */
-    public void restorePendingReconstruction(
-            List<ReconstructionEntry> entries,
-            String direction)
+    public void restorePendingReconstruction(List<ReconstructionEntry> entries, String direction)
     {
         reconstructionQueue.clear();
         grid.releaseAllReconstructionReservations();
@@ -455,8 +361,7 @@ public class InsuranceManager
         reconstructionRestoredThisTick = false;
         reconstructionCompletedThisTick = false;
 
-        if (entries == null
-                || entries.isEmpty())
+        if (entries == null || entries.isEmpty())
         {
             return;
         }
@@ -465,9 +370,7 @@ public class InsuranceManager
         {
             if (entry != null)
             {
-                reconstructionQueue.addLast(
-                        entry
-                );
+                reconstructionQueue.addLast(entry);
             }
         }
 
@@ -476,24 +379,17 @@ public class InsuranceManager
             return;
         }
 
-        reconstructionDirection =
-                direction;
+        reconstructionDirection = direction;
 
         if (direction != null)
         {
-            reserveTsunamiArea(
-                    direction
-            );
+            reserveTsunamiArea(direction);
         }
         else
         {
-            for (ReconstructionEntry entry
-                    : reconstructionQueue)
+            for (ReconstructionEntry entry : reconstructionQueue)
             {
-                grid.reserveCellForReconstruction(
-                        entry.row(),
-                        entry.column()
-                );
+                grid.reserveCellForReconstruction(entry.row(), entry.column());
             }
         }
 
@@ -507,46 +403,34 @@ public class InsuranceManager
         grid.releaseAllReconstructionReservations();
     }
 
-    private void reserveTsunamiArea(
-            String direction)
+    private void reserveTsunamiArea(String direction)
     {
-        int depth =
-                Tsunami.ADVANCEMENT_LENGTH;
+        int depth = Tsunami.ADVANCEMENT_LENGTH;
 
         if ("UP".equals(direction))
         {
-            for (int row = 0;
-                 row < depth;
-                 row++)
+            for (int row = 0; row < depth; row++)
             {
                 reserveRow(row);
             }
         }
         else if ("DOWN".equals(direction))
         {
-            for (int row =
-                 grid.getNumberOfRows() - depth;
-                 row < grid.getNumberOfRows();
-                 row++)
+            for (int row = grid.getNumberOfRows() - depth; row < grid.getNumberOfRows(); row++)
             {
                 reserveRow(row);
             }
         }
         else if ("LEFT".equals(direction))
         {
-            for (int column = 0;
-                 column < depth;
-                 column++)
+            for (int column = 0; column < depth; column++)
             {
                 reserveColumn(column);
             }
         }
         else if ("RIGHT".equals(direction))
         {
-            for (int column =
-                 grid.getNumberOfColumns() - depth;
-                 column < grid.getNumberOfColumns();
-                 column++)
+            for (int column = grid.getNumberOfColumns() - depth; column < grid.getNumberOfColumns(); column++)
             {
                 reserveColumn(column);
             }
@@ -555,62 +439,38 @@ public class InsuranceManager
 
     private void reserveRow(int row)
     {
-        for (int column = 0;
-             column < grid.getNumberOfColumns();
-             column++)
+        for (int column = 0; column < grid.getNumberOfColumns(); column++)
         {
-            grid.reserveCellForReconstruction(
-                    row,
-                    column
-            );
+            grid.reserveCellForReconstruction(row, column);
         }
     }
 
     private void reserveColumn(int column)
     {
-        for (int row = 0;
-             row < grid.getNumberOfRows();
-             row++)
+        for (int row = 0; row < grid.getNumberOfRows(); row++)
         {
-            grid.reserveCellForReconstruction(
-                    row,
-                    column
-            );
+            grid.reserveCellForReconstruction(row, column);
         }
     }
 
-    private boolean isAtTsunamiRisk(
-            int row,
-            int column)
+    private boolean isAtTsunamiRisk(int row, int column)
     {
-        int riskDepth =
-                Tsunami.ADVANCEMENT_LENGTH;
+        int riskDepth = Tsunami.ADVANCEMENT_LENGTH;
 
-        return row < riskDepth
-                || column < riskDepth
-                || row >= grid.getNumberOfRows()
-                - riskDepth
-                || column >= grid.getNumberOfColumns()
-                - riskDepth;
+        return row < riskDepth || column < riskDepth || row >= grid.getNumberOfRows() - riskDepth
+                || column >= grid.getNumberOfColumns() - riskDepth;
     }
 
-    private boolean isInsurable(
-            ConstructionType type)
+    private boolean isInsurable(ConstructionType type)
     {
-        return type == ConstructionType.PARK
-                || type == ConstructionType.RESIDENTIAL
-                || type == ConstructionType.COMMERCIAL
-                || type == ConstructionType.INDUSTRIAL
+        return type == ConstructionType.PARK || type == ConstructionType.RESIDENTIAL
+                || type == ConstructionType.COMMERCIAL || type == ConstructionType.INDUSTRIAL
                 || type == ConstructionType.POWER_PLANT
-                || type == ConstructionType.BANK
-                || type
-                == ConstructionType.CONSTRUCTION_COMPANY
-                || type == ConstructionType.POLICE_STATION
-                || type == ConstructionType.MILITARY_BASE;
+                || type == ConstructionType.BANK || type == ConstructionType.CONSTRUCTION_COMPANY
+                || type == ConstructionType.POLICE_STATION || type == ConstructionType.MILITARY_BASE;
     }
 
-    private int getBuildingInsuranceCost(
-            ConstructionType type)
+    private int getBuildingInsuranceCost(ConstructionType type)
     {
         return switch (type)
         {
@@ -630,19 +490,10 @@ public class InsuranceManager
         };
     }
 
-    private int applyBankDiscount(
-            int baseCost,
-            int numberOfBanks)
+    private int applyBankDiscount(int baseCost, int numberOfBanks)
     {
-        double discount =
-                Math.min(
-                        numberOfBanks
-                                * BANK_DISCOUNT,
-                        MAX_BANK_DISCOUNT
-                );
+        double discount = Math.min(numberOfBanks * BANK_DISCOUNT, MAX_BANK_DISCOUNT);
 
-        return (int) Math.round(
-                baseCost * (1.0 - discount)
-        );
+        return (int) Math.round(baseCost * (1.0 - discount));
     }
 }

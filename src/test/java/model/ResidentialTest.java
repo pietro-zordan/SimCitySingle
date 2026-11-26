@@ -53,10 +53,7 @@ class ResidentialTest {
         assertEquals(1, residential.getPopulationDecreaseRate());
 
         assertTrue(residential.isPowerPlantConnected());
-        assertSame(
-                powerPlant,
-                residential.getConnectedPowerPlant()
-        );
+        assertSame(powerPlant, residential.getConnectedPowerPlant());
     }
 
     @Test
@@ -102,21 +99,12 @@ class ResidentialTest {
 
     @Test
     void typeIsResidential() {
-        assertEquals(
-                ConstructionType.RESIDENTIAL,
-                residential.getType()
-        );
+        assertEquals(ConstructionType.RESIDENTIAL, residential.getType());
     }
 
     @Test
     void restoreStateRestoresValues() {
-        residential.restoreState(
-                37,
-                4,
-                3,
-                0,
-                0
-        );
+        residential.restoreState(37, 4, 3, 0, 0);
 
         assertEquals(37, residential.getPopulation());
         assertEquals(4, residential.getPopulationGrowthRate());

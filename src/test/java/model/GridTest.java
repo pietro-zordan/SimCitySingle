@@ -72,8 +72,7 @@ class GridTest {
     @Test
     void placeConstructionOutsideGridThrowsException() {
         //controlla presenza eccezione per piazzamento fuori dalla griglia
-        assertThrows(IllegalArgumentException.class,
-                () -> grid.placeConstruction(road, -1, 0));
+        assertThrows(IllegalArgumentException.class, () -> grid.placeConstruction(road, -1, 0));
     }
 
     @Test
@@ -81,8 +80,7 @@ class GridTest {
         //controlla eccezione se piazzamento su celle già occupate
         grid.placeConstruction(road, 0, 0);
 
-        assertThrows(IllegalStateException.class,
-                () -> grid.placeConstruction(anotherRoad, 0, 0));
+        assertThrows(IllegalStateException.class, () -> grid.placeConstruction(anotherRoad, 0, 0));
     }
 
     @Test
@@ -101,8 +99,7 @@ class GridTest {
         //controlla lancio eccezione se strade non vicine
         grid.placeConstruction(road, 5, 5);
 
-        assertThrows(IllegalStateException.class,
-                () -> grid.placeConstruction(anotherRoad, 15, 15));
+        assertThrows(IllegalStateException.class, () -> grid.placeConstruction(anotherRoad, 15, 15));
     }
 
     @Test
@@ -120,8 +117,7 @@ class GridTest {
     @Test
     void placeNonRoadConstructionWithoutAdjacentRoadThrowsException() {
         //costruzioni non adiacenti alla strada non possono essere costruite
-        assertThrows(IllegalStateException.class,
-                () -> grid.placeConstruction(building, 5, 5));
+        assertThrows(IllegalStateException.class, () -> grid.placeConstruction(building, 5, 5));
     }
 
     @Test
@@ -143,8 +139,7 @@ class GridTest {
     @Test
     void removeConstructionOutsideGridThrowsException() {
         //deve lanciare eccezione se provi a rimuovere qualcosa fuori dalla griglia
-        assertThrows(IllegalArgumentException.class,
-                () -> grid.removeConstruction(-1, 0));
+        assertThrows(IllegalArgumentException.class, () -> grid.removeConstruction(-1, 0));
     }
 
     @Test
@@ -156,8 +151,7 @@ class GridTest {
     void removeRoadThrowsException() {
         grid.placeConstruction(road, 5, 5);
 
-        assertThrows(IllegalStateException.class,
-                () -> grid.removeConstruction(5, 5));
+        assertThrows(IllegalStateException.class, () -> grid.removeConstruction(5, 5));
     }
 
     @Test
@@ -320,16 +314,14 @@ class GridTest {
         Grid expandedGrid = new Grid();
         for (int index = 0; index < 396; index++)
         {
-            expandedGrid.restoreConstruction(
-                    new Road(), index / 20, index % 20);
+            expandedGrid.restoreConstruction(new Road(), index / 20, index % 20);
         }
 
         assertTrue(expandedGrid.expandIfNeeded());
         assertEquals(30, expandedGrid.getNumberOfRows());
         assertEquals(30, expandedGrid.getNumberOfColumns());
         assertFalse(expandedGrid.expandIfNeeded());
-        assertThrows(IllegalArgumentException.class,
-                () -> new Grid(40, 40));
+        assertThrows(IllegalArgumentException.class, () -> new Grid(40, 40));
     }
 
     // ---------- countBuildableCells ----------
@@ -373,10 +365,7 @@ class GridTest {
 
         localGrid.placeConstruction(new Road(), 0, 0);
 
-        assertInstanceOf(
-                Grass.class,
-                localGrid.getCell(10, 10).getConstruction()
-        );
+        assertInstanceOf(Grass.class, localGrid.getCell(10, 10).getConstruction());
     }
 
     @Test
@@ -384,11 +373,7 @@ class GridTest {
     {
         Grid localGrid = new Grid();
 
-        localGrid.restoreConstruction(
-                new Road(),
-                10,
-                8
-        );
+        localGrid.restoreConstruction(new Road(), 10, 8);
 
         int[][] wallCells =
                 {
@@ -403,68 +388,37 @@ class GridTest {
 
         for (int[] position : wallCells)
         {
-            localGrid.restoreConstruction(
-                    new Park(),
-                    position[0],
-                    position[1]
-            );
+            localGrid.restoreConstruction(new Park(), position[0], position[1]);
         }
 
-        localGrid.placeConstruction(
-                new CriminalActivity(),
-                10,
-                9
-        );
+        localGrid.placeConstruction(new CriminalActivity(), 10, 9);
 
-        assertTrue(
-                localGrid.getCell(
-                        10,
-                        10
-                ).isEmpty()
-        );
+        assertTrue(localGrid.getCell(10, 10).isEmpty());
 
-        assertTrue(
-                localGrid.getCell(
-                        10,
-                        11
-                ).isEmpty()
-        );
+        assertTrue(localGrid.getCell(10, 11).isEmpty());
 
-        assertTrue(
-                localGrid.getCell(
-                        11,
-                        10
-                ).isEmpty()
-        );
+        assertTrue(localGrid.getCell(11, 10).isEmpty());
 
-        assertTrue(
-                localGrid.getCell(
-                        11,
-                        11
-                ).isEmpty()
-        );
+        assertTrue(localGrid.getCell(11, 11).isEmpty());
     }
 
     // ---------- restoreConstruction ----------
 
     @Test
     void restoreConstructionWithNullThrowsException() {
-        assertThrows(IllegalArgumentException.class,
-                () -> grid.restoreConstruction(null, 0, 0));
+        assertThrows(IllegalArgumentException.class, () -> grid.restoreConstruction(null, 0, 0));
     }
 
     @Test
     void restoreConstructionOutsideGridThrowsException() {
-        assertThrows(IllegalArgumentException.class,
-                () -> grid.restoreConstruction(road, -1, 0));
+        assertThrows(IllegalArgumentException.class, () -> grid.restoreConstruction(road, -1, 0));
     }
 
     @Test
     void restoreConstructionOnOccupiedCellThrowsException() {
         grid.placeConstruction(road, 5, 5);
 
-        assertThrows(IllegalStateException.class,
-                () -> grid.restoreConstruction(anotherRoad, 5, 5));
+        assertThrows(IllegalStateException.class, () -> grid.restoreConstruction(anotherRoad, 5, 5));
     }
 
     @Test
@@ -482,49 +436,26 @@ class GridTest {
     @Test
     void rebuildConnectionsAfterLoadUpdatesRoadsAndEnergyConnections()
     {
-        Grid localGrid =
-                new Grid();
+        Grid localGrid = new Grid();
 
-        Road localRoad =
-                new Road();
+        Road localRoad = new Road();
 
-        PowerPlant localPowerPlant =
-                new PowerPlant();
+        PowerPlant localPowerPlant = new PowerPlant();
 
-        Residential residential =
-                new Residential();
+        Residential residential = new Residential();
 
-        localGrid.restoreConstruction(
-                localRoad,
-                5,
-                5
-        );
+        localGrid.restoreConstruction(localRoad, 5, 5);
 
-        localGrid.restoreConstruction(
-                localPowerPlant,
-                5,
-                6
-        );
+        localGrid.restoreConstruction(localPowerPlant, 5, 6);
 
-        localGrid.restoreConstruction(
-                residential,
-                5,
-                4
-        );
+        localGrid.restoreConstruction(residential, 5, 4);
 
         localGrid.rebuildConnectionsAfterLoad();
 
-        assertTrue(
-                residential.isRoadConnected()
-        );
+        assertTrue(residential.isRoadConnected());
 
-        assertTrue(
-                residential.isPowerPlantConnected()
-        );
+        assertTrue(residential.isPowerPlantConnected());
 
-        assertSame(
-                localPowerPlant,
-                residential.getConnectedPowerPlant()
-        );
+        assertSame(localPowerPlant, residential.getConnectedPowerPlant());
     }
 }

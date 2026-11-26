@@ -170,8 +170,6 @@ public class TerrorManager {
     }
 
     public boolean canPlaceTG() {
-        return spawnCooldown == 0
-                && getNumOfTG() < MAX_GROUPS
-                && grid.getBuildableCells().size() > 1;
+        return spawnCooldown == 0 && getNumOfTG() < MAX_GROUPS && grid.getBuildableCells().size() > 1;
     }
 }

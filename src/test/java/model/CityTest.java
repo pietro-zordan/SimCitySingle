@@ -120,33 +120,15 @@ class CityTest {
     @Test
     void unemploymentNeverBecomesNegative()
     {
-        Grid employmentGrid =
-                new Grid();
+        Grid employmentGrid = new Grid();
 
-        employmentGrid.restoreConstruction(
-                new Residential(),
-                5,
-                5
-        );
+        employmentGrid.restoreConstruction(new Residential(), 5, 5);
 
-        employmentGrid.restoreConstruction(
-                new Industrial(),
-                5,
-                6
-        );
+        employmentGrid.restoreConstruction(new Industrial(), 5, 6);
 
-        City employmentCity =
-                new City(
-                        employmentGrid,
-                        defaultPolicy,
-                        2500
-                );
+        City employmentCity = new City(employmentGrid, defaultPolicy, 2500);
 
-        assertEquals(
-                0,
-                employmentCity
-                        .getGlobalUnemployed()
-        );
+        assertEquals(0, employmentCity.getGlobalUnemployed());
     }
 
     @Test
@@ -163,51 +145,23 @@ class CityTest {
 
         City capacityCity = new City(capacityGrid, defaultPolicy, 10000);
 
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> capacityCity.placeConstruction(new Residential(), 5, 5)
-        );
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> capacityCity.placeConstruction(new Residential(), 5, 5));
 
-        assertEquals(
-                "You need to expand the grid capacity before placing more constructions",
-                exception.getMessage()
-        );
+        assertEquals("You need to expand the grid capacity before placing more constructions", exception.getMessage());
     }
 
     @Test
     void testPlaceConstructionNullOrInsufficientBudget()
     {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> city.placeConstruction(
-                        null,
-                        0,
-                        0
-                )
-        );
+        assertThrows(IllegalArgumentException.class, () -> city.placeConstruction(null, 0, 0));
 
-        City poorCity =
-                new City(
-                        grid,
-                        new DummyPolicy(-500, 0),
-                        10
-                );
+        City poorCity = new City(grid, new DummyPolicy(-500, 0), 10);
 
-        Construction residential =
-                new Residential();
+        Construction residential = new Residential();
 
-        assertThrows(
-                IllegalStateException.class,
-                () -> poorCity.placeConstruction(
-                        residential,
-                        0,
-                        0
-                )
-        );
+        assertThrows(IllegalStateException.class, () -> poorCity.placeConstruction(residential, 0, 0));
 
-        assertEquals(
-                10,
-                poorCity.getBudget()
-        );
+        assertEquals(10, poorCity.getBudget());
     }
 }

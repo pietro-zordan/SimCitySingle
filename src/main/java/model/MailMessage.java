@@ -11,22 +11,17 @@ public class MailMessage {
     private boolean read;
 
     /** Crea la lettera e controlla che i suoi dati siano validi. */
-    public MailMessage(String id, String sender, String subject,
-                       String body, int receivedTick)
+    public MailMessage(String id, String sender, String subject, String body, int receivedTick)
     {
-        if (id == null || id.isBlank()
-                || sender == null || sender.isBlank()
-                || subject == null || subject.isBlank()
-                || body == null || body.isBlank())
+        if (id == null || id.isBlank() || sender == null || sender.isBlank()
+                || subject == null || subject.isBlank() || body == null || body.isBlank())
         {
-            throw new IllegalArgumentException(
-                    "Id, sender, subject and body cannot be empty");
+            throw new IllegalArgumentException("Id, sender, subject and body cannot be empty");
         }
 
         if (receivedTick < 0)
         {
-            throw new IllegalArgumentException(
-                    "Received tick cannot be negative");
+            throw new IllegalArgumentException("Received tick cannot be negative");
         }
 
         this.id = id;

@@ -20,10 +20,7 @@ public class IndustrialPolicy implements Policy
 
         if (type == ConstructionType.INDUSTRIAL)
         {
-            return Math.min(
-                    0,
-                    baseCost + INDUSTRIAL_COST_REDUCTION
-            );
+            return Math.min(0, baseCost + INDUSTRIAL_COST_REDUCTION);
         }
 
         if (type == ConstructionType.PARK)

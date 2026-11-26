@@ -21,39 +21,19 @@ class PowerPlantTest
         assertTrue(powerPlant.isActive());
         assertTrue(powerPlant.isPowered());
 
-        assertEquals(
-                6000,
-                powerPlant.getPowerGenerated()
-        );
+        assertEquals(6000, powerPlant.getPowerGenerated());
 
-        assertEquals(
-                6000,
-                powerPlant.getPowerCapacity()
-        );
+        assertEquals(6000, powerPlant.getPowerCapacity());
 
-        assertEquals(
-                200,
-                powerPlant.getPollutionImpact()
-        );
+        assertEquals(200, powerPlant.getPollutionImpact());
 
-        assertEquals(
-                -800,
-                powerPlant.getPlacementPrice()
-        );
+        assertEquals(-800, powerPlant.getPlacementPrice());
 
-        assertEquals(
-                0,
-                powerPlant.getPowerConsumption()
-        );
+        assertEquals(0, powerPlant.getPowerConsumption());
 
-        assertFalse(
-                powerPlant.requiresPower()
-        );
+        assertFalse(powerPlant.requiresPower());
 
-        assertEquals(
-                ConstructionType.POWER_PLANT,
-                powerPlant.getType()
-        );
+        assertEquals(ConstructionType.POWER_PLANT, powerPlant.getType());
     }
 
     @Test
@@ -61,23 +41,13 @@ class PowerPlantTest
     {
         powerPlant.suspend();
 
-        assertFalse(
-                powerPlant.isActive()
-        );
+        assertFalse(powerPlant.isActive());
 
-        assertFalse(
-                powerPlant.isPowered()
-        );
+        assertFalse(powerPlant.isPowered());
 
-        assertEquals(
-                0,
-                powerPlant.getPowerGenerated()
-        );
+        assertEquals(0, powerPlant.getPowerGenerated());
 
-        assertEquals(
-                0,
-                powerPlant.getPollutionImpact()
-        );
+        assertEquals(0, powerPlant.getPollutionImpact());
     }
 
     @Test
@@ -86,17 +56,10 @@ class PowerPlantTest
         powerPlant.suspend();
         powerPlant.resume();
 
-        assertTrue(
-                powerPlant.isActive()
-        );
+        assertTrue(powerPlant.isActive());
 
-        assertTrue(
-                powerPlant.isPowered()
-        );
+        assertTrue(powerPlant.isPowered());
 
-        assertEquals(
-                6000,
-                powerPlant.getPowerGenerated()
-        );
+        assertEquals(6000, powerPlant.getPowerGenerated());
     }
 }

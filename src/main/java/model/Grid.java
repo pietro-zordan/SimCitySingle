@@ -42,15 +42,11 @@ public class Grid
 // Verrà usato anche quando caricheremo una partita salvata.
     public Grid(int numberOfRows, int numberOfColumns)
     {
-        if (numberOfRows < INITIAL_GRID_SIZE
-                || numberOfColumns < INITIAL_GRID_SIZE
-                || numberOfRows > MAX_GRID_SIZE
-                || numberOfColumns > MAX_GRID_SIZE)
+        if (numberOfRows < INITIAL_GRID_SIZE || numberOfColumns < INITIAL_GRID_SIZE
+                || numberOfRows > MAX_GRID_SIZE || numberOfColumns > MAX_GRID_SIZE)
         {
-            throw new IllegalArgumentException(
-                    "Grid dimensions must each be between 20 and 30; "
-                            + "larger saves cannot be loaded without losing cells"
-            );
+            throw new IllegalArgumentException("Grid dimensions must each be between 20 and 30; "
+                    + "larger saves cannot be loaded without losing cells");
         }
 
         this.numberOfRows = numberOfRows;
@@ -77,10 +73,7 @@ public class Grid
     // Verifica se la posizione indicata si trova nella griglia.
     public boolean isInside(int row, int column)
     {
-        return row >= 0
-                && row < numberOfRows
-                && column >= 0
-                && column < numberOfColumns;
+        return row >= 0 && row < numberOfRows && column >= 0 && column < numberOfColumns;
     }
 
     // Restituisce la cella presente nella posizione indicata.
@@ -88,12 +81,7 @@ public class Grid
     {
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid: row="
-                            + row
-                            + ", column="
-                            + column
-            );
+            throw new IllegalArgumentException("Position outside the grid: row=" + row + ", column=" + column);
         }
 
         return cells[row][column];
@@ -101,8 +89,7 @@ public class Grid
 
     /* Posiziona una costruzione dopo aver controllato la posizione,
        la disponibilità della cella e il collegamento stradale. */
-    public void placeConstruction(Construction construction, int row,
-            int column)
+    public void placeConstruction(Construction construction, int row, int column)
     {
         if (construction == null)
         {
@@ -116,49 +103,35 @@ public class Grid
 
         if (isCellReservedForReconstruction(row, column))
         {
-            throw new IllegalStateException(
-                    "Impossibile piazzare un nuovo edificio: ricostruzione in corso"
-            );
+            throw new IllegalStateException("Impossibile piazzare un nuovo edificio: ricostruzione in corso");
         }
 
         Cell cell = getCell(row, column);
 
         if (!cell.isEmpty())
         {
-            throw new IllegalStateException(
-                    "The cell is already occupied"
-            );
+            throw new IllegalStateException("The cell is already occupied");
         }
 
-        boolean placingRoad =
-                construction.getType()
-                        == ConstructionType.ROAD;
+        boolean placingRoad = construction.getType() == ConstructionType.ROAD;
 
-        if (!placingRoad
-                && countBuildableCells() == 1)
+        if (!placingRoad && countBuildableCells() == 1)
         {
-            throw new IllegalStateException(
-                    "Only a Road can be placed when just one buildable cell remains"
-            );
+            throw new IllegalStateException("Only a Road can be placed when just one buildable cell remains");
         }
 
         if (placingRoad)
         {
-            if (hasAnyRoad()
-                    && !hasAdjacentRoad(cell))
+            if (hasAnyRoad() && !hasAdjacentRoad(cell))
             {
-                throw new IllegalStateException(
-                        "A Road must be adjacent to another Road"
-                );
+                throw new IllegalStateException("A Road must be adjacent to another Road");
             }
         }
         else
         {
             if (!hasAdjacentRoad(cell))
             {
-                throw new IllegalStateException(
-                        "The construction must be adjacent to a Road"
-                );
+                throw new IllegalStateException("The construction must be adjacent to a Road");
             }
         }
 
@@ -185,27 +158,16 @@ public class Grid
     }
 
     // Rimuove la costruzione e applica l'eventuale effetto di distruzione preparato dalla costruzione stessa.
-    public void removeConstruction(
-            int row,
-            int column)
+    public void removeConstruction(int row, int column)
     {
-        removeConstructionInternal(
-                row,
-                column,
-                false
-        );
+        removeConstructionInternal(row, column, false);
     }
 
-    private void removeConstructionInternal(
-            int row,
-            int column,
-            boolean forced)
+    private void removeConstructionInternal(int row, int column, boolean forced)
     {
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid"
-            );
+            throw new IllegalArgumentException("Position outside the grid");
         }
 
         Cell cell = getCell(row, column);
@@ -215,43 +177,25 @@ public class Grid
             return;
         }
 
-        Construction construction =
-                cell.getConstruction();
+        Construction construction = cell.getConstruction();
 
-        if (!forced
-                && !construction.canBeRemoved())
+        if (!forced && !construction.canBeRemoved())
         {
-            throw new IllegalStateException(
-                    "This construction cannot be removed"
-            );
+            throw new IllegalStateException("This construction cannot be removed");
         }
 
-        energyManager.removeConstruction(
-                construction
-        );
+        energyManager.removeConstruction(construction);
 
-        int destructionRadius =
-                construction.prepareForRemoval();
+        int destructionRadius = construction.prepareForRemoval();
 
         cell.removeConstruction();
 
         if (destructionRadius > 0)
         {
-            explosions.add(
-                    new ExplosionInfo(
-                            row,
-                            column,
-                            destructionRadius,
-                            construction.getType()
-                                    == ConstructionType.NUCLEAR_PLANT
-                    )
-            );
+            explosions.add(new ExplosionInfo(row, column,
+                    destructionRadius, construction.getType() == ConstructionType.NUCLEAR_PLANT));
 
-            makeExplosion(
-                    row,
-                    column,
-                    destructionRadius
-            );
+            makeExplosion(row, column, destructionRadius);
         }
     }
 
@@ -261,25 +205,17 @@ public class Grid
     {
         int occupiedCells = 0;
 
-        for (int row = 0;
-             row < numberOfRows;
-             row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
-                Cell cell =
-                        cells[row][column];
+                Cell cell = cells[row][column];
 
                 if (!cell.isEmpty())
                 {
-                    ConstructionType type =
-                            cell.getConstruction()
-                                    .getType();
+                    ConstructionType type = cell.getConstruction().getType();
 
-                    if (type != ConstructionType.GRASS
-                            && type != ConstructionType.CRIMINAL_ACTIVITY
+                    if (type != ConstructionType.GRASS && type != ConstructionType.CRIMINAL_ACTIVITY
                             && type != ConstructionType.TERRORISTIC_GROUP)
                     {
                         occupiedCells++;
@@ -323,17 +259,13 @@ public class Grid
 // senza superare il limite massimo di 30x30.
     private void expandGrid()
     {
-        int newNumberOfRows =
-                Math.min(numberOfRows + GRID_EXPANSION_STEP,
-                        MAX_GRID_SIZE);
+        int newNumberOfRows = Math.min(numberOfRows + GRID_EXPANSION_STEP, MAX_GRID_SIZE);
 
-        int newNumberOfColumns = Math.min(numberOfColumns + GRID_EXPANSION_STEP,
-                        MAX_GRID_SIZE);
+        int newNumberOfColumns = Math.min(numberOfColumns + GRID_EXPANSION_STEP, MAX_GRID_SIZE);
 
         Cell[][] newCells = new Cell[newNumberOfRows] [newNumberOfColumns];
 
-        boolean[][] newReconstructionReserved =
-                new boolean
+        boolean[][] newReconstructionReserved = new boolean
                         [newNumberOfRows]
                         [newNumberOfColumns];
 
@@ -346,8 +278,7 @@ public class Grid
                     // Mantiene la vecchia città.
                     newCells[row][column] = cells[row][column];
 
-                    newReconstructionReserved[row][column] =
-                            reconstructionReserved[row][column];
+                    newReconstructionReserved[row][column] = reconstructionReserved[row][column];
                 }
                 else
                 {
@@ -373,28 +304,19 @@ public class Grid
     }
 
     // Trova le celle occupate nell'area quadrata dell'esplosione, escludendo centro e strade.
-    private List<Cell> getExplosionCells(
-            int centerRow,
-            int centerColumn,
-            int radius)
+    private List<Cell> getExplosionCells(int centerRow, int centerColumn, int radius)
     {
-        List<Cell> explosionCells =
-                new ArrayList<>();
+        List<Cell> explosionCells = new ArrayList<>();
 
         for (int row = centerRow - radius; row <= centerRow + radius; row++)
         {
-            for (int column = centerColumn - radius;
-                 column <= centerColumn + radius;
-                 column++)
+            for (int column = centerColumn - radius; column <= centerColumn + radius; column++)
             {
-                if (isInside(row, column)
-                        && (row != centerRow
-                        || column != centerColumn))
+                if (isInside(row, column) && (row != centerRow || column != centerColumn))
                 {
                     Cell cell = getCell(row, column);
 
-                    if (!cell.isEmpty()
-                            && !(cell.getConstruction() instanceof Road))
+                    if (!cell.isEmpty() && !(cell.getConstruction() instanceof Road))
                     {
                         explosionCells.add(cell);
                     }
@@ -406,27 +328,15 @@ public class Grid
     }
 
     // Distrugge tutte le costruzioni presenti nell'area dell'esplosione.
-    private void makeExplosion(
-            int centerRow,
-            int centerColumn,
-            int radius)
+    private void makeExplosion(int centerRow, int centerColumn, int radius)
     {
-        List<Cell> explosionCells =
-                getExplosionCells(
-                        centerRow,
-                        centerColumn,
-                        radius
-                );
+        List<Cell> explosionCells = getExplosionCells(centerRow, centerColumn, radius);
 
         for (Cell cell : explosionCells)
         {
-            if (!cell.isEmpty()
-                    && !(cell.getConstruction() instanceof Road))
+            if (!cell.isEmpty() && !(cell.getConstruction() instanceof Road))
             {
-                removeConstruction(
-                        cell.getRow(),
-                        cell.getColumn()
-                );
+                removeConstruction(cell.getRow(), cell.getColumn());
             }
         }
     }
@@ -440,8 +350,7 @@ public class Grid
     // Restituisce le esplosioni non ancora mostrate dalla GUI e poi svuota la lista.
     public List<ExplosionInfo> consumeExplosions()
     {
-        List<ExplosionInfo> pendingExplosions =
-                new ArrayList<>(explosions);
+        List<ExplosionInfo> pendingExplosions = new ArrayList<>(explosions);
 
         explosions.clear();
 
@@ -454,20 +363,16 @@ public class Grid
         int row = cell.getRow();
         int column = cell.getColumn();
 
-        for (int[] direction
-                : ORTHOGONAL_DIRECTIONS)
+        for (int[] direction : ORTHOGONAL_DIRECTIONS)
         {
             int newRow = row + direction[0];
             int newColumn = column + direction[1];
 
             if (isInside(newRow, newColumn))
             {
-                Cell neighbor =
-                        getCell(newRow, newColumn);
+                Cell neighbor = getCell(newRow, newColumn);
 
-                if (!neighbor.isEmpty()
-                        && neighbor.getConstruction().getType()
-                        == ConstructionType.ROAD)
+                if (!neighbor.isEmpty() && neighbor.getConstruction().getType() == ConstructionType.ROAD)
                 {
                     return true;
                 }
@@ -483,17 +388,11 @@ public class Grid
     {
         for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
-                Construction construction =
-                        cells[row][column]
-                                .getConstruction();
+                Construction construction = cells[row][column].getConstruction();
 
-                if (construction != null
-                        && construction.getType()
-                        == ConstructionType.ROAD)
+                if (construction != null && construction.getType() == ConstructionType.ROAD)
                 {
                     return true;
                 }
@@ -507,25 +406,17 @@ public class Grid
     {
         int count = 0;
 
-        for (int row = 0;
-             row < numberOfRows;
-             row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
-                Cell cell =
-                        cells[row][column];
+                Cell cell = cells[row][column];
 
                 if (!cell.isEmpty())
                 {
-                    Construction construction =
-                            cell.getConstruction();
+                    Construction construction = cell.getConstruction();
 
-                    if (construction.getType()
-                            == ConstructionType.CONSTRUCTION_COMPANY
-                            && construction.isPowered())
+                    if (construction.getType() == ConstructionType.CONSTRUCTION_COMPANY && construction.isPowered())
                     {
                         count++;
                     }
@@ -585,8 +476,7 @@ public class Grid
 
         for (Construction construction : getConstructions())
         {
-            if (construction.getType() == ConstructionType.BANK
-                    && construction.isPowered())
+            if (construction.getType() == ConstructionType.BANK && construction.isPowered())
             {
                 numberOfPoweredBanks++;
             }
@@ -599,25 +489,17 @@ public class Grid
     {
         int numberOfNuclearPlants = 0;
 
-        for (int row = 0;
-             row < numberOfRows;
-             row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
-                Cell cell =
-                        cells[row][column];
+                Cell cell = cells[row][column];
 
                 if (!cell.isEmpty())
                 {
-                    Construction construction =
-                            cell.getConstruction();
+                    Construction construction = cell.getConstruction();
 
-                    if (construction.getType()
-                            == ConstructionType.NUCLEAR_PLANT
-                            && construction.isPowered())
+                    if (construction.getType() == ConstructionType.NUCLEAR_PLANT && construction.isPowered())
                     {
                         numberOfNuclearPlants++;
                     }
@@ -633,20 +515,15 @@ public class Grid
     {
         for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 Cell cell = cells[row][column];
 
                 if (!cell.isEmpty())
                 {
-                    Construction construction =
-                            cell.getConstruction();
+                    Construction construction = cell.getConstruction();
 
-                    construction.setRoadConnected(
-                            hasAdjacentRoad(cell)
-                    );
+                    construction.setRoadConnected(hasAdjacentRoad(cell));
                 }
             }
         }
@@ -661,25 +538,17 @@ public class Grid
         // Prima fase: aggiorna tutte le centrali elettriche.
         for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 Cell cell = cells[row][column];
 
-                if (!cell.isEmpty()
-                        && cell.getConstruction()
-                        instanceof PowerPlant)
+                if (!cell.isEmpty() && cell.getConstruction() instanceof PowerPlant)
                 {
-                    boolean mustRemove =
-                            cell.updateOfOneTick();
+                    boolean mustRemove = cell.updateOfOneTick();
 
                     if (mustRemove)
                     {
-                        removeConstruction(
-                                row,
-                                column
-                        );
+                        removeConstruction(row, column);
                     }
                 }
             }
@@ -688,25 +557,17 @@ public class Grid
         // Seconda fase: aggiorna tutte le altre costruzioni.
         for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 Cell cell = cells[row][column];
 
-                if (!cell.isEmpty()
-                        && !(cell.getConstruction()
-                        instanceof PowerPlant))
+                if (!cell.isEmpty() && !(cell.getConstruction() instanceof PowerPlant))
                 {
-                    boolean mustRemove =
-                            cell.updateOfOneTick();
+                    boolean mustRemove = cell.updateOfOneTick();
 
                     if (mustRemove)
                     {
-                        removeConstruction(
-                                row,
-                                column
-                        );
+                        removeConstruction(row, column);
                     }
                 }
             }
@@ -718,27 +579,17 @@ public class Grid
     // Restituisce tutte le centrali presenti nella griglia.
     public List<PowerPlant> getAllPowerPlants()
     {
-        List<PowerPlant> powerPlants =
-                new ArrayList<>();
+        List<PowerPlant> powerPlants = new ArrayList<>();
 
-        for (int row = 0;
-             row < numberOfRows;
-             row++)
+        for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
-                Cell cell =
-                        cells[row][column];
+                Cell cell = cells[row][column];
 
-                if (!cell.isEmpty()
-                        && cell.getConstruction()
-                        instanceof PowerPlant powerPlant)
+                if (!cell.isEmpty() && cell.getConstruction() instanceof PowerPlant powerPlant)
                 {
-                    powerPlants.add(
-                            powerPlant
-                    );
+                    powerPlants.add(powerPlant);
                 }
             }
         }
@@ -747,12 +598,9 @@ public class Grid
     }
 
     // Restituisce l'energia realmente utilizzata dalla centrale indicata.
-    public int getPowerPlantUsedPower(
-            PowerPlant powerPlant)
+    public int getPowerPlantUsedPower(PowerPlant powerPlant)
     {
-        return energyManager.getUsedPower(
-                powerPlant
-        );
+        return energyManager.getUsedPower(powerPlant);
     }
 
     // Restituisce l'energia realmente consumata dalle costruzioni alimentate.
@@ -806,45 +654,27 @@ public class Grid
     // Conta le celle vuote adiacenti ad almeno una strada.
     public int countBuildableCells()
     {
-        Set<Cell> buildable =
-                new HashSet<>();
+        Set<Cell> buildable = new HashSet<>();
 
         for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 Cell cell = cells[row][column];
 
-                if (!cell.isEmpty()
-                        && cell.getConstruction().getType()
-                        == ConstructionType.ROAD)
+                if (!cell.isEmpty() && cell.getConstruction().getType() == ConstructionType.ROAD)
                 {
-                    for (int[] direction
-                            : ORTHOGONAL_DIRECTIONS)
+                    for (int[] direction : ORTHOGONAL_DIRECTIONS)
                     {
-                        int newRow =
-                                row + direction[0];
+                        int newRow = row + direction[0];
 
-                        int newColumn =
-                                column + direction[1];
+                        int newColumn = column + direction[1];
 
-                        if (isInside(
-                                newRow,
-                                newColumn))
+                        if (isInside(newRow, newColumn))
                         {
-                            Cell neighbor =
-                                    getCell(
-                                            newRow,
-                                            newColumn
-                                    );
+                            Cell neighbor = getCell(newRow, newColumn);
 
-                            if (neighbor.isEmpty()
-                                    && !isCellReservedForReconstruction(
-                                            newRow,
-                                            newColumn
-                                    ))
+                            if (neighbor.isEmpty() && !isCellReservedForReconstruction(newRow, newColumn))
                             {
                                 buildable.add(neighbor);
                             }
@@ -859,47 +689,30 @@ public class Grid
 
     /* Inserisce una costruzione salvata senza applicare nuovamente
        i normali vincoli di piazzamento. */
-    public void restoreConstruction(
-            Construction construction,
-            int row,
-            int column)
+    public void restoreConstruction(Construction construction, int row, int column)
     {
         if (construction == null)
         {
-            throw new IllegalArgumentException(
-                    "The construction cannot be null"
-            );
+            throw new IllegalArgumentException("The construction cannot be null");
         }
 
         if (!isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Saved position outside the grid"
-            );
+            throw new IllegalArgumentException("Saved position outside the grid");
         }
 
         Cell cell = getCell(row, column);
 
         if (!cell.isEmpty())
         {
-            throw new IllegalStateException(
-                    "Two saved constructions occupy the same cell"
-            );
+            throw new IllegalStateException("Two saved constructions occupy the same cell");
         }
 
         cell.placeConstruction(construction);
 
-        construction.initializeAfterPlacement(
-                this,
-                row,
-                column
-        );
+        construction.initializeAfterPlacement(this, row, column);
 
-        energyManager.registerConstruction(
-                construction,
-                row,
-                column
-        );
+        energyManager.registerConstruction(construction, row, column);
     }
 
     /* Dopo il caricamento ricalcola i collegamenti stradali
@@ -913,22 +726,17 @@ public class Grid
     // Restituisce tutte le costruzioni presenti nella griglia.
     public List<Construction> getConstructions()
     {
-        List<Construction> constructions =
-                new ArrayList<>();
+        List<Construction> constructions = new ArrayList<>();
 
         for (int row = 0; row < numberOfRows; row++)
         {
-            for (int column = 0;
-                 column < numberOfColumns;
-                 column++)
+            for (int column = 0; column < numberOfColumns; column++)
             {
                 Cell cell = cells[row][column];
 
                 if (!cell.isEmpty())
                 {
-                    constructions.add(
-                            cell.getConstruction()
-                    );
+                    constructions.add(cell.getConstruction());
                 }
             }
         }
@@ -936,45 +744,29 @@ public class Grid
         return constructions;
     }
 
-    public void destroyArea(
-            int centerRow,
-            int centerColumn,
-            int radius)
+    public void destroyArea(int centerRow, int centerColumn, int radius)
     {
         if (!isInside(centerRow, centerColumn))
         {
-            throw new IllegalArgumentException(
-                    "Explosion center outside the grid"
-            );
+            throw new IllegalArgumentException("Explosion center outside the grid");
         }
 
         if (radius < 0)
         {
-            throw new IllegalArgumentException(
-                    "Explosion radius cannot be negative"
-            );
+            throw new IllegalArgumentException("Explosion radius cannot be negative");
         }
 
-        for (int row = centerRow - radius;
-             row <= centerRow + radius;
-             row++)
+        for (int row = centerRow - radius; row <= centerRow + radius; row++)
         {
-            for (int column = centerColumn - radius;
-                 column <= centerColumn + radius;
-                 column++)
+            for (int column = centerColumn - radius; column <= centerColumn + radius; column++)
             {
                 if (isInside(row, column))
                 {
                     Cell cell = getCell(row, column);
 
-                    if (!cell.isEmpty()
-                            && !(cell.getConstruction() instanceof Road))
+                    if (!cell.isEmpty() && !(cell.getConstruction() instanceof Road))
                     {
-                        removeConstructionInternal(
-                                row,
-                                column,
-                                true
-                        );
+                        removeConstructionInternal(row, column, true);
                     }
                 }
             }
@@ -995,9 +787,7 @@ public class Grid
             {
                 Cell cell = cells[row][column];
 
-                if (!cell.isEmpty()
-                        && cell.getConstruction().getType()
-                        == ConstructionType.ROAD)
+                if (!cell.isEmpty() && cell.getConstruction().getType() == ConstructionType.ROAD)
                 {
                     for (int[] direction : ORTHOGONAL_DIRECTIONS)
                     {
@@ -1006,14 +796,9 @@ public class Grid
 
                         if (isInside(newRow, newColumn))
                         {
-                            Cell neighbor =
-                                    getCell(newRow, newColumn);
+                            Cell neighbor = getCell(newRow, newColumn);
 
-                            if (neighbor.isEmpty()
-                                    && !isCellReservedForReconstruction(
-                                            newRow,
-                                            newColumn
-                                    ))
+                            if (neighbor.isEmpty() && !isCellReservedForReconstruction(newRow, newColumn))
                             {
                                 buildable.add(neighbor);
                             }
@@ -1036,9 +821,7 @@ public class Grid
         }
     }
 
-    public void reserveCellForReconstruction(
-            int row,
-            int column)
+    public void reserveCellForReconstruction(int row, int column)
     {
         if (!isInside(row, column))
         {
@@ -1048,9 +831,7 @@ public class Grid
         reconstructionReserved[row][column] = true;
     }
 
-    public void releaseCellFromReconstruction(
-            int row,
-            int column)
+    public void releaseCellFromReconstruction(int row, int column)
     {
         if (!isInside(row, column))
         {

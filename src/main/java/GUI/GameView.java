@@ -73,86 +73,52 @@ public final class GameView implements GameObserver
     private BorderPane gameRoot;
 
     private final Label toast = new Label();
-    private final PauseTransition toastHidePause =
-            new PauseTransition(Duration.seconds(4));
+    private final PauseTransition toastHidePause = new PauseTransition(Duration.seconds(4));
 
-    private final Button nextTurnButton =
-            new Button("Next Tick");
+    private final Button nextTurnButton = new Button("Next Tick");
 
-    private final Button tsunamiInsuranceButton =
-            new Button("Tsunami insurance");
+    private final Button tsunamiInsuranceButton = new Button("Tsunami insurance");
 
-    private final Label tsunamiInsuranceInfoLabel =
-            new Label();
+    private final Label tsunamiInsuranceInfoLabel = new Label();
 
-    private final Button confirmTsunamiInsuranceButton =
-            new Button("Apply insurance");
+    private final Button confirmTsunamiInsuranceButton = new Button("Apply insurance");
 
-    private final Button cancelTsunamiInsuranceButton =
-            new Button("Cancel");
+    private final Button cancelTsunamiInsuranceButton = new Button("Cancel");
 
-    private final HBox tsunamiInsuranceActions =
-            new HBox(
-                    5,
-                    confirmTsunamiInsuranceButton,
-                    cancelTsunamiInsuranceButton
-            );
+    private final HBox tsunamiInsuranceActions = new HBox(5,
+            confirmTsunamiInsuranceButton, cancelTsunamiInsuranceButton);
 
-    private final VBox tsunamiInsuranceBox =
-            new VBox(
-                    5,
-                    tsunamiInsuranceInfoLabel,
-                    tsunamiInsuranceActions
-            );
+    private final VBox tsunamiInsuranceBox = new VBox(5, tsunamiInsuranceInfoLabel, tsunamiInsuranceActions);
 
     private final Label nuclearFireProtectionInfoLabel = new Label();
     private final Button confirmNuclearFireProtectionButton = new Button("Apply protection");
     private final Button cancelNuclearFireProtectionButton = new Button("Not now");
-    private final HBox nuclearFireProtectionActions = new HBox(
-            5,
-            confirmNuclearFireProtectionButton,
-            cancelNuclearFireProtectionButton
-    );
-    private final VBox nuclearFireProtectionBox = new VBox(
-            5,
-            nuclearFireProtectionInfoLabel,
-            nuclearFireProtectionActions
-    );
+    private final HBox nuclearFireProtectionActions = new HBox(5,
+            confirmNuclearFireProtectionButton, cancelNuclearFireProtectionButton);
+    private final VBox nuclearFireProtectionBox = new VBox(5,
+            nuclearFireProtectionInfoLabel, nuclearFireProtectionActions);
 
     private int dismissedNuclearProtectionCount = -1;
 
     private final MissileDefenseView missileDefenseView;
 
-    private final Button demolitionButton =
-            new Button("Demolish");
+    private final Button demolitionButton = new Button("Demolish");
 
     private final Scene scene;
     private boolean observerRegistered;
     private boolean closed;
     private boolean defeatSoundPlayed;
     private volatile boolean tickInProgress;
-    private final AtomicBoolean refreshScheduled =
-            new AtomicBoolean(false);
+    private final AtomicBoolean refreshScheduled = new AtomicBoolean(false);
 
     // Inizializza la vista di gioco istanziando le sotto-viste, configurando i componenti di controllo e registrandosi come observer.
-    public GameView(
-            Controller controller,
-            GameNavigation navigation,
-            ProgressManager progressManager,
-            String saveFilePath,
-            SoundManager soundManager,
-            Runnable achievementSaveAction)
+    public GameView(Controller controller, GameNavigation navigation, ProgressManager progressManager,
+            String saveFilePath, SoundManager soundManager, Runnable achievementSaveAction)
     {
-        if (controller == null
-                || navigation == null
-                || progressManager == null
-                || saveFilePath == null
-                || soundManager == null
-                || achievementSaveAction == null)
+        if (controller == null || navigation == null || progressManager == null
+                || saveFilePath == null || soundManager == null || achievementSaveAction == null)
         {
-            throw new IllegalArgumentException(
-                    "Game view dependencies cannot be null"
-            );
+            throw new IllegalArgumentException("Game view dependencies cannot be null");
         }
 
         this.controller = controller;
@@ -161,8 +127,7 @@ public final class GameView implements GameObserver
         this.progressManager = progressManager;
         this.saveFilePath = saveFilePath;
         this.soundManager = soundManager;
-        achievementNotificationView =
-                new AchievementNotificationView(soundManager);
+        achievementNotificationView = new AchievementNotificationView(soundManager);
         this.achievementSaveAction = achievementSaveAction;
 
         configureToast();
@@ -179,8 +144,7 @@ public final class GameView implements GameObserver
 
         configureTsunamiInsuranceButton();
         configureNuclearFireProtection();
-        missileDefenseView = new MissileDefenseView(
-                controller,
+        missileDefenseView = new MissileDefenseView(controller,
                 new Consumer<String>()
                 {
                     @Override
@@ -191,8 +155,7 @@ public final class GameView implements GameObserver
                 }
         );
 
-        gridView = new GridView(
-                controller,
+        gridView = new GridView(controller,
                 new Consumer<String>()
                 {
                     @Override
@@ -232,32 +195,20 @@ public final class GameView implements GameObserver
         chartView = new ChartView(controller);
         statusView = new GameStatusView(controller, raEyeView);
 
-        constructionToolbarView =
-                new ConstructionToolbarView(
-                        controller,
+        constructionToolbarView = new ConstructionToolbarView(controller,
                         new Consumer<ConstructionType>()
                         {
                             @Override
-                            public void accept(
-                                    ConstructionType type)
+                            public void accept(ConstructionType type)
                             {
                                 gridView.setSelectedType(type);
                             }
                         }
                 );
 
-        eventAnimationView =
-                new EventAnimationView(
-                        controller,
-                        gridView,
-                        nextTurnButton,
-                        soundManager
-                );
+        eventAnimationView = new EventAnimationView(controller, gridView, nextTurnButton, soundManager);
 
-        mailboxView = new MailboxView(
-                controller.getMailbox(),
-                soundManager
-        );
+        mailboxView = new MailboxView(controller.getMailbox(), soundManager);
 
         invitationView = new FreemasonryInvitationView(
                 new Consumer<FreemasonryChoice>()
@@ -267,9 +218,7 @@ public final class GameView implements GameObserver
                     {
                         if (controller.chooseFreemasonry(choice))
                         {
-                            raEyeView.refresh(
-                                    controller.getFreemasonryChoice()
-                            );
+                            raEyeView.refresh(controller.getFreemasonryChoice());
                         }
                     }
                 },
@@ -278,9 +227,7 @@ public final class GameView implements GameObserver
                     @Override
                     public void run()
                     {
-                        gameRoot.setDisable(
-                                controller.isGameOver()
-                        );
+                        gameRoot.setDisable(controller.isGameOver());
                     }
                 }
         );
@@ -324,10 +271,7 @@ public final class GameView implements GameObserver
     {
         nextTurnButton.setMaxWidth(Double.MAX_VALUE);
         nextTurnButton.setFocusTraversable(false);
-        nextTurnButton.setStyle(
-                "-fx-focus-color: transparent;"
-                        + "-fx-faint-focus-color: transparent;"
-        );
+        nextTurnButton.setStyle("-fx-focus-color: transparent;" + "-fx-faint-focus-color: transparent;");
         nextTurnButton.setOnAction(
                 new EventHandler<ActionEvent>()
                 {
@@ -343,8 +287,7 @@ public final class GameView implements GameObserver
     // Il modello lavora su un solo thread; durante il calcolo la GUI non puo modificarlo.
     private void advanceTickInBackground()
     {
-        if (closed || tickInProgress || gameRoot.isDisabled()
-                || nextTurnButton.isDisabled())
+        if (closed || tickInProgress || gameRoot.isDisabled() || nextTurnButton.isDisabled())
         {
             return;
         }
@@ -397,9 +340,7 @@ public final class GameView implements GameObserver
         try
         {
             showTickFeedback(criminalActivityCreated);
-            if (controller.getCurrentTick() == 508
-                    && controller.getFreemasonryChoice()
-                    == FreemasonryChoice.ACCEPTED)
+            if (controller.getCurrentTick() == 508 && controller.getFreemasonryChoice() == FreemasonryChoice.ACCEPTED)
             {
                 // Arresta anche l'eventuale animazione iniziata prima
                 // dei cinque turni riservati all'avvistamento.
@@ -413,8 +354,7 @@ public final class GameView implements GameObserver
         finally
         {
             gameRoot.setMouseTransparent(false);
-            gameRoot.setDisable(controller.isGameOver()
-                    || controller.isFreemasonryInvitationPending());
+            gameRoot.setDisable(controller.isGameOver() || controller.isFreemasonryInvitationPending());
             clearControlFocus();
         }
     }
@@ -439,8 +379,7 @@ public final class GameView implements GameObserver
         finally
         {
             gameRoot.setMouseTransparent(false);
-            gameRoot.setDisable(controller.isGameOver()
-                    || controller.isFreemasonryInvitationPending());
+            gameRoot.setDisable(controller.isGameOver() || controller.isFreemasonryInvitationPending());
             clearControlFocus();
         }
     }
@@ -467,108 +406,69 @@ public final class GameView implements GameObserver
         {
             soundManager.playTickAdvanceSound();
 
-            if (controller
-                    .didBlackoutOccurThisTick()
-                    && controller.getActiveEventType()
-                    != EventType.ENERGY_CRISIS)
+            if (controller.didBlackoutOccurThisTick() && controller.getActiveEventType() != EventType.ENERGY_CRISIS)
             {
                 soundManager.playBlackoutSound();
             }
 
-            if (controller
-                    .wasTsunamiReconstructionRestoredThisTick())
+            if (controller.wasTsunamiReconstructionRestoredThisTick())
             {
-                soundManager
-                        .playInsuranceRebuildSound();
+                soundManager.playInsuranceRebuildSound();
             }
         }
 
         showInvitationIfNeeded();
 
-        int militaryRemovals =
-                controller
-                        .getRemovedTerroristicGroupsByMilitary();
+        int militaryRemovals = controller.getRemovedTerroristicGroupsByMilitary();
 
-        int policeTerroristRemovals =
-                controller.getRemovedTerroristicGroups()
-                        - militaryRemovals;
+        int policeTerroristRemovals = controller.getRemovedTerroristicGroups() - militaryRemovals;
 
         if (controller.isActiveMissileIntercepted())
         {
-            showToast(
-                    "Missile intercepted! Missile Defense: "
-                            + controller
-                            .getMissileDefenseHitsRemaining()
-                            + "/3"
-            );
+            showToast("Missile intercepted! Missile Defense: " + controller.getMissileDefenseHitsRemaining() + "/3");
         }
-        else if (controller
-                .wasTsunamiReconstructionCompletedThisTick())
+        else if (controller.wasTsunamiReconstructionCompletedThisTick())
         {
-            showToast(
-                    "Insurance reconstruction completed!"
-            );
+            showToast("Insurance reconstruction completed!");
         }
         else if (militaryRemovals > 0)
         {
-            String groupText =
-                    militaryRemovals == 1
-                            ? " terrorist group!"
-                            : " terrorist groups!";
+            String groupText = militaryRemovals == 1 ? " terrorist group!" : " terrorist groups!";
 
-            showToast(
-                    "Military base eliminated "
-                            + militaryRemovals
-                            + groupText
-            );
+            showToast("Military base eliminated " + militaryRemovals + groupText);
         }
         else if (controller.wasTerroristicGroupCreated())
         {
-            showToast(
-                    "Warning: a terrorist group has appeared!"
-            );
+            showToast("Warning: a terrorist group has appeared!");
         }
-        else if (policeTerroristRemovals > 0
-                && controller.getRemovedCriminalActivities() > 0)
+        else if (policeTerroristRemovals > 0 && controller.getRemovedCriminalActivities() > 0)
         {
-            showToast(
-                    "Criminal activity and terrorist group eliminated by the police!"
-            );
+            showToast("Criminal activity and terrorist group eliminated by the police!");
         }
         else if (policeTerroristRemovals > 0)
         {
-            showToast(
-                    "Terrorist group eliminated by the police!"
-            );
+            showToast("Terrorist group eliminated by the police!");
         }
         else if (controller.getRemovedCriminalActivities() > 0)
         {
-            showToast(
-                    "Criminal activity eliminated by the police!"
-            );
+            showToast("Criminal activity eliminated by the police!");
         }
         else if (criminalActivityCreated)
         {
-            showToast(
-                    "Warning: criminal activity has appeared!"
-            );
+            showToast("Warning: criminal activity has appeared!");
         }
     }
 
     // Crea e struttura la scena JavaFX organizzando i pannelli laterali, la griglia centrale e la barra inferiore in un BorderPane.
     private Scene createScene()
     {
-        Button changePolicyButton =
-                createPolicyButton();
+        Button changePolicyButton = createPolicyButton();
 
-        Button saveButton =
-                createSaveButton();
+        Button saveButton = createSaveButton();
 
-        Button restartButton =
-                createRestartButton();
+        Button restartButton = createRestartButton();
 
-        Button homeButton =
-                createHomeButton();
+        Button homeButton = createHomeButton();
 
         cancelDemolitionWhenUsed(nextTurnButton);
         cancelDemolitionWhenUsed(changePolicyButton);
@@ -591,72 +491,29 @@ public final class GameView implements GameObserver
         cancelDemolitionWhenUsed(chartView.getSwitchButton());
 
         // ---------- PANNELLO LATERALE SINISTRO ----------
-        VBox leftPanel = new VBox(
-                5,
-                statusView.getInfoPanel(),
-                saveButton,
-                restartButton,
-                homeButton,
-                chartView.getView(),
-                chartView.getSwitchButton()
-        );
+        VBox leftPanel = new VBox(5, statusView.getInfoPanel(),
+                saveButton, restartButton, homeButton, chartView.getView(), chartView.getSwitchButton());
 
-        leftPanel.setAlignment(
-                Pos.TOP_CENTER
-        );
+        leftPanel.setAlignment(Pos.TOP_CENTER);
 
-        leftPanel.setPadding(
-                new Insets(
-                        10,
-                        10,
-                        10,
-                        20
-                )
-        );
+        leftPanel.setPadding(new Insets(10, 10, 10, 20));
 
         leftPanel.setPrefWidth(330);
 
         // ---------- PULSANTI AZIONI ----------
-        VBox actionButtons = new VBox(
-                10,
-                eventAnimationView
-                        .getHackerAttackPanel(),
-                mailboxView.getView(),
-                nextTurnButton,
-                changePolicyButton,
-                loanView.getActionButton(),
-                loanView.getRequestBox(),
-                tsunamiInsuranceButton,
-                tsunamiInsuranceBox,
-                nuclearFireProtectionBox,
-                missileDefenseView.getActionButton(),
-                missileDefenseView.getView(),
-                demolitionButton
-        );
+        VBox actionButtons = new VBox(10, eventAnimationView.getHackerAttackPanel(),
+                mailboxView.getView(), nextTurnButton, changePolicyButton, loanView.getActionButton(),
+                loanView.getRequestBox(), tsunamiInsuranceButton, tsunamiInsuranceBox, nuclearFireProtectionBox,
+                missileDefenseView.getActionButton(), missileDefenseView.getView(), demolitionButton);
 
-        actionButtons.setAlignment(
-                Pos.CENTER
-        );
+        actionButtons.setAlignment(Pos.CENTER);
 
         // ---------- PANNELLO LATERALE DESTRO ----------
-        VBox rightPanel = new VBox(
-                20,
-                statusView.getEventBanner(),
-                actionButtons
-        );
+        VBox rightPanel = new VBox(20, statusView.getEventBanner(), actionButtons);
 
-        rightPanel.setAlignment(
-                Pos.CENTER
-        );
+        rightPanel.setAlignment(Pos.CENTER);
 
-        rightPanel.setPadding(
-                new Insets(
-                        10,
-                        20,
-                        10,
-                        10
-                )
-        );
+        rightPanel.setPadding(new Insets(10, 20, 10, 10));
 
         // La comparsa di banner/eventi (es. Hacker Attack) non deve
         // cambiare la larghezza del pannello laterale e spostare la mappa.
@@ -665,27 +522,16 @@ public final class GameView implements GameObserver
         rightPanel.setMaxWidth(220);
 
         // ---------- GRIGLIA CENTRATA ----------
-        MapViewport mapViewport =
-                new MapViewport(
-                        gridView.getView(),
-                        gridView.getGridVisualWidth(),
-                        gridView.getGridVisualHeight(),
-                        controller.getNumberOfRows() > 20
-                                || controller.getNumberOfColumns() > 20
-                );
+        MapViewport mapViewport = new MapViewport(gridView.getView(),
+                gridView.getGridVisualWidth(), gridView.getGridVisualHeight(), controller.getNumberOfRows() > 20
+                || controller.getNumberOfColumns() > 20);
 
         // Missile e scudo stanno sopra il viewport; la loro geometria viene
         // adattata alla scala della griglia al momento dell'evento.
-        mapViewport.getEventOverlay()
-                .getChildren()
-                .addAll(
-                        eventAnimationView.getMissileShieldNode(),
-                        eventAnimationView.getMissileNode()
-                );
+        mapViewport.getEventOverlay().getChildren().addAll(eventAnimationView.getMissileShieldNode(),
+                eventAnimationView.getMissileNode());
 
-        eventAnimationView.setMissileOverlayHost(
-                mapViewport.getEventOverlay()
-        );
+        eventAnimationView.setMissileOverlayHost(mapViewport.getEventOverlay());
         gridView.setExpansionViewAction(new Runnable()
         {
             @Override
@@ -699,8 +545,7 @@ public final class GameView implements GameObserver
         // alcuna nuova espansione e quindi il callback sopra non viene chiamato.
         // In quel caso mostriamo subito i controlli di zoom e adattiamo la
         // griglia al viewport, esattamente come dopo un'espansione normale.
-        if (controller.getNumberOfRows() > 20
-                || controller.getNumberOfColumns() > 20)
+        if (controller.getNumberOfRows() > 20 || controller.getNumberOfColumns() > 20)
         {
             Platform.runLater(new Runnable()
             {
@@ -715,100 +560,49 @@ public final class GameView implements GameObserver
         VBox gridColumn = new VBox(4, mapViewport.getView());
         gridColumn.setAlignment(Pos.CENTER);
 
-        HBox centralContent =
-                new HBox(
-                        20,
-                        leftPanel,
-                        gridColumn,
-                        rightPanel
-                );
+        HBox centralContent = new HBox(20, leftPanel, gridColumn, rightPanel);
 
-        centralContent.setAlignment(
-                Pos.CENTER
-        );
+        centralContent.setAlignment(Pos.CENTER);
 
-        VBox bottomPanel =
-                new VBox(
-                        5,
-                        gridView.getInfoLabel(),
-                        constructionToolbarView
-                                .getView()
-                );
+        VBox bottomPanel = new VBox(5, gridView.getInfoLabel(), constructionToolbarView.getView());
 
-        bottomPanel.setAlignment(
-                Pos.CENTER
-        );
+        bottomPanel.setAlignment(Pos.CENTER);
 
-        bottomPanel.setPadding(
-                new Insets(
-                        5,
-                        0,
-                        10,
-                        0
-                )
-        );
+        bottomPanel.setPadding(new Insets(5, 0, 10, 0));
 
         // ---------- ORDINE GRAFICO ----------
         gameRoot = new BorderPane();
         gameRoot.setFocusTraversable(true);
 
-        gameRoot.setCenter(
-                centralContent
-        );
+        gameRoot.setCenter(centralContent);
 
-        gameRoot.setBottom(
-                bottomPanel
-        );
+        gameRoot.setBottom(bottomPanel);
 
-        StackPane rootWithToast =
-                new StackPane(
-                        gameRoot,
-                        toast,
-                        achievementNotificationView.getView(),
-                        gameOverView.getView(),
-                        invitationView.getView()
-                );
+        StackPane rootWithToast = new StackPane(gameRoot,
+                toast, achievementNotificationView.getView(), gameOverView.getView(), invitationView.getView());
 
         // Il lettore delle lettere e l'icona d'angolo restano sopra al gioco.
         mailboxView.attachTo(rootWithToast);
 
         // Il buio dell'incontro UFO copre anche i pannelli laterali.
-        ufoEncounterView = new UfoEncounterView(
-                controller, gridView, mapViewport, soundManager);
+        ufoEncounterView = new UfoEncounterView(controller, gridView, mapViewport, soundManager);
         rootWithToast.getChildren().add(ufoEncounterView.getView());
 
-        StackPane.setAlignment(
-                achievementNotificationView.getView(),
-                Pos.TOP_CENTER
-        );
-        StackPane.setMargin(
-                achievementNotificationView.getView(),
-                Insets.EMPTY
-        );
+        StackPane.setAlignment(achievementNotificationView.getView(), Pos.TOP_CENTER);
+        StackPane.setMargin(achievementNotificationView.getView(), Insets.EMPTY);
 
-        StackPane.setAlignment(
-                toast,
-                Pos.CENTER
-        );
+        StackPane.setAlignment(toast, Pos.CENTER);
 
-        StackPane.setAlignment(
-                gameOverView.getView(),
-                Pos.CENTER
-        );
+        StackPane.setAlignment(gameOverView.getView(), Pos.CENTER);
 
-        Scene gameScene = new Scene(
-                rootWithToast,
-                1400,
-                900
-        );
+        Scene gameScene = new Scene(rootWithToast, 1400, 900);
         mapViewport.installKeyboardShortcuts(gameScene);
         return gameScene;
     }
 
     private void cancelDemolitionWhenUsed(Button button)
     {
-        button.addEventFilter(
-                ActionEvent.ACTION,
+        button.addEventFilter(ActionEvent.ACTION,
                 new EventHandler<ActionEvent>()
                 {
                     @Override
@@ -823,14 +617,9 @@ public final class GameView implements GameObserver
     // Crea e restituisce il pulsante che apre il menu a tendina per il cambio della politica di gioco.
     private Button createPolicyButton()
     {
-        final Button button =
-                new Button(
-                        "Change policy"
-                );
+        final Button button = new Button("Change policy");
 
-        button.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        button.setMaxWidth(Double.MAX_VALUE);
 
         button.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -838,9 +627,7 @@ public final class GameView implements GameObserver
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        showPolicyMenu(
-                                button
-                        );
+                        showPolicyMenu(button);
                     }
                 }
         );
@@ -849,128 +636,75 @@ public final class GameView implements GameObserver
     }
 
     // Verifica la disponibilita del cambio politica e mostra il ContextMenu con le opzioni selezionabili.
-    private void showPolicyMenu(
-            Button policyButton)
+    private void showPolicyMenu(Button policyButton)
     {
         if (!controller.canChangePolicy())
         {
-            showToast(
-                    "Cannot change policy now! Please wait another "
-                            + controller
-                            .getTicksToPolicyChange()
-                            + " tick."
-            );
+            showToast("Cannot change policy now! Please wait another " + controller
+                    .getTicksToPolicyChange() + " tick.");
 
             return;
         }
 
-        List<PolicyType> policyTypes =
-                List.of(
-                        PolicyType.STANDARD,
-                        PolicyType.ENVIRONMENTAL,
-                        PolicyType.INDUSTRIAL
-                );
+        List<PolicyType> policyTypes = List.of(PolicyType.STANDARD, PolicyType.ENVIRONMENTAL, PolicyType.INDUSTRIAL);
 
-        ContextMenu policyMenu =
-                new ContextMenu();
+        ContextMenu policyMenu = new ContextMenu();
 
-        for (final PolicyType policyType
-                : policyTypes)
+        for (final PolicyType policyType : policyTypes)
         {
-            MenuItem item =
-                    new MenuItem(
-                            policyType
-                                    .getDisplayName()
-                    );
+            MenuItem item = new MenuItem(policyType.getDisplayName());
 
             item.setOnAction(
                     new EventHandler<ActionEvent>()
                     {
                         @Override
-                        public void handle(
-                                ActionEvent event)
+                        public void handle(ActionEvent event)
                         {
-                            changePolicy(
-                                    policyType
-                            );
+                            changePolicy(policyType);
                         }
                     }
             );
 
-            policyMenu.getItems()
-                    .add(item);
+            policyMenu.getItems().add(item);
         }
 
-        policyMenu.show(
-                policyButton,
-                Side.BOTTOM,
-                30,
-                0
-        );
+        policyMenu.show(policyButton, Side.BOTTOM, 30, 0);
     }
 
     // Tenta di cambiare la politica attiva tramite il controller e notifica all'utente l'esito dell'operazione.
-    private void changePolicy(
-            PolicyType policyType)
+    private void changePolicy(PolicyType policyType)
     {
-        if (controller.changePolicy(
-                policyType))
+        if (controller.changePolicy(policyType))
         {
-            showToast(
-                    "Policy changed to: "
-                            + policyType
-                            .getDisplayName()
-            );
+            showToast("Policy changed to: " + policyType.getDisplayName());
         }
         else
         {
-            showToast(
-                    "Impossible to change the Policy."
-            );
+            showToast("Impossible to change the Policy.");
         }
     }
 
     private void configureTsunamiInsuranceButton()
     {
-        tsunamiInsuranceButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        tsunamiInsuranceButton.setMaxWidth(Double.MAX_VALUE);
 
-        tsunamiInsuranceButton.managedProperty()
-                .bind(
-                        tsunamiInsuranceButton
-                                .visibleProperty()
-                );
+        tsunamiInsuranceButton.managedProperty().bind(tsunamiInsuranceButton.visibleProperty());
 
         tsunamiInsuranceButton.setVisible(false);
 
-        tsunamiInsuranceBox.setAlignment(
-                Pos.CENTER
-        );
+        tsunamiInsuranceBox.setAlignment(Pos.CENTER);
 
-        tsunamiInsuranceBox.managedProperty()
-                .bind(
-                        tsunamiInsuranceBox
-                                .visibleProperty()
-                );
+        tsunamiInsuranceBox.managedProperty().bind(tsunamiInsuranceBox.visibleProperty());
 
         tsunamiInsuranceBox.setVisible(false);
 
-        tsunamiInsuranceInfoLabel.setWrapText(
-                true
-        );
+        tsunamiInsuranceInfoLabel.setWrapText(true);
 
-        tsunamiInsuranceActions.setAlignment(
-                Pos.CENTER
-        );
+        tsunamiInsuranceActions.setAlignment(Pos.CENTER);
 
-        confirmTsunamiInsuranceButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        confirmTsunamiInsuranceButton.setMaxWidth(Double.MAX_VALUE);
 
-        cancelTsunamiInsuranceButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        cancelTsunamiInsuranceButton.setMaxWidth(Double.MAX_VALUE);
 
         tsunamiInsuranceButton.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -1000,9 +734,7 @@ public final class GameView implements GameObserver
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        tsunamiInsuranceBox.setVisible(
-                                false
-                        );
+                        tsunamiInsuranceBox.setVisible(false);
                     }
                 }
         );
@@ -1014,21 +746,14 @@ public final class GameView implements GameObserver
      */
     private void showTsunamiInsuranceConfirmation()
     {
-        int cost =
-                controller.getTsunamiInsuranceCost();
+        int cost = controller.getTsunamiInsuranceCost();
 
-        int coveredBuildings =
-                controller
-                        .getTsunamiInsuranceBuildingCount();
+        int coveredBuildings = controller.getTsunamiInsuranceBuildingCount();
 
-        int discount =
-                controller
-                        .getTsunamiInsuranceDiscountPercentage();
+        int discount = controller.getTsunamiInsuranceDiscountPercentage();
 
-        String action =
-                controller.isTsunamiInsuranceActive()
-                        ? "Extend tsunami insurance"
-                        : "Activate tsunami insurance";
+        String action = controller.isTsunamiInsuranceActive()
+                ? "Extend tsunami insurance" : "Activate tsunami insurance";
 
         tsunamiInsuranceInfoLabel.setText(
                 action
@@ -1041,47 +766,31 @@ public final class GameView implements GameObserver
                         + " €"
         );
 
-        tsunamiInsuranceBox.setVisible(
-                true
-        );
+        tsunamiInsuranceBox.setVisible(true);
     }
 
     private void applyTsunamiInsurance()
     {
-        int cost =
-                controller.getTsunamiInsuranceCost();
+        int cost = controller.getTsunamiInsuranceCost();
 
-        boolean extending =
-                controller.isTsunamiInsuranceActive();
+        boolean extending = controller.isTsunamiInsuranceActive();
 
         if (controller.buyTsunamiInsurance())
         {
-            tsunamiInsuranceBox.setVisible(
-                    false
-            );
+            tsunamiInsuranceBox.setVisible(false);
 
             if (extending)
             {
-                showToast(
-                        "Tsunami insurance extended for "
-                                + cost
-                                + " €."
-                );
+                showToast("Tsunami insurance extended for " + cost + " €.");
             }
             else
             {
-                showToast(
-                        "Tsunami insurance activated for "
-                                + cost
-                                + " €."
-                );
+                showToast("Tsunami insurance activated for " + cost + " €.");
             }
         }
         else
         {
-            showToast(
-                    "Unable to apply tsunami insurance. Check your budget."
-            );
+            showToast("Unable to apply tsunami insurance. Check your budget.");
         }
     }
 
@@ -1115,8 +824,7 @@ public final class GameView implements GameObserver
                     @Override
                     public void handle(ActionEvent event)
                     {
-                        dismissedNuclearProtectionCount =
-                                controller.getNuclearPlantsNeedingFireProtectionCount();
+                        dismissedNuclearProtectionCount = controller.getNuclearPlantsNeedingFireProtectionCount();
                         nuclearFireProtectionBox.setVisible(false);
                     }
                 }
@@ -1168,8 +876,7 @@ public final class GameView implements GameObserver
             dismissedNuclearProtectionCount = -1;
         }
 
-        if (!controller.canBuyNuclearFireProtection()
-                || plantsToProtect == dismissedNuclearProtectionCount)
+        if (!controller.canBuyNuclearFireProtection() || plantsToProtect == dismissedNuclearProtectionCount)
         {
             nuclearFireProtectionBox.setVisible(false);
             return;
@@ -1201,14 +908,9 @@ public final class GameView implements GameObserver
 
     private void configureDemolitionButton()
     {
-        demolitionButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        demolitionButton.setMaxWidth(Double.MAX_VALUE);
 
-        demolitionButton.managedProperty()
-                .bind(
-                        demolitionButton.visibleProperty()
-                );
+        demolitionButton.managedProperty().bind(demolitionButton.visibleProperty());
 
         demolitionButton.setVisible(false);
 
@@ -1229,24 +931,13 @@ public final class GameView implements GameObserver
     {
         boolean constructionCompanyPresent = false;
 
-        for (int row = 0;
-             row < controller.getNumberOfRows()
-                     && !constructionCompanyPresent;
-             row++)
+        for (int row = 0; row < controller.getNumberOfRows() && !constructionCompanyPresent; row++)
         {
-            for (int column = 0;
-                 column < controller.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < controller.getNumberOfColumns(); column++)
             {
-                Controller.CellState state =
-                        controller.getCellState(
-                                row,
-                                column
-                        );
+                Controller.CellState state = controller.getCellState(row, column);
 
-                if (!state.empty()
-                        && state.type()
-                        == ConstructionType.CONSTRUCTION_COMPANY)
+                if (!state.empty() && state.type() == ConstructionType.CONSTRUCTION_COMPANY)
                 {
                     constructionCompanyPresent = true;
                     break;
@@ -1254,22 +945,15 @@ public final class GameView implements GameObserver
             }
         }
 
-        demolitionButton.setVisible(
-                constructionCompanyPresent
-        );
+        demolitionButton.setVisible(constructionCompanyPresent);
     }
 
     // Crea e restituisce il pulsante per avviare il salvataggio della partita su file.
     private Button createSaveButton()
     {
-        Button button =
-                new Button(
-                        "Save Game"
-                );
+        Button button = new Button("Save Game");
 
-        button.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        button.setMaxWidth(Double.MAX_VALUE);
 
         button.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -1290,44 +974,29 @@ public final class GameView implements GameObserver
     {
         try
         {
-            progressManager.saveGame(
-                    controller,
-                    saveFilePath
-            );
+            progressManager.saveGame(controller, saveFilePath);
 
             // Lo scatto conferma acusticamente solo i salvataggi riusciti.
             soundManager.playSaveGameSound();
 
-            showToast(
-                    "Game saved successfully"
-            );
+            showToast("Game saved successfully");
         }
         catch (IllegalStateException exception)
         {
-            showToast(
-                    exception.getMessage()
-            );
+            showToast(exception.getMessage());
         }
         catch (IOException exception)
         {
-            showToast(
-                    "Saving error: "
-                            + exception.getMessage()
-            );
+            showToast("Saving error: " + exception.getMessage());
         }
     }
 
     // Crea e restituisce il pulsante per ricominciare la partita senza salvare i progressi correnti.
     private Button createRestartButton()
     {
-        Button button =
-                new Button(
-                        "Restart Game (without saving)"
-                );
+        Button button = new Button("Restart Game (without saving)");
 
-        button.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        button.setMaxWidth(Double.MAX_VALUE);
 
         button.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -1346,14 +1015,9 @@ public final class GameView implements GameObserver
     // Crea e restituisce il pulsante per abbandonare la partita corrente e tornare alla schermata principale.
     private Button createHomeButton()
     {
-        Button button =
-                new Button(
-                        "Return to home"
-                );
+        Button button = new Button("Return to home");
 
-        button.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        button.setMaxWidth(Double.MAX_VALUE);
 
         button.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -1376,11 +1040,9 @@ public final class GameView implements GameObserver
         statusView.updateStatistics();
         statusView.updateTick();
 
-        constructionToolbarView
-                .refreshCosts();
+        constructionToolbarView.refreshCosts();
 
-        constructionToolbarView
-                .refreshAvailability();
+        constructionToolbarView.refreshAvailability();
 
         loanView.refresh();
         refreshTsunamiInsuranceButton();
@@ -1408,9 +1070,7 @@ public final class GameView implements GameObserver
 
     private void showInvitationIfNeeded()
     {
-        if (!closed
-                && !controller.isGameOver()
-                && controller.isFreemasonryInvitationPending()
+        if (!closed && !controller.isGameOver() && controller.isFreemasonryInvitationPending()
                 && !invitationView.isShowing())
         {
             gameRoot.setDisable(true);
@@ -1440,9 +1100,7 @@ public final class GameView implements GameObserver
     @Override
     public void refreshGameView()
     {
-        if (closed
-                || (tickInProgress
-                && !Platform.isFxApplicationThread()))
+        if (closed || (tickInProgress && !Platform.isFxApplicationThread()))
         {
             return;
         }
@@ -1453,10 +1111,7 @@ public final class GameView implements GameObserver
          * strada). Senza coalescing ogni notifica accodava un refresh completo
          * della griglia: su 30x30 potevano accumularsi decine di refresh.
          */
-        if (!refreshScheduled.compareAndSet(
-                false,
-                true
-        ))
+        if (!refreshScheduled.compareAndSet(false, true))
         {
             return;
         }
@@ -1484,8 +1139,7 @@ public final class GameView implements GameObserver
 
         statusView.updateBudget();
 
-        boolean gameOver =
-                controller.isGameOver();
+        boolean gameOver = controller.isGameOver();
 
         gridView.ensureGridSize();
 
@@ -1498,26 +1152,18 @@ public final class GameView implements GameObserver
             eventAnimationView.refresh();
         }
 
-        if (gameOver
-                || (!eventAnimationView
-                .isTsunamiAnimationRunning()
-                && !eventAnimationView
-                .isEarthquakeAnimationRunning()
-                && !eventAnimationView
-                .isMissileAnimationRunning()
-                && !eventAnimationView
-                .isExplosionAnimationRunning()))
+        if (gameOver || (!eventAnimationView.isTsunamiAnimationRunning()
+                && !eventAnimationView.isEarthquakeAnimationRunning() && !eventAnimationView.isMissileAnimationRunning()
+                && !eventAnimationView.isExplosionAnimationRunning()))
         {
             gridView.refresh();
         }
 
         statusView.updateStatistics();
 
-        constructionToolbarView
-                .refreshCosts();
+        constructionToolbarView.refreshCosts();
 
-        constructionToolbarView
-                .refreshAvailability();
+        constructionToolbarView.refreshAvailability();
 
         loanView.refresh();
         refreshTsunamiInsuranceButton();
@@ -1528,9 +1174,7 @@ public final class GameView implements GameObserver
 
         statusView.updateTick();
         statusView.updateEventBanner();
-        raEyeView.refresh(
-                controller.getFreemasonryChoice()
-        );
+        raEyeView.refresh(controller.getFreemasonryChoice());
 
         chartView.refresh();
 
@@ -1546,65 +1190,45 @@ public final class GameView implements GameObserver
 
     private void refreshTsunamiInsuranceButton()
     {
-        boolean hasBanks =
-                controller.hasBanks();
+        boolean hasBanks = controller.hasBanks();
 
-        tsunamiInsuranceButton.setVisible(
-                hasBanks
-        );
+        tsunamiInsuranceButton.setVisible(hasBanks);
 
         if (!hasBanks)
         {
-            tsunamiInsuranceBox.setVisible(
-                    false
-            );
+            tsunamiInsuranceBox.setVisible(false);
             return;
         }
 
-        boolean insuranceActive =
-                controller
-                        .isTsunamiInsuranceActive();
+        boolean insuranceActive = controller.isTsunamiInsuranceActive();
 
-        boolean canApplyInsurance =
-                controller
-                        .canBuyTsunamiInsurance();
+        boolean canApplyInsurance = controller.canBuyTsunamiInsurance();
 
-        tsunamiInsuranceButton.setDisable(
-                !canApplyInsurance
-        );
+        tsunamiInsuranceButton.setDisable(!canApplyInsurance);
 
         if (!canApplyInsurance)
         {
-            tsunamiInsuranceBox.setVisible(
-                    false
-            );
+            tsunamiInsuranceBox.setVisible(false);
         }
 
         if (!insuranceActive)
         {
-            tsunamiInsuranceButton.setText(
-                    "Tsunami insurance"
-            );
+            tsunamiInsuranceButton.setText("Tsunami insurance");
         }
         else if (canApplyInsurance)
         {
-            tsunamiInsuranceButton.setText(
-                    "Extend tsunami insurance"
-            );
+            tsunamiInsuranceButton.setText("Extend tsunami insurance");
         }
         else
         {
-            tsunamiInsuranceButton.setText(
-                    "Tsunami insurance up to date"
-            );
+            tsunamiInsuranceButton.setText("Tsunami insurance up to date");
         }
     }
 
     // Mostra a schermo un messaggio informativo per 4 secondi.
     // Un nuovo toast riavvia lo stesso timer, evitando che un vecchio timer
     // nasconda prematuramente il messaggio più recente.
-    private void showToast(
-            String message)
+    private void showToast(String message)
     {
         toastHidePause.stop();
 
@@ -1643,8 +1267,7 @@ public final class GameView implements GameObserver
 
     private void checkNewAchievements()
     {
-        Achievement achievement = controller
-                .consumeNewlyUnlockedAchievement();
+        Achievement achievement = controller.consumeNewlyUnlockedAchievement();
 
         boolean unlockedSomething = false;
 
@@ -1654,8 +1277,7 @@ public final class GameView implements GameObserver
 
             achievementNotificationView.show(achievement);
 
-            achievement = controller
-                            .consumeNewlyUnlockedAchievement();
+            achievement = controller.consumeNewlyUnlockedAchievement();
         }
 
         if (unlockedSomething)

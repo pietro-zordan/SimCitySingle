@@ -31,11 +31,9 @@ final class GrassGenerator
      */
     void fillTrappedCellsWithGrass()
     {
-        Set<Cell> cellsToFill =
-                new HashSet<>();
+        Set<Cell> cellsToFill = new HashSet<>();
 
-        boolean[][] visited =
-                new boolean[grid.getNumberOfRows()][grid.getNumberOfColumns()];
+        boolean[][] visited = new boolean[grid.getNumberOfRows()][grid.getNumberOfColumns()];
 
         for (int row = 0; row < grid.getNumberOfRows(); row++)
         {
@@ -43,32 +41,21 @@ final class GrassGenerator
             {
                 Cell cell = grid.getCell(row, column);
 
-                if (cell.isEmpty()
-                        && !grid.isCellReservedForReconstruction(
-                                row,
-                                column
-                        )
-                        && !grid.hasAdjacentRoad(cell)
-                        && countBlockedSides(row, column) >= 3)
+                if (cell.isEmpty() && !grid.isCellReservedForReconstruction(row, column)
+                        && !grid.hasAdjacentRoad(cell) && countBlockedSides(row, column) >= 3)
                 {
                     cellsToFill.add(cell);
                 }
 
-                if (visited[row][column]
-                        || !isOpenForGrassReachability(cell)
-                        || grid.isCellReservedForReconstruction(
-                                row,
-                                column
-                        ))
+                if (visited[row][column] || !isOpenForGrassReachability(cell)
+                        || grid.isCellReservedForReconstruction(row, column))
                 {
                     continue;
                 }
 
-                List<Cell> emptyArea =
-                        new ArrayList<>();
+                List<Cell> emptyArea = new ArrayList<>();
 
-                ArrayDeque<Cell> pendingCells =
-                        new ArrayDeque<>();
+                ArrayDeque<Cell> pendingCells = new ArrayDeque<>();
 
                 pendingCells.add(cell);
                 visited[row][column] = true;
@@ -77,8 +64,7 @@ final class GrassGenerator
 
                 while (!pendingCells.isEmpty())
                 {
-                    Cell currentCell =
-                            pendingCells.removeFirst();
+                    Cell currentCell = pendingCells.removeFirst();
 
                     if (currentCell.isEmpty())
                     {
@@ -90,32 +76,19 @@ final class GrassGenerator
                         reachableFromRoad = true;
                     }
 
-                    for (int[] direction
-                            : ORTHOGONAL_DIRECTIONS)
+                    for (int[] direction : ORTHOGONAL_DIRECTIONS)
                     {
-                        int newRow =
-                                currentCell.getRow()
-                                        + direction[0];
+                        int newRow = currentCell.getRow() + direction[0];
 
-                        int newColumn =
-                                currentCell.getColumn()
-                                        + direction[1];
+                        int newColumn = currentCell.getColumn() + direction[1];
 
-                        if (grid.isInside(newRow, newColumn)
-                                && !visited[newRow][newColumn]
-                                && isOpenForGrassReachability(
-                                        grid.getCell(newRow, newColumn)
-                                )
-                                && !grid.isCellReservedForReconstruction(
-                                        newRow,
-                                        newColumn
-                                ))
+                        if (grid.isInside(newRow, newColumn) && !visited[newRow][newColumn]
+                                && isOpenForGrassReachability(grid.getCell(newRow, newColumn))
+                                && !grid.isCellReservedForReconstruction(newRow, newColumn))
                         {
                             visited[newRow][newColumn] = true;
 
-                            pendingCells.addLast(
-                                    grid.getCell(newRow, newColumn)
-                            );
+                            pendingCells.addLast(grid.getCell(newRow, newColumn));
                         }
                     }
                 }
@@ -131,16 +104,13 @@ final class GrassGenerator
         {
             if (cell.isEmpty())
             {
-                cell.placeConstruction(
-                        new Grass()
-                );
+                cell.placeConstruction(new Grass());
             }
         }
     }
 
     // Le minacce temporanee non interrompono il percorso verso una strada.
-    private boolean isOpenForGrassReachability(
-            Cell cell)
+    private boolean isOpenForGrassReachability(Cell cell)
     {
         if (cell.isEmpty())
         {
@@ -149,8 +119,7 @@ final class GrassGenerator
 
         ConstructionType type = cell.getConstruction().getType();
 
-        return type == ConstructionType.CRIMINAL_ACTIVITY
-                || type == ConstructionType.TERRORISTIC_GROUP;
+        return type == ConstructionType.CRIMINAL_ACTIVITY || type == ConstructionType.TERRORISTIC_GROUP;
     }
 
     // L'erba e le minacce temporanee non contano come lati bloccati.
@@ -169,12 +138,9 @@ final class GrassGenerator
                 continue;
             }
 
-            Construction construction =
-                    grid.getCell(newRow, newColumn)
-                            .getConstruction();
+            Construction construction = grid.getCell(newRow, newColumn).getConstruction();
 
-            if (construction != null
-                    && construction.getType() != ConstructionType.GRASS
+            if (construction != null && construction.getType() != ConstructionType.GRASS
                     && construction.getType() != ConstructionType.CRIMINAL_ACTIVITY
                     && construction.getType() != ConstructionType.TERRORISTIC_GROUP)
             {

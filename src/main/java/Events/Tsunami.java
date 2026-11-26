@@ -16,8 +16,7 @@ public class Tsunami extends Event{
     private final static int HAPPINESS_DECREASE=150;
     private final Grid grid;
     private String direction;
-    private final List<ReconstructionEntry> destroyedBuildings =
-            new ArrayList<>();
+    private final List<ReconstructionEntry> destroyedBuildings = new ArrayList<>();
 
     // Crea uno tsunami della durata di tre tick e imposta la sua probabilità di avvio.
     public Tsunami(City city, Grid grid)
@@ -45,24 +44,15 @@ public class Tsunami extends Event{
                 for(int i=0; i<ADVANCEMENT_LENGTH; i++)
                     for(int j=0; j< grid.getNumberOfColumns(); j++)
                     {
-                        destroyBuildingIfNeeded(
-                                grid,
-                                i,
-                                j
-                        );
+                        destroyBuildingIfNeeded(grid, i, j);
                     }
             }
             case "DOWN"->
             {
-                for(int i= grid.getNumberOfRows()-1;
-                    i >= grid.getNumberOfRows() - ADVANCEMENT_LENGTH; i--)
+                for(int i= grid.getNumberOfRows()-1; i >= grid.getNumberOfRows() - ADVANCEMENT_LENGTH; i--)
                     for(int j=0; j< grid.getNumberOfColumns(); j++)
                     {
-                        destroyBuildingIfNeeded(
-                                grid,
-                                i,
-                                j
-                        );
+                        destroyBuildingIfNeeded(grid, i, j);
                     }
             }
             case "LEFT"->
@@ -70,76 +60,44 @@ public class Tsunami extends Event{
                 for(int i=0; i< grid.getNumberOfRows(); i++)
                     for(int j=0; j<ADVANCEMENT_LENGTH; j++)
                     {
-                        destroyBuildingIfNeeded(
-                                grid,
-                                i,
-                                j
-                        );
+                        destroyBuildingIfNeeded(grid, i, j);
                     }
             }
             case "RIGHT"->
             {
                 for (int i = 0; i < grid.getNumberOfRows(); i++)
-                    for(int j= grid.getNumberOfColumns()-1;
-                        j >= grid.getNumberOfColumns() - ADVANCEMENT_LENGTH; j--)
+                    for(int j= grid.getNumberOfColumns()-1; j >= grid.getNumberOfColumns() - ADVANCEMENT_LENGTH; j--)
                     {
-                        destroyBuildingIfNeeded(
-                                grid,
-                                i,
-                                j
-                        );
+                        destroyBuildingIfNeeded(grid, i, j);
                     }
             }
         }
     }
 
-    private void destroyBuildingIfNeeded(
-            Grid targetGrid,
-            int row,
-            int column)
+    private void destroyBuildingIfNeeded(Grid targetGrid, int row, int column)
     {
-        Cell cell =
-                targetGrid.getCell(
-                        row,
-                        column
-                );
+        Cell cell = targetGrid.getCell(row, column);
 
-        Construction construction =
-                cell.getConstruction();
+        Construction construction = cell.getConstruction();
 
-        if (construction != null
-                && !(construction instanceof Road)
-                && !(construction instanceof Grass))
+        if (construction != null && !(construction instanceof Road) && !(construction instanceof Grass))
         {
-            destroyedBuildings.add(
-                    new ReconstructionEntry(
-                            construction,
-                            row,
-                            column
-                    )
-            );
+            destroyedBuildings.add(new ReconstructionEntry(construction, row, column));
 
-            targetGrid.removeConstruction(
-                    row,
-                    column
-            );
+            targetGrid.removeConstruction(row, column);
         }
     }
 
     public List<ReconstructionEntry> getDestroyedBuildings()
     {
-        return new ArrayList<>(
-                destroyedBuildings
-        );
+        return new ArrayList<>(destroyedBuildings);
     }
 
     // Distrugge gli edifici colpiti e aggiorna subito le statistiche della città.
     @Override
     public void start()
     {
-        grid.setGrassGenerationSuspended(
-                true
-        );
+        grid.setGrassGenerationSuspended(true);
 
         getBuildingsToDestroy(grid);
         city.refreshStatistics();
@@ -149,9 +107,7 @@ public class Tsunami extends Event{
     public void end()
     {
         // La generazione automatica dell'erba è disattivata globalmente anche dopo lo tsunami.
-        grid.setGrassGenerationSuspended(
-                true
-        );
+        grid.setGrassGenerationSuspended(true);
     }
 
     // Riduce la felicità della città a ogni tick dello tsunami.

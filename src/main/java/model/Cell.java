@@ -40,16 +40,12 @@ public class Cell {
     {
         if (construction == null)
         {
-            throw new IllegalArgumentException(
-                    "The construction cannot be null"
-            );
+            throw new IllegalArgumentException("The construction cannot be null");
         }
 
         if (!isEmpty())
         {
-            throw new IllegalStateException(
-                    "The cell is already occupied"
-            );
+            throw new IllegalStateException("The cell is already occupied");
         }
 
         this.construction = construction;

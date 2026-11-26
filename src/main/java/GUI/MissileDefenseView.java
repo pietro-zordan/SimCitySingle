@@ -18,47 +18,28 @@ public final class MissileDefenseView
     private final Controller controller;
     private final Consumer<String> toastHandler;
 
-    private final Button missileDefenseButton =
-            new Button("Missile Defense");
+    private final Button missileDefenseButton = new Button("Missile Defense");
 
-    private final Label missileDefenseInfoLabel =
-            new Label();
+    private final Label missileDefenseInfoLabel = new Label();
 
-    private final Button confirmMissileDefenseButton =
-            new Button("Buy");
+    private final Button confirmMissileDefenseButton = new Button("Buy");
 
-    private final Button refillMissileDefenseButton =
-            new Button("Restore to 3");
+    private final Button refillMissileDefenseButton = new Button("Restore to 3");
 
-    private final Button cancelMissileDefenseButton =
-            new Button("Not now");
+    private final Button cancelMissileDefenseButton = new Button("Not now");
 
-    private final HBox missileDefenseActions =
-            new HBox(
-                    5,
-                    confirmMissileDefenseButton,
-                    cancelMissileDefenseButton
-            );
+    private final HBox missileDefenseActions = new HBox(5, confirmMissileDefenseButton, cancelMissileDefenseButton);
 
-    private final VBox missileDefenseBox =
-            new VBox(
-                    5,
-                    missileDefenseInfoLabel,
-                    refillMissileDefenseButton,
-                    missileDefenseActions
-            );
+    private final VBox missileDefenseBox = new VBox(5, missileDefenseInfoLabel,
+            refillMissileDefenseButton, missileDefenseActions);
 
     private boolean missileDefenseOfferShown;
 
-    public MissileDefenseView(
-            Controller controller,
-            Consumer<String> toastHandler)
+    public MissileDefenseView(Controller controller, Consumer<String> toastHandler)
     {
         if (controller == null || toastHandler == null)
         {
-            throw new IllegalArgumentException(
-                    "Missile Defense panel dependencies cannot be null"
-            );
+            throw new IllegalArgumentException("Missile Defense panel dependencies cannot be null");
         }
 
         this.controller = controller;
@@ -68,41 +49,26 @@ public final class MissileDefenseView
 
     private void configureMissileDefense()
     {
-        missileDefenseButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        missileDefenseButton.setMaxWidth(Double.MAX_VALUE);
 
-        missileDefenseButton.managedProperty()
-                .bind(
-                        missileDefenseButton
-                                .visibleProperty()
-                );
+        missileDefenseButton.managedProperty().bind(missileDefenseButton.visibleProperty());
 
         missileDefenseButton.setVisible(false);
 
         missileDefenseBox.setAlignment(Pos.CENTER);
-        missileDefenseBox.managedProperty()
-                .bind(
-                        missileDefenseBox
-                                .visibleProperty()
-                );
+        missileDefenseBox.managedProperty().bind(missileDefenseBox.visibleProperty());
         missileDefenseBox.setVisible(false);
 
         missileDefenseInfoLabel.setWrapText(true);
         missileDefenseActions.setAlignment(Pos.CENTER);
 
         refillMissileDefenseButton.setMaxWidth(Double.MAX_VALUE);
-        refillMissileDefenseButton.managedProperty()
-                .bind(refillMissileDefenseButton.visibleProperty());
+        refillMissileDefenseButton.managedProperty().bind(refillMissileDefenseButton.visibleProperty());
         refillMissileDefenseButton.setVisible(false);
 
-        confirmMissileDefenseButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        confirmMissileDefenseButton.setMaxWidth(Double.MAX_VALUE);
 
-        cancelMissileDefenseButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        cancelMissileDefenseButton.setMaxWidth(Double.MAX_VALUE);
 
         missileDefenseButton.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -174,8 +140,7 @@ public final class MissileDefenseView
         }
         else
         {
-            int hits =
-                    controller.getMissileDefenseHitsRemaining();
+            int hits = controller.getMissileDefenseHitsRemaining();
 
             missileDefenseInfoLabel.setText(
                     "Missile Defense: "
@@ -195,22 +160,12 @@ public final class MissileDefenseView
                             : "\nThe shield is fully repaired.")
             );
 
-            confirmMissileDefenseButton.setText(
-                    hits < 3
-                            ? "Repair +1"
-                            : "Fully repaired"
-            );
+            confirmMissileDefenseButton.setText(hits < 3 ? "Repair +1" : "Fully repaired");
 
-            confirmMissileDefenseButton.setDisable(
-                    !controller.canRepairMissileDefense()
-            );
+            confirmMissileDefenseButton.setDisable(!controller.canRepairMissileDefense());
 
             refillMissileDefenseButton.setVisible(hits < 3);
-            refillMissileDefenseButton.setText(
-                    "Restore to 3 ("
-                            + controller.getMissileDefenseFullRepairCost()
-                            + " €)"
-            );
+            refillMissileDefenseButton.setText("Restore to 3 (" + controller.getMissileDefenseFullRepairCost() + " €)");
 
             cancelMissileDefenseButton.setText("Close");
         }
@@ -222,31 +177,23 @@ public final class MissileDefenseView
     {
         if (!controller.isMissileDefensePurchased())
         {
-            int cost =
-                    controller.getMissileDefensePurchaseCost();
+            int cost = controller.getMissileDefensePurchaseCost();
 
             if (controller.buyMissileDefense())
             {
                 missileDefenseBox.setVisible(false);
 
-                toastHandler.accept(
-                        "Missile Defense activated for "
-                                + cost
-                                + " €. Capacity: 3 missiles."
-                );
+                toastHandler.accept("Missile Defense activated for " + cost + " €. Capacity: 3 missiles.");
             }
             else
             {
-                toastHandler.accept(
-                        "Unable to buy Missile Defense. Check requirements and budget."
-                );
+                toastHandler.accept("Unable to buy Missile Defense. Check requirements and budget.");
             }
 
             return;
         }
 
-        int repairCost =
-                controller.getMissileDefenseRepairCost();
+        int repairCost = controller.getMissileDefenseRepairCost();
 
         if (controller.repairMissileDefense())
         {
@@ -263,9 +210,7 @@ public final class MissileDefenseView
         }
         else
         {
-            toastHandler.accept(
-                    "Unable to repair Missile Defense. Check your budget."
-            );
+            toastHandler.accept("Unable to repair Missile Defense. Check your budget.");
         }
     }
 
@@ -276,30 +221,21 @@ public final class MissileDefenseView
         if (controller.repairMissileDefenseFully())
         {
             missileDefenseBox.setVisible(false);
-            toastHandler.accept(
-                    "Missile Defense restored to 3/3 for "
-                            + cost + " €."
-            );
+            toastHandler.accept("Missile Defense restored to 3/3 for " + cost + " €.");
         }
         else
         {
-            toastHandler.accept(
-                    "Unable to restore Missile Defense. Check your budget."
-            );
+            toastHandler.accept("Unable to restore Missile Defense. Check your budget.");
         }
     }
 
     public void refresh()
     {
-        boolean purchased =
-                controller.isMissileDefensePurchased();
+        boolean purchased = controller.isMissileDefensePurchased();
 
-        boolean available =
-                controller.isMissileDefenseAvailable();
+        boolean available = controller.isMissileDefenseAvailable();
 
-        missileDefenseButton.setVisible(
-                purchased || available
-        );
+        missileDefenseButton.setVisible(purchased || available);
 
         if (!purchased && !available)
         {
@@ -310,33 +246,23 @@ public final class MissileDefenseView
 
         if (purchased)
         {
-            int hits =
-                    controller.getMissileDefenseHitsRemaining();
+            int hits = controller.getMissileDefenseHitsRemaining();
 
             if (hits > 0)
             {
-                missileDefenseButton.setText(
-                        "Missile Defense ("
-                                + hits
-                                + "/3)"
-                );
+                missileDefenseButton.setText("Missile Defense (" + hits + "/3)");
             }
             else
             {
-                missileDefenseButton.setText(
-                        "Missile Defense (OFF 0/3)"
-                );
+                missileDefenseButton.setText("Missile Defense (OFF 0/3)");
             }
 
             return;
         }
 
-        missileDefenseButton.setText(
-                "Buy Missile Defense"
-        );
+        missileDefenseButton.setText("Buy Missile Defense");
 
-        if (controller.canBuyMissileDefense()
-                && !missileDefenseOfferShown)
+        if (controller.canBuyMissileDefense() && !missileDefenseOfferShown)
         {
             missileDefenseOfferShown = true;
             showMissileDefensePanel();
@@ -355,11 +281,7 @@ public final class MissileDefenseView
 
     public List<Button> getButtons()
     {
-        return List.of(
-                missileDefenseButton,
-                confirmMissileDefenseButton,
-                refillMissileDefenseButton,
-                cancelMissileDefenseButton
-        );
+        return List.of(missileDefenseButton, confirmMissileDefenseButton,
+                refillMissileDefenseButton, cancelMissileDefenseButton);
     }
 }

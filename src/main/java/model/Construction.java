@@ -41,9 +41,7 @@ public abstract class Construction {
     {
         if (powerPlant == null)
         {
-            throw new IllegalArgumentException(
-                    "Power plant cannot be null"
-            );
+            throw new IllegalArgumentException("Power plant cannot be null");
         }
 
         connectedPowerPlant=powerPlant;
@@ -138,9 +136,7 @@ public abstract class Construction {
     //verifica se una costruzione sta ricevendo l'energia da lei richiesta
     public boolean isPowered()
     {
-        return !requiresPower()
-                || (connectedPowerPlant != null
-                && connectedPowerPlant.isActive());
+        return !requiresPower() || (connectedPowerPlant != null && connectedPowerPlant.isActive());
     }
 
     /* Restituisce il numero di posti di lavoro offerti.
@@ -176,22 +172,15 @@ public abstract class Construction {
 
     /* Ripristina gli attributi comuni della costruzione.
    Le sottoclassi ripristinano anche i propri attributi specifici. */
-    public void restoreState(
-            int population,
-            int populationGrowthRate,
-            int populationDecreaseRate,
-            double economyGrowthRate,
-            int moneyProduction)
+    public void restoreState(int population, int populationGrowthRate,
+            int populationDecreaseRate, double economyGrowthRate, int moneyProduction)
     {
         this.moneyProduction = moneyProduction;
     }
 
     /* Esegue le eventuali inizializzazioni richieste dopo il piazzamento.
    L'implementazione di base non esegue alcuna operazione. */
-    public void initializeAfterPlacement(
-            Grid grid,
-            int row,
-            int column)
+    public void initializeAfterPlacement(Grid grid, int row, int column)
     {
     }
 
@@ -211,9 +200,7 @@ public abstract class Construction {
         return true;
     }
 
-    public String getPlacementErrorMessage(
-            int pollution,
-            int unemployed)
+    public String getPlacementErrorMessage(int pollution, int unemployed)
     {
         return "Construction cannot be placed";
     }
@@ -228,11 +215,9 @@ public abstract class Construction {
         return tsunamiInsured;
     }
 
-    public void setTsunamiInsured(
-            boolean tsunamiInsured)
+    public void setTsunamiInsured(boolean tsunamiInsured)
     {
-        this.tsunamiInsured =
-                tsunamiInsured;
+        this.tsunamiInsured = tsunamiInsured;
     }
 
 }

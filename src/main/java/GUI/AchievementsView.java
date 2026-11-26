@@ -45,9 +45,7 @@ public final class AchievementsView
         });
 
         Label heading = new Label("Achievements");
-        heading.setStyle(
-                "-fx-text-fill: #182438; -fx-font-size: 29px; -fx-font-weight: bold;"
-        );
+        heading.setStyle("-fx-text-fill: #182438; -fx-font-size: 29px; -fx-font-weight: bold;");
 
         int unlockedCount = manager.getUnlockedAchievements().size();
         int totalCount = Achievement.values().length;
@@ -80,9 +78,7 @@ public final class AchievementsView
         if (unlockedCount == 0)
         {
             Label emptyTitle = new Label("Your story starts here");
-            emptyTitle.setStyle(
-                    "-fx-text-fill: #263446; -fx-font-size: 19px; -fx-font-weight: bold;"
-            );
+            emptyTitle.setStyle("-fx-text-fill: #263446; -fx-font-size: 19px; -fx-font-weight: bold;");
             Label emptyHint = new Label("Play a city to unlock your first achievement.");
             emptyHint.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px;");
             VBox empty = new VBox(8, emptyTitle, emptyHint);
@@ -94,10 +90,8 @@ public final class AchievementsView
         ScrollPane scroll = new ScrollPane(entries);
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setStyle(
-                "-fx-background-color: transparent; -fx-background: #f5f7fa;"
-                        + "-fx-border-color: transparent; -fx-padding: 0;"
-        );
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: #f5f7fa;"
+                + "-fx-border-color: transparent; -fx-padding: 0;");
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f5f7fa;");
@@ -116,9 +110,7 @@ public final class AchievementsView
         medal.setStyle("-fx-background-color: #fff2d9; -fx-background-radius: 14;");
 
         Label title = new Label(achievement.getTitle());
-        title.setStyle(
-                "-fx-text-fill: #1e293b; -fx-font-size: 16px; -fx-font-weight: bold;"
-        );
+        title.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 16px; -fx-font-weight: bold;");
         Label description = new Label(achievement.getDescription().trim());
         description.setWrapText(true);
         description.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
@@ -127,20 +119,15 @@ public final class AchievementsView
         HBox.setHgrow(details, javafx.scene.layout.Priority.ALWAYS);
 
         Label unlocked = new Label("UNLOCKED");
-        unlocked.setStyle(
-                "-fx-text-fill: #9a6827; -fx-font-size: 10px;"
-                        + "-fx-font-weight: bold;"
-        );
+        unlocked.setStyle("-fx-text-fill: #9a6827; -fx-font-size: 10px;" + "-fx-font-weight: bold;");
 
         HBox card = new HBox(16, medal, details, unlocked);
         card.setAlignment(Pos.CENTER_LEFT);
         card.setPadding(new Insets(18, 20, 18, 20));
         card.setMinHeight(92);
         card.setMaxWidth(Double.MAX_VALUE);
-        card.setStyle(
-                "-fx-background-color: white; -fx-background-radius: 14;"
-                        + "-fx-border-color: #e4e8ee; -fx-border-radius: 14;"
-        );
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 14;"
+                + "-fx-border-color: #e4e8ee; -fx-border-radius: 14;");
         return card;
     }
 

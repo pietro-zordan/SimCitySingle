@@ -93,15 +93,9 @@ class TerrorManagerTest
         grid.restoreConstruction(new Road(), 10, 10);
         grid.restoreConstruction(new CriminalActivity(), 10, 11);
 
-        City city =
-                new City(
-                        grid,
-                        new StandardPolicy(),
-                        -100
-                );
+        City city = new City(grid, new StandardPolicy(), -100);
 
-        TerrorManager terrorManager =
-                new TerrorManager(city, grid);
+        TerrorManager terrorManager = new TerrorManager(city, grid);
 
         boolean groupCreated = false;
 

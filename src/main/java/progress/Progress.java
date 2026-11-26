@@ -61,52 +61,21 @@ public class Progress
             pendingTsunamiReconstructions;
     private String tsunamiReconstructionDirection;
 
-    public Progress(
-            int currentTick,
-            int lastPolicyChangeTick,
-            int budget,
-            PolicyType policyType,
-            List<ConstructionProgress> constructions)
+    public Progress(int currentTick, int lastPolicyChangeTick,
+            int budget, PolicyType policyType, List<ConstructionProgress> constructions)
     {
-        this(
-                currentTick,
-                lastPolicyChangeTick,
-                budget,
-                policyType,
-                constructions,
-                false
-        );
+        this(currentTick, lastPolicyChangeTick, budget, policyType, constructions, false);
     }
 
-    public Progress(
-            int currentTick,
-            int lastPolicyChangeTick,
-            int budget,
-            PolicyType policyType,
-            List<ConstructionProgress> constructions,
-            boolean tsunamiInsuranceActive)
+    public Progress(int currentTick, int lastPolicyChangeTick,
+            int budget, PolicyType policyType, List<ConstructionProgress> constructions, boolean tsunamiInsuranceActive)
     {
-        this(
-                currentTick,
-                lastPolicyChangeTick,
-                budget,
-                policyType,
-                constructions,
-                tsunamiInsuranceActive,
-                null,
-                null
-        );
+        this(currentTick, lastPolicyChangeTick, budget, policyType, constructions, tsunamiInsuranceActive, null, null);
     }
 
-    public Progress(
-            int currentTick,
-            int lastPolicyChangeTick,
-            int budget,
-            PolicyType policyType,
-            List<ConstructionProgress> constructions,
-            boolean tsunamiInsuranceActive,
-            List<ConstructionProgress> pendingTsunamiReconstructions,
-            String tsunamiReconstructionDirection)
+    public Progress(int currentTick, int lastPolicyChangeTick,
+            int budget, PolicyType policyType, List<ConstructionProgress> constructions, boolean tsunamiInsuranceActive,
+            List<ConstructionProgress> pendingTsunamiReconstructions, String tsunamiReconstructionDirection)
     {
         this.currentTick = currentTick;
         this.lastPolicyChangeTick = lastPolicyChangeTick;
@@ -116,42 +85,27 @@ public class Progress
         // I Progress creati manualmente mantengono il formato storico 20x20.
         this.gridRows = 20;
         this.gridColumns = 20;
-        this.tsunamiInsuranceActive =
-                tsunamiInsuranceActive;
-        this.pendingTsunamiReconstructions =
-                pendingTsunamiReconstructions;
-        this.tsunamiReconstructionDirection =
-                tsunamiReconstructionDirection;
+        this.tsunamiInsuranceActive = tsunamiInsuranceActive;
+        this.pendingTsunamiReconstructions = pendingTsunamiReconstructions;
+        this.tsunamiReconstructionDirection = tsunamiReconstructionDirection;
     }
 
     /* Crea lo stato di salvataggio della partita
    raccogliendo i dati della simulazione e della griglia. */
-    public static Progress fromGame(
-            Grid grid,
-            City city,
-            Simulation simulation)
+    public static Progress fromGame(Grid grid, City city, Simulation simulation)
     {
-        List<ConstructionProgress> savedConstructions =
-                new ArrayList<>();
+        List<ConstructionProgress> savedConstructions = new ArrayList<>();
 
         for (int row = 0; row < grid.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < grid.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < grid.getNumberOfColumns(); column++)
             {
-                Construction construction =
-                        grid.getCell(row, column).getConstruction();
+                Construction construction = grid.getCell(row, column).getConstruction();
 
-                if (construction != null
-                        && construction.getType() != ConstructionType.GRASS)
+                if (construction != null && construction.getType() != ConstructionType.GRASS)
                 {
-                    ConstructionProgress constructionProgress =
-                            ConstructionProgress.fromConstruction(
-                                    construction,
-                                    row,
-                                    column
-                            );
+                    ConstructionProgress constructionProgress = ConstructionProgress.fromConstruction(construction,
+                            row, column);
 
                     savedConstructions.add(constructionProgress);
                 }
@@ -159,77 +113,48 @@ public class Progress
         }
 
         List<ConstructionProgress>
-                savedPendingReconstructions =
-                new ArrayList<>();
+                savedPendingReconstructions = new ArrayList<>();
 
         List<ReconstructionEntry>
-                pendingReconstructions =
-                simulation
-                        .getPendingTsunamiReconstructions();
+                pendingReconstructions = simulation.getPendingTsunamiReconstructions();
 
         if (pendingReconstructions != null)
         {
-            for (ReconstructionEntry entry
-                    : pendingReconstructions)
+            for (ReconstructionEntry entry : pendingReconstructions)
             {
-                savedPendingReconstructions.add(
-                        ConstructionProgress
-                                .fromConstruction(
-                                        entry.construction(),
-                                        entry.row(),
-                                        entry.column()
-                                )
-                );
+                savedPendingReconstructions.add(ConstructionProgress.fromConstruction(entry.construction(),
+                        entry.row(), entry.column()));
             }
         }
 
-        Progress progress = new Progress(
-                simulation.getCurrentTick(),
-                simulation.getLastPolicyChangeTick(),
-                city.getBudget(),
-                city.getCurrentPolicy().getType(),
-                savedConstructions,
-                simulation.isTsunamiInsuranceActive(),
-                savedPendingReconstructions,
-                simulation
-                        .getTsunamiReconstructionDirection()
-        );
+        Progress progress = new Progress(simulation.getCurrentTick(),
+                simulation.getLastPolicyChangeTick(), city.getBudget(),
+                city.getCurrentPolicy().getType(), savedConstructions, simulation.isTsunamiInsuranceActive(),
+                savedPendingReconstructions, simulation.getTsunamiReconstructionDirection());
 
         progress.gridRows = grid.getNumberOfRows();
         progress.gridColumns = grid.getNumberOfColumns();
 
         progress.bankStatePresent = true;
-        progress.lastLoanTick =
-                simulation.getLastLoanTick();
-        progress.loanActive =
-                simulation.isLoanActive();
-        progress.loanAmount =
-                simulation.getLoanAmount();
-        progress.loanStartTick =
-                simulation.getLoanStartTick();
-        progress.remainingDebt =
-                simulation.getRemainingDebt();
+        progress.lastLoanTick = simulation.getLastLoanTick();
+        progress.loanActive = simulation.isLoanActive();
+        progress.loanAmount = simulation.getLoanAmount();
+        progress.loanStartTick = simulation.getLoanStartTick();
+        progress.remainingDebt = simulation.getRemainingDebt();
 
         progress.missileDefenseStatePresent = true;
-        progress.missileDefensePurchased =
-                simulation.isMissileDefensePurchased();
-        progress.missileDefenseHitsRemaining =
-                simulation.getMissileDefenseHitsRemaining();
+        progress.missileDefensePurchased = simulation.isMissileDefensePurchased();
+        progress.missileDefenseHitsRemaining = simulation.getMissileDefenseHitsRemaining();
 
-        progress.freemasonryChoice =
-                simulation.getFreemasonryChoice();
-        progress.masonicLodgeRemovedTick =
-                simulation.getMasonicLodgeRemovedTick();
+        progress.freemasonryChoice = simulation.getFreemasonryChoice();
+        progress.masonicLodgeRemovedTick = simulation.getMasonicLodgeRemovedTick();
 
         // Salva anche l'indicazione delle lettere già aperte.
-        progress.mailboxMessages =
-                simulation.getMailbox().getMessages();
+        progress.mailboxMessages = simulation.getMailbox().getMessages();
 
-        progress.demolitionTicks =
-                simulation.getDemolitionTicks();
+        progress.demolitionTicks = simulation.getDemolitionTicks();
 
-        progress.criticalTicks =
-                simulation.getCriticalTicks();
+        progress.criticalTicks = simulation.getCriticalTicks();
 
         return progress;
     }
@@ -256,9 +181,7 @@ public class Progress
 
     public FreemasonryChoice getFreemasonryChoice()
     {
-        return freemasonryChoice == null
-                ? FreemasonryChoice.PENDING
-                : freemasonryChoice;
+        return freemasonryChoice == null ? FreemasonryChoice.PENDING : freemasonryChoice;
     }
 
     public PolicyType getPolicyType()
@@ -293,9 +216,7 @@ public class Progress
     {
         if (constructions == null)
         {
-            throw new IllegalStateException(
-                    "The saved construction list cannot be null"
-            );
+            throw new IllegalStateException("The saved construction list cannot be null");
         }
 
         Grid restoredGrid;
@@ -310,15 +231,10 @@ public class Progress
         {
             if (gridRows == 0 || gridColumns == 0)
             {
-                throw new IllegalStateException(
-                        "Invalid saved grid size"
-                );
+                throw new IllegalStateException("Invalid saved grid size");
             }
 
-            restoredGrid = new Grid(
-                    gridRows,
-                    gridColumns
-            );
+            restoredGrid = new Grid(gridRows, gridColumns);
         }
 
         for (ConstructionProgress constructionProgress : constructions)
@@ -329,14 +245,10 @@ public class Progress
                 continue;
             }
 
-            Construction construction =
-                    constructionProgress.toConstruction();
+            Construction construction = constructionProgress.toConstruction();
 
-            restoredGrid.restoreConstruction(
-                    construction,
-                    constructionProgress.getRow(),
-                    constructionProgress.getColumn()
-            );
+            restoredGrid.restoreConstruction(construction,
+                    constructionProgress.getRow(), constructionProgress.getColumn());
         }
 
         restoredGrid.rebuildConnectionsAfterLoad();
@@ -354,29 +266,18 @@ public class Progress
    la policy, il budget e i tick precedentemente salvati. */
     public Controller restoreController()
     {
-        return restoreController(
-                new AchievementManager()
-        );
+        return restoreController(new AchievementManager());
     }
 
     /* Variante usata dall'applicazione per mantenere gli stessi
        achievement anche quando viene caricata un'altra partita. */
-    public Controller restoreController(
-            AchievementManager achievementManager)
+    public Controller restoreController(AchievementManager achievementManager)
     {
         Grid restoredGrid = restoreGrid();
         Policy restoredPolicy = restorePolicy();
 
-        Controller controller =
-                new Controller(
-                        restoredGrid,
-                        restoredPolicy,
-                        budget,
-                        currentTick,
-                        lastPolicyChangeTick,
-                        tsunamiInsuranceActive,
-                        achievementManager
-                );
+        Controller controller = new Controller(restoredGrid,
+                restoredPolicy, budget, currentTick, lastPolicyChangeTick, tsunamiInsuranceActive, achievementManager);
 
         controller.restoreBankruptcyState(criticalTicks);
 
@@ -388,64 +289,35 @@ public class Progress
         {
             // Il vecchio formato non conosce il tick di ciascuna demolizione.
             // Conserva la quota usata facendo ripartire i 10 tick dal caricamento.
-            controller.restoreRemovalState(Collections.nCopies(
-                    Math.min(usedRemovals,
-                            restoredGrid.getNumberOfPoweredCC()),
-                    currentTick
-            ));
+            controller.restoreRemovalState(Collections.nCopies(Math.min(usedRemovals,
+                    restoredGrid.getNumberOfPoweredCC()), currentTick));
         }
 
         if (bankStatePresent)
         {
-            controller.restoreBankState(
-                    lastLoanTick,
-                    loanActive,
-                    loanAmount,
-                    loanStartTick,
-                    remainingDebt
-            );
+            controller.restoreBankState(lastLoanTick, loanActive, loanAmount, loanStartTick, remainingDebt);
         }
 
         if (missileDefenseStatePresent)
         {
-            controller.restoreMissileDefenseState(
-                    missileDefensePurchased,
-                    missileDefenseHitsRemaining
-            );
+            controller.restoreMissileDefenseState(missileDefensePurchased, missileDefenseHitsRemaining);
         }
 
-        if (pendingTsunamiReconstructions != null
-                && !pendingTsunamiReconstructions.isEmpty())
+        if (pendingTsunamiReconstructions != null && !pendingTsunamiReconstructions.isEmpty())
         {
-            List<ReconstructionEntry> entries =
-                    new ArrayList<>();
+            List<ReconstructionEntry> entries = new ArrayList<>();
 
-            for (ConstructionProgress savedEntry
-                    : pendingTsunamiReconstructions)
+            for (ConstructionProgress savedEntry : pendingTsunamiReconstructions)
             {
-                entries.add(
-                        new ReconstructionEntry(
-                                savedEntry
-                                        .toConstruction(),
-                                savedEntry.getRow(),
-                                savedEntry.getColumn()
-                        )
-                );
+                entries.add(new ReconstructionEntry(savedEntry.toConstruction(),
+                        savedEntry.getRow(), savedEntry.getColumn()));
             }
 
-            controller
-                    .restoreTsunamiReconstruction(
-                            entries,
-                            tsunamiReconstructionDirection
-                    );
+            controller.restoreTsunamiReconstruction(entries, tsunamiReconstructionDirection);
         }
 
-        controller.restoreMasonicLodgeRemovedTick(
-                masonicLodgeRemovedTick
-        );
-        controller.restoreFreemasonryChoice(
-                getFreemasonryChoice()
-        );
+        controller.restoreMasonicLodgeRemovedTick(masonicLodgeRemovedTick);
+        controller.restoreFreemasonryChoice(getFreemasonryChoice());
 
         // Un elenco nullo mantiene compatibili le partite precedenti.
         controller.restoreMailbox(mailboxMessages);

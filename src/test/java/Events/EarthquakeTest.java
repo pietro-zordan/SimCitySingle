@@ -63,8 +63,7 @@ class EarthquakeTest
         assertEquals(EventType.EARTHQUAKE, earthquake.getType());
         assertEquals(direction, earthquake.getDirection());
         assertEquals(line, earthquake.getAffectedLineIndex());
-        assertEquals("vertical".equals(direction) ? rows : columns,
-                earthquake.getEarthquakeCells(grid).length);
+        assertEquals("vertical".equals(direction) ? rows : columns, earthquake.getEarthquakeCells(grid).length);
         for (int row = 0; row < rows; row++)
         {
             for (int column = 0; column < columns; column++)

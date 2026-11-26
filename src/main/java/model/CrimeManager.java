@@ -139,10 +139,8 @@ public class CrimeManager {
             for (int column = 0; column < grid.getNumberOfColumns(); column++) {
                 Cell cell = grid.getCell(row, column);
 
-                if (!cell.isEmpty()
-                        && cell.getConstruction() instanceof TerroristicGroup) {
-                    TerroristicGroup terroristicGroup =
-                            (TerroristicGroup) cell.getConstruction();
+                if (!cell.isEmpty() && cell.getConstruction() instanceof TerroristicGroup) {
+                    TerroristicGroup terroristicGroup = (TerroristicGroup) cell.getConstruction();
 
                     if (terroristicGroup.canBeRemovedByMilitaryBase()) {
                         militaryTargets.add(cell);
@@ -165,10 +163,7 @@ public class CrimeManager {
         int randomIndex = random.nextInt(militaryTargets.size());
         Cell targetCell = militaryTargets.get(randomIndex);
 
-        grid.removeConstruction(
-                targetCell.getRow(),
-                targetCell.getColumn()
-        );
+        grid.removeConstruction(targetCell.getRow(), targetCell.getColumn());
 
         removedTerroristicGroups++;
         removedTerroristicGroupsByMilitary++;
@@ -221,16 +216,13 @@ public class CrimeManager {
         removedTerroristicGroups = 0;
         removedTerroristicGroupsByMilitary = 0;
 
-        List<Construction> constructions =
-                new ArrayList<>(grid.getConstructions());
+        List<Construction> constructions = new ArrayList<>(grid.getConstructions());
 
         for (Construction construction : constructions) {
             if (construction instanceof PoliceStation) {
-                PoliceStation policeStation =
-                        (PoliceStation) construction;
+                PoliceStation policeStation = (PoliceStation) construction;
 
-                if (policeStation.isPowered()
-                        && policeStation.canRemoveCriminalActivity(currentTick)
+                if (policeStation.isPowered() && policeStation.canRemoveCriminalActivity(currentTick)
                         && destroyPoliceTarget(currentTick)) {
                     policeStation.registerCriminalActivityRemoval(currentTick);
                     removed++;
@@ -238,16 +230,13 @@ public class CrimeManager {
             }
         }
 
-        constructions =
-                new ArrayList<>(grid.getConstructions());
+        constructions = new ArrayList<>(grid.getConstructions());
 
         for (Construction construction : constructions) {
             if (construction instanceof MilitaryBase) {
-                MilitaryBase militaryBase =
-                        (MilitaryBase) construction;
+                MilitaryBase militaryBase = (MilitaryBase) construction;
 
-                if (militaryBase.isPowered()
-                        && militaryBase.canRemoveCriminalActivity(currentTick)
+                if (militaryBase.isPowered() && militaryBase.canRemoveCriminalActivity(currentTick)
                         && destroyMilitaryTarget()) {
                     militaryBase.registerCriminalActivityRemoval(currentTick);
                     removed++;

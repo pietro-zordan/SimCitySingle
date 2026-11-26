@@ -33,15 +33,12 @@ public class PoliceStation extends Construction implements DefenceSystem{
         return 50;
     }
 
-    public boolean canRemoveCriminalActivity(
-            int currentTick)
+    public boolean canRemoveCriminalActivity(int currentTick)
     {
-        return lastRemovalTick == -1
-                || currentTick - lastRemovalTick >= 15;
+        return lastRemovalTick == -1 || currentTick - lastRemovalTick >= 15;
     }
 
-    public void registerCriminalActivityRemoval(
-            int currentTick)
+    public void registerCriminalActivityRemoval(int currentTick)
     {
         lastRemovalTick = currentTick;
     }
@@ -55,9 +52,7 @@ public class PoliceStation extends Construction implements DefenceSystem{
     {
         if (lastRemovalTick < -1)
         {
-            throw new IllegalArgumentException(
-                    "Invalid police removal tick"
-            );
+            throw new IllegalArgumentException("Invalid police removal tick");
         }
 
         this.lastRemovalTick = lastRemovalTick;

@@ -87,8 +87,7 @@ class SimulationTest {
         verify(city, never()).updateOfOneTick();
 
         assertTrue(at500.chooseFreemasonry(FreemasonryChoice.DECLINED));
-        assertEquals(FreemasonryChoice.DECLINED,
-                at500.getFreemasonryChoice());
+        assertEquals(FreemasonryChoice.DECLINED, at500.getFreemasonryChoice());
         assertFalse(at500.isFreemasonryInvitationPending());
         assertFalse(at500.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
     }
@@ -137,8 +136,7 @@ class SimulationTest {
         Simulation invited = new Simulation(city, actualGrid, 500, 0);
 
         assertTrue(invited.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
-        assertInstanceOf(MasonicLodge.class,
-                actualGrid.getCell(0, 1).getConstruction());
+        assertInstanceOf(MasonicLodge.class, actualGrid.getCell(0, 1).getConstruction());
 
         actualGrid.removeConstruction(0, 1);
         invited.tryToPlaceMasonicLodge();
@@ -150,8 +148,7 @@ class SimulationTest {
         invited.updateOfOneTick();
 
         assertEquals(501, invited.getCurrentTick());
-        assertInstanceOf(MasonicLodge.class,
-                actualGrid.getCell(0, 1).getConstruction());
+        assertInstanceOf(MasonicLodge.class, actualGrid.getCell(0, 1).getConstruction());
     }
 
     @Test
@@ -179,8 +176,7 @@ class SimulationTest {
         assertTrue(actualGrid.getCell(0, 1).isEmpty());
 
         invited.updateOfOneTick();
-        assertInstanceOf(MasonicLodge.class,
-                actualGrid.getCell(0, 1).getConstruction());
+        assertInstanceOf(MasonicLodge.class, actualGrid.getCell(0, 1).getConstruction());
     }
 
     @Test
@@ -188,8 +184,7 @@ class SimulationTest {
     {
         simulation.restoreBankruptcyState(15);
 
-        assertThrows(IllegalStateException.class,
-                simulation::updateOfOneTick);
+        assertThrows(IllegalStateException.class, simulation::updateOfOneTick);
         assertEquals(0, simulation.getCurrentTick());
         verify(city, never()).updateOfOneTick();
     }

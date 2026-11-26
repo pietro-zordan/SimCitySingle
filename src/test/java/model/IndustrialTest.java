@@ -21,20 +21,12 @@ class IndustrialTest {
     @Test
     void initialValuesAreCorrect() {
         assertEquals(0, industrial.getMoneyProduction());
-        assertEquals(
-                1.0,
-                industrial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(1.0, industrial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(1000, industrial.getPowerConsumption());
         assertEquals(-600, industrial.getPlacementPrice());
         assertEquals(100, industrial.getNumberOfEmployee());
-        assertEquals(
-                5.0,
-                industrial.getMaxEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(5.0, industrial.getMaxEconomyGrowthRate(), 0.0001);
 
         assertFalse(industrial.isPowered());
         assertEquals(0, industrial.getPollutionImpact());
@@ -48,11 +40,7 @@ class IndustrialTest {
         industrial.updateOfOneTick();
 
         assertEquals(150, industrial.getMoneyProduction());
-        assertEquals(
-                1.1,
-                industrial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(1.1, industrial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(600, industrial.getPollutionImpact());
         assertEquals(-200, industrial.getHappinessImpact());
@@ -67,11 +55,7 @@ class IndustrialTest {
         assertEquals(0, industrial.getPollutionImpact());
         assertEquals(0, industrial.getHappinessImpact());
 
-        assertEquals(
-                1.0,
-                industrial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(1.0, industrial.getEconomyGrowthRate(), 0.0001);
     }
 
     @Test
@@ -82,38 +66,21 @@ class IndustrialTest {
             industrial.updateOfOneTick();
         }
 
-        assertEquals(
-                5.0,
-                industrial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(5.0, industrial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(750, industrial.getMoneyProduction());
     }
 
     @Test
     void typeIsIndustrial() {
-        assertEquals(
-                ConstructionType.INDUSTRIAL,
-                industrial.getType()
-        );
+        assertEquals(ConstructionType.INDUSTRIAL, industrial.getType());
     }
 
     @Test
     void restoreStateRestoresValues() {
-        industrial.restoreState(
-                0,
-                0,
-                0,
-                4.2,
-                800
-        );
+        industrial.restoreState(0, 0, 0, 4.2, 800);
 
-        assertEquals(
-                4.2,
-                industrial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(4.2, industrial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(800, industrial.getMoneyProduction());
     }

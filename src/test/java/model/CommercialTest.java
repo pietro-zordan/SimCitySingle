@@ -21,20 +21,12 @@ class CommercialTest {
     @Test
     void initialValuesAreCorrect() {
         assertEquals(0, commercial.getMoneyProduction());
-        assertEquals(
-                1.0,
-                commercial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(1.0, commercial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(200, commercial.getPowerConsumption());
         assertEquals(-300, commercial.getPlacementPrice());
         assertEquals(30, commercial.getNumberOfEmployee());
-        assertEquals(
-                3.0,
-                commercial.getMaxEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(3.0, commercial.getMaxEconomyGrowthRate(), 0.0001);
 
         assertFalse(commercial.isPowered());
         assertEquals(0, commercial.getPollutionImpact());
@@ -48,11 +40,7 @@ class CommercialTest {
         commercial.updateOfOneTick();
 
         assertEquals(50, commercial.getMoneyProduction());
-        assertEquals(
-                1.1,
-                commercial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(1.1, commercial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(150, commercial.getPollutionImpact());
         assertEquals(150, commercial.getHappinessImpact());
@@ -67,11 +55,7 @@ class CommercialTest {
         assertEquals(0, commercial.getPollutionImpact());
         assertEquals(0, commercial.getHappinessImpact());
 
-        assertEquals(
-                1.0,
-                commercial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(1.0, commercial.getEconomyGrowthRate(), 0.0001);
     }
 
     @Test
@@ -82,11 +66,7 @@ class CommercialTest {
             commercial.updateOfOneTick();
         }
 
-        assertEquals(
-                3.0,
-                commercial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(3.0, commercial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(150, commercial.getMoneyProduction());
     }
@@ -108,35 +88,19 @@ class CommercialTest {
 
     @Test
     void negativeEconomicBoostThrowsException() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> commercial.applyEconomicBoost(-1.0)
-        );
+        assertThrows(IllegalArgumentException.class, () -> commercial.applyEconomicBoost(-1.0));
     }
 
     @Test
     void typeIsCommercial() {
-        assertEquals(
-                ConstructionType.COMMERCIAL,
-                commercial.getType()
-        );
+        assertEquals(ConstructionType.COMMERCIAL, commercial.getType());
     }
 
     @Test
     void restoreStateRestoresValues() {
-        commercial.restoreState(
-                0,
-                0,
-                0,
-                2.4,
-                120
-        );
+        commercial.restoreState(0, 0, 0, 2.4, 120);
 
-        assertEquals(
-                2.4,
-                commercial.getEconomyGrowthRate(),
-                0.0001
-        );
+        assertEquals(2.4, commercial.getEconomyGrowthRate(), 0.0001);
 
         assertEquals(120, commercial.getMoneyProduction());
     }

@@ -46,8 +46,7 @@ class CellTest {
 
     @Test
     void placeConstructionWithNullThrowsException() {
-        assertThrows(IllegalArgumentException.class,
-                () -> cell.placeConstruction(null));
+        assertThrows(IllegalArgumentException.class, () -> cell.placeConstruction(null));
     }
 
     @Test
@@ -56,8 +55,7 @@ class CellTest {
 
         Construction anotherConstruction = mock(Construction.class);
 
-        assertThrows(IllegalStateException.class,
-                () -> cell.placeConstruction(anotherConstruction));
+        assertThrows(IllegalStateException.class, () -> cell.placeConstruction(anotherConstruction));
     }
 
     @Test

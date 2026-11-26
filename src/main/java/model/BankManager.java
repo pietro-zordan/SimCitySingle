@@ -25,16 +25,12 @@ public class BankManager
     {
         if (city == null)
         {
-            throw new IllegalArgumentException(
-                    "The city cannot be null"
-            );
+            throw new IllegalArgumentException("The city cannot be null");
         }
 
         if (grid == null)
         {
-            throw new IllegalArgumentException(
-                    "The grid cannot be null"
-            );
+            throw new IllegalArgumentException("The grid cannot be null");
         }
 
         this.city = city;
@@ -56,18 +52,12 @@ public class BankManager
     {
         int passedTicks = currentTick - lastLoanTick;
 
-        return canPlaceBank(currentTick)
-                && grid.getNumberOfPoweredBanks() > 0
-                && passedTicks >= LOAN_INTERVAL;
+        return canPlaceBank(currentTick) && grid.getNumberOfPoweredBanks() > 0 && passedTicks >= LOAN_INTERVAL;
     }
 
-    public boolean requestLoan(
-            int amount,
-            int currentTick)
+    public boolean requestLoan(int amount, int currentTick)
     {
-        if (!canRequestLoan(currentTick)
-                || amount <= 0
-                || amount > getMaxLoanAmount())
+        if (!canRequestLoan(currentTick) || amount <= 0 || amount > getMaxLoanAmount())
         {
             return false;
         }
@@ -84,17 +74,11 @@ public class BankManager
 
     public int getMaxLoanAmount()
     {
-        return BASE_LOAN_AMOUNT
-                * grid.getNumberOfPoweredBanks();
+        return BASE_LOAN_AMOUNT * grid.getNumberOfPoweredBanks();
     }
 
     // Ripristina lo stato finanziario salvato della banca.
-    public void restoreState(
-            int lastLoanTick,
-            boolean loanActive,
-            int loanAmount,
-            int loanStartTick,
-            int remainingDebt)
+    public void restoreState(int lastLoanTick, boolean loanActive, int loanAmount, int loanStartTick, int remainingDebt)
     {
         this.lastLoanTick = lastLoanTick;
         this.loanActive = loanActive;
@@ -131,27 +115,18 @@ public class BankManager
     private void checkLoanRepayment(int currentTick)
     {
         // Dopo tre tick il prestito diventa debito da restituire.
-        if (loanActive
-                && currentTick - loanStartTick >= LOAN_DURATION)
+        if (loanActive && currentTick - loanStartTick >= LOAN_DURATION)
         {
-            remainingDebt +=
-                    (int) Math.round(
-                            loanAmount
-                                    * LOAN_MULTIPLIER
-                    );
+            remainingDebt += (int) Math.round(loanAmount * LOAN_MULTIPLIER);
 
             loanActive = false;
             loanAmount = 0;
         }
 
         // Se esiste un debito, usa il budget disponibile senza renderlo negativo.
-        if (remainingDebt > 0
-                && city.getBudget() > 0)
+        if (remainingDebt > 0 && city.getBudget() > 0)
         {
-            int payment = Math.min(
-                    city.getBudget(),
-                    remainingDebt
-            );
+            int payment = Math.min(city.getBudget(), remainingDebt);
 
             city.updateBudget(-payment);
             remainingDebt -= payment;

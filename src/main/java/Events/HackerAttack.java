@@ -27,8 +27,7 @@ public class HackerAttack extends Event
     // Seleziona casualmente una delle centrali presenti nella griglia.
     private PowerPlant selectRandomPowerPlant(Grid grid)
     {
-        List<PowerPlant> powerPlants =
-                grid.getAllPowerPlants();
+        List<PowerPlant> powerPlants = grid.getAllPowerPlants();
 
         if (powerPlants.isEmpty())
         {
@@ -36,9 +35,7 @@ public class HackerAttack extends Event
         }
 
         Random dice = new Random();
-        int numero = dice.nextInt(
-                powerPlants.size()
-        );
+        int numero = dice.nextInt(powerPlants.size());
 
         return powerPlants.get(numero);
     }
@@ -56,16 +53,14 @@ public class HackerAttack extends Event
     @Override
     public boolean canStart()
     {
-        return super.canStart()
-                && !grid.getAllPowerPlants().isEmpty();
+        return super.canStart() && !grid.getAllPowerPlants().isEmpty();
     }
 
     // Seleziona una centrale casuale e la sospende.
     @Override
     public void start()
     {
-        suspendedPowerPlant =
-                selectRandomPowerPlant(grid);
+        suspendedPowerPlant = selectRandomPowerPlant(grid);
 
         setSuspended();
         city.refreshStatistics();

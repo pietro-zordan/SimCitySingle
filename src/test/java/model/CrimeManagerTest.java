@@ -13,59 +13,31 @@ class CrimeManagerTest
     void placingCriminalActivityRefreshesCityStatistics()
     {
         Grid grid = new Grid();
-        City city = new City(
-                grid,
-                new StandardPolicy()
-        );
+        City city = new City(grid, new StandardPolicy());
 
-        grid.placeConstruction(
-                new Road(),
-                10,
-                10
-        );
+        grid.placeConstruction(new Road(), 10, 10);
 
-        CrimeManager crimeManager =
-                new CrimeManager(city, grid);
+        CrimeManager crimeManager = new CrimeManager(city, grid);
 
-        boolean created =
-                crimeManager.placeCriminalActivity(20);
+        boolean created = crimeManager.placeCriminalActivity(20);
 
         assertTrue(created);
-        assertEquals(
-                -300,
-                city.getGlobalEconomy()
-        );
-        assertEquals(
-                -400,
-                city.getGlobalHappiness()
-        );
+        assertEquals(-300, city.getGlobalEconomy());
+        assertEquals(-400, city.getGlobalHappiness());
     }
     @Test
     void criminalActivityCannotAppearBeforeTick20()
     {
         Grid grid = new Grid();
-        City city = new City(
-                grid,
-                new StandardPolicy()
-        );
+        City city = new City(grid, new StandardPolicy());
 
-        grid.placeConstruction(
-                new Road(),
-                10,
-                10
-        );
+        grid.placeConstruction(new Road(), 10, 10);
 
-        CrimeManager crimeManager =
-                new CrimeManager(city, grid);
+        CrimeManager crimeManager = new CrimeManager(city, grid);
 
-        assertFalse(
-                crimeManager.placeCriminalActivity(19)
-        );
+        assertFalse(crimeManager.placeCriminalActivity(19));
 
-        assertEquals(
-                0,
-                countCriminalActivities(grid)
-        );
+        assertEquals(0, countCriminalActivities(grid));
     }
 
     @Test
@@ -133,54 +105,27 @@ class CrimeManagerTest
     @Test
     void onePoliceStationRemovesOnlyOneThreat()
     {
-        Grid grid =
-                createGridWithPoweredPoliceStation();
+        Grid grid = createGridWithPoweredPoliceStation();
 
-        CriminalActivity criminalActivity =
-                new CriminalActivity();
+        CriminalActivity criminalActivity = new CriminalActivity();
 
         criminalActivity.setCreationTick(0);
 
-        grid.restoreConstruction(
-                criminalActivity,
-                10,
-                10
-        );
-        TerroristicGroup terroristicGroup =
-                new TerroristicGroup();
+        grid.restoreConstruction(criminalActivity, 10, 10);
+        TerroristicGroup terroristicGroup = new TerroristicGroup();
         terroristicGroup.setLifetimeTicks(5);
-        grid.restoreConstruction(
-                terroristicGroup,
-                10,
-                11
-        );
+        grid.restoreConstruction(terroristicGroup, 10, 11);
 
-        City city =
-                new City(
-                        grid,
-                        new StandardPolicy()
-                );
+        City city = new City(grid, new StandardPolicy());
 
-        CrimeManager crimeManager =
-                new CrimeManager(city, grid);
+        CrimeManager crimeManager = new CrimeManager(city, grid);
 
-        assertEquals(
-                1,
-                crimeManager
-                        .tryToDestroyCriminalActivities(15)
-        );
+        assertEquals(1, crimeManager.tryToDestroyCriminalActivities(15));
 
         // Nello stesso tick la stazione è in cooldown:
         // non può rimuovere anche l'altra minaccia.
-        assertEquals(
-                0,
-                crimeManager
-                        .tryToDestroyCriminalActivities(15)
-        );
-        assertEquals(
-                1,
-                countThreats(grid)
-        );
+        assertEquals(0, crimeManager.tryToDestroyCriminalActivities(15));
+        assertEquals(1, countThreats(grid));
     }
 
     @Test
@@ -195,9 +140,7 @@ class CrimeManagerTest
         grid.restoreConstruction(first, 10, 10);
         grid.restoreConstruction(second, 10, 11);
 
-        CrimeManager crimeManager = new CrimeManager(
-                new City(grid, new StandardPolicy()), grid
-        );
+        CrimeManager crimeManager = new CrimeManager(new City(grid, new StandardPolicy()), grid);
 
         assertEquals(1, crimeManager.tryToDestroyCriminalActivities(60));
         assertEquals(0, crimeManager.tryToDestroyCriminalActivities(74));
@@ -210,32 +153,21 @@ class CrimeManagerTest
     {
         Grid grid = new Grid();
 
-        grid.restoreConstruction(
-                new PowerPlant(),
-                5,
-                5
-        );
-        grid.restoreConstruction(
-                new PoliceStation(),
-                5,
-                6
-        );
+        grid.restoreConstruction(new PowerPlant(), 5, 5);
+        grid.restoreConstruction(new PoliceStation(), 5, 6);
 
         grid.rebuildConnectionsAfterLoad();
 
         return grid;
     }
 
-    private int countCriminalActivities(
-            Grid grid)
+    private int countCriminalActivities(Grid grid)
     {
         int count = 0;
 
-        for (Construction construction
-                : grid.getConstructions())
+        for (Construction construction : grid.getConstructions())
         {
-            if (construction
-                    instanceof CriminalActivity)
+            if (construction instanceof CriminalActivity)
             {
                 count++;
             }
@@ -248,13 +180,9 @@ class CrimeManagerTest
     {
         int count = 0;
 
-        for (Construction construction
-                : grid.getConstructions())
+        for (Construction construction : grid.getConstructions())
         {
-            if (construction
-                    instanceof CriminalActivity
-                    || construction
-                    instanceof TerroristicGroup)
+            if (construction instanceof CriminalActivity || construction instanceof TerroristicGroup)
             {
                 count++;
             }

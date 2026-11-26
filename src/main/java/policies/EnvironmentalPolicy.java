@@ -25,10 +25,7 @@ public class EnvironmentalPolicy implements Policy
 
         if (type == ConstructionType.PARK)
         {
-            return Math.min(
-                    0,
-                    baseCost + PARK_COST_REDUCTION
-            );
+            return Math.min(0, baseCost + PARK_COST_REDUCTION);
         }
 
         return baseCost;

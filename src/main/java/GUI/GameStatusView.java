@@ -38,13 +38,7 @@ public final class GameStatusView
         tickRow.setAlignment(Pos.CENTER_LEFT);
 
         // ---------- BARRA STATISTICHE (VERTICALE A SINISTRA) ----------
-        infoPanel = new VBox(
-                10,
-                tickRow,
-                budgetLabel,
-                statsLabel,
-                policyLabel
-        );
+        infoPanel = new VBox(10, tickRow, budgetLabel, statsLabel, policyLabel);
         infoPanel.setPadding(new Insets(15));
         infoPanel.setStyle(
                 "-fx-background-color: #f4f4f4;"
@@ -100,8 +94,7 @@ public final class GameStatusView
     public void updateStatistics()
     {
         int unemployed = controller.getUnemployed();
-        String employmentLine = unemployed < 0
-                ? "Available jobs: " + Math.abs(unemployed)
+        String employmentLine = unemployed < 0 ? "Available jobs: " + Math.abs(unemployed)
                 : "Unemployed: " + unemployed;
 
         statsLabel.setText(
@@ -129,15 +122,12 @@ public final class GameStatusView
 
         if (eventType != null)
         {
-            String bannerText = "Evento in corso:\n"
-                    + eventType.getDisplayName().toUpperCase();
+            String bannerText = "Evento in corso:\n" + eventType.getDisplayName().toUpperCase();
 
             if (eventType == EventType.TSUNAMI)
             {
                 bannerText = bannerText + "\nProvenienza: "
-                        + getTsunamiCardinalDirection(
-                        controller.getActiveTsunamiDirection()
-                );
+                        + getTsunamiCardinalDirection(controller.getActiveTsunamiDirection());
             }
 
             eventBanner.setText(bannerText);

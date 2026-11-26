@@ -26,8 +26,7 @@ public class Simulation{
     private final Random random = new Random();
     private int currentTick;
     private int lastPolicyChangeTick;
-    private FreemasonryChoice freemasonryChoice =
-            FreemasonryChoice.PENDING;
+    private FreemasonryChoice freemasonryChoice = FreemasonryChoice.PENDING;
     private boolean masonicLodgePresent;
     private int masonicLodgeRemovedTick = -1;
     private final City city;
@@ -35,8 +34,7 @@ public class Simulation{
     private Event activeEvent;
     private int eventTicksPassed;
     private final Grid grid;
-    private final Deque<Integer> demolitionTicks =
-            new ArrayDeque<>();
+    private final Deque<Integer> demolitionTicks = new ArrayDeque<>();
     private final BankruptcyManager bankruptcyManager;
     private final BankManager bankManager;
     private final InsuranceManager insuranceManager;
@@ -52,65 +50,35 @@ public class Simulation{
     // Crea una nuova simulazione partendo dal tick zero.
     public Simulation(City city, Grid grid)
     {
-        this(
-                city,
-                grid,
-                0,
-                0,
-                false
-        );
+        this(city, grid, 0, 0, false);
     }
 
     // Crea una simulazione usando i tick recuperati da un salvataggio.
-    public Simulation(
-            City city,
-            Grid grid,
-            int currentTick,
-            int lastPolicyChangeTick)
+    public Simulation(City city, Grid grid, int currentTick, int lastPolicyChangeTick)
     {
-        this(
-                city,
-                grid,
-                currentTick,
-                lastPolicyChangeTick,
-                false
-        );
+        this(city, grid, currentTick, lastPolicyChangeTick, false);
     }
 
-    public Simulation(
-            City city,
-            Grid grid,
-            int currentTick,
-            int lastPolicyChangeTick,
-            boolean tsunamiInsuranceActive)
+    public Simulation(City city, Grid grid, int currentTick, int lastPolicyChangeTick, boolean tsunamiInsuranceActive)
     {
         if (city == null)
         {
-            throw new IllegalArgumentException(
-                    "The city cannot be null"
-            );
+            throw new IllegalArgumentException("The city cannot be null");
         }
 
         if (grid == null)
         {
-            throw new IllegalArgumentException(
-                    "The grid cannot be null"
-            );
+            throw new IllegalArgumentException("The grid cannot be null");
         }
 
         if (currentTick < 0)
         {
-            throw new IllegalArgumentException(
-                    "Current tick cannot be negative"
-            );
+            throw new IllegalArgumentException("Current tick cannot be negative");
         }
 
-        if (lastPolicyChangeTick < 0
-                || lastPolicyChangeTick > currentTick)
+        if (lastPolicyChangeTick < 0 || lastPolicyChangeTick > currentTick)
         {
-            throw new IllegalArgumentException(
-                    "Invalid last policy change tick"
-            );
+            throw new IllegalArgumentException("Invalid last policy change tick");
         }
 
         this.city = city;
@@ -159,15 +127,12 @@ public class Simulation{
 
     public boolean isFreemasonryInvitationPending()
     {
-        return currentTick >= FREEMASONRY_INVITATION_TICK
-                && freemasonryChoice == FreemasonryChoice.PENDING;
+        return currentTick >= FREEMASONRY_INVITATION_TICK && freemasonryChoice == FreemasonryChoice.PENDING;
     }
 
     public boolean chooseFreemasonry(FreemasonryChoice choice)
     {
-        if (!isFreemasonryInvitationPending()
-                || choice == null
-                || choice == FreemasonryChoice.PENDING)
+        if (!isFreemasonryInvitationPending() || choice == null || choice == FreemasonryChoice.PENDING)
         {
             return false;
         }
@@ -177,12 +142,9 @@ public class Simulation{
         return true;
     }
 
-    public void restoreFreemasonryChoice(
-            FreemasonryChoice choice)
+    public void restoreFreemasonryChoice(FreemasonryChoice choice)
     {
-        freemasonryChoice = choice == null
-                ? FreemasonryChoice.PENDING
-                : choice;
+        freemasonryChoice = choice == null ? FreemasonryChoice.PENDING : choice;
         tryToPlaceMasonicLodge();
     }
 
@@ -208,8 +170,7 @@ public class Simulation{
         }
 
         if (freemasonryChoice != FreemasonryChoice.ACCEPTED
-                || currentTick <= masonicLodgeRemovedTick
-                || grid.countBuildableCells() <= 1)
+                || currentTick <= masonicLodgeRemovedTick || grid.countBuildableCells() <= 1)
         {
             return;
         }
@@ -221,19 +182,12 @@ public class Simulation{
         }
 
         List<Cell> available = grid.getBuildableCells();
-        available.sort(
-                Comparator.comparingInt(Cell::getRow)
-                        .thenComparingInt(Cell::getColumn)
-        );
+        available.sort(Comparator.comparingInt(Cell::getRow).thenComparingInt(Cell::getColumn));
 
         if (!available.isEmpty())
         {
             Cell cell = available.get(0);
-            grid.placeConstruction(
-                    lodge,
-                    cell.getRow(),
-                    cell.getColumn()
-            );
+            grid.placeConstruction(lodge, cell.getRow(), cell.getColumn());
             masonicLodgePresent = true;
             city.refreshStatistics();
         }
@@ -278,23 +232,19 @@ public class Simulation{
 
     public boolean isMissileDefenseAvailable()
     {
-        return currentTick >= MissileDefense.UNLOCK_TICK
-                && grid.hasMilitaryBase();
+        return currentTick >= MissileDefense.UNLOCK_TICK && grid.hasMilitaryBase();
     }
 
     public boolean canBuyMissileDefense()
     {
-        return isMissileDefenseAvailable()
-                && !missileDefense.isPurchased();
+        return isMissileDefenseAvailable() && !missileDefense.isPurchased();
     }
 
     public boolean buyMissileDefense()
     {
         int cost = getMissileDefensePurchaseCost();
 
-        if (!canBuyMissileDefense()
-                || city.getBudget()
-                < cost)
+        if (!canBuyMissileDefense() || city.getBudget() < cost)
         {
             return false;
         }
@@ -306,23 +256,17 @@ public class Simulation{
 
     public boolean canRepairMissileDefense()
     {
-        return missileDefense.isPurchased()
-                && missileDefense.getHitsRemaining()
-                < MissileDefense.MAX_HITS;
+        return missileDefense.isPurchased() && missileDefense.getHitsRemaining() < MissileDefense.MAX_HITS;
     }
 
     public boolean repairMissileDefense()
     {
-        if (!canRepairMissileDefense()
-                || city.getBudget()
-                < MissileDefense.REPAIR_COST)
+        if (!canRepairMissileDefense() || city.getBudget() < MissileDefense.REPAIR_COST)
         {
             return false;
         }
 
-        city.updateBudget(
-                -MissileDefense.REPAIR_COST
-        );
+        city.updateBudget(-MissileDefense.REPAIR_COST);
 
         return missileDefense.repairOneHit();
     }
@@ -331,9 +275,7 @@ public class Simulation{
     {
         int cost = getMissileDefenseFullRepairCost();
 
-        if (!canRepairMissileDefense()
-                || city.getBudget()
-                < cost)
+        if (!canRepairMissileDefense() || city.getBudget() < cost)
         {
             return false;
         }
@@ -360,9 +302,7 @@ public class Simulation{
 
     public int getMissileDefensePurchaseCost()
     {
-        return MissileDefense.PURCHASE_COST
-                * (100 - getMissileDefensePurchaseDiscountPercentage())
-                / 100;
+        return MissileDefense.PURCHASE_COST * (100 - getMissileDefensePurchaseDiscountPercentage()) / 100;
     }
 
     public int getMissileDefensePurchaseDiscountPercentage()
@@ -377,19 +317,12 @@ public class Simulation{
 
     public int getMissileDefenseFullRepairCost()
     {
-        return (MissileDefense.MAX_HITS
-                - missileDefense.getHitsRemaining())
-                * MissileDefense.REPAIR_COST;
+        return (MissileDefense.MAX_HITS - missileDefense.getHitsRemaining()) * MissileDefense.REPAIR_COST;
     }
 
-    public void restoreMissileDefenseState(
-            boolean purchased,
-            int hitsRemaining)
+    public void restoreMissileDefenseState(boolean purchased, int hitsRemaining)
     {
-        missileDefense.restoreState(
-                purchased,
-                hitsRemaining
-        );
+        missileDefense.restoreState(purchased, hitsRemaining);
     }
 
     // Crea casualmente uno degli eventi disponibili.
@@ -402,11 +335,7 @@ public class Simulation{
                 new Tsunami(city, grid),
                 new EconomicBoom(city, grid),
                 new Earthquake(city, grid),
-                new MissileAttack(
-                        city,
-                        grid,
-                        missileDefense
-                )
+                new MissileAttack(city, grid, missileDefense)
         };
 
         int selectedEvent = random.nextInt(possibleEvents.length);
@@ -420,20 +349,15 @@ public class Simulation{
     {
         if (isGameOver())
         {
-            throw new IllegalStateException(
-                    "The game is over"
-            );
+            throw new IllegalStateException("The game is over");
         }
 
         if (isFreemasonryInvitationPending())
         {
-            throw new IllegalStateException(
-                    "Choose an answer to the invitation before continuing"
-            );
+            throw new IllegalStateException("Choose an answer to the invitation before continuing");
         }
 
-        List<Construction> poweredBeforeTick =
-                getPoweredConstructions();
+        List<Construction> poweredBeforeTick = getPoweredConstructions();
 
         blackoutOccurredThisTick = false;
         boolean quietPeriod = isUfoQuietPeriod(currentTick + 1);
@@ -469,17 +393,11 @@ public class Simulation{
         insuranceManager.updateReconstruction();
 
         // Prima agiscono le stazioni di polizia.
-        int removedThreats =
-                crimeManager
-                        .tryToDestroyCriminalActivities(
-                                currentTick
-                        );
+        int removedThreats = crimeManager.tryToDestroyCriminalActivities(currentTick);
 
-        removedCriminalActivities =
-                crimeManager.getRemovedCriminalActivities();
+        removedCriminalActivities = crimeManager.getRemovedCriminalActivities();
 
-        removedTerroristicGroups =
-                crimeManager.getRemovedTerroristicGroups();
+        removedTerroristicGroups = crimeManager.getRemovedTerroristicGroups();
 
         if (removedThreats > 0)
         {
@@ -487,68 +405,47 @@ public class Simulation{
         }
 
         // Solo dopo può comparire una nuova attività criminale
-        boolean criminalActivityCreated =
-                crimeManager
-                        .tryToCreateCriminalActivity(
-                                currentTick
-                        );
+        boolean criminalActivityCreated = crimeManager.tryToCreateCriminalActivity(currentTick);
 
         currentTick++;
         expireDemolitions();
 
         bankManager.update(currentTick);
 
-        bankruptcyManager.update(
-                city.getBudget(),
-                city.getGlobalEconomy(),
-                city.getMaintenance()
-        );
+        bankruptcyManager.update(city.getBudget(), city.getGlobalEconomy(), city.getMaintenance());
 
         terroristicGroupCreated = terrorManager.updateOfOneTick();
 
         tryToPlaceMasonicLodge();
 
-        blackoutOccurredThisTick =
-                hasNewBlackout(poweredBeforeTick);
+        blackoutOccurredThisTick = hasNewBlackout(poweredBeforeTick);
 
         return criminalActivityCreated;
     }
 
     private List<Construction> getPoweredConstructions()
     {
-        List<Construction> poweredConstructions =
-                new ArrayList<>();
+        List<Construction> poweredConstructions = new ArrayList<>();
 
-        for (Construction construction
-                : grid.getConstructions())
+        for (Construction construction : grid.getConstructions())
         {
-            if (construction.requiresPower()
-                    && construction.isPowered())
+            if (construction.requiresPower() && construction.isPowered())
             {
-                poweredConstructions.add(
-                        construction
-                );
+                poweredConstructions.add(construction);
             }
         }
 
         return poweredConstructions;
     }
 
-    private boolean hasNewBlackout(
-            List<Construction> poweredBeforeTick)
+    private boolean hasNewBlackout(List<Construction> poweredBeforeTick)
     {
-        Set<Construction> currentConstructions =
-                new HashSet<>(
-                        grid.getConstructions()
-                );
+        Set<Construction> currentConstructions = new HashSet<>(grid.getConstructions());
 
-        for (Construction construction
-                : poweredBeforeTick)
+        for (Construction construction : poweredBeforeTick)
         {
-            if (currentConstructions.contains(
-                    construction)
-                    && construction.requiresPower()
-                    && !construction.isPowered())
+            if (currentConstructions.contains(construction)
+                    && construction.requiresPower() && !construction.isPowered())
             {
                 return true;
             }
@@ -578,21 +475,16 @@ public class Simulation{
     {
         if (savedTicks == null)
         {
-            throw new IllegalArgumentException(
-                    "Demolition ticks cannot be null"
-            );
+            throw new IllegalArgumentException("Demolition ticks cannot be null");
         }
 
         demolitionTicks.clear();
         int previousTick = -1;
         for (Integer tick : savedTicks)
         {
-            if (tick == null || tick < 0 || tick < previousTick
-                    || tick > currentTick)
+            if (tick == null || tick < 0 || tick < previousTick || tick > currentTick)
             {
-                throw new IllegalArgumentException(
-                        "Invalid construction company demolition countdown"
-                );
+                throw new IllegalArgumentException("Invalid construction company demolition countdown");
             }
 
             demolitionTicks.addLast(tick);
@@ -603,9 +495,7 @@ public class Simulation{
 
     private void expireDemolitions()
     {
-        while (!demolitionTicks.isEmpty()
-                && currentTick - demolitionTicks.peekFirst()
-                >= CC_INTERVAL)
+        while (!demolitionTicks.isEmpty() && currentTick - demolitionTicks.peekFirst() >= CC_INTERVAL)
         {
             demolitionTicks.removeFirst();
         }
@@ -641,20 +531,10 @@ public class Simulation{
         return bankManager.getRemainingDebt();
     }
 
-    public void restoreBankState(
-            int lastLoanTick,
-            boolean loanActive,
-            int loanAmount,
-            int loanStartTick,
-            int remainingDebt)
+    public void restoreBankState(int lastLoanTick, boolean loanActive,
+            int loanAmount, int loanStartTick, int remainingDebt)
     {
-        bankManager.restoreState(
-                lastLoanTick,
-                loanActive,
-                loanAmount,
-                loanStartTick,
-                remainingDebt
-        );
+        bankManager.restoreState(lastLoanTick, loanActive, loanAmount, loanStartTick, remainingDebt);
     }
 
     public int getMaxEnergyServed()
@@ -677,8 +557,7 @@ public class Simulation{
     /** Avvia un evento solo se il turno in cui agirebbe non è riservato. */
     private void startEventForTick(Event event, int eventTick)
     {
-        if (event == null || isEventActive()
-                || isUfoQuietPeriod(eventTick))
+        if (event == null || isEventActive() || isUfoQuietPeriod(eventTick))
             return;
 
         if (!event.canBeChosen(currentTick))
@@ -693,13 +572,9 @@ public class Simulation{
 
             if (activeEvent instanceof Tsunami)
             {
-                Tsunami tsunami =
-                        (Tsunami) activeEvent;
+                Tsunami tsunami = (Tsunami) activeEvent;
 
-                insuranceManager.registerTsunamiDamage(
-                        tsunami.getDestroyedBuildings(),
-                        tsunami.getDirection()
-                );
+                insuranceManager.registerTsunamiDamage(tsunami.getDestroyedBuildings(), tsunami.getDirection());
             }
         }
     }
@@ -708,8 +583,7 @@ public class Simulation{
     private boolean isUfoQuietPeriod(int tick)
     {
         return freemasonryChoice == FreemasonryChoice.ACCEPTED
-                && tick >= UFO_QUIET_START_TICK
-                && tick <= UFO_QUIET_END_TICK;
+                && tick >= UFO_QUIET_START_TICK && tick <= UFO_QUIET_END_TICK;
     }
 
     // Controlla se una cella è coinvolta nell'incendio attivo.
@@ -725,10 +599,7 @@ public class Simulation{
 
     public boolean requestLoan(int amount)
     {
-        return bankManager.requestLoan(
-                amount,
-                currentTick
-        );
+        return bankManager.requestLoan(amount, currentTick);
     }
 
     public boolean canRequestLoan()
@@ -745,38 +616,32 @@ public class Simulation{
 
     public boolean canBuyTsunamiInsurance()
     {
-        return insuranceManager
-                .canBuyTsunamiInsurance();
+        return insuranceManager.canBuyTsunamiInsurance();
     }
 
     public boolean buyTsunamiInsurance()
     {
-        return insuranceManager
-                .buyTsunamiInsurance();
+        return insuranceManager.buyTsunamiInsurance();
     }
 
     public int getTsunamiInsuranceCost()
     {
-        return insuranceManager
-                .getTsunamiInsuranceCost();
+        return insuranceManager.getTsunamiInsuranceCost();
     }
 
     public int getTsunamiInsuranceBuildingCount()
     {
-        return insuranceManager
-                .getTsunamiInsuranceBuildingCount();
+        return insuranceManager.getTsunamiInsuranceBuildingCount();
     }
 
     public int getTsunamiInsuranceDiscountPercentage()
     {
-        return insuranceManager
-                .getBankDiscountPercentage();
+        return insuranceManager.getBankDiscountPercentage();
     }
 
     public boolean isTsunamiInsuranceActive()
     {
-        return insuranceManager
-                .isTsunamiInsuranceActive();
+        return insuranceManager.isTsunamiInsuranceActive();
     }
 
     public boolean canBuyNuclearFireProtection()
@@ -806,44 +671,33 @@ public class Simulation{
 
     public void startTsunamiReconstruction()
     {
-        insuranceManager
-                .startTsunamiReconstruction();
+        insuranceManager.startTsunamiReconstruction();
     }
 
     public boolean wasTsunamiReconstructionRestoredThisTick()
     {
-        return insuranceManager
-                .wasReconstructionRestoredThisTick();
+        return insuranceManager.wasReconstructionRestoredThisTick();
     }
 
     public boolean wasTsunamiReconstructionCompletedThisTick()
     {
-        return insuranceManager
-                .wasReconstructionCompletedThisTick();
+        return insuranceManager.wasReconstructionCompletedThisTick();
     }
 
     public List<ReconstructionEntry>
     getPendingTsunamiReconstructions()
     {
-        return insuranceManager
-                .getPendingReconstructions();
+        return insuranceManager.getPendingReconstructions();
     }
 
     public String getTsunamiReconstructionDirection()
     {
-        return insuranceManager
-                .getReconstructionDirection();
+        return insuranceManager.getReconstructionDirection();
     }
 
-    public void restoreTsunamiReconstruction(
-            List<ReconstructionEntry> entries,
-            String direction)
+    public void restoreTsunamiReconstruction(List<ReconstructionEntry> entries, String direction)
     {
-        insuranceManager
-                .restorePendingReconstruction(
-                        entries,
-                        direction
-                );
+        insuranceManager.restorePendingReconstruction(entries, direction);
     }
 
     // Controlla se una costruzione ha ricevuto il bonus del boom economico attivo.
@@ -863,10 +717,7 @@ public class Simulation{
     public int getAvailableRemovals()
     {
         expireDemolitions();
-        return Math.max(
-                0,
-                grid.getNumberOfPoweredCC() - demolitionTicks.size()
-        );
+        return Math.max(0, grid.getNumberOfPoweredCC() - demolitionTicks.size());
     }
 
     public boolean canRemoveConstruction()
@@ -930,8 +781,7 @@ public class Simulation{
     {
         if (activeEvent instanceof MissileAttack)
         {
-            MissileAttack missileAttack =
-                    (MissileAttack) activeEvent;
+            MissileAttack missileAttack = (MissileAttack) activeEvent;
 
             return missileAttack.getTargetRow();
         }
@@ -943,8 +793,7 @@ public class Simulation{
     {
         if (activeEvent instanceof MissileAttack)
         {
-            MissileAttack missileAttack =
-                    (MissileAttack) activeEvent;
+            MissileAttack missileAttack = (MissileAttack) activeEvent;
 
             return missileAttack.getTargetColumn();
         }
@@ -956,8 +805,7 @@ public class Simulation{
     {
         if (activeEvent instanceof MissileAttack)
         {
-            MissileAttack missileAttack =
-                    (MissileAttack) activeEvent;
+            MissileAttack missileAttack = (MissileAttack) activeEvent;
 
             return missileAttack.isIntercepted();
         }

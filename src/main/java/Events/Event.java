@@ -65,8 +65,7 @@ public abstract class Event
     // Controlla la durata, escludendo gli eventi contrassegnati con durata indefinita.
     public boolean isFinished(int tickPassed)
     {
-        return tickDuration != -1
-                && tickPassed >= tickDuration;
+        return tickDuration != -1 && tickPassed >= tickDuration;
     }
 
     /* Rappresenta le operazioni da eseguire all'avvio dell'evento.

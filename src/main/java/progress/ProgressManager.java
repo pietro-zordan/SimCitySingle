@@ -22,9 +22,7 @@ public class ProgressManager
 
     public ProgressManager()
     {
-        gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     /* Converte lo stato della partita in JSON
@@ -35,9 +33,7 @@ public class ProgressManager
     {
         if (progress == null)
         {
-            throw new IllegalArgumentException(
-                    "progress.Progress cannot be null"
-            );
+            throw new IllegalArgumentException("progress.Progress cannot be null");
         }
 
         Path path = Path.of(filePath);
@@ -56,46 +52,34 @@ public class ProgressManager
 
         try (Reader reader = Files.newBufferedReader(path))
         {
-            Progress progress =
-                    gson.fromJson(reader, Progress.class);
+            Progress progress = gson.fromJson(reader, Progress.class);
 
             if (progress == null)
             {
-                throw new IOException(
-                        "The save file is empty"
-                );
+                throw new IOException("The save file is empty");
             }
 
             return progress;
         }
         catch (JsonParseException exception)
         {
-            throw new IOException(
-                    "The save file contains invalid JSON",
-                    exception
-            );
+            throw new IOException("The save file contains invalid JSON", exception);
         }
     }
     /* Ottiene lo stato corrente dal controller
        e lo salva nel file specificato. */
 
-    public void saveGame(
-            Controller controller,
-            String filePath)
+    public void saveGame(Controller controller, String filePath)
             throws IOException
     {
         if (controller == null)
         {
-            throw new IllegalArgumentException(
-                    "controller.Controller cannot be null"
-            );
+            throw new IllegalArgumentException("controller.Controller cannot be null");
         }
 
         if (controller.getActiveEventType() != null)
         {
-            throw new IllegalStateException(
-                    "Cannot save while an event is in progress."
-            );
+            throw new IllegalStateException("Cannot save while an event is in progress.");
         }
 
         Progress progress = controller.createProgress();
@@ -114,22 +98,16 @@ public class ProgressManager
         return progress.restoreController();
     }
 
-    public Controller loadGame(
-            String filePath,
-            AchievementManager achievementManager)
+    public Controller loadGame(String filePath, AchievementManager achievementManager)
             throws IOException
     {
         if (achievementManager == null)
         {
-            throw new IllegalArgumentException(
-                    "Achievement manager cannot be null"
-            );
+            throw new IllegalArgumentException("Achievement manager cannot be null");
         }
 
         Progress progress = load(filePath);
 
-        return progress.restoreController(
-                achievementManager
-        );
+        return progress.restoreController(achievementManager);
     }
 }

@@ -15,21 +15,16 @@ public class AchievementChecker
     private boolean energyCrisisTracked;
     private boolean energyCrisisFailed;
     private boolean energyCrisisHadResidential;
-    private final Set<Residential> energyCrisisResidentials =
-            new HashSet<>();
+    private final Set<Residential> energyCrisisResidentials = new HashSet<>();
 
     public AchievementChecker(AchievementManager achievementManager)
     {
-        this.achievementManager = Objects.requireNonNull(achievementManager,
-                        "Achievement manager cannot be null");
+        this.achievementManager = Objects.requireNonNull(achievementManager, "Achievement manager cannot be null");
     }
 
     /* Controlla gli achievement ricavabili dallo stato corrente del gioco.
        Grid e Simulation sono già disponibili per regole future che ne avranno bisogno. */
-    public void checkState(
-            City city,
-            Grid grid,
-            Simulation simulation)
+    public void checkState(City city, Grid grid, Simulation simulation)
     {
         Objects.requireNonNull(city, "City cannot be null");
 
@@ -41,47 +36,31 @@ public class AchievementChecker
         checkBudget(city);
         checkMetropolis(grid);
 
-        EventType activeEventType =
-                simulation.getActiveEventType();
+        EventType activeEventType = simulation.getActiveEventType();
 
-        checkNotToday(
-                simulation,
-                activeEventType
-        );
+        checkNotToday(simulation, activeEventType);
 
-        checkPowerThrough(
-                grid,
-                activeEventType
-        );
+        checkPowerThrough(grid, activeEventType);
     }
 
     /* Riceve il piazzamento riuscito di una costruzione e valuta
        gli achievement collegati a questo tipo di azione. */
-    public void onConstructionPlaced(
-            ConstructionType type)
+    public void onConstructionPlaced(ConstructionType type)
     {
         if (type == null)
         {
-            throw new IllegalArgumentException(
-                    "Construction type cannot be null"
-            );
+            throw new IllegalArgumentException("Construction type cannot be null");
         }
 
-        if (type == ConstructionType.NUCLEAR_PLANT
-                && !achievementManager.isUnlocked(
-                        Achievement.FIRST_NUCLEAR_PLANT))
+        if (type == ConstructionType.NUCLEAR_PLANT && !achievementManager.isUnlocked(Achievement.FIRST_NUCLEAR_PLANT))
         {
-            achievementManager.unlock(
-                    Achievement.FIRST_NUCLEAR_PLANT
-            );
+            achievementManager.unlock(Achievement.FIRST_NUCLEAR_PLANT);
         }
     }
 
     private void checkPopulation(City city)
     {
-        if (city.getGlobalPopulation() >= 1000
-                && !achievementManager.isUnlocked(
-                        Achievement.FIRST_1000_INHABITANTS))
+        if (city.getGlobalPopulation() >= 1000 && !achievementManager.isUnlocked(Achievement.FIRST_1000_INHABITANTS))
         {
             achievementManager.unlock(Achievement.FIRST_1000_INHABITANTS);
         }
@@ -89,20 +68,15 @@ public class AchievementChecker
 
     private void checkBudget(City city)
     {
-        if (city.getBudget() >= 50000
-                && !achievementManager.isUnlocked(
-                Achievement.A_LOT_OF_MONEY))
+        if (city.getBudget() >= 50000 && !achievementManager.isUnlocked(Achievement.A_LOT_OF_MONEY))
         {
             achievementManager.unlock(Achievement.A_LOT_OF_MONEY);
         }
     }
 
-    public void onConstructionRemovedByPlayer(
-            ConstructionType type)
+    public void onConstructionRemovedByPlayer(ConstructionType type)
     {
-        if (type == ConstructionType.NUCLEAR_PLANT
-                && !achievementManager.isUnlocked(
-                Achievement.WHY_WOULD_YOU_DO_THAT))
+        if (type == ConstructionType.NUCLEAR_PLANT && !achievementManager.isUnlocked(Achievement.WHY_WOULD_YOU_DO_THAT))
         {
             achievementManager.unlock(Achievement.WHY_WOULD_YOU_DO_THAT);
         }
@@ -110,46 +84,28 @@ public class AchievementChecker
 
     public void checkMetropolis(Grid grid)
     {
-        Objects.requireNonNull(
-                grid,
-                "Grid cannot be null"
-        );
+        Objects.requireNonNull(grid, "Grid cannot be null");
 
-        boolean expanded =
-                grid.getNumberOfRows() > 20
-                        || grid.getNumberOfColumns() > 20;
+        boolean expanded = grid.getNumberOfRows() > 20 || grid.getNumberOfColumns() > 20;
 
-        if (expanded
-                && !achievementManager.isUnlocked(
-                        Achievement.METROPOLIS))
+        if (expanded && !achievementManager.isUnlocked(Achievement.METROPOLIS))
         {
-            achievementManager.unlock(
-                    Achievement.METROPOLIS
-            );
+            achievementManager.unlock(Achievement.METROPOLIS);
         }
     }
 
-    private void checkNotToday(
-            Simulation simulation,
-            EventType activeEventType)
+    private void checkNotToday(Simulation simulation, EventType activeEventType)
     {
         if (activeEventType == EventType.MISSILE_ATTACK
-                && simulation.isActiveMissileIntercepted()
-                && !achievementManager.isUnlocked(
-                        Achievement.NOT_TODAY))
+                && simulation.isActiveMissileIntercepted() && !achievementManager.isUnlocked(Achievement.NOT_TODAY))
         {
-            achievementManager.unlock(
-                    Achievement.NOT_TODAY
-            );
+            achievementManager.unlock(Achievement.NOT_TODAY);
         }
     }
 
-    private void checkPowerThrough(
-            Grid grid,
-            EventType activeEventType)
+    private void checkPowerThrough(Grid grid, EventType activeEventType)
     {
-        boolean energyCrisisActive =
-                activeEventType == EventType.ENERGY_CRISIS;
+        boolean energyCrisisActive = activeEventType == EventType.ENERGY_CRISIS;
 
         if (energyCrisisActive)
         {
@@ -161,8 +117,7 @@ public class AchievementChecker
 
                 addCurrentResidentials(grid);
 
-                energyCrisisHadResidential =
-                        !energyCrisisResidentials.isEmpty();
+                energyCrisisHadResidential = !energyCrisisResidentials.isEmpty();
             }
             else
             {
@@ -187,14 +142,10 @@ public class AchievementChecker
             energyCrisisFailed = true;
         }
 
-        if (energyCrisisHadResidential
-                && !energyCrisisFailed
-                && !achievementManager.isUnlocked(
-                        Achievement.POWER_THROUGH))
+        if (energyCrisisHadResidential && !energyCrisisFailed
+                && !achievementManager.isUnlocked(Achievement.POWER_THROUGH))
         {
-            achievementManager.unlock(
-                    Achievement.POWER_THROUGH
-            );
+            achievementManager.unlock(Achievement.POWER_THROUGH);
         }
 
         resetEnergyCrisisTracking();
@@ -202,22 +153,18 @@ public class AchievementChecker
 
     private void addCurrentResidentials(Grid grid)
     {
-        for (Construction construction
-                : grid.getConstructions())
+        for (Construction construction : grid.getConstructions())
         {
             if (construction instanceof Residential)
             {
-                energyCrisisResidentials.add(
-                        (Residential) construction
-                );
+                energyCrisisResidentials.add((Residential) construction);
             }
         }
     }
 
     private boolean hasResidentialReachedZeroPopulation()
     {
-        for (Residential residential
-                : energyCrisisResidentials)
+        for (Residential residential : energyCrisisResidentials)
         {
             if (residential.getPopulation() <= 0)
             {
@@ -236,16 +183,11 @@ public class AchievementChecker
         energyCrisisResidentials.clear();
     }
 
-    public void onFreemasonryChoice(
-            FreemasonryChoice choice)
+    public void onFreemasonryChoice(FreemasonryChoice choice)
     {
-        if (choice == FreemasonryChoice.ACCEPTED
-                && !achievementManager.isUnlocked(
-                        Achievement.ILLUMINATED))
+        if (choice == FreemasonryChoice.ACCEPTED && !achievementManager.isUnlocked(Achievement.ILLUMINATED))
         {
-            achievementManager.unlock(
-                    Achievement.ILLUMINATED
-            );
+            achievementManager.unlock(Achievement.ILLUMINATED);
         }
     }
 

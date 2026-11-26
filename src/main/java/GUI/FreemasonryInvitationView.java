@@ -51,19 +51,14 @@ public final class FreemasonryInvitationView
     private final Button declineButton = new Button("Decline");
     private final Consumer<FreemasonryChoice> choiceHandler;
     private final Runnable closeHandler;
-    private final DoubleProperty unrollProgress =
-            new SimpleDoubleProperty(0);
+    private final DoubleProperty unrollProgress = new SimpleDoubleProperty(0);
     private Timeline animation;
 
-    public FreemasonryInvitationView(
-            Consumer<FreemasonryChoice> choiceHandler,
-            Runnable closeHandler)
+    public FreemasonryInvitationView(Consumer<FreemasonryChoice> choiceHandler, Runnable closeHandler)
     {
         if (choiceHandler == null || closeHandler == null)
         {
-            throw new IllegalArgumentException(
-                    "Invitation callbacks cannot be null"
-            );
+            throw new IllegalArgumentException("Invitation callbacks cannot be null");
         }
 
         this.choiceHandler = choiceHandler;
@@ -78,14 +73,8 @@ public final class FreemasonryInvitationView
 
         Rectangle visiblePaper = new Rectangle();
         visiblePaper.widthProperty().bind(parchment.widthProperty());
-        visiblePaper.heightProperty().bind(
-                parchment.heightProperty().multiply(unrollProgress)
-        );
-        visiblePaper.yProperty().bind(
-                parchment.heightProperty()
-                        .subtract(visiblePaper.heightProperty())
-                        .divide(2)
-        );
+        visiblePaper.heightProperty().bind(parchment.heightProperty().multiply(unrollProgress));
+        visiblePaper.yProperty().bind(parchment.heightProperty().subtract(visiblePaper.heightProperty()).divide(2));
         parchment.setClip(visiblePaper);
 
         texture.setManaged(false);
@@ -97,10 +86,7 @@ public final class FreemasonryInvitationView
                 new ChangeListener<Number>()
                 {
                     @Override
-                    public void changed(
-                            ObservableValue<? extends Number> value,
-                            Number oldSize,
-                            Number newSize)
+                    public void changed(ObservableValue<? extends Number> value, Number oldSize, Number newSize)
                     {
                         drawTexture();
                     }
@@ -112,11 +98,7 @@ public final class FreemasonryInvitationView
         String inkFont = loadInkFontFamily();
 
         Label title = new Label("A LETTER FOR YOUR CITY");
-        title.setStyle(
-                "-fx-font-family: '" + inkFont + "';"
-                        + "-fx-font-size: 44px;"
-                        + "-fx-text-fill: #392517;"
-        );
+        title.setStyle("-fx-font-family: '" + inkFont + "';" + "-fx-font-size: 44px;" + "-fx-text-fill: #392517;");
 
         Label message = new Label(
                 "Congratulations, player. Your city has attained a "
@@ -134,21 +116,12 @@ public final class FreemasonryInvitationView
         message.setTextAlignment(TextAlignment.CENTER);
         message.setAlignment(Pos.CENTER);
         message.setMaxWidth(950);
-        message.setStyle(
-                "-fx-font-family: '" + inkFont + "';"
-                        + "-fx-font-size: 25px;"
-                        + "-fx-text-fill: #3c2819;"
-        );
+        message.setStyle("-fx-font-family: '" + inkFont + "';" + "-fx-font-size: 25px;" + "-fx-text-fill: #3c2819;");
 
-        Label invitation =
-                new Label("Will you accept our invitation to join the Freemasons?");
+        Label invitation = new Label("Will you accept our invitation to join the Freemasons?");
         invitation.setWrapText(true);
         invitation.setTextAlignment(TextAlignment.CENTER);
-        invitation.setStyle(
-                "-fx-font-family: '" + inkFont + "';"
-                        + "-fx-font-size: 30px;"
-                        + "-fx-text-fill: #392517;"
-        );
+        invitation.setStyle("-fx-font-family: '" + inkFont + "';" + "-fx-font-size: 30px;" + "-fx-text-fill: #392517;");
 
         configureButton(acceptButton, inkFont);
         configureButton(declineButton, inkFont);
@@ -178,32 +151,15 @@ public final class FreemasonryInvitationView
         HBox buttons = new HBox(28, acceptButton, declineButton);
         buttons.setAlignment(Pos.CENTER);
 
-        VBox letter = new VBox(
-                31,
-                title,
-                message,
-                invitation,
-                buttons,
-                createEyeSymbol()
-        );
+        VBox letter = new VBox(31, title, message, invitation, buttons, createEyeSymbol());
         letter.setAlignment(Pos.CENTER);
         letter.setPadding(new Insets(55, 65, 55, 65));
         letter.setMaxWidth(1100);
 
         Rectangle upperRoll = createRoll();
         Rectangle lowerRoll = createRoll();
-        upperRoll.translateYProperty().bind(
-                view.heightProperty()
-                        .subtract(24)
-                        .multiply(unrollProgress)
-                        .multiply(-0.5)
-        );
-        lowerRoll.translateYProperty().bind(
-                view.heightProperty()
-                        .subtract(24)
-                        .multiply(unrollProgress)
-                        .multiply(0.5)
-        );
+        upperRoll.translateYProperty().bind(view.heightProperty().subtract(24).multiply(unrollProgress).multiply(-0.5));
+        lowerRoll.translateYProperty().bind(view.heightProperty().subtract(24).multiply(unrollProgress).multiply(0.5));
         upperRoll.setMouseTransparent(true);
         lowerRoll.setMouseTransparent(true);
 
@@ -213,12 +169,8 @@ public final class FreemasonryInvitationView
 
     private String loadInkFontFamily()
     {
-        URL fontFile = getClass().getResource(
-                "/fonts/Fondamento-Regular.ttf"
-        );
-        Font font = fontFile == null
-                ? null
-                : Font.loadFont(fontFile.toExternalForm(), 25);
+        URL fontFile = getClass().getResource("/fonts/Fondamento-Regular.ttf");
+        Font font = fontFile == null ? null : Font.loadFont(fontFile.toExternalForm(), 25);
         return font == null ? "Georgia" : font.getFamily();
     }
 
@@ -241,38 +193,22 @@ public final class FreemasonryInvitationView
     {
         Rectangle roll = new Rectangle(0, 24);
         roll.widthProperty().bind(view.widthProperty());
-        roll.setFill(
-                new LinearGradient(
-                        0, 0, 0, 1,
-                        true,
-                        CycleMethod.NO_CYCLE,
-                        new Stop(0, Color.web("#58371d")),
-                        new Stop(0.35, Color.web("#c09a61")),
-                        new Stop(0.68, Color.web("#8c6034")),
-                        new Stop(1, Color.web("#4f301a"))
-                )
-        );
+        roll.setFill(new LinearGradient(0, 0, 0, 1, true,
+                CycleMethod.NO_CYCLE, new Stop(0, Color.web("#58371d")), new Stop(0.35, Color.web("#c09a61")),
+                new Stop(0.68, Color.web("#8c6034")), new Stop(1, Color.web("#4f301a"))));
         roll.setEffect(new DropShadow(12, Color.rgb(54, 30, 13, 0.55)));
         return roll;
     }
 
     private Group createEyeSymbol()
     {
-        Polygon triangle = new Polygon(
-                0.0, -67.0,
-                -83.0, 68.0,
-                83.0, 68.0
-        );
+        Polygon triangle = new Polygon(0.0, -67.0, -83.0, 68.0, 83.0, 68.0);
         triangle.setFill(Color.rgb(208, 178, 121, 0.17));
         triangle.setStroke(Color.web("#654324"));
         triangle.setStrokeWidth(4);
 
-        Path eye = new Path(
-                new MoveTo(-36, 9),
-                new QuadCurveTo(0, -22, 36, 9),
-                new QuadCurveTo(0, 38, -36, 9),
-                new ClosePath()
-        );
+        Path eye = new Path(new MoveTo(-36, 9), new QuadCurveTo(0, -22, 36, 9),
+                new QuadCurveTo(0, 38, -36, 9), new ClosePath());
         eye.setFill(Color.web("#f1e2bd"));
         eye.setStroke(Color.web("#654324"));
         eye.setStrokeWidth(3);
@@ -300,17 +236,9 @@ public final class FreemasonryInvitationView
 
         GraphicsContext graphics = texture.getGraphicsContext2D();
         graphics.clearRect(0, 0, width, height);
-        graphics.setFill(
-                new LinearGradient(
-                        0, 0, 1, 1,
-                        true,
-                        CycleMethod.NO_CYCLE,
-                        new Stop(0, Color.web("#d3ba83")),
-                        new Stop(0.22, Color.web("#f2e4bd")),
-                        new Stop(0.65, Color.web("#e8d6a8")),
-                        new Stop(1, Color.web("#b9935b"))
-                )
-        );
+        graphics.setFill(new LinearGradient(0, 0, 1, 1,
+                true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#d3ba83")), new Stop(0.22, Color.web("#f2e4bd")),
+                new Stop(0.65, Color.web("#e8d6a8")), new Stop(1, Color.web("#b9935b"))));
         graphics.fillRect(0, 0, width, height);
 
         Random random = new Random(500);
@@ -319,34 +247,20 @@ public final class FreemasonryInvitationView
         {
             double size = 30 + random.nextDouble() * 170;
             graphics.setFill(Color.rgb(97, 66, 34, 0.014));
-            graphics.fillOval(
-                    random.nextDouble() * width,
-                    random.nextDouble() * height,
-                    size,
-                    size * 0.6
-            );
+            graphics.fillOval(random.nextDouble() * width, random.nextDouble() * height, size, size * 0.6);
         }
 
         for (int grain = 0; grain < 1800; grain++)
         {
             graphics.setFill(Color.rgb(92, 63, 34, 0.06));
-            graphics.fillRect(
-                    random.nextDouble() * width,
-                    random.nextDouble() * height,
-                    1 + random.nextDouble() * 2,
-                    1
-            );
+            graphics.fillRect(random.nextDouble() * width,
+                    random.nextDouble() * height, 1 + random.nextDouble() * 2, 1);
         }
 
         for (int edge = 0; edge < 28; edge++)
         {
             graphics.setStroke(Color.rgb(91, 57, 29, 0.012));
-            graphics.strokeRect(
-                    edge,
-                    edge,
-                    width - edge * 2,
-                    height - edge * 2
-            );
+            graphics.strokeRect(edge, edge, width - edge * 2, height - edge * 2);
         }
 
         graphics.setStroke(Color.rgb(93, 59, 29, 0.48));
@@ -376,20 +290,8 @@ public final class FreemasonryInvitationView
         acceptButton.setDisable(true);
         declineButton.setDisable(true);
 
-        animation = new Timeline(
-                new KeyFrame(
-                        Duration.ZERO,
-                        new KeyValue(unrollProgress, 0)
-                ),
-                new KeyFrame(
-                        Duration.millis(1000),
-                        new KeyValue(
-                                unrollProgress,
-                                1.0,
-                                Interpolator.EASE_OUT
-                        )
-                )
-        );
+        animation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(unrollProgress, 0)),
+                new KeyFrame(Duration.millis(1000), new KeyValue(unrollProgress, 1.0, Interpolator.EASE_OUT)));
         animation.setOnFinished(
                 new EventHandler<ActionEvent>()
                 {
@@ -412,20 +314,8 @@ public final class FreemasonryInvitationView
         declineButton.setDisable(true);
         choiceHandler.accept(choice);
 
-        animation = new Timeline(
-                new KeyFrame(
-                        Duration.ZERO,
-                        new KeyValue(unrollProgress, 1.0)
-                ),
-                new KeyFrame(
-                        Duration.millis(750),
-                        new KeyValue(
-                                unrollProgress,
-                                0,
-                                Interpolator.EASE_IN
-                        )
-                )
-        );
+        animation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(unrollProgress, 1.0)),
+                new KeyFrame(Duration.millis(750), new KeyValue(unrollProgress, 0, Interpolator.EASE_IN)));
         animation.setOnFinished(
                 new EventHandler<ActionEvent>()
                 {

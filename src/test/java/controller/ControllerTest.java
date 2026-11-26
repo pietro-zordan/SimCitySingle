@@ -52,10 +52,7 @@ class ControllerTest {
     void addObserverNull() {
         Controller controller = new Controller();
 
-        assertThrows(
-                NullPointerException.class,
-                () -> controller.addObserver(null)
-        );
+        assertThrows(NullPointerException.class, () -> controller.addObserver(null));
     }
 
     @Test
@@ -77,12 +74,7 @@ class ControllerTest {
 
         controller.addObserver(observer);
 
-        Controller.CellState state =
-                controller.placeConstruction(
-                        ConstructionType.ROAD,
-                        0,
-                        0
-                );
+        Controller.CellState state = controller.placeConstruction(ConstructionType.ROAD, 0, 0);
 
         assertFalse(state.empty());
         assertEquals(ConstructionType.ROAD, state.type());
@@ -92,16 +84,8 @@ class ControllerTest {
     @Test
     void removeConstruction() {
         Controller controller = new Controller();
-        controller.placeConstruction(
-                ConstructionType.ROAD,
-                0,
-                1
-        );
-        controller.placeConstruction(
-                ConstructionType.PARK,
-                0,
-                0
-        );
+        controller.placeConstruction(ConstructionType.ROAD, 0, 1);
+        controller.placeConstruction(ConstructionType.PARK, 0, 0);
 
         // Registriamo l'observer per tracciare la rimozione
         TestObserver observer = new TestObserver();
@@ -110,8 +94,7 @@ class ControllerTest {
         // Rimozione del PARK
         controller.removeConstruction(0, 0);
 
-        Controller.CellState state =
-                controller.getCellState(0, 0);
+        Controller.CellState state = controller.getCellState(0, 0);
 
         assertTrue(state.empty());
         assertEquals(1, observer.getRefreshCount());
@@ -135,9 +118,7 @@ class ControllerTest {
     /** Verifica la consegna al tick 508, la scelta e il salvataggio della posta. */
     @Test
     void lodgeWarningArrivesAt508OnlyForMembersAndSurvivesSaving() {
-        Controller member = new Controller(
-                new Grid(), new StandardPolicy(), 2500, 507, 0
-        );
+        Controller member = new Controller(new Grid(), new StandardPolicy(), 2500, 507, 0);
         assertTrue(member.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
         assertFalse(member.getMailbox().hasMessages());
 
@@ -145,16 +126,11 @@ class ControllerTest {
 
         assertEquals(508, member.getCurrentTick());
         assertEquals(1, member.getMailbox().getMessages().size());
-        assertEquals("lodge_ufo_warning",
-                member.getMailbox().getMessages().get(0).getId());
-        assertEquals(508,
-                member.getMailbox().getMessages().get(0).getReceivedTick());
-        assertEquals(1, member.createProgress()
-                .restoreController().getMailbox().getMessages().size());
+        assertEquals("lodge_ufo_warning", member.getMailbox().getMessages().get(0).getId());
+        assertEquals(508, member.getMailbox().getMessages().get(0).getReceivedTick());
+        assertEquals(1, member.createProgress().restoreController().getMailbox().getMessages().size());
 
-        Controller nonMember = new Controller(
-                new Grid(), new StandardPolicy(), 2500, 507, 0
-        );
+        Controller nonMember = new Controller(new Grid(), new StandardPolicy(), 2500, 507, 0);
         assertTrue(nonMember.chooseFreemasonry(FreemasonryChoice.DECLINED));
         nonMember.updateOfOneTick();
         assertFalse(nonMember.getMailbox().hasMessages());
@@ -189,9 +165,7 @@ class ControllerTest {
         TestObserver observer = new TestObserver();
         controller.addObserver(observer);
         // 3. Cambiamo policy usando un PolicyType diverso da quello iniziale (StandardPolicy)
-        boolean changed = controller.changePolicy(
-                policies.PolicyType.INDUSTRIAL
-        );
+        boolean changed = controller.changePolicy(policies.PolicyType.INDUSTRIAL);
 
         assertTrue(changed);
         assertEquals(1, observer.getRefreshCount());
@@ -201,20 +175,14 @@ class ControllerTest {
     void getTicksToPolicyChange() {
         Controller controller = new Controller();
 
-        assertEquals(
-                12,
-                controller.getTicksToPolicyChange()
-        );
+        assertEquals(12, controller.getTicksToPolicyChange());
     }
 
     @Test
     void getCurrentPolicyName() {
         Controller controller = new Controller();
 
-        assertEquals(
-                new StandardPolicy().getName(),
-                controller.getCurrentPolicyName()
-        );
+        assertEquals(new StandardPolicy().getName(), controller.getCurrentPolicyName());
     }
 
     @Test
@@ -228,9 +196,7 @@ class ControllerTest {
     void getPlacementCost() {
         Controller controller = new Controller();
 
-        int cost = controller.getPlacementCost(
-                ConstructionType.ROAD
-        );
+        int cost = controller.getPlacementCost(ConstructionType.ROAD);
 
         assertTrue(cost <= 0);
     }
@@ -246,10 +212,7 @@ class ControllerTest {
     void getActiveTsunamiAdvancementLength() {
         Controller controller = new Controller();
 
-        assertEquals(
-                0,
-                controller.getActiveTsunamiAdvancementLength()
-        );
+        assertEquals(0, controller.getActiveTsunamiAdvancementLength());
     }
 
     @Test

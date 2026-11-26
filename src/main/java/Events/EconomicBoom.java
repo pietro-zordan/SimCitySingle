@@ -21,8 +21,7 @@ public class EconomicBoom extends Event
     private final Grid grid;
 
     // Edifici che hanno già ricevuto il bonus durante l'evento.
-    private final Set<EconomyBoostable> boostedBuildings =
-            new HashSet<>();
+    private final Set<EconomyBoostable> boostedBuildings = new HashSet<>();
 
     // Inizializza l'evento associandolo alla città e alla griglia.
     public EconomicBoom(City city, Grid grid)
@@ -38,10 +37,7 @@ public class EconomicBoom extends Event
     {
         Random dice = new Random();
 
-        moneyProductionMultiplier =
-                MINIMUM_BOOST
-                        + (MAXIMUM_BOOST - MINIMUM_BOOST)
-                        * dice.nextDouble();
+        moneyProductionMultiplier = MINIMUM_BOOST + (MAXIMUM_BOOST - MINIMUM_BOOST) * dice.nextDouble();
 
         boostEconomyGrowth();
     }
@@ -64,16 +60,11 @@ public class EconomicBoom extends Event
        che non sono ancora stati potenziati. */
     private void boostEconomyGrowth()
     {
-        for (Construction construction
-                : grid.getConstructions())
+        for (Construction construction : grid.getConstructions())
         {
-            if (construction
-                    instanceof EconomyBoostable boostable
-                    && !isBoosted(construction))
+            if (construction instanceof EconomyBoostable boostable && !isBoosted(construction))
             {
-                boostable.applyEconomicBoost(
-                        moneyProductionMultiplier
-                );
+                boostable.applyEconomicBoost(moneyProductionMultiplier);
 
                 boostedBuildings.add(boostable);
             }
@@ -84,8 +75,7 @@ public class EconomicBoom extends Event
        senza modificare il loro tasso di crescita naturale. */
     private void removeEconomicBoosts()
     {
-        for (EconomyBoostable boostedBuilding
-                : boostedBuildings)
+        for (EconomyBoostable boostedBuilding : boostedBuildings)
         {
             boostedBuilding.removeEconomicBoost();
         }
@@ -96,8 +86,7 @@ public class EconomicBoom extends Event
     // Verifica se la costruzione ha già ricevuto il bonus dell'evento.
     public boolean isBoosted(Construction construction)
     {
-        return construction != null
-                && boostedBuildings.contains(construction);
+        return construction != null && boostedBuildings.contains(construction);
     }
 
     // Restituisce il tipo corrispondente al boom economico.

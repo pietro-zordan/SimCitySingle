@@ -14,103 +14,45 @@ class InsuranceManagerTest
     {
         Grid grid = new Grid();
 
-        grid.restoreConstruction(
-                new Bank(),
-                10,
-                10
-        );
+        grid.restoreConstruction(new Bank(), 10, 10);
 
-        Residential firstResidential =
-                new Residential();
+        Residential firstResidential = new Residential();
 
-        grid.restoreConstruction(
-                firstResidential,
-                0,
-                10
-        );
+        grid.restoreConstruction(firstResidential, 0, 10);
 
-        City city =
-                new City(
-                        grid,
-                        new StandardPolicy()
-                );
+        City city = new City(grid, new StandardPolicy());
 
-        InsuranceManager insuranceManager =
-                new InsuranceManager(
-                        city,
-                        grid
-                );
+        InsuranceManager insuranceManager = new InsuranceManager(city, grid);
 
         // 80 euro meno il 5% dato dalla banca.
-        assertEquals(
-                76,
-                insuranceManager
-                        .getTsunamiInsuranceCost()
-        );
+        assertEquals(76, insuranceManager.getTsunamiInsuranceCost());
 
-        assertTrue(
-                insuranceManager
-                        .buyTsunamiInsurance()
-        );
+        assertTrue(insuranceManager.buyTsunamiInsurance());
 
-        assertTrue(
-                firstResidential
-                        .isTsunamiInsured()
-        );
+        assertTrue(firstResidential.isTsunamiInsured());
 
         // Appena applicata non c'è nulla di nuovo da assicurare.
-        assertFalse(
-                insuranceManager
-                        .canBuyTsunamiInsurance()
-        );
+        assertFalse(insuranceManager.canBuyTsunamiInsurance());
 
-        Residential newResidential =
-                new Residential();
+        Residential newResidential = new Residential();
 
-        grid.restoreConstruction(
-                newResidential,
-                1,
-                10
-        );
+        grid.restoreConstruction(newResidential, 1, 10);
 
         // La nuova costruzione NON viene coperta automaticamente.
-        assertFalse(
-                newResidential
-                        .isTsunamiInsured()
-        );
+        assertFalse(newResidential.isTsunamiInsured());
 
         // L'estensione diventa subito disponibile: nessun cooldown.
-        assertTrue(
-                insuranceManager
-                        .canBuyTsunamiInsurance()
-        );
+        assertTrue(insuranceManager.canBuyTsunamiInsurance());
 
-        assertEquals(
-                1,
-                insuranceManager
-                        .getTsunamiInsuranceBuildingCount()
-        );
+        assertEquals(1, insuranceManager.getTsunamiInsuranceBuildingCount());
 
-        assertEquals(
-                76,
-                insuranceManager
-                        .getTsunamiInsuranceCost()
-        );
+        assertEquals(76, insuranceManager.getTsunamiInsuranceCost());
 
-        assertTrue(
-                insuranceManager
-                        .buyTsunamiInsurance()
-        );
+        assertTrue(insuranceManager.buyTsunamiInsurance());
 
-        assertTrue(
-                newResidential
-                        .isTsunamiInsured()
-        );
+        assertTrue(newResidential.isTsunamiInsured());
 
-        assertFalse(
-                insuranceManager
-                        .canBuyTsunamiInsurance()
-        );
+        assertFalse(insuranceManager.canBuyTsunamiInsurance());
     }
 
     @Test
@@ -118,99 +60,37 @@ class InsuranceManagerTest
     {
         Grid grid = new Grid();
 
-        grid.restoreConstruction(
-                new Bank(),
-                10,
-                10
-        );
+        grid.restoreConstruction(new Bank(), 10, 10);
 
-        Residential residential =
-                new Residential();
+        Residential residential = new Residential();
 
-        grid.restoreConstruction(
-                residential,
-                1,
-                10
-        );
+        grid.restoreConstruction(residential, 1, 10);
 
-        City city =
-                new City(
-                        grid,
-                        new StandardPolicy()
-                );
+        City city = new City(grid, new StandardPolicy());
 
-        InsuranceManager insuranceManager =
-                new InsuranceManager(
-                        city,
-                        grid
-                );
+        InsuranceManager insuranceManager = new InsuranceManager(city, grid);
 
-        assertTrue(
-                insuranceManager
-                        .buyTsunamiInsurance()
-        );
+        assertTrue(insuranceManager.buyTsunamiInsurance());
 
-        grid.removeConstruction(
-                1,
-                10
-        );
+        grid.removeConstruction(1, 10);
 
-        insuranceManager.registerTsunamiDamage(
-                List.of(
-                        new ReconstructionEntry(
-                                residential,
-                                1,
-                                10
-                        )
-                ),
-                "UP"
-        );
+        insuranceManager.registerTsunamiDamage(List.of(new ReconstructionEntry(residential, 1, 10)), "UP");
 
-        assertThrows(
-                IllegalStateException.class,
-                () -> grid.placeConstruction(
-                        new Road(),
-                        2,
-                        5
-                )
-        );
+        assertThrows(IllegalStateException.class, () -> grid.placeConstruction(new Road(), 2, 5));
 
-        insuranceManager
-                .startTsunamiReconstruction();
+        insuranceManager.startTsunamiReconstruction();
 
-        assertFalse(
-                insuranceManager
-                        .wasReconstructionRestoredThisTick()
-        );
+        assertFalse(insuranceManager.wasReconstructionRestoredThisTick());
 
-        insuranceManager
-                .updateReconstruction();
+        insuranceManager.updateReconstruction();
 
-        assertTrue(
-                insuranceManager
-                        .wasReconstructionRestoredThisTick()
-        );
+        assertTrue(insuranceManager.wasReconstructionRestoredThisTick());
 
-        assertTrue(
-                insuranceManager
-                        .wasReconstructionCompletedThisTick()
-        );
+        assertTrue(insuranceManager.wasReconstructionCompletedThisTick());
 
-        assertSame(
-                residential,
-                grid.getCell(
-                        1,
-                        10
-                ).getConstruction()
-        );
+        assertSame(residential, grid.getCell(1, 10).getConstruction());
 
-        assertDoesNotThrow(
-                () -> grid.placeConstruction(
-                        new Road(),
-                        2,
-                        5
-                )
-        );
+        assertDoesNotThrow(() -> grid.placeConstruction(new Road(), 2, 5));
     }
 
     @Test
@@ -218,75 +98,31 @@ class InsuranceManagerTest
     {
         Grid grid = new Grid();
 
-        grid.restoreConstruction(
-                new Bank(),
-                10,
-                10
-        );
+        grid.restoreConstruction(new Bank(), 10, 10);
 
-        Residential insuredResidential =
-                new Residential();
+        Residential insuredResidential = new Residential();
 
-        grid.restoreConstruction(
-                insuredResidential,
-                0,
-                10
-        );
+        grid.restoreConstruction(insuredResidential, 0, 10);
 
-        City city =
-                new City(
-                        grid,
-                        new StandardPolicy()
-                );
+        City city = new City(grid, new StandardPolicy());
 
-        InsuranceManager insuranceManager =
-                new InsuranceManager(
-                        city,
-                        grid
-                );
+        InsuranceManager insuranceManager = new InsuranceManager(city, grid);
 
-        assertTrue(
-                insuranceManager
-                        .buyTsunamiInsurance()
-        );
+        assertTrue(insuranceManager.buyTsunamiInsurance());
 
-        Residential uninsuredResidential =
-                new Residential();
+        Residential uninsuredResidential = new Residential();
 
-        grid.restoreConstruction(
-                uninsuredResidential,
-                1,
-                10
-        );
+        grid.restoreConstruction(uninsuredResidential, 1, 10);
 
-        grid.removeConstruction(
-                1,
-                10
-        );
+        grid.removeConstruction(1, 10);
 
-        insuranceManager.registerTsunamiDamage(
-                List.of(
-                        new ReconstructionEntry(
-                                uninsuredResidential,
-                                1,
-                                10
-                        )
-                ),
-                "UP"
-        );
+        insuranceManager.registerTsunamiDamage(List.of(new ReconstructionEntry(uninsuredResidential, 1, 10)), "UP");
 
-        insuranceManager
-                .startTsunamiReconstruction();
+        insuranceManager.startTsunamiReconstruction();
 
-        insuranceManager
-                .updateReconstruction();
+        insuranceManager.updateReconstruction();
 
-        assertNull(
-                grid.getCell(
-                        1,
-                        10
-                ).getConstruction()
-        );
+        assertNull(grid.getCell(1, 10).getConstruction());
     }
     @Test
     void nuclearFireProtectionUsesBankDiscountAndProtectsPlants()

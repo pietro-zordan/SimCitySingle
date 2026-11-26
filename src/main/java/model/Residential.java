@@ -113,20 +113,11 @@ public class Residential extends Construction
     /* Ripristina la popolazione e i relativi tassi di crescita e diminuzione,
    oltre agli attributi comuni gestiti dalla superclasse. */
     @Override
-    public void restoreState(
-            int population,
-            int populationGrowthRate,
-            int populationDecreaseRate,
-            double economyGrowthRate,
-            int moneyProduction)
+    public void restoreState(int population, int populationGrowthRate,
+            int populationDecreaseRate, double economyGrowthRate, int moneyProduction)
     {
-        super.restoreState(
-                population,
-                populationGrowthRate,
-                populationDecreaseRate,
-                economyGrowthRate,
-                moneyProduction
-        );
+        super.restoreState(population, populationGrowthRate,
+                populationDecreaseRate, economyGrowthRate, moneyProduction);
 
         this.population = population;
         this.populationGrowthRate = populationGrowthRate;

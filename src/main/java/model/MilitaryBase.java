@@ -26,12 +26,9 @@ public class MilitaryBase extends Construction implements DefenceSystem{
         return 80;
     }
 
-    public boolean canRemoveCriminalActivity(
-            int currentTick)
+    public boolean canRemoveCriminalActivity(int currentTick)
     {
-        return lastRemovalTick == -1
-                || currentTick - lastRemovalTick
-                >= TERRORIST_REMOVAL_COOLDOWN;
+        return lastRemovalTick == -1 || currentTick - lastRemovalTick >= TERRORIST_REMOVAL_COOLDOWN;
     }
 
     public void registerCriminalActivityRemoval(int currentTick)

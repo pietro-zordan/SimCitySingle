@@ -29,23 +29,16 @@ public class City
     }
 
     // Crea una città usando il budget recuperato da un salvataggio.
-    public City(
-            Grid grid,
-            Policy initialPolicy,
-            int initialBudget)
+    public City(Grid grid, Policy initialPolicy, int initialBudget)
     {
         if (grid == null)
         {
-            throw new IllegalArgumentException(
-                    "The grid cannot be null"
-            );
+            throw new IllegalArgumentException("The grid cannot be null");
         }
 
         if (initialPolicy == null)
         {
-            throw new IllegalArgumentException(
-                    "The initial policy cannot be null"
-            );
+            throw new IllegalArgumentException("The initial policy cannot be null");
         }
 
         this.grid = grid;
@@ -77,8 +70,7 @@ public class City
 
         int totalEmployeeSlots = 0;
 
-        for (Construction construction
-                : grid.getConstructions())
+        for (Construction construction : grid.getConstructions())
         {
             population += construction.getPopulation();
             pollution += construction.getPollutionImpact();
@@ -86,18 +78,14 @@ public class City
             happiness += construction.getHappinessImpact();
             maintenance += construction.getMaintenanceCost();
 
-            totalEmployeeSlots +=
-                    construction.getNumberOfEmployee();
+            totalEmployeeSlots += construction.getNumberOfEmployee();
         }
 
         pollution = currentPolicy.modifyPollution(pollution);
         economy = currentPolicy.modifyEconomy(economy);
         happiness -= temporaryHappinessPenalty;
 
-        unemployed = Math.max(
-                0,
-                population - totalEmployeeSlots
-        );
+        unemployed = Math.max(0, population - totalEmployeeSlots);
     }
 
     // Restituisce il numero di cittadini senza un posto di lavoro.
@@ -124,12 +112,9 @@ public class City
     // Modifica il budget impedendo che diventi negativo.
     public void updateBudget(int amount)
     {
-        if (amount < 0
-                && budget + amount < 0)
+        if (amount < 0 && budget + amount < 0)
         {
-            throw new IllegalArgumentException(
-                    "Budget is insufficient"
-            );
+            throw new IllegalArgumentException("Budget is insufficient");
         }
 
         budget += amount;
@@ -194,11 +179,7 @@ public class City
             return;
         }
 
-        temporaryHappinessPenalty = Math.max(
-                0,
-                temporaryHappinessPenalty
-                        - HAPPINESS_RECOVERY_PER_TICK
-        );
+        temporaryHappinessPenalty = Math.max(0, temporaryHappinessPenalty - HAPPINESS_RECOVERY_PER_TICK);
     }
 
     // Restituisce il budget disponibile.
@@ -209,38 +190,23 @@ public class City
 
     /* Controlla popolazione e budget, crea la costruzione richiesta
        e delega alla griglia la verifica della posizione. */
-    public void placeConstruction(
-            Construction construction,
-            int row,
-            int column)
+    public void placeConstruction(Construction construction, int row, int column)
     {
         if (construction == null)
         {
-            throw new IllegalArgumentException(
-                    "Construction cannot be null"
-            );
+            throw new IllegalArgumentException("Construction cannot be null");
         }
 
-        int cost =
-                calculatePlacementCost(construction);
+        int cost = calculatePlacementCost(construction);
 
         if (!grid.canSupportConstruction(construction))
         {
-            throw new IllegalStateException(
-                    "You need to expand the grid capacity before placing more constructions"
-            );
+            throw new IllegalStateException("You need to expand the grid capacity before placing more constructions");
         }
 
-        if (!construction.isPlacementAllowed(
-                pollution,
-                unemployed))
+        if (!construction.isPlacementAllowed(pollution, unemployed))
         {
-            throw new IllegalStateException(
-                    construction.getPlacementErrorMessage(
-                            pollution,
-                            unemployed
-                    )
-            );
+            throw new IllegalStateException(construction.getPlacementErrorMessage(pollution, unemployed));
         }
 
         if (budget + cost < 0)
@@ -254,11 +220,7 @@ public class City
             );
         }
 
-        grid.placeConstruction(
-                construction,
-                row,
-                column
-        );
+        grid.placeConstruction(construction, row, column);
 
         updateBudget(cost);
         recalculateStatistics();

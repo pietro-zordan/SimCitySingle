@@ -20,8 +20,7 @@ public class Fire extends Event{
     private Grid grid;
 
     // Celle che verranno bruciate durante il tick successivo
-    private final Set<Cell> cellsToBurnNextTick =
-            new LinkedHashSet<>();
+    private final Set<Cell> cellsToBurnNextTick = new LinkedHashSet<>();
 
     // Celle già coinvolte nell'incendio
     private final Set<Cell> involvedCells = new HashSet<>();
@@ -39,9 +38,7 @@ public class Fire extends Event{
 
         for (int row = 0; row < grid.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < grid.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < grid.getNumberOfColumns(); column++)
             {
                 Cell cell = grid.getCell(row, column);
 
@@ -100,8 +97,7 @@ public class Fire extends Event{
 
         Random random = new Random();
 
-        if (!involvedCells.contains(cell)
-                && random.nextBoolean())
+        if (!involvedCells.contains(cell) && random.nextBoolean())
         {
             cellsToBurnNextTick.add(cell);
             involvedCells.add(cell);
@@ -112,8 +108,7 @@ public class Fire extends Event{
     @Override
     public void updateOfOneTick()
     {
-        List<Cell> current =
-                new ArrayList<>(cellsToBurnNextTick);
+        List<Cell> current = new ArrayList<>(cellsToBurnNextTick);
 
         cellsToBurnNextTick.clear();
 
@@ -149,9 +144,7 @@ public class Fire extends Event{
             return false;
         }
 
-        return cellsToBurnNextTick.contains(
-                grid.getCell(row, column)
-        );
+        return cellsToBurnNextTick.contains(grid.getCell(row, column));
     }
     //l'evento finisce quando la lista che contiene le celle che bruceranno il prossimo turno è vuota
     @Override

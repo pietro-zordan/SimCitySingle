@@ -27,93 +27,31 @@ public class ConstructionProgress {
     private int policeLastRemovalTick;
     private int criminalActivityCreationTick;
 
-    public ConstructionProgress(
-            ConstructionType type,
-            int row,
-            int column,
-            int population,
-            int populationGrowthRate,
-            int populationDecreaseRate,
-            double economyGrowthRate,
-            int moneyProduction)
+    public ConstructionProgress(ConstructionType type, int row, int column, int population,
+            int populationGrowthRate, int populationDecreaseRate, double economyGrowthRate, int moneyProduction)
     {
-        this(
-                type,
-                row,
-                column,
-                population,
-                populationGrowthRate,
-                populationDecreaseRate,
-                economyGrowthRate,
-                moneyProduction,
-                false
-        );
+        this(type, row, column, population, populationGrowthRate,
+                populationDecreaseRate, economyGrowthRate, moneyProduction, false);
     }
 
-    public ConstructionProgress(
-            ConstructionType type,
-            int row,
-            int column,
-            int population,
-            int populationGrowthRate,
-            int populationDecreaseRate,
-            double economyGrowthRate,
-            int moneyProduction,
-            boolean tsunamiInsured)
+    public ConstructionProgress(ConstructionType type, int row, int column, int population, int populationGrowthRate,
+            int populationDecreaseRate, double economyGrowthRate, int moneyProduction, boolean tsunamiInsured)
     {
-        this(
-                type,
-                row,
-                column,
-                population,
-                populationGrowthRate,
-                populationDecreaseRate,
-                economyGrowthRate,
-                moneyProduction,
-                tsunamiInsured,
-                false
-        );
+        this(type, row, column, population, populationGrowthRate,
+                populationDecreaseRate, economyGrowthRate, moneyProduction, tsunamiInsured, false);
     }
 
-    public ConstructionProgress(
-            ConstructionType type,
-            int row,
-            int column,
-            int population,
-            int populationGrowthRate,
-            int populationDecreaseRate,
-            double economyGrowthRate,
-            int moneyProduction,
-            boolean tsunamiInsured,
-            boolean fireProtected)
+    public ConstructionProgress(ConstructionType type, int row,
+            int column, int population, int populationGrowthRate, int populationDecreaseRate,
+            double economyGrowthRate, int moneyProduction, boolean tsunamiInsured, boolean fireProtected)
     {
-        this(
-                type,
-                row,
-                column,
-                population,
-                populationGrowthRate,
-                populationDecreaseRate,
-                economyGrowthRate,
-                moneyProduction,
-                tsunamiInsured,
-                fireProtected,
-                0
-        );
+        this(type, row, column, population, populationGrowthRate,
+                populationDecreaseRate, economyGrowthRate, moneyProduction, tsunamiInsured, fireProtected, 0);
     }
 
-    public ConstructionProgress(
-            ConstructionType type,
-            int row,
-            int column,
-            int population,
-            int populationGrowthRate,
-            int populationDecreaseRate,
-            double economyGrowthRate,
-            int moneyProduction,
-            boolean tsunamiInsured,
-            boolean fireProtected,
-            int terroristicGroupLifetimeTicks)
+    public ConstructionProgress(ConstructionType type, int row,
+            int column, int population, int populationGrowthRate, int populationDecreaseRate, double economyGrowthRate,
+            int moneyProduction, boolean tsunamiInsured, boolean fireProtected, int terroristicGroupLifetimeTicks)
     {
         this.type = type;
         this.row = row;
@@ -131,10 +69,7 @@ public class ConstructionProgress {
     /* Crea una copia dello stato corrente di una costruzione,
     salvando anche la posizione che occupa nella griglia. */
 
-    public static ConstructionProgress fromConstruction(
-            Construction construction,
-            int row,
-            int column)
+    public static ConstructionProgress fromConstruction(Construction construction, int row, int column)
     {
         boolean fireProtected = false;
         int terroristicGroupLifetimeTicks = 0;
@@ -151,30 +86,20 @@ public class ConstructionProgress {
             terroristicGroupLifetimeTicks = terroristicGroup.getLifetimeTicks();
         }
 
-        ConstructionProgress progress = new ConstructionProgress(
-                construction.getType(),
-                row,
-                column,
-                construction.getPopulation(),
-                construction.getPopulationGrowthRate(),
-                construction.getPopulationDecreaseRate(),
-                construction.getEconomyGrowthRate(),
-                construction.getMoneyProduction(),
-                construction.isTsunamiInsured(),
-                fireProtected,
-                terroristicGroupLifetimeTicks
-        );
+        ConstructionProgress progress = new ConstructionProgress(construction.getType(),
+                row, column, construction.getPopulation(),
+                construction.getPopulationGrowthRate(), construction.getPopulationDecreaseRate(),
+                construction.getEconomyGrowthRate(), construction.getMoneyProduction(),
+                construction.isTsunamiInsured(), fireProtected, terroristicGroupLifetimeTicks);
 
         if (construction instanceof PoliceStation)
         {
-            progress.policeLastRemovalTick =
-                    ((PoliceStation) construction).getLastRemovalTick();
+            progress.policeLastRemovalTick = ((PoliceStation) construction).getLastRemovalTick();
         }
 
         if (construction instanceof CriminalActivity)
         {
-            progress.criminalActivityCreationTick =
-                    ((CriminalActivity) construction).getCreationTick();
+            progress.criminalActivityCreationTick = ((CriminalActivity) construction).getCreationTick();
         }
 
         return progress;
@@ -242,25 +167,15 @@ public class ConstructionProgress {
     {
         if (type == null)
         {
-            throw new IllegalStateException(
-                    "The saved construction type cannot be null"
-            );
+            throw new IllegalStateException("The saved construction type cannot be null");
         }
 
-        Construction construction =
-                ConstructionFactory.create(type);
+        Construction construction = ConstructionFactory.create(type);
 
-        construction.restoreState(
-                population,
-                populationGrowthRate,
-                populationDecreaseRate,
-                economyGrowthRate,
-                moneyProduction
-        );
+        construction.restoreState(population, populationGrowthRate,
+                populationDecreaseRate, economyGrowthRate, moneyProduction);
 
-        construction.setTsunamiInsured(
-                tsunamiInsured
-        );
+        construction.setTsunamiInsured(tsunamiInsured);
 
         if (construction instanceof NuclearPlant)
         {
@@ -276,14 +191,12 @@ public class ConstructionProgress {
 
         if (construction instanceof PoliceStation)
         {
-            ((PoliceStation) construction)
-                    .restoreLastRemovalTick(policeLastRemovalTick);
+            ((PoliceStation) construction).restoreLastRemovalTick(policeLastRemovalTick);
         }
 
         if (construction instanceof CriminalActivity)
         {
-            ((CriminalActivity) construction)
-                    .setCreationTick(criminalActivityCreationTick);
+            ((CriminalActivity) construction).setCreationTick(criminalActivityCreationTick);
         }
 
         return construction;

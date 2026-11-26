@@ -83,10 +83,8 @@ public class EnergyManager {
             if (cell != null && !cell.isEmpty()) {
                 Construction construction = cell.getConstruction();
 
-                if (construction.requiresPower()
-                        && !construction.isPowerPlantConnected()
-                        && !served.contains(construction)
-                        && !candidates.contains(construction)) {
+                if (construction.requiresPower() && !construction.isPowerPlantConnected()
+                        && !served.contains(construction) && !candidates.contains(construction)) {
                     construction.connectToPowerPlant(powerPlant);
                     served.offer(construction);
                 }

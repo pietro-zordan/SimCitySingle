@@ -13,13 +13,9 @@ public class BankruptcyManager
     private int criticalTicks = 0;
 
     // Aggiorna il contatore in base alla situazione economica corrente.
-    public void update(
-            int budget,
-            int economy,
-            int maintenance)
+    public void update(int budget, int economy, int maintenance)
     {
-        if (budget < 0
-                && economy < maintenance)
+        if (budget < 0 && economy < maintenance)
         {
             criticalTicks++;
         }
@@ -45,9 +41,7 @@ public class BankruptcyManager
     {
         if (criticalTicks < 0)
         {
-            throw new IllegalArgumentException(
-                    "Critical ticks cannot be negative"
-            );
+            throw new IllegalArgumentException("Critical ticks cannot be negative");
         }
 
         this.criticalTicks = criticalTicks;

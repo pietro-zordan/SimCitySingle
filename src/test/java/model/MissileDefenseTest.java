@@ -9,8 +9,7 @@ class MissileDefenseTest
     @Test
     void absorbsThreeMissilesThenStops()
     {
-        MissileDefense defense =
-                new MissileDefense();
+        MissileDefense defense = new MissileDefense();
 
         assertTrue(defense.purchase());
 
@@ -18,10 +17,7 @@ class MissileDefenseTest
         assertTrue(defense.absorbMissile());
         assertTrue(defense.absorbMissile());
 
-        assertEquals(
-                0,
-                defense.getHitsRemaining()
-        );
+        assertEquals(0, defense.getHitsRemaining());
 
         assertFalse(defense.isActive());
         assertFalse(defense.absorbMissile());
@@ -30,8 +26,7 @@ class MissileDefenseTest
     @Test
     void repairFromZeroReactivatesDefense()
     {
-        MissileDefense defense =
-                new MissileDefense();
+        MissileDefense defense = new MissileDefense();
 
         defense.purchase();
         defense.absorbMissile();
@@ -39,25 +34,18 @@ class MissileDefenseTest
         defense.absorbMissile();
 
         assertTrue(defense.repairOneHit());
-        assertEquals(
-                1,
-                defense.getHitsRemaining()
-        );
+        assertEquals(1, defense.getHitsRemaining());
         assertTrue(defense.isActive());
     }
 
     @Test
     void cannotRepairBeyondMaximum()
     {
-        MissileDefense defense =
-                new MissileDefense();
+        MissileDefense defense = new MissileDefense();
 
         defense.purchase();
 
         assertFalse(defense.repairOneHit());
-        assertEquals(
-                MissileDefense.MAX_HITS,
-                defense.getHitsRemaining()
-        );
+        assertEquals(MissileDefense.MAX_HITS, defense.getHitsRemaining());
     }
 }

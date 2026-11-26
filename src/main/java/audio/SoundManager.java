@@ -42,9 +42,7 @@ public class SoundManager
         blackoutSound = loadClip("blackout.wav");
         ufoPowerdownSound = loadClip("ufo_powerdown.mp3");
         ufoHowlSound = loadClip("ufo_howl.mp3");
-        insuranceRebuildSound = loadClip(
-                "insurance_rebuild.wav"
-        );
+        insuranceRebuildSound = loadClip("insurance_rebuild.wav");
         demolitionSound = loadClip("demolition.wav");
         placementSound = loadClip("placement.wav");
         gridExpansionSound = loadClip("grid_expansion.wav");
@@ -104,14 +102,11 @@ public class SoundManager
 
     private AudioClip loadClip(String fileName)
     {
-        URL url = getClass().getResource(
-                "/music-effects/" + fileName);
+        URL url = getClass().getResource("/music-effects/" + fileName);
 
         if (url == null)
         {
-            throw new IllegalStateException(
-                    "Sound not found: " + fileName
-            );
+            throw new IllegalStateException("Sound not found: " + fileName);
         }
 
         return new AudioClip(url.toExternalForm());
@@ -119,34 +114,25 @@ public class SoundManager
 
     private MediaPlayer loadPlayer(String fileName)
     {
-        URL url = getClass().getResource(
-                "/music-effects/" + fileName);
+        URL url = getClass().getResource("/music-effects/" + fileName);
 
         if (url == null)
         {
-            throw new IllegalStateException(
-                    "Sound not found: " + fileName
-            );
+            throw new IllegalStateException("Sound not found: " + fileName);
         }
 
-        return new MediaPlayer(
-                new Media(url.toExternalForm())
-        );
+        return new MediaPlayer(new Media(url.toExternalForm()));
     }
 
-    private AudioClip loadFirstAvailableClip(
-            String[] fileNames)
+    private AudioClip loadFirstAvailableClip(String[] fileNames)
     {
         for (String fileName : fileNames)
         {
-            URL url = getClass().getResource(
-                    "/music-effects/" + fileName);
+            URL url = getClass().getResource("/music-effects/" + fileName);
 
             if (url != null)
             {
-                return new AudioClip(
-                        url.toExternalForm()
-                );
+                return new AudioClip(url.toExternalForm());
             }
         }
 
@@ -372,9 +358,7 @@ public class SoundManager
     {
         if (url == null)
         {
-            throw new IllegalStateException(
-                    "source not found"
-            );
+            throw new IllegalStateException("source not found");
         }
     }
 }

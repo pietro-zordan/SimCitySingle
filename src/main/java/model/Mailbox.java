@@ -38,9 +38,7 @@ public class Mailbox
     /** Restituisce una copia dell'elenco che non può essere modificata. */
     public List<MailMessage> getMessages()
     {
-        return Collections.unmodifiableList(
-                new ArrayList<>(messages)
-        );
+        return Collections.unmodifiableList(new ArrayList<>(messages));
     }
 
     /** Indica se almeno una lettera è stata consegnata. */

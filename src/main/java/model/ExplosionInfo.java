@@ -13,11 +13,7 @@ public class ExplosionInfo
         this(row, column, radius, false);
     }
 
-    public ExplosionInfo(
-            int row,
-            int column,
-            int radius,
-            boolean nuclear)
+    public ExplosionInfo(int row, int column, int radius, boolean nuclear)
     {
         this.row = row;
         this.column = column;

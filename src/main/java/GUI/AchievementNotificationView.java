@@ -41,17 +41,11 @@ public final class AchievementNotificationView
         star.setStyle("-fx-font-size: 17px; -fx-text-fill: #d8b979;");
 
         Label eyebrow = new Label("ACHIEVEMENT UNLOCKED");
-        eyebrow.setStyle(
-                "-fx-text-fill: #d8b979; -fx-font-size: 9px;"
-                        + "-fx-font-weight: bold;"
-        );
+        eyebrow.setStyle("-fx-text-fill: #d8b979; -fx-font-size: 9px;" + "-fx-font-weight: bold;");
         title = new Label();
         title.setWrapText(true);
         title.setMaxWidth(206);
-        title.setStyle(
-                "-fx-text-fill: #f8fafc; -fx-font-size: 12px;"
-                        + "-fx-font-weight: bold;"
-        );
+        title.setStyle("-fx-text-fill: #f8fafc; -fx-font-size: 12px;" + "-fx-font-weight: bold;");
 
         VBox words = new VBox(2, eyebrow, title);
         words.setAlignment(Pos.CENTER_LEFT);
@@ -62,10 +56,8 @@ public final class AchievementNotificationView
         view.setMinSize(252, 58);
         view.setPrefSize(252, 58);
         view.setMaxSize(252, 58);
-        view.setStyle(
-                "-fx-background-color: #273142; -fx-background-radius: 0 0 10 10;"
-                        + "-fx-border-color: #c8a76a; -fx-border-width: 0 0 2 0;"
-        );
+        view.setStyle("-fx-background-color: #273142; -fx-background-radius: 0 0 10 10;"
+                + "-fx-border-color: #c8a76a; -fx-border-width: 0 0 2 0;");
 
         // Il ritaglio resta ancorato in alto: aprendo mostra il pannello
         // verso il basso; chiudendo ne ritira il bordo inferiore verso l'alto.
@@ -110,16 +102,10 @@ public final class AchievementNotificationView
         view.setVisible(true);
         soundManager.playAchievementSound();
 
-        animation = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(reveal.heightProperty(), 0)),
-                new KeyFrame(Duration.millis(300),
-                        new KeyValue(reveal.heightProperty(), 58, Interpolator.EASE_OUT)),
-                new KeyFrame(Duration.seconds(2.45),
-                        new KeyValue(reveal.heightProperty(), 58)),
-                new KeyFrame(Duration.seconds(2.80),
-                        new KeyValue(reveal.heightProperty(), 0, Interpolator.EASE_IN))
-        );
+        animation = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(reveal.heightProperty(), 0)),
+                new KeyFrame(Duration.millis(300), new KeyValue(reveal.heightProperty(), 58, Interpolator.EASE_OUT)),
+                new KeyFrame(Duration.seconds(2.45), new KeyValue(reveal.heightProperty(), 58)),
+                new KeyFrame(Duration.seconds(2.80), new KeyValue(reveal.heightProperty(), 0, Interpolator.EASE_IN)));
         animation.setOnFinished(new EventHandler<ActionEvent>()
         {
             @Override

@@ -16,35 +16,20 @@ public class GameOverView
     {
         if (navigation == null)
         {
-            throw new IllegalArgumentException(
-                    "Game navigation cannot be null"
-            );
+            throw new IllegalArgumentException("Game navigation cannot be null");
         }
 
-        Label title = new Label(
-                "YOU LOST"
-        );
+        Label title = new Label("YOU LOST");
 
-        title.setStyle(
-                "-fx-font-size: 36px;"
-                        + "-fx-font-weight: bold;"
-                        + "-fx-text-fill: white;"
-        );
+        title.setStyle("-fx-font-size: 36px;" + "-fx-font-weight: bold;" + "-fx-text-fill: white;");
 
-        Label message = new Label(
-                "The city is no longer economically sustainable."
-        );
+        Label message = new Label("The city is no longer economically sustainable.");
 
-        message.setStyle(
-                "-fx-font-size: 16px;"
-                        + "-fx-text-fill: white;"
-        );
+        message.setStyle("-fx-font-size: 16px;" + "-fx-text-fill: white;");
 
-        Button restartButton =
-                new Button("Play Again");
+        Button restartButton = new Button("Play Again");
 
-        Button exitButton =
-                new Button("Exit");
+        Button exitButton = new Button("Exit");
 
         restartButton.setOnAction(
                 new EventHandler<ActionEvent>()
@@ -68,20 +53,11 @@ public class GameOverView
                 }
         );
 
-        HBox buttons = new HBox(
-                10,
-                restartButton,
-                exitButton
-        );
+        HBox buttons = new HBox(10, restartButton, exitButton);
 
         buttons.setAlignment(Pos.CENTER);
 
-        view = new VBox(
-                20,
-                title,
-                message,
-                buttons
-        );
+        view = new VBox(20, title, message, buttons);
 
         view.setAlignment(Pos.CENTER);
 

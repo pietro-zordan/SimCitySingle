@@ -103,20 +103,12 @@ public final class EventAnimationView
     private ParallelTransition missileDeflectionTransition;
 
     // Inizializza le dipendenze visive e costruisce i componenti grafici degli eventi.
-    public EventAnimationView(
-            Controller controller,
-            GridView gridView,
-            Button nextTurnButton,
-            SoundManager soundManager)
+    public EventAnimationView(Controller controller, GridView gridView,
+            Button nextTurnButton, SoundManager soundManager)
     {
-        if (controller == null
-                || gridView == null
-                || nextTurnButton == null
-                || soundManager == null)
+        if (controller == null || gridView == null || nextTurnButton == null || soundManager == null)
         {
-            throw new IllegalArgumentException(
-                    "Animation dependencies cannot be null"
-            );
+            throw new IllegalArgumentException("Animation dependencies cannot be null");
         }
 
         this.controller = controller;
@@ -139,43 +131,22 @@ public final class EventAnimationView
                         + "-fx-font-weight: bold;"
         );
 
-        StackPane monitor =
-                new StackPane(monitorScreen, terminalSymbol);
+        StackPane monitor = new StackPane(monitorScreen, terminalSymbol);
 
-        Rectangle monitorStand =
-                new Rectangle(8, 8, Color.web("#263238"));
+        Rectangle monitorStand = new Rectangle(8, 8, Color.web("#263238"));
 
-        Rectangle monitorBase =
-                new Rectangle(30, 4, Color.web("#263238"));
+        Rectangle monitorBase = new Rectangle(30, 4, Color.web("#263238"));
 
-        VBox hackerComputerIcon = new VBox(
-                0,
-                monitor,
-                monitorStand,
-                monitorBase
-        );
+        VBox hackerComputerIcon = new VBox(0, monitor, monitorStand, monitorBase);
         hackerComputerIcon.setAlignment(Pos.CENTER);
 
         Label hackerAttackText = new Label("Hacker Attack");
-        hackerAttackText.setStyle(
-                "-fx-text-fill: red;"
-                        + "-fx-font-size: 14px;"
-                        + "-fx-font-weight: bold;"
-        );
+        hackerAttackText.setStyle("-fx-text-fill: red;" + "-fx-font-size: 14px;" + "-fx-font-weight: bold;");
 
         hackerBinaryCode = new Label("01001101 10110100");
-        hackerBinaryCode.setStyle(
-                "-fx-text-fill: #008a36;"
-                        + "-fx-font-family: monospace;"
-                        + "-fx-font-size: 12px;"
-        );
+        hackerBinaryCode.setStyle("-fx-text-fill: #008a36;" + "-fx-font-family: monospace;" + "-fx-font-size: 12px;");
 
-        hackerAttackPanel = new VBox(
-                4,
-                hackerComputerIcon,
-                hackerAttackText,
-                hackerBinaryCode
-        );
+        hackerAttackPanel = new VBox(4, hackerComputerIcon, hackerAttackText, hackerBinaryCode);
         hackerAttackPanel.setAlignment(Pos.CENTER);
         hackerAttackPanel.setStyle(
                 "-fx-background-color: #e9eef5;"
@@ -185,14 +156,8 @@ public final class EventAnimationView
                         + "-fx-background-radius: 6px;"
                         + "-fx-border-radius: 6px;"
         );
-        hackerAttackPanel.setMaxSize(
-                Region.USE_PREF_SIZE,
-                Region.USE_PREF_SIZE
-        );
-        hackerAttackPanel.managedProperty()
-                .bind(
-                        hackerAttackPanel.visibleProperty()
-                );
+        hackerAttackPanel.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        hackerAttackPanel.managedProperty().bind(hackerAttackPanel.visibleProperty());
         hackerAttackPanel.setVisible(false);
         hackerAttackPanel.setMouseTransparent(true);
 
@@ -211,14 +176,11 @@ public final class EventAnimationView
         missileNode.setMouseTransparent(true);
     }
 
-    public void setMissileOverlayHost(
-            StackPane missileOverlayHost)
+    public void setMissileOverlayHost(StackPane missileOverlayHost)
     {
         if (missileOverlayHost == null)
         {
-            throw new IllegalArgumentException(
-                    "Missile overlay host cannot be null"
-            );
+            throw new IllegalArgumentException("Missile overlay host cannot be null");
         }
 
         this.missileOverlayHost = missileOverlayHost;
@@ -285,18 +247,14 @@ public final class EventAnimationView
 
     private void updateFireSound()
     {
-        boolean fireActive =
-                controller.getActiveEventType()
-                        == EventType.FIRE;
+        boolean fireActive = controller.getActiveEventType() == EventType.FIRE;
 
-        if (fireActive
-                && !fireSoundPlaying)
+        if (fireActive && !fireSoundPlaying)
         {
             soundManager.playFireSound();
             fireSoundPlaying = true;
         }
-        else if (!fireActive
-                && fireSoundPlaying)
+        else if (!fireActive && fireSoundPlaying)
         {
             soundManager.stopFireSound();
             fireSoundPlaying = false;
@@ -308,122 +266,27 @@ public final class EventAnimationView
         missileShieldOuter = new Path();
         missileShieldHighlight = new Ellipse();
 
-        missileShieldOuter.setFill(
-                new RadialGradient(
-                        -35,
-                        0.30,
-                        0.34,
-                        0.20,
-                        1.0,
-                        true,
-                        CycleMethod.NO_CYCLE,
-                        new Stop(
-                                0.0,
-                                Color.rgb(
-                                        255,
-                                        255,
-                                        225,
-                                        0.44
-                                )
-                        ),
-                        new Stop(
-                                0.36,
-                                Color.rgb(
-                                        255,
-                                        234,
-                                        105,
-                                        0.26
-                                )
-                        ),
-                        new Stop(
-                                0.72,
-                                Color.rgb(
-                                        255,
-                                        207,
-                                        35,
-                                        0.14
-                                )
-                        ),
-                        new Stop(
-                                1.0,
-                                Color.rgb(
-                                        255,
-                                        188,
-                                        0,
-                                        0.025
-                                )
-                        )
-                )
-        );
+        missileShieldOuter.setFill(new RadialGradient(-35, 0.30, 0.34, 0.20, 1.0, true, CycleMethod.NO_CYCLE,
+                new Stop(0.0, Color.rgb(255, 255, 225, 0.44)), new Stop(0.36, Color.rgb(255, 234, 105,
+                0.26)), new Stop(0.72, Color.rgb(255, 207, 35, 0.14)), new Stop(1.0, Color.rgb(255, 188, 0, 0.025))));
 
-        missileShieldOuter.setStroke(
-                Color.rgb(
-                        255,
-                        215,
-                        0,
-                        0.92
-                )
-        );
+        missileShieldOuter.setStroke(Color.rgb(255, 215, 0, 0.92));
         missileShieldOuter.setStrokeWidth(4);
 
-        missileShieldOuter.setEffect(
-                new DropShadow(
-                        12,
-                        Color.rgb(
-                                255,
-                                210,
-                                25,
-                                0.62
-                        )
-                )
-        );
+        missileShieldOuter.setEffect(new DropShadow(12, Color.rgb(255, 210, 25, 0.62)));
 
-        missileShieldHighlight.setFill(
-                new RadialGradient(
-                        0,
-                        0,
-                        0.5,
-                        0.5,
-                        0.5,
-                        true,
-                        CycleMethod.NO_CYCLE,
-                        new Stop(
-                                0.0,
-                                Color.rgb(
-                                        255,
-                                        255,
-                                        250,
-                                        0.26
-                                )
-                        ),
-                        new Stop(
-                                1.0,
-                                Color.TRANSPARENT
-                        )
-                )
-        );
-        missileShieldHighlight.setStroke(
-                Color.TRANSPARENT
-        );
+        missileShieldHighlight.setFill(new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
+                CycleMethod.NO_CYCLE, new Stop(0.0, Color.rgb(255, 255, 250, 0.26)), new Stop(1.0, Color.TRANSPARENT)));
+        missileShieldHighlight.setStroke(Color.TRANSPARENT);
         missileShieldHighlight.setRotate(-12);
 
         updateMissileShieldGeometry();
 
-        Group shield = new Group(
-                missileShieldOuter,
-                missileShieldHighlight
-        );
+        Group shield = new Group(missileShieldOuter, missileShieldHighlight);
 
         double width = gridView.getGridVisualWidth();
         double height = gridView.getGridVisualHeight();
-        shield.setClip(
-                new Rectangle(
-                        -width / 2.0,
-                        -height / 2.0,
-                        width,
-                        height
-                )
-        );
+        shield.setClip(new Rectangle(-width / 2.0, -height / 2.0, width, height));
         return shield;
     }
 
@@ -434,36 +297,25 @@ public final class EventAnimationView
      */
     private double[] getMissileShieldRadii()
     {
-        Bounds renderedBounds =
-                getRenderedGridBoundsInOverlay();
+        Bounds renderedBounds = getRenderedGridBoundsInOverlay();
 
         double halfWidth;
         double halfHeight;
 
         if (renderedBounds != null)
         {
-            halfWidth =
-                    renderedBounds.getWidth() / 2.0;
-            halfHeight =
-                    renderedBounds.getHeight() / 2.0;
+            halfWidth = renderedBounds.getWidth() / 2.0;
+            halfHeight = renderedBounds.getHeight() / 2.0;
         }
         else
         {
-            halfWidth =
-                    gridView.getGridVisualWidth() / 2.0;
-            halfHeight =
-                    gridView.getGridVisualHeight() / 2.0;
+            halfWidth = gridView.getGridVisualWidth() / 2.0;
+            halfHeight = gridView.getGridVisualHeight() / 2.0;
         }
 
         return new double[] {
-                Math.max(
-                        1.0,
-                        halfWidth - MISSILE_SHIELD_INSET
-                ),
-                Math.max(
-                        1.0,
-                        halfHeight - MISSILE_SHIELD_INSET
-                )
+                Math.max(1.0, halfWidth - MISSILE_SHIELD_INSET),
+                Math.max(1.0, halfHeight - MISSILE_SHIELD_INSET)
         };
     }
 
@@ -481,106 +333,61 @@ public final class EventAnimationView
 
     private Bounds getRenderedGridBoundsInOverlay()
     {
-        if (missileOverlayHost == null
-                || missileOverlayHost.getScene() == null
+        if (missileOverlayHost == null || missileOverlayHost.getScene() == null
                 || gridView.getView().getScene() == null)
         {
             return null;
         }
 
-        Bounds sceneBounds =
-                gridView.getView().localToScene(
-                        gridView.getView()
-                                .getBoundsInLocal()
-                );
+        Bounds sceneBounds = gridView.getView().localToScene(gridView.getView().getBoundsInLocal());
 
-        return missileOverlayHost.sceneToLocal(
-                sceneBounds
-        );
+        return missileOverlayHost.sceneToLocal(sceneBounds);
     }
 
     private Point2D getRenderedGridCenterInOverlay()
     {
-        Bounds bounds =
-                getRenderedGridBoundsInOverlay();
+        Bounds bounds = getRenderedGridBoundsInOverlay();
 
         if (bounds == null)
         {
-            return new Point2D(
-                    missileOverlayHost == null
-                            ? 0.0
-                            : missileOverlayHost.getWidth() / 2.0,
-                    missileOverlayHost == null
-                            ? 0.0
-                            : missileOverlayHost.getHeight() / 2.0
-            );
+            return new Point2D(missileOverlayHost == null ? 0.0 : missileOverlayHost.getWidth() / 2.0,
+                    missileOverlayHost == null ? 0.0 : missileOverlayHost.getHeight() / 2.0);
         }
 
-        return new Point2D(
-                (bounds.getMinX()
-                        + bounds.getMaxX()) / 2.0,
-                (bounds.getMinY()
-                        + bounds.getMaxY()) / 2.0
-        );
+        return new Point2D((bounds.getMinX() + bounds.getMaxX()) / 2.0, (bounds.getMinY() + bounds.getMaxY()) / 2.0);
     }
 
     private void positionMissileOverlayNodes()
     {
-        Point2D center =
-                getRenderedGridCenterInOverlay();
+        Point2D center = getRenderedGridCenterInOverlay();
 
         if (missileNode != null)
         {
-            missileNode.setLayoutX(
-                    center.getX()
-            );
-            missileNode.setLayoutY(
-                    center.getY()
-            );
+            missileNode.setLayoutX(center.getX());
+            missileNode.setLayoutY(center.getY());
         }
 
         if (missileShieldNode != null)
         {
-            missileShieldNode.setLayoutX(
-                    center.getX()
-            );
-            missileShieldNode.setLayoutY(
-                    center.getY()
-            );
+            missileShieldNode.setLayoutX(center.getX());
+            missileShieldNode.setLayoutY(center.getY());
         }
     }
 
-    private void updateShieldOutline(
-            Path outline,
-            double radiusX,
-            double radiusY,
-            double centerY)
+    private void updateShieldOutline(Path outline, double radiusX, double radiusY, double centerY)
     {
         outline.getElements().clear();
 
-        for (int step = 0;
-             step < MISSILE_SHIELD_SEGMENTS;
-             step++)
+        for (int step = 0; step < MISSILE_SHIELD_SEGMENTS; step++)
         {
-            double angle =
-                    2.0 * Math.PI * step
-                            / MISSILE_SHIELD_SEGMENTS;
+            double angle = 2.0 * Math.PI * step / MISSILE_SHIELD_SEGMENTS;
 
             double cosine = Math.cos(angle);
             double sine = Math.sin(angle);
-            double exponent =
-                    2.0 / MISSILE_SHIELD_ROUNDNESS;
+            double exponent = 2.0 / MISSILE_SHIELD_ROUNDNESS;
 
-            double x = radiusX
-                    * Math.copySign(
-                            Math.pow(Math.abs(cosine), exponent),
-                            cosine
-                    );
-            double y = centerY + radiusY
-                    * Math.copySign(
-                            Math.pow(Math.abs(sine), exponent),
-                            sine
-                    );
+            double x = radiusX * Math.copySign(Math.pow(Math.abs(cosine), exponent), cosine);
+            double y = centerY + radiusY * Math.copySign(Math.pow(Math.abs(sine), exponent), sine);
 
             if (step == 0)
             {
@@ -595,50 +402,27 @@ public final class EventAnimationView
         outline.getElements().add(new ClosePath());
     }
 
-    private double shieldEquation(
-            double x,
-            double y,
-            double radiusX,
-            double radiusY)
+    private double shieldEquation(double x, double y, double radiusX, double radiusY)
     {
-        return Math.pow(
-                Math.abs(x / radiusX),
-                MISSILE_SHIELD_ROUNDNESS
-        ) + Math.pow(
-                Math.abs(y / radiusY),
-                MISSILE_SHIELD_ROUNDNESS
-        );
+        return Math.pow(Math.abs(x / radiusX), MISSILE_SHIELD_ROUNDNESS) + Math.pow(Math.abs(y / radiusY),
+                MISSILE_SHIELD_ROUNDNESS);
     }
 
     private void updateMissileShieldGeometry()
     {
         positionMissileOverlayNodes();
 
-        double[] radii =
-                getMissileShieldRadii();
+        double[] radii = getMissileShieldRadii();
 
         double radiusX = radii[0];
         double radiusY = radii[1];
 
-        updateShieldOutline(
-                missileShieldOuter,
-                radiusX,
-                radiusY,
-                0
-        );
+        updateShieldOutline(missileShieldOuter, radiusX, radiusY, 0);
 
-        missileShieldHighlight.setRadiusX(
-                radiusX * 0.34
-        );
-        missileShieldHighlight.setRadiusY(
-                radiusY * 0.13
-        );
-        missileShieldHighlight.setCenterX(
-                -radiusX * 0.18
-        );
-        missileShieldHighlight.setCenterY(
-                -radiusY * 0.32
-        );
+        missileShieldHighlight.setRadiusX(radiusX * 0.34);
+        missileShieldHighlight.setRadiusY(radiusY * 0.13);
+        missileShieldHighlight.setCenterX(-radiusX * 0.18);
+        missileShieldHighlight.setCenterY(-radiusY * 0.32);
     }
 
     // Aggiorna il ritaglio dello scudo quando la griglia cambia dimensione.
@@ -651,14 +435,11 @@ public final class EventAnimationView
 
         Rectangle clip = (Rectangle) missileShieldNode.getClip();
 
-        double[] radii =
-                getMissileShieldRadii();
+        double[] radii = getMissileShieldRadii();
 
-        double width =
-                (radii[0] + MISSILE_SHIELD_INSET) * 2.0;
+        double width = (radii[0] + MISSILE_SHIELD_INSET) * 2.0;
 
-        double height =
-                (radii[1] + MISSILE_SHIELD_INSET) * 2.0;
+        double height = (radii[1] + MISSILE_SHIELD_INSET) * 2.0;
 
         clip.setX(-width / 2.0);
         clip.setY(-height / 2.0);
@@ -668,57 +449,25 @@ public final class EventAnimationView
 
     private Group createMissileNode()
     {
-        Rectangle body =
-                new Rectangle(
-                        -18,
-                        -5,
-                        32,
-                        10
-                );
+        Rectangle body = new Rectangle(-18, -5, 32, 10);
         body.setArcWidth(8);
         body.setArcHeight(8);
         body.setFill(Color.LIGHTGRAY);
         body.setStroke(Color.DARKSLATEGRAY);
 
-        Polygon nose =
-                new Polygon(
-                        14.0, -5.0,
-                        25.0, 0.0,
-                        14.0, 5.0
-                );
+        Polygon nose = new Polygon(14.0, -5.0, 25.0, 0.0, 14.0, 5.0);
         nose.setFill(Color.DARKRED);
 
-        Polygon upperFin =
-                new Polygon(
-                        -9.0, -5.0,
-                        -17.0, -13.0,
-                        0.0, -5.0
-                );
+        Polygon upperFin = new Polygon(-9.0, -5.0, -17.0, -13.0, 0.0, -5.0);
         upperFin.setFill(Color.DARKRED);
 
-        Polygon lowerFin =
-                new Polygon(
-                        -9.0, 5.0,
-                        -17.0, 13.0,
-                        0.0, 5.0
-                );
+        Polygon lowerFin = new Polygon(-9.0, 5.0, -17.0, 13.0, 0.0, 5.0);
         lowerFin.setFill(Color.DARKRED);
 
-        Polygon flame =
-                new Polygon(
-                        -18.0, -3.5,
-                        -29.0, 0.0,
-                        -18.0, 3.5
-                );
+        Polygon flame = new Polygon(-18.0, -3.5, -29.0, 0.0, -18.0, 3.5);
         flame.setFill(Color.ORANGE);
 
-        return new Group(
-                flame,
-                upperFin,
-                lowerFin,
-                body,
-                nose
-        );
+        return new Group(flame, upperFin, lowerFin, body, nose);
     }
 
     private void updateEarthquakeAnimation()
@@ -764,8 +513,7 @@ public final class EventAnimationView
                     gridView.refresh();
                     // Una centrale nucleare colpita esplode dopo la scossa.
                     startWaitingExplosionIfReady();
-                    if (!explosionAnimationRunning && !missileAnimationRunning
-                            && !tsunamiAnimationRunning)
+                    if (!explosionAnimationRunning && !missileAnimationRunning && !tsunamiAnimationRunning)
                     {
                         nextTurnButton.setDisable(false);
                     }
@@ -781,9 +529,7 @@ public final class EventAnimationView
 
     private void updateTsunamiAnimation()
     {
-        boolean tsunamiActive =
-                controller.getActiveEventType()
-                        == EventType.TSUNAMI;
+        boolean tsunamiActive = controller.getActiveEventType() == EventType.TSUNAMI;
 
         if (tsunamiActive && !tsunamiAnimationStarted)
         {
@@ -798,9 +544,7 @@ public final class EventAnimationView
 
     private void updateEconomicBoomSound()
     {
-        boolean economicBoomActive =
-                controller.getActiveEventType()
-                        == EventType.ECONOMIC_BOOM;
+        boolean economicBoomActive = controller.getActiveEventType() == EventType.ECONOMIC_BOOM;
 
         if (economicBoomActive && !economicBoomSoundStarted)
         {
@@ -815,9 +559,7 @@ public final class EventAnimationView
 
     private void updateEnergyCrisisSound()
     {
-        boolean energyCrisisActive =
-                controller.getActiveEventType()
-                        == EventType.ENERGY_CRISIS;
+        boolean energyCrisisActive = controller.getActiveEventType() == EventType.ENERGY_CRISIS;
 
         if (energyCrisisActive && !energyCrisisSoundStarted)
         {
@@ -836,35 +578,25 @@ public final class EventAnimationView
         nextTurnButton.setDisable(true);
         soundManager.playTsunamiSound();
 
-        tsunamiDirection =
-                controller.getActiveTsunamiDirection();
+        tsunamiDirection = controller.getActiveTsunamiDirection();
 
-        tsunamiAdvancementLength =
-                controller.getActiveTsunamiAdvancementLength();
+        tsunamiAdvancementLength = controller.getActiveTsunamiAdvancementLength();
 
         tsunamiCurrentStep = -1;
 
         tsunamiTimeline = new Timeline();
 
-        for (int step = 0;
-             step < tsunamiAdvancementLength;
-             step++)
+        for (int step = 0; step < tsunamiAdvancementLength; step++)
         {
             final int currentStep = step;
 
-            KeyFrame frame = new KeyFrame(
-                    Duration.millis(
-                            (step + 1) * TSUNAMI_LINE_DELAY
-                    ),
+            KeyFrame frame = new KeyFrame(Duration.millis((step + 1) * TSUNAMI_LINE_DELAY),
                     new AnimationHandler()
                     {
                         @Override
                         protected void run()
                         {
-                            showTsunamiLine(
-                                    tsunamiDirection,
-                                    currentStep
-                            );
+                            showTsunamiLine(tsunamiDirection, currentStep);
 
                             tsunamiCurrentStep = currentStep;
                             startWaitingExplosionIfReady();
@@ -875,32 +607,22 @@ public final class EventAnimationView
             tsunamiTimeline.getKeyFrames().add(frame);
         }
 
-        KeyFrame passedLastLineFrame = new KeyFrame(
-                Duration.millis(
-                        (tsunamiAdvancementLength + 1)
-                                * TSUNAMI_LINE_DELAY
-                ),
+        KeyFrame passedLastLineFrame = new KeyFrame(Duration.millis((tsunamiAdvancementLength + 1)
+                * TSUNAMI_LINE_DELAY),
                 new AnimationHandler()
                 {
                     @Override
                     protected void run()
                     {
-                        tsunamiCurrentStep =
-                                tsunamiAdvancementLength;
+                        tsunamiCurrentStep = tsunamiAdvancementLength;
                         startWaitingExplosionIfReady();
                     }
                 }
         );
 
-        tsunamiTimeline.getKeyFrames().add(
-                passedLastLineFrame
-        );
+        tsunamiTimeline.getKeyFrames().add(passedLastLineFrame);
 
-        KeyFrame resetFrame = new KeyFrame(
-                Duration.millis(
-                        (tsunamiAdvancementLength + 2)
-                                * TSUNAMI_LINE_DELAY
-                ),
+        KeyFrame resetFrame = new KeyFrame(Duration.millis((tsunamiAdvancementLength + 2) * TSUNAMI_LINE_DELAY),
                 new AnimationHandler()
                 {
                     @Override
@@ -915,9 +637,7 @@ public final class EventAnimationView
         tsunamiTimeline.play();
     }
 
-    private void showTsunamiLine(
-            String direction,
-            int step)
+    private void showTsunamiLine(String direction, int step)
     {
         if ("UP".equals(direction))
         {
@@ -925,8 +645,7 @@ public final class EventAnimationView
         }
         else if ("DOWN".equals(direction))
         {
-            int row =
-                    controller.getNumberOfRows() - 1 - step;
+            int row = controller.getNumberOfRows() - 1 - step;
             gridView.showTsunamiRow(row);
         }
         else if ("LEFT".equals(direction))
@@ -935,8 +654,7 @@ public final class EventAnimationView
         }
         else if ("RIGHT".equals(direction))
         {
-            int column =
-                    controller.getNumberOfColumns() - 1 - step;
+            int column = controller.getNumberOfColumns() - 1 - step;
             gridView.showTsunamiColumn(column);
         }
     }
@@ -953,8 +671,7 @@ public final class EventAnimationView
 
         startWaitingExplosionIfReady();
 
-        if (!explosionAnimationRunning
-                && !missileAnimationRunning)
+        if (!explosionAnimationRunning && !missileAnimationRunning)
         {
             gridView.refresh();
             nextTurnButton.setDisable(false);
@@ -963,12 +680,9 @@ public final class EventAnimationView
 
     private void updateHackerAttackAnimation()
     {
-        boolean hackerAttackActive =
-                controller.getActiveEventType()
-                        == EventType.HACKER_ATTACK;
+        boolean hackerAttackActive = controller.getActiveEventType() == EventType.HACKER_ATTACK;
 
-        if (hackerAttackActive
-                && !hackerAttackAnimationStarted)
+        if (hackerAttackActive && !hackerAttackAnimationStarted)
         {
             hackerAttackAnimationStarted = true;
             startHackerAttackAnimation();
@@ -988,50 +702,12 @@ public final class EventAnimationView
         hackerAttackPanel.setVisible(true);
         hackerAttackPanel.setOpacity(0.0);
 
-        Timeline timeline = new Timeline(
-                new KeyFrame(
-                        Duration.ZERO,
-                        new KeyValue(
-                                hackerAttackPanel.opacityProperty(),
-                                0.0
-                        )
-                ),
-                new KeyFrame(
-                        Duration.millis(120),
-                        new KeyValue(
-                                hackerAttackPanel.opacityProperty(),
-                                1.0
-                        )
-                ),
-                new KeyFrame(
-                        Duration.millis(240),
-                        new KeyValue(
-                                hackerAttackPanel.opacityProperty(),
-                                0.2
-                        )
-                ),
-                new KeyFrame(
-                        Duration.millis(360),
-                        new KeyValue(
-                                hackerAttackPanel.opacityProperty(),
-                                1.0
-                        )
-                ),
-                new KeyFrame(
-                        Duration.millis(500),
-                        new KeyValue(
-                                hackerAttackPanel.opacityProperty(),
-                                0.4
-                        )
-                ),
-                new KeyFrame(
-                        Duration.millis(650),
-                        new KeyValue(
-                                hackerAttackPanel.opacityProperty(),
-                                1.0
-                        )
-                )
-        );
+        Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(hackerAttackPanel.opacityProperty(),
+                0.0)), new KeyFrame(Duration.millis(120), new KeyValue(hackerAttackPanel.opacityProperty(),
+                1.0)), new KeyFrame(Duration.millis(240), new KeyValue(hackerAttackPanel.opacityProperty(),
+                0.2)), new KeyFrame(Duration.millis(360), new KeyValue(hackerAttackPanel.opacityProperty(),
+                1.0)), new KeyFrame(Duration.millis(500), new KeyValue(hackerAttackPanel.opacityProperty(),
+                0.4)), new KeyFrame(Duration.millis(650), new KeyValue(hackerAttackPanel.opacityProperty(), 1.0)));
 
         timeline.play();
         startHackerCodeAnimation();
@@ -1039,21 +715,16 @@ public final class EventAnimationView
 
     private void startHackerCodeAnimation()
     {
-        hackerCodeTimeline = new Timeline(
-                new KeyFrame(
-                        Duration.millis(180),
+        hackerCodeTimeline = new Timeline(new KeyFrame(Duration.millis(180),
                         new AnimationHandler()
                         {
                             @Override
                             protected void run()
                             {
-                                hackerBinaryCode.setText(
-                                        generateBinaryCode()
-                                );
+                                hackerBinaryCode.setText(generateBinaryCode());
                             }
                         }
-                )
-        );
+                ));
 
         hackerCodeTimeline.setCycleCount(Timeline.INDEFINITE);
         hackerCodeTimeline.play();
@@ -1094,18 +765,14 @@ public final class EventAnimationView
 
     private void updateMissileAnimation()
     {
-        boolean missileActive =
-                controller.getActiveEventType()
-                        == EventType.MISSILE_ATTACK;
+        boolean missileActive = controller.getActiveEventType() == EventType.MISSILE_ATTACK;
 
-        if (missileActive
-                && !missileAnimationStarted)
+        if (missileActive && !missileAnimationStarted)
         {
             missileAnimationStarted = true;
             startMissileAnimation();
         }
-        else if (!missileActive
-                && !missileAnimationRunning)
+        else if (!missileActive && !missileAnimationRunning)
         {
             missileAnimationStarted = false;
         }
@@ -1113,27 +780,22 @@ public final class EventAnimationView
 
     private void startMissileAnimation()
     {
-        missileTargetRow =
-                controller.getActiveMissileTargetRow();
+        missileTargetRow = controller.getActiveMissileTargetRow();
 
-        missileTargetColumn =
-                controller.getActiveMissileTargetColumn();
+        missileTargetColumn = controller.getActiveMissileTargetColumn();
 
-        if (missileTargetRow < 0
-                || missileTargetColumn < 0)
+        if (missileTargetRow < 0 || missileTargetColumn < 0)
         {
             missileAnimationStarted = false;
             return;
         }
 
-        missileIntercepted =
-                controller.isActiveMissileIntercepted();
+        missileIntercepted = controller.isActiveMissileIntercepted();
 
         missileAnimationRunning = true;
         nextTurnButton.setDisable(true);
 
-        if (missileOverlayHost == null
-                || missileOverlayHost.getScene() == null)
+        if (missileOverlayHost == null || missileOverlayHost.getScene() == null)
         {
             missileAnimationStarted = false;
             missileAnimationRunning = false;
@@ -1148,33 +810,17 @@ public final class EventAnimationView
          */
         positionMissileOverlayNodes();
 
-        Point2D targetInScene =
-                gridView.getCellCenterInScene(
-                        missileTargetRow,
-                        missileTargetColumn
-                );
+        Point2D targetInScene = gridView.getCellCenterInScene(missileTargetRow, missileTargetColumn);
 
-        Point2D targetInOverlay =
-                missileOverlayHost.sceneToLocal(
-                        targetInScene
-                );
+        Point2D targetInOverlay = missileOverlayHost.sceneToLocal(targetInScene);
 
-        Point2D gridCenter =
-                getRenderedGridCenterInOverlay();
+        Point2D gridCenter = getRenderedGridCenterInOverlay();
 
-        double targetX =
-                targetInOverlay.getX()
-                        - gridCenter.getX();
+        double targetX = targetInOverlay.getX() - gridCenter.getX();
 
-        double targetY =
-                targetInOverlay.getY()
-                        - gridCenter.getY();
+        double targetY = targetInOverlay.getY() - gridCenter.getY();
 
-        double[] startPosition =
-                getRandomMissileStartPosition(
-                        targetX,
-                        targetY
-                );
+        double[] startPosition = getRandomMissileStartPosition(targetX, targetY);
 
         double startX = startPosition[0];
         double startY = startPosition[1];
@@ -1184,25 +830,13 @@ public final class EventAnimationView
 
         if (missileIntercepted)
         {
-            double[] interceptionPoint =
-                    getShieldIntersection(
-                            startX,
-                            startY,
-                            targetX,
-                            targetY
-                    );
+            double[] interceptionPoint = getShieldIntersection(startX, startY, targetX, targetY);
 
             endX = interceptionPoint[0];
             endY = interceptionPoint[1];
         }
 
-        double angle =
-                Math.toDegrees(
-                        Math.atan2(
-                                endY - startY,
-                                endX - startX
-                        )
-                );
+        double angle = Math.toDegrees(Math.atan2(endY - startY, endX - startX));
 
         double missileScale = getRenderedMapScale();
         missileNode.setScaleX(missileScale);
@@ -1211,13 +845,7 @@ public final class EventAnimationView
         missileNode.setRotate(angle);
         missileNode.setVisible(true);
 
-        missileTransition =
-                new TranslateTransition(
-                        Duration.millis(
-                                MISSILE_FLIGHT_DURATION
-                        ),
-                        missileNode
-                );
+        missileTransition = new TranslateTransition(Duration.millis(MISSILE_FLIGHT_DURATION), missileNode);
 
         missileTransition.setFromX(startX);
         missileTransition.setFromY(startY);
@@ -1239,12 +867,7 @@ public final class EventAnimationView
 
                         if (missileIntercepted)
                         {
-                            startMissileDeflectionAnimation(
-                                    missileStartX,
-                                    missileStartY,
-                                    missileEndX,
-                                    missileEndY
-                            );
+                            startMissileDeflectionAnimation(missileStartX, missileStartY, missileEndX, missileEndY);
                         }
                         else
                         {
@@ -1259,9 +882,7 @@ public final class EventAnimationView
         missileTransition.play();
     }
 
-    private double[] getRandomMissileStartPosition(
-            double targetX,
-            double targetY)
+    private double[] getRandomMissileStartPosition(double targetX, double targetY)
     {
         double[] radii = getMissileShieldRadii();
         double radiusX = radii[0];
@@ -1294,14 +915,9 @@ public final class EventAnimationView
     }
 
     // Trova il bordo della stessa superellisse disegnata sulla griglia.
-    private double[] getShieldIntersection(
-            double startX,
-            double startY,
-            double targetX,
-            double targetY)
+    private double[] getShieldIntersection(double startX, double startY, double targetX, double targetY)
     {
-        double[] radii =
-                getMissileShieldRadii();
+        double[] radii = getMissileShieldRadii();
 
         double radiusX = radii[0];
         double radiusY = radii[1];
@@ -1309,21 +925,9 @@ public final class EventAnimationView
         double dx = targetX - startX;
         double dy = targetY - startY;
 
-        double startValue =
-                shieldEquation(
-                        startX,
-                        startY,
-                        radiusX,
-                        radiusY
-                );
+        double startValue = shieldEquation(startX, startY, radiusX, radiusY);
 
-        double targetValue =
-                shieldEquation(
-                        targetX,
-                        targetY,
-                        radiusX,
-                        radiusY
-                );
+        double targetValue = shieldEquation(targetX, targetY, radiusX, radiusY);
 
         /*
          * Il caso normale e: partenza fuori (>1), bersaglio dentro (<=1).
@@ -1331,8 +935,7 @@ public final class EventAnimationView
          * "finto impatto" quasi istantaneo e lasciamo arrivare il missile
          * verso il bersaglio invece di produrre una geometria instabile.
          */
-        if (startValue <= 1.0
-                || targetValue > 1.0)
+        if (startValue <= 1.0 || targetValue > 1.0)
         {
             return new double[] {
                     targetX,
@@ -1349,12 +952,7 @@ public final class EventAnimationView
             double x = startX + dx * middle;
             double y = startY + dy * middle;
 
-            if (shieldEquation(
-                    x,
-                    y,
-                    radiusX,
-                    radiusY
-            ) > 1.0)
+            if (shieldEquation(x, y, radiusX, radiusY) > 1.0)
             {
                 outside = middle;
             }
@@ -1370,50 +968,27 @@ public final class EventAnimationView
         };
     }
 
-    private void startMissileDeflectionAnimation(
-            double startX,
-            double startY,
-            double impactX,
-            double impactY)
+    private void startMissileDeflectionAnimation(double startX, double startY, double impactX, double impactY)
     {
         soundManager.playMissileShieldImpactSound();
         showMissileShieldImpact();
 
-        double incomingX =
-                impactX - startX;
+        double incomingX = impactX - startX;
 
-        double incomingY =
-                impactY - startY;
+        double incomingY = impactY - startY;
 
-        double[] radii =
-                getMissileShieldRadii();
+        double[] radii = getMissileShieldRadii();
 
         double radiusX = radii[0];
         double radiusY = radii[1];
 
-        double normalX =
-                Math.copySign(
-                        Math.pow(
-                                Math.abs(impactX / radiusX),
-                                MISSILE_SHIELD_ROUNDNESS - 1.0
-                        ),
-                        impactX
-                ) / radiusX;
+        double normalX = Math.copySign(Math.pow(Math.abs(impactX / radiusX),
+                MISSILE_SHIELD_ROUNDNESS - 1.0), impactX) / radiusX;
 
-        double normalY =
-                Math.copySign(
-                        Math.pow(
-                                Math.abs(impactY / radiusY),
-                                MISSILE_SHIELD_ROUNDNESS - 1.0
-                        ),
-                        impactY
-                ) / radiusY;
+        double normalY = Math.copySign(Math.pow(Math.abs(impactY / radiusY),
+                MISSILE_SHIELD_ROUNDNESS - 1.0), impactY) / radiusY;
 
-        double normalLength =
-                Math.sqrt(
-                        normalX * normalX
-                                + normalY * normalY
-                );
+        double normalLength = Math.sqrt(normalX * normalX + normalY * normalY);
 
         if (normalLength == 0)
         {
@@ -1423,23 +998,13 @@ public final class EventAnimationView
         normalX /= normalLength;
         normalY /= normalLength;
 
-        double dot =
-                incomingX * normalX
-                        + incomingY * normalY;
+        double dot = incomingX * normalX + incomingY * normalY;
 
-        double reflectedX =
-                incomingX
-                        - 2.0 * dot * normalX;
+        double reflectedX = incomingX - 2.0 * dot * normalX;
 
-        double reflectedY =
-                incomingY
-                        - 2.0 * dot * normalY;
+        double reflectedY = incomingY - 2.0 * dot * normalY;
 
-        double reflectedLength =
-                Math.sqrt(
-                        reflectedX * reflectedX
-                                + reflectedY * reflectedY
-                );
+        double reflectedLength = Math.sqrt(reflectedX * reflectedX + reflectedY * reflectedY);
 
         if (reflectedLength == 0)
         {
@@ -1449,81 +1014,33 @@ public final class EventAnimationView
         reflectedX /= reflectedLength;
         reflectedY /= reflectedLength;
 
-        double bounceDistance =
-                Math.max(
-                        140 * getRenderedMapScale(),
-                        Math.min(
-                                radiusX,
-                                radiusY
-                        ) * 0.35
-                );
+        double bounceDistance = Math.max(140 * getRenderedMapScale(), Math.min(radiusX, radiusY) * 0.35);
 
-        double downwardFall =
-                Math.max(
-                        55 * getRenderedMapScale(),
-                        radiusY * 0.10
-                );
+        double downwardFall = Math.max(55 * getRenderedMapScale(), radiusY * 0.10);
 
-        double bounceX =
-                impactX
-                        + reflectedX
-                        * bounceDistance;
+        double bounceX = impactX + reflectedX * bounceDistance;
 
-        double bounceY =
-                impactY
-                        + reflectedY
-                        * bounceDistance
-                        + downwardFall;
+        double bounceY = impactY + reflectedY * bounceDistance + downwardFall;
 
-        missileNode.setRotate(
-                Math.toDegrees(
-                        Math.atan2(
-                                bounceY - impactY,
-                                bounceX - impactX
-                        )
-                )
-        );
+        missileNode.setRotate(Math.toDegrees(Math.atan2(bounceY - impactY, bounceX - impactX)));
 
-        TranslateTransition bounce =
-                new TranslateTransition(
-                        Duration.millis(
-                                MISSILE_DEFLECTION_DURATION
-                        ),
-                        missileNode
-                );
+        TranslateTransition bounce = new TranslateTransition(Duration.millis(MISSILE_DEFLECTION_DURATION), missileNode);
 
         bounce.setFromX(impactX);
         bounce.setFromY(impactY);
         bounce.setToX(bounceX);
         bounce.setToY(bounceY);
 
-        FadeTransition fade =
-                new FadeTransition(
-                        Duration.millis(
-                                MISSILE_DEFLECTION_DURATION
-                        ),
-                        missileNode
-                );
+        FadeTransition fade = new FadeTransition(Duration.millis(MISSILE_DEFLECTION_DURATION), missileNode);
 
         fade.setFromValue(1.0);
         fade.setToValue(0.0);
 
-        RotateTransition spin =
-                new RotateTransition(
-                        Duration.millis(
-                                MISSILE_DEFLECTION_DURATION
-                        ),
-                        missileNode
-                );
+        RotateTransition spin = new RotateTransition(Duration.millis(MISSILE_DEFLECTION_DURATION), missileNode);
 
         spin.setByAngle(150);
 
-        missileDeflectionTransition =
-                new ParallelTransition(
-                        bounce,
-                        fade,
-                        spin
-                );
+        missileDeflectionTransition = new ParallelTransition(bounce, fade, spin);
 
         missileDeflectionTransition.setOnFinished(
                 new AnimationHandler()
@@ -1555,43 +1072,11 @@ public final class EventAnimationView
         missileShieldNode.setVisible(true);
         missileShieldNode.setOpacity(0.0);
 
-        missileShieldTimeline =
-                new Timeline(
-                        new KeyFrame(
-                                Duration.ZERO,
-                                new KeyValue(
-                                        missileShieldNode
-                                                .opacityProperty(),
-                                        0.0
-                                )
-                        ),
-                        new KeyFrame(
-                                Duration.millis(90),
-                                new KeyValue(
-                                        missileShieldNode
-                                                .opacityProperty(),
-                                        0.86
-                                )
-                        ),
-                        new KeyFrame(
-                                Duration.millis(310),
-                                new KeyValue(
-                                        missileShieldNode
-                                                .opacityProperty(),
-                                        0.48
-                                )
-                        ),
-                        new KeyFrame(
-                                Duration.millis(
-                                        MISSILE_SHIELD_VISIBLE_DURATION
-                                ),
-                                new KeyValue(
-                                        missileShieldNode
-                                                .opacityProperty(),
-                                        0.0
-                                )
-                        )
-                );
+        missileShieldTimeline = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(missileShieldNode
+                .opacityProperty(), 0.0)), new KeyFrame(Duration.millis(90), new KeyValue(missileShieldNode
+                .opacityProperty(), 0.86)), new KeyFrame(Duration.millis(310), new KeyValue(missileShieldNode
+                .opacityProperty(), 0.48)), new KeyFrame(Duration.millis(MISSILE_SHIELD_VISIBLE_DURATION),
+                new KeyValue(missileShieldNode.opacityProperty(), 0.0)));
 
         missileShieldTimeline.setOnFinished(
                 new AnimationHandler()
@@ -1613,45 +1098,27 @@ public final class EventAnimationView
         soundManager.playMissileGridImpactSound();
         gridView.clearExplosion();
 
-        missileImpactTimeline = new Timeline(
-                new KeyFrame(
-                        Duration.ZERO,
+        missileImpactTimeline = new Timeline(new KeyFrame(Duration.ZERO,
                         new AnimationHandler()
                         {
                             @Override
                             protected void run()
                             {
-                                gridView.showExplosionRing(
-                                        missileTargetRow,
-                                        missileTargetColumn,
-                                        0,
-                                        1
-                                );
+                                gridView.showExplosionRing(missileTargetRow, missileTargetColumn, 0, 1);
                             }
                         }
                 ),
-                new KeyFrame(
-                        Duration.millis(
-                                MISSILE_IMPACT_DELAY
-                        ),
+                new KeyFrame(Duration.millis(MISSILE_IMPACT_DELAY),
                         new AnimationHandler()
                         {
                             @Override
                             protected void run()
                             {
-                                gridView.showExplosionRing(
-                                        missileTargetRow,
-                                        missileTargetColumn,
-                                        1,
-                                        1
-                                );
+                                gridView.showExplosionRing(missileTargetRow, missileTargetColumn, 1, 1);
                             }
                         }
                 ),
-                new KeyFrame(
-                        Duration.millis(
-                                MISSILE_IMPACT_DURATION
-                        ),
+                new KeyFrame(Duration.millis(MISSILE_IMPACT_DURATION),
                         new AnimationHandler()
                         {
                             @Override
@@ -1660,8 +1127,7 @@ public final class EventAnimationView
                                 finishMissileAnimation();
                             }
                         }
-                )
-        );
+                ));
 
         missileImpactTimeline.play();
     }
@@ -1677,8 +1143,7 @@ public final class EventAnimationView
 
         startWaitingExplosionIfReady();
 
-        if (!explosionAnimationRunning
-                && !tsunamiAnimationRunning)
+        if (!explosionAnimationRunning && !tsunamiAnimationRunning)
         {
             gridView.refresh();
             nextTurnButton.setDisable(false);
@@ -1687,8 +1152,7 @@ public final class EventAnimationView
 
     private void updateExplosionAnimation()
     {
-        List<ExplosionInfo> newExplosions =
-                controller.consumeExplosions();
+        List<ExplosionInfo> newExplosions = controller.consumeExplosions();
 
         for (ExplosionInfo explosion : newExplosions)
         {
@@ -1700,10 +1164,8 @@ public final class EventAnimationView
 
     private void startWaitingExplosionIfReady()
     {
-        if (explosionAnimationRunning
-                || missileAnimationRunning
-                || earthquakeAnimationRunning
-                || pendingExplosions.isEmpty())
+        if (explosionAnimationRunning || missileAnimationRunning
+                || earthquakeAnimationRunning || pendingExplosions.isEmpty())
         {
             return;
         }
@@ -1716,15 +1178,11 @@ public final class EventAnimationView
 
         ExplosionInfo readyExplosion = null;
 
-        for (ExplosionInfo explosion
-                : pendingExplosions)
+        for (ExplosionInfo explosion : pendingExplosions)
         {
-            int requiredStep =
-                    getExplosionStartStep(explosion);
+            int requiredStep = getExplosionStartStep(explosion);
 
-            if (requiredStep < 0
-                    || tsunamiCurrentStep
-                    >= requiredStep)
+            if (requiredStep < 0 || tsunamiCurrentStep >= requiredStep)
             {
                 readyExplosion = explosion;
                 break;
@@ -1740,8 +1198,7 @@ public final class EventAnimationView
         startExplosionAnimation(readyExplosion);
     }
 
-    private int getExplosionStartStep(
-            ExplosionInfo explosion)
+    private int getExplosionStartStep(ExplosionInfo explosion)
     {
         int plantStep;
 
@@ -1751,10 +1208,7 @@ public final class EventAnimationView
         }
         else if ("DOWN".equals(tsunamiDirection))
         {
-            plantStep =
-                    controller.getNumberOfRows()
-                            - 1
-                            - explosion.getRow();
+            plantStep = controller.getNumberOfRows() - 1 - explosion.getRow();
         }
         else if ("LEFT".equals(tsunamiDirection))
         {
@@ -1762,18 +1216,14 @@ public final class EventAnimationView
         }
         else if ("RIGHT".equals(tsunamiDirection))
         {
-            plantStep =
-                    controller.getNumberOfColumns()
-                            - 1
-                            - explosion.getColumn();
+            plantStep = controller.getNumberOfColumns() - 1 - explosion.getColumn();
         }
         else
         {
             return -1;
         }
 
-        if (plantStep < 0
-                || plantStep >= tsunamiAdvancementLength)
+        if (plantStep < 0 || plantStep >= tsunamiAdvancementLength)
         {
             return -1;
         }
@@ -1783,8 +1233,7 @@ public final class EventAnimationView
 
     private void startNextExplosionAnimation()
     {
-        ExplosionInfo explosion =
-                pendingExplosions.poll();
+        ExplosionInfo explosion = pendingExplosions.poll();
 
         if (explosion == null)
         {
@@ -1794,8 +1243,7 @@ public final class EventAnimationView
         startExplosionAnimation(explosion);
     }
 
-    private void startExplosionAnimation(
-            ExplosionInfo explosion)
+    private void startExplosionAnimation(ExplosionInfo explosion)
     {
         explosionAnimationRunning = true;
         nextTurnButton.setDisable(true);
@@ -1808,41 +1256,26 @@ public final class EventAnimationView
 
         explosionTimeline = new Timeline();
 
-        for (int radius = 0;
-             radius <= explosion.getRadius();
-             radius++)
+        for (int radius = 0; radius <= explosion.getRadius(); radius++)
         {
             final int currentRadius = radius;
 
-            KeyFrame frame = new KeyFrame(
-                    Duration.millis(
-                            radius * EXPLOSION_RING_DELAY
-                    ),
+            KeyFrame frame = new KeyFrame(Duration.millis(radius * EXPLOSION_RING_DELAY),
                     new AnimationHandler()
                     {
                         @Override
                         protected void run()
                         {
-                            gridView.showExplosionRing(
-                                    explosion.getRow(),
-                                    explosion.getColumn(),
-                                    currentRadius,
-                                    explosion.getRadius()
-                            );
+                            gridView.showExplosionRing(explosion.getRow(),
+                                    explosion.getColumn(), currentRadius, explosion.getRadius());
                         }
                     }
             );
 
-            explosionTimeline
-                    .getKeyFrames()
-                    .add(frame);
+            explosionTimeline.getKeyFrames().add(frame);
         }
 
-        KeyFrame resetFrame = new KeyFrame(
-                Duration.millis(
-                        (explosion.getRadius() + 2)
-                                * EXPLOSION_RING_DELAY
-                ),
+        KeyFrame resetFrame = new KeyFrame(Duration.millis((explosion.getRadius() + 2) * EXPLOSION_RING_DELAY),
                 new AnimationHandler()
                 {
                     @Override
@@ -1853,9 +1286,7 @@ public final class EventAnimationView
                 }
         );
 
-        explosionTimeline
-                .getKeyFrames()
-                .add(resetFrame);
+        explosionTimeline.getKeyFrames().add(resetFrame);
 
         explosionTimeline.play();
     }
@@ -1867,15 +1298,11 @@ public final class EventAnimationView
             nuclearAudioDuckTransition.stop();
         }
 
-        soundManager
-                .duckLongEventSoundsForNuclearExplosion();
+        soundManager.duckLongEventSoundsForNuclearExplosion();
 
         soundManager.playNuclearExplosionSound();
 
-        nuclearAudioDuckTransition =
-                new PauseTransition(
-                        Duration.millis(1800)
-                );
+        nuclearAudioDuckTransition = new PauseTransition(Duration.millis(1800));
 
         nuclearAudioDuckTransition.setOnFinished(
                 new AnimationHandler()
@@ -1883,8 +1310,7 @@ public final class EventAnimationView
                     @Override
                     protected void run()
                     {
-                        soundManager
-                                .restoreLongEventSoundsAfterNuclearExplosion();
+                        soundManager.restoreLongEventSoundsAfterNuclearExplosion();
 
                         nuclearAudioDuckTransition = null;
                     }
@@ -1909,8 +1335,7 @@ public final class EventAnimationView
         {
             gridView.refresh();
 
-            if (!tsunamiAnimationRunning
-                    && !missileAnimationRunning)
+            if (!tsunamiAnimationRunning && !missileAnimationRunning)
             {
                 nextTurnButton.setDisable(false);
             }

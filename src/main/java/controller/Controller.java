@@ -22,19 +22,13 @@ public final class Controller
     private final Simulation simulation;
     private final AchievementManager achievementManager;
     private final AchievementChecker achievementChecker;
-    private final CopyOnWriteArrayList<GameObserver> observers =
-            new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<GameObserver> observers = new CopyOnWriteArrayList<>();
 
     /*
      * Informazioni sufficienti alla GUI per disegnare una cella,
      * senza permetterle di modificare direttamente model.Cell o model.Grid.
      */
-    public record CellState(
-            boolean empty,
-            ConstructionType type,
-            boolean onFire,
-            boolean powered,
-            boolean boosted)
+    public record CellState(boolean empty, ConstructionType type, boolean onFire, boolean powered, boolean boosted)
     {
     }
 
@@ -54,64 +48,26 @@ public final class Controller
     }
 
     // Crea un controller ripristinando i dati di una partita salvata.
-    public Controller(
-            Grid grid,
-            Policy initialPolicy,
-            int budget,
-            int currentTick,
-            int lastPolicyChangeTick)
+    public Controller(Grid grid, Policy initialPolicy, int budget, int currentTick, int lastPolicyChangeTick)
     {
-        this(
-                grid,
-                initialPolicy,
-                budget,
-                currentTick,
-                lastPolicyChangeTick,
-                false
-        );
+        this(grid, initialPolicy, budget, currentTick, lastPolicyChangeTick, false);
     }
 
-    public Controller(
-            Grid grid,
-            Policy initialPolicy,
-            int budget,
-            int currentTick,
-            int lastPolicyChangeTick,
-            boolean tsunamiInsuranceActive)
+    public Controller(Grid grid, Policy initialPolicy, int budget,
+            int currentTick, int lastPolicyChangeTick, boolean tsunamiInsuranceActive)
     {
-        this(
-                grid,
-                initialPolicy,
-                budget,
-                currentTick,
-                lastPolicyChangeTick,
-                tsunamiInsuranceActive,
-                new AchievementManager()
-        );
+        this(grid, initialPolicy, budget, currentTick, lastPolicyChangeTick,
+                tsunamiInsuranceActive, new AchievementManager());
     }
 
-    public Controller(Grid grid, Policy initialPolicy,
-                      AchievementManager achievementManager)
+    public Controller(Grid grid, Policy initialPolicy, AchievementManager achievementManager)
     {
-        this.grid = Objects.requireNonNull(
-                grid,
-                "model.Grid cannot be null"
-        );
+        this.grid = Objects.requireNonNull(grid, "model.Grid cannot be null");
 
-        Objects.requireNonNull(
-                initialPolicy,
-                "Initial policy cannot be null"
-        );
+        Objects.requireNonNull(initialPolicy, "Initial policy cannot be null");
 
-        this.achievementManager =
-                Objects.requireNonNull(
-                        achievementManager,
-                        "Achievement manager cannot be null"
-                );
-        this.achievementChecker =
-                new AchievementChecker(
-                        this.achievementManager
-                );
+        this.achievementManager = Objects.requireNonNull(achievementManager, "Achievement manager cannot be null");
+        this.achievementChecker = new AchievementChecker(this.achievementManager);
 
         this.city = new City(grid, initialPolicy);
         this.simulation = new Simulation(city, grid);
@@ -218,48 +174,19 @@ public final class Controller
         ));
     }
 
-    public Controller(
-            Grid grid,
-            Policy initialPolicy,
-            int budget,
-            int currentTick,
-            int lastPolicyChangeTick,
-            boolean tsunamiInsuranceActive,
-            AchievementManager achievementManager)
+    public Controller(Grid grid, Policy initialPolicy, int budget, int currentTick,
+            int lastPolicyChangeTick, boolean tsunamiInsuranceActive, AchievementManager achievementManager)
     {
-        this.grid = Objects.requireNonNull(
-                grid,
-                "model.Grid cannot be null"
-        );
+        this.grid = Objects.requireNonNull(grid, "model.Grid cannot be null");
 
-        Objects.requireNonNull(
-                initialPolicy,
-                "Initial policy cannot be null"
-        );
+        Objects.requireNonNull(initialPolicy, "Initial policy cannot be null");
 
-        this.achievementManager =
-                Objects.requireNonNull(
-                        achievementManager,
-                        "Achievement manager cannot be null"
-                );
-        this.achievementChecker =
-                new AchievementChecker(
-                        this.achievementManager
-                );
+        this.achievementManager = Objects.requireNonNull(achievementManager, "Achievement manager cannot be null");
+        this.achievementChecker = new AchievementChecker(this.achievementManager);
 
-        this.city = new City(
-                grid,
-                initialPolicy,
-                budget
-        );
+        this.city = new City(grid, initialPolicy, budget);
 
-        this.simulation = new Simulation(
-                city,
-                grid,
-                currentTick,
-                lastPolicyChangeTick,
-                tsunamiInsuranceActive
-        );
+        this.simulation = new Simulation(city, grid, currentTick, lastPolicyChangeTick, tsunamiInsuranceActive);
     }
 
     public Controller(AchievementManager achievementManager)
@@ -272,9 +199,7 @@ public final class Controller
     {
         if (observer == null)
         {
-            throw new NullPointerException(
-                    "Game observer cannot be null"
-            );
+            throw new NullPointerException("Game observer cannot be null");
         }
 
         observers.addIfAbsent(observer);
@@ -296,52 +221,33 @@ public final class Controller
      * Unico metodo che la GUI deve usare per costruire.
      * La GUI non deve più chiamare model.Cell.placeConstruction().
      */
-    public CellState placeConstruction(
-            ConstructionType type,
-            int row,
-            int column)
+    public CellState placeConstruction(ConstructionType type, int row, int column)
     {
         if (type == null)
         {
-            throw new IllegalArgumentException(
-                    "Construction type cannot be null"
-            );
+            throw new IllegalArgumentException("Construction type cannot be null");
         }
 
         if (type == ConstructionType.MASONIC_LODGE)
         {
-            throw new IllegalStateException(
-                    "The Masonic Lodge appears automatically"
-            );
+            throw new IllegalStateException("The Masonic Lodge appears automatically");
         }
 
-        Construction construction =
-                ConstructionFactory.create(type);
+        Construction construction = ConstructionFactory.create(type);
 
-        if (simulation.getCurrentTick()
-                < construction.getUnlockTick())
+        if (simulation.getCurrentTick() < construction.getUnlockTick())
         {
-            throw new IllegalStateException(
-                    "This construction is available from tick "
-                            + construction.getUnlockTick()
-            );
+            throw new IllegalStateException("This construction is available from tick " + construction.getUnlockTick());
         }
 
-        city.placeConstruction(
-                construction,
-                row,
-                column
-        );
+        city.placeConstruction(construction, row, column);
 
         simulation.tryToPlaceMasonicLodge();
         achievementChecker.onConstructionPlaced(type);
         achievementChecker.checkMetropolis(grid);
         notifyObservers();
 
-        return getCellState(
-                row,
-                column
-        );
+        return getCellState(row, column);
     }
 
     /*
@@ -363,16 +269,12 @@ public final class Controller
 
         if (state.empty())
         {
-            throw new IllegalStateException(
-                    "There is no construction to remove"
-            );
+            throw new IllegalStateException("There is no construction to remove");
         }
 
         if (!simulation.canRemoveConstruction())
         {
-            throw new IllegalStateException(
-                    "No demolitions available"
-            );
+            throw new IllegalStateException("No demolitions available");
         }
 
         grid.removeConstruction(row, column);
@@ -394,17 +296,14 @@ public final class Controller
     // Fa avanzare l'intero modello di un tick.
     public boolean updateOfOneTick()
     {
-        boolean criminalActivityCreated =
-                simulation.updateOfOneTick();
+        boolean criminalActivityCreated = simulation.updateOfOneTick();
 
         if (simulation.getCurrentTick() == 2)
         {
             deliverNewTestMessage();
         }
 
-        if (simulation.getCurrentTick() == 508
-                && simulation.getFreemasonryChoice()
-                == FreemasonryChoice.ACCEPTED)
+        if (simulation.getCurrentTick() == 508 && simulation.getFreemasonryChoice() == FreemasonryChoice.ACCEPTED)
         {
             deliverLodgeWarning();
         }
@@ -439,8 +338,7 @@ public final class Controller
         return chosen;
     }
 
-    public void restoreFreemasonryChoice(
-            FreemasonryChoice choice)
+    public void restoreFreemasonryChoice(FreemasonryChoice choice)
     {
         simulation.restoreFreemasonryChoice(choice);
     }
@@ -490,39 +388,24 @@ public final class Controller
 
         boolean onFire = simulation.isCellOnFire(row, column);
 
-        Construction construction =
-                grid.getCell(row, column).getConstruction();
+        Construction construction = grid.getCell(row, column).getConstruction();
 
         if (construction == null)
         {
-            return new CellState(
-                    true,
-                    null,
-                    false,
-                    false,
-                    false
-            );
+            return new CellState(true, null, false, false, false);
         }
 
         boolean powered = construction.isPowered();
         boolean boosted = simulation.isConstructionBoosted(construction);
 
-        return new CellState(
-                false,
-                construction.getType(),
-                onFire,
-                powered,
-                boosted
-        );
+        return new CellState(false, construction.getType(), onFire, powered, boosted);
     }
 
     public boolean cellConsumesPower(int row, int column)
     {
         requireValidPosition(row, column);
-        Construction construction =
-                grid.getCell(row, column).getConstruction();
-        return construction != null
-                && construction.getPowerConsumption() > 0;
+        Construction construction = grid.getCell(row, column).getConstruction();
+        return construction != null && construction.getPowerConsumption() > 0;
     }
 
     public boolean canPlaceConstructionCompany()
@@ -542,8 +425,7 @@ public final class Controller
 
     public boolean requestLoan(int amount)
     {
-        boolean requested =
-                simulation.requestLoan(amount);
+        boolean requested = simulation.requestLoan(amount);
 
         if (requested)
         {
@@ -558,20 +440,10 @@ public final class Controller
         return simulation.getMaxLoanAmount();
     }
 
-    public void restoreBankState(
-            int lastLoanTick,
-            boolean loanActive,
-            int loanAmount,
-            int loanStartTick,
-            int remainingDebt)
+    public void restoreBankState(int lastLoanTick, boolean loanActive,
+            int loanAmount, int loanStartTick, int remainingDebt)
     {
-        simulation.restoreBankState(
-                lastLoanTick,
-                loanActive,
-                loanAmount,
-                loanStartTick,
-                remainingDebt
-        );
+        simulation.restoreBankState(lastLoanTick, loanActive, loanAmount, loanStartTick, remainingDebt);
     }
 
     public boolean hasBanks()
@@ -586,8 +458,7 @@ public final class Controller
 
     public boolean buyTsunamiInsurance()
     {
-        boolean bought =
-                simulation.buyTsunamiInsurance();
+        boolean bought = simulation.buyTsunamiInsurance();
 
         if (bought)
         {
@@ -604,20 +475,17 @@ public final class Controller
 
     public int getTsunamiInsuranceBuildingCount()
     {
-        return simulation
-                .getTsunamiInsuranceBuildingCount();
+        return simulation.getTsunamiInsuranceBuildingCount();
     }
 
     public int getTsunamiInsuranceDiscountPercentage()
     {
-        return simulation
-                .getTsunamiInsuranceDiscountPercentage();
+        return simulation.getTsunamiInsuranceDiscountPercentage();
     }
 
     public boolean isTsunamiInsuranceActive()
     {
-        return simulation
-                .isTsunamiInsuranceActive();
+        return simulation.isTsunamiInsuranceActive();
     }
 
     public boolean canBuyNuclearFireProtection()
@@ -659,14 +527,12 @@ public final class Controller
 
     public boolean wasTsunamiReconstructionRestoredThisTick()
     {
-        return simulation
-                .wasTsunamiReconstructionRestoredThisTick();
+        return simulation.wasTsunamiReconstructionRestoredThisTick();
     }
 
     public boolean wasTsunamiReconstructionCompletedThisTick()
     {
-        return simulation
-                .wasTsunamiReconstructionCompletedThisTick();
+        return simulation.wasTsunamiReconstructionCompletedThisTick();
     }
 
     public boolean didBlackoutOccurThisTick()
@@ -674,9 +540,7 @@ public final class Controller
         return simulation.didBlackoutOccurThisTick();
     }
 
-    public void restoreTsunamiReconstruction(
-            List<ReconstructionEntry> entries,
-            String direction)
+    public void restoreTsunamiReconstruction(List<ReconstructionEntry> entries, String direction)
     {
         simulation.restoreTsunamiReconstruction(entries, direction);
     }
@@ -772,14 +636,11 @@ public final class Controller
     {
         requireValidPosition(row, column);
 
-        Construction construction =
-                grid.getCell(row, column).getConstruction();
+        Construction construction = grid.getCell(row, column).getConstruction();
 
         if (construction instanceof PowerPlant powerPlant)
         {
-            return grid.getPowerPlantUsedPower(
-                    powerPlant
-            );
+            return grid.getPowerPlantUsedPower(powerPlant);
         }
 
         return 0;
@@ -823,9 +684,7 @@ public final class Controller
     {
         if (!grid.isInside(row, column))
         {
-            throw new IllegalArgumentException(
-                    "Position outside the grid: row=" + row + ", column="
-                            + column);
+            throw new IllegalArgumentException("Position outside the grid: row=" + row + ", column=" + column);
         }
     }
 
@@ -855,11 +714,7 @@ public final class Controller
     // Crea i dati necessari per salvare lo stato attuale della partita.
     public Progress createProgress()
     {
-        return Progress.fromGame(
-                grid,
-                city,
-                simulation
-        );
+        return Progress.fromGame(grid, city, simulation);
     }
 
     /** Fornisce alla vista la casella di posta della partita corrente. */
@@ -909,8 +764,7 @@ public final class Controller
 
     public boolean buyMissileDefense()
     {
-        boolean bought =
-                simulation.buyMissileDefense();
+        boolean bought = simulation.buyMissileDefense();
 
         if (bought)
         {
@@ -927,8 +781,7 @@ public final class Controller
 
     public boolean repairMissileDefense()
     {
-        boolean repaired =
-                simulation.repairMissileDefense();
+        boolean repaired = simulation.repairMissileDefense();
 
         if (repaired)
         {
@@ -940,8 +793,7 @@ public final class Controller
 
     public boolean repairMissileDefenseFully()
     {
-        boolean repaired =
-                simulation.repairMissileDefenseFully();
+        boolean repaired = simulation.repairMissileDefenseFully();
 
         if (repaired)
         {
@@ -973,8 +825,7 @@ public final class Controller
 
     public int getMissileDefensePurchaseDiscountPercentage()
     {
-        return simulation
-                .getMissileDefensePurchaseDiscountPercentage();
+        return simulation.getMissileDefensePurchaseDiscountPercentage();
     }
 
     public int getMissileDefenseRepairCost()
@@ -987,22 +838,14 @@ public final class Controller
         return simulation.getMissileDefenseFullRepairCost();
     }
 
-    public void restoreMissileDefenseState(
-            boolean purchased,
-            int hitsRemaining)
+    public void restoreMissileDefenseState(boolean purchased, int hitsRemaining)
     {
-        simulation.restoreMissileDefenseState(
-                purchased,
-                hitsRemaining
-        );
+        simulation.restoreMissileDefenseState(purchased, hitsRemaining);
     }
 
-    public boolean isAchievementUnlocked(
-            Achievement achievement)
+    public boolean isAchievementUnlocked(Achievement achievement)
     {
-        return achievementManager.isUnlocked(
-                achievement
-        );
+        return achievementManager.isUnlocked(achievement);
     }
 
     // Restituisce il tipo dell'evento attualmente attivo.
@@ -1021,14 +864,11 @@ public final class Controller
         simulation.restoreBankruptcyState(criticalTicks);
     }
 
-    public boolean isConstructionUnlocked(
-            ConstructionType type)
+    public boolean isConstructionUnlocked(ConstructionType type)
     {
-        Construction construction =
-                ConstructionFactory.create(type);
+        Construction construction = ConstructionFactory.create(type);
 
-        return simulation.getCurrentTick()
-                >= construction.getUnlockTick();
+        return simulation.getCurrentTick() >= construction.getUnlockTick();
     }
 
     public int getRemovedCriminalActivities()

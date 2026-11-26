@@ -28,21 +28,16 @@ public class Main
         extends Application
         implements GameNavigation
 {
-    private static final String SAVE_FILE_PATH =
-            "progress.json";
+    private static final String SAVE_FILE_PATH = "progress.json";
 
-    private static final String ACHIEVEMENTS_FILE_PATH =
-            "achievements.json";
+    private static final String ACHIEVEMENTS_FILE_PATH = "achievements.json";
 
-    private final ProgressManager progressManager =
-            new ProgressManager();
+    private final ProgressManager progressManager = new ProgressManager();
 
     private final AchievementProgressManager
-            achievementProgressManager =
-            new AchievementProgressManager();
+            achievementProgressManager = new AchievementProgressManager();
 
-    private final SoundManager soundManager =
-            new SoundManager();
+    private final SoundManager soundManager = new SoundManager();
 
     private AchievementManager achievementManager;
 
@@ -75,20 +70,13 @@ public class Main
     {
         try
         {
-            achievementManager =
-                    achievementProgressManager.load(
-                            ACHIEVEMENTS_FILE_PATH
-                    );
+            achievementManager = achievementProgressManager.load(ACHIEVEMENTS_FILE_PATH);
         }
         catch (IOException exception)
         {
-            achievementManager =
-                    new AchievementManager();
+            achievementManager = new AchievementManager();
 
-            System.err.println(
-                    "Unable to load achievements: "
-                            + exception.getMessage()
-            );
+            System.err.println("Unable to load achievements: " + exception.getMessage());
         }
     }
 
@@ -98,19 +86,11 @@ public class Main
     {
         closeGameView();
 
-        Button startButton = new Button(
-                controller == null
-                        ? "Inizia simulazione"
-                        : "Nuova partita"
-        );
+        Button startButton = new Button(controller == null ? "Inizia simulazione" : "Nuova partita");
 
-        Button loadButton = new Button(
-                "Carica simulazione"
-        );
+        Button loadButton = new Button("Carica simulazione");
 
-        Button achievementsButton = new Button(
-                "Achievements"
-        );
+        Button achievementsButton = new Button("Achievements");
 
         Label labelInfo = new Label(
                 "Created by: Borsetto Daniele, "
@@ -122,8 +102,7 @@ public class Main
         startButton.setPrefWidth(200);
         loadButton.setPrefWidth(200);
         achievementsButton.setPrefWidth(200);
-        String menuButtonStyle =
-                "-fx-background-color: #fff7e8; -fx-text-fill: #7d561f;"
+        String menuButtonStyle = "-fx-background-color: #fff7e8; -fx-text-fill: #7d561f;"
                         + "-fx-border-color: #e5c995; -fx-border-radius: 7;"
                         + "-fx-background-radius: 7; -fx-cursor: hand;"
                         + "-fx-focus-color: #e5c995;"
@@ -168,19 +147,12 @@ public class Main
                 }
         );
 
-        VBox layout = new VBox(
-                15,
-                startButton,
-                loadButton,
-                achievementsButton
-        );
+        VBox layout = new VBox(15, startButton, loadButton, achievementsButton);
 
         // Aggiunge il pulsante per riprendere una partita già iniziata.
         if (controller != null)
         {
-            Button resumeButton = new Button(
-                    "Riprendi partita"
-            );
+            Button resumeButton = new Button("Riprendi partita");
 
             resumeButton.setPrefWidth(200);
             resumeButton.setStyle(menuButtonStyle);
@@ -195,10 +167,7 @@ public class Main
                     }
             );
 
-            layout.getChildren().add(
-                    0,
-                    resumeButton
-            );
+            layout.getChildren().add(0, resumeButton);
         }
 
         layout.setAlignment(Pos.CENTER);
@@ -207,23 +176,13 @@ public class Main
         BorderPane root = new BorderPane();
         root.setCenter(layout);
 
-        BorderPane.setAlignment(
-                labelInfo,
-                Pos.BOTTOM_RIGHT
-        );
+        BorderPane.setAlignment(labelInfo, Pos.BOTTOM_RIGHT);
 
-        BorderPane.setMargin(
-                labelInfo,
-                new Insets(10)
-        );
+        BorderPane.setMargin(labelInfo, new Insets(10));
 
         root.setBottom(labelInfo);
 
-        Scene scene = new Scene(
-                root,
-                800,
-                600
-        );
+        Scene scene = new Scene(root, 800, 600);
 
         // Comando nascosto per gli sviluppatori: Command + Shift + A.
         scene.setOnKeyPressed(
@@ -232,10 +191,7 @@ public class Main
                     @Override
                     public void handle(KeyEvent event)
                     {
-                        if (event.isMetaDown()
-                                && event.isShiftDown()
-                                && event.getCode()
-                                == KeyCode.A)
+                        if (event.isMetaDown() && event.isShiftDown() && event.getCode() == KeyCode.A)
                         {
                             resetAchievements();
                             event.consume();
@@ -249,8 +205,7 @@ public class Main
 
     private void showAchievementsScreen()
     {
-        AchievementsView achievementsView = new AchievementsView(
-                achievementManager,
+        AchievementsView achievementsView = new AchievementsView(achievementManager,
                 new Runnable()
                 {
                     @Override
@@ -269,27 +224,17 @@ public class Main
     {
         try
         {
-            controller = progressManager.loadGame(
-                    SAVE_FILE_PATH,
-                    achievementManager
-            );
+            controller = progressManager.loadGame(SAVE_FILE_PATH, achievementManager);
 
             showGameScreen();
         }
-        catch (IOException
-               | IllegalArgumentException
-               | IllegalStateException exception)
+        catch (IOException | IllegalArgumentException | IllegalStateException exception)
         {
-            Alert alert =
-                    new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
 
             alert.setTitle("Loading error");
-            alert.setHeaderText(
-                    "Impossible to load the game"
-            );
-            alert.setContentText(
-                    exception.getMessage()
-            );
+            alert.setHeaderText("Impossible to load the game");
+            alert.setContentText(exception.getMessage());
             alert.showAndWait();
         }
     }
@@ -300,21 +245,13 @@ public class Main
     {
         try
         {
-            achievementProgressManager.reset(
-                    achievementManager,
-                    ACHIEVEMENTS_FILE_PATH
-            );
+            achievementProgressManager.reset(achievementManager, ACHIEVEMENTS_FILE_PATH);
 
-            System.out.println(
-                    "Achievements reset successfully."
-            );
+            System.out.println("Achievements reset successfully.");
         }
         catch (IOException exception)
         {
-            System.err.println(
-                    "Unable to reset achievements: "
-                            + exception.getMessage()
-            );
+            System.err.println("Unable to reset achievements: " + exception.getMessage());
         }
     }
 
@@ -323,12 +260,7 @@ public class Main
     {
         closeGameView();
 
-        gameView = new GameView(
-                controller,
-                this,
-                progressManager,
-                SAVE_FILE_PATH,
-                soundManager,
+        gameView = new GameView(controller, this, progressManager, SAVE_FILE_PATH, soundManager,
                 new Runnable()
                 {
                     @Override
@@ -377,17 +309,11 @@ public class Main
 
         try
         {
-            achievementProgressManager.save(
-                    achievementManager,
-                    ACHIEVEMENTS_FILE_PATH
-            );
+            achievementProgressManager.save(achievementManager, ACHIEVEMENTS_FILE_PATH);
         }
         catch (IOException exception)
         {
-            System.err.println(
-                    "Unable to save achievements: "
-                            + exception.getMessage()
-            );
+            System.err.println("Unable to save achievements: " + exception.getMessage());
         }
     }
 

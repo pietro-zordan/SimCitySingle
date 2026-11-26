@@ -23,8 +23,7 @@ public class CriminalActivity extends Construction
         return -400;
     }
 
-    public void setCreationTick(
-            int creationTick)
+    public void setCreationTick(int creationTick)
     {
         this.creationTick = creationTick;
     }
@@ -34,11 +33,9 @@ public class CriminalActivity extends Construction
         return creationTick;
     }
 
-    public boolean canBeRemovedByPolice(
-            int currentTick)
+    public boolean canBeRemovedByPolice(int currentTick)
     {
-        return currentTick - creationTick
-                >= MIN_LIFETIME;
+        return currentTick - creationTick >= MIN_LIFETIME;
     }
 
 }

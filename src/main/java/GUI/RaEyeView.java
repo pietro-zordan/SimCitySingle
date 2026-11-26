@@ -16,8 +16,7 @@ public final class RaEyeView
     public RaEyeView()
     {
         Image eye = new Image(Objects.requireNonNull(
-                RaEyeView.class.getResource("/images/eye-of-ra.png")
-        ).toExternalForm());
+                RaEyeView.class.getResource("/images/eye-of-ra.png")).toExternalForm());
 
         ImageView symbol = new ImageView(eye);
         symbol.setFitWidth(25);

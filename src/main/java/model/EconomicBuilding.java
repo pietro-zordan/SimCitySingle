@@ -12,9 +12,7 @@ public abstract class EconomicBuilding extends Construction
     /* Inizializza l'edificio con il tasso di crescita economica di base
        e senza alcun bonus economico temporaneo. */
 
-    protected EconomicBuilding(
-            int powerConsumption,
-            int placementPrice)
+    protected EconomicBuilding(int powerConsumption, int placementPrice)
     {
         super(0, powerConsumption, placementPrice);
 
@@ -40,27 +38,18 @@ public abstract class EconomicBuilding extends Construction
         {
             // Ricalcola sempre la produzione.
             moneyProduction = (int)
-                    (getBaseMoneyProduction()
-                            * getEffectiveEconomyGrowthRate());
+                    (getBaseMoneyProduction() * getEffectiveEconomyGrowthRate());
 
             // Impedisce alla produzione di superare il massimo.
-            moneyProduction = Math.min(
-                    moneyProduction,
-                    getMaxMoneyProduction()
-            );
+            moneyProduction = Math.min(moneyProduction, getMaxMoneyProduction());
 
             // Aumenta il tasso per il tick successivo.
-            if (economyGrowthRate
-                    < getMaxEconomyGrowthRate())
+            if (economyGrowthRate < getMaxEconomyGrowthRate())
             {
-                economyGrowthRate +=
-                        ECONOMY_GROWTH_INCREMENT;
+                economyGrowthRate += ECONOMY_GROWTH_INCREMENT;
 
                 // Impedisce al growth rate di superare il massimo.
-                economyGrowthRate = Math.min(
-                        economyGrowthRate,
-                        getMaxEconomyGrowthRate()
-                );
+                economyGrowthRate = Math.min(economyGrowthRate, getMaxEconomyGrowthRate());
             }
         }
         else
@@ -73,10 +62,7 @@ public abstract class EconomicBuilding extends Construction
     // Calcola il tasso economico includendo il bonus senza superare il massimo.
     private double getEffectiveEconomyGrowthRate()
     {
-        return Math.min(
-                economyGrowthRate + economicBoost,
-                getMaxEconomyGrowthRate()
-        );
+        return Math.min(economyGrowthRate + economicBoost, getMaxEconomyGrowthRate());
     }
 
     // Applica il bonus economico temporaneo ricevuto da un evento.
@@ -85,9 +71,7 @@ public abstract class EconomicBuilding extends Construction
     {
         if (boost < 0)
         {
-            throw new IllegalArgumentException(
-                    "Economic boost cannot be negative"
-            );
+            throw new IllegalArgumentException("Economic boost cannot be negative");
         }
 
         economicBoost = boost;
@@ -104,8 +88,7 @@ public abstract class EconomicBuilding extends Construction
     // Imposta il tasso di crescita se il valore rispetta i limiti consentiti.
     public void setEconomyGrowthRate(double growthRate)
     {
-        if (growthRate >= 0
-                && growthRate <= getMaxEconomyGrowthRate())
+        if (growthRate >= 0 && growthRate <= getMaxEconomyGrowthRate())
         {
             economyGrowthRate = growthRate;
         }
@@ -124,39 +107,25 @@ public abstract class EconomicBuilding extends Construction
     /* Ripristina la produzione di denaro e il tasso di crescita economica
     utilizzando i valori recuperati dal salvataggio. */
     @Override
-    public void restoreState(
-            int population,
-            int populationGrowthRate,
-            int populationDecreaseRate,
-            double economyGrowthRate,
-            int moneyProduction)
+    public void restoreState(int population, int populationGrowthRate,
+            int populationDecreaseRate, double economyGrowthRate, int moneyProduction)
     {
-        super.restoreState(
-                population,
-                populationGrowthRate,
-                populationDecreaseRate,
-                economyGrowthRate,
-                moneyProduction
-        );
+        super.restoreState(population, populationGrowthRate,
+                populationDecreaseRate, economyGrowthRate, moneyProduction);
 
         setEconomyGrowthRate(economyGrowthRate);
     }
 
     @Override
-    public boolean isPlacementAllowed(
-            int pollution,
-            int unemployed)
+    public boolean isPlacementAllowed(int pollution, int unemployed)
     {
         return unemployed >= getNumberOfEmployee();
     }
 
     @Override
-    public String getPlacementErrorMessage(
-            int pollution,
-            int unemployed)
+    public String getPlacementErrorMessage(int pollution, int unemployed)
     {
         return "Cannot build " + getType() + ": at least "
-                + getNumberOfEmployee()
-                + " unemployed citizens are required";
+                + getNumberOfEmployee() + " unemployed citizens are required";
     }
 }

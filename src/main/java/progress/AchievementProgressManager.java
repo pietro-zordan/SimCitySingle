@@ -19,32 +19,22 @@ public class AchievementProgressManager
 
     public AchievementProgressManager()
     {
-        gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    public void save(
-            AchievementManager achievementManager,
-            String filePath)
+    public void save(AchievementManager achievementManager, String filePath)
             throws IOException
     {
         if (achievementManager == null)
         {
-            throw new IllegalArgumentException(
-                    "Achievement manager cannot be null"
-            );
+            throw new IllegalArgumentException("Achievement manager cannot be null");
         }
 
         Path path = Path.of(filePath);
 
-        AchievementProgress progress =
-                AchievementProgress.fromManager(
-                        achievementManager
-                );
+        AchievementProgress progress = AchievementProgress.fromManager(achievementManager);
 
-        try (Writer writer =
-                     Files.newBufferedWriter(path))
+        try (Writer writer = Files.newBufferedWriter(path))
         {
             gson.toJson(progress, writer);
         }
@@ -60,14 +50,9 @@ public class AchievementProgressManager
             return new AchievementManager();
         }
 
-        try (Reader reader =
-                     Files.newBufferedReader(path))
+        try (Reader reader = Files.newBufferedReader(path))
         {
-            AchievementProgress progress =
-                    gson.fromJson(
-                            reader,
-                            AchievementProgress.class
-                    );
+            AchievementProgress progress = gson.fromJson(reader, AchievementProgress.class);
 
             if (progress == null)
             {
@@ -78,23 +63,16 @@ public class AchievementProgressManager
         }
         catch (JsonParseException exception)
         {
-            throw new IOException(
-                    "The achievement file contains invalid JSON",
-                    exception
-            );
+            throw new IOException("The achievement file contains invalid JSON", exception);
         }
     }
 
-    public void reset(
-            AchievementManager achievementManager,
-            String filePath)
+    public void reset(AchievementManager achievementManager, String filePath)
             throws IOException
     {
         if (achievementManager == null)
         {
-            throw new IllegalArgumentException(
-                    "Achievement manager cannot be null"
-            );
+            throw new IllegalArgumentException("Achievement manager cannot be null");
         }
 
         achievementManager.reset();

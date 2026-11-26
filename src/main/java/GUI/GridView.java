@@ -41,13 +41,9 @@ public final class GridView
 {
     private static final int CELL_SIZE = 30; // pixel
     private static final double CRISIS_OVERLAY_OPACITY = 0.16;
-    private static final Paint MILITARY_CAMOUFLAGE =
-            createMilitaryCamouflagePattern();
-    private static final Image LODGE_EYE = new Image(
-            Objects.requireNonNull(
-                    GridView.class.getResource("/images/lodge-eye.png")
-            ).toExternalForm()
-    );
+    private static final Paint MILITARY_CAMOUFLAGE = createMilitaryCamouflagePattern();
+    private static final Image LODGE_EYE = new Image(Objects.requireNonNull(
+            GridView.class.getResource("/images/lodge-eye.png")).toExternalForm());
 
     private final Controller controller;
     private final Consumer<String> errorHandler;
@@ -67,12 +63,9 @@ public final class GridView
     private Label[][] tsunamiIcons;
     private Rectangle[][] tsunamiOverlays;
     private Rectangle[][] explosionOverlays;
-    private final List<Rectangle> visibleTsunamiOverlays =
-            new ArrayList<>();
-    private final List<Label> visibleTsunamiIcons =
-            new ArrayList<>();
-    private final List<Rectangle> visibleExplosionOverlays =
-            new ArrayList<>();
+    private final List<Rectangle> visibleTsunamiOverlays = new ArrayList<>();
+    private final List<Label> visibleTsunamiIcons = new ArrayList<>();
+    private final List<Rectangle> visibleExplosionOverlays = new ArrayList<>();
     private Label[][] grassIcons;
     private StackPane[][] lodgeIcons;
     private Tooltip[][] grassTooltips;
@@ -92,10 +85,9 @@ public final class GridView
     private final List<EarthquakeGhost> earthquakeGhosts = new ArrayList<>();
 
     private record EarthquakeGhost(StackPane cell, StackPane overlay,
-                                   ImageView image, double delay, double duration) { }
+            ImageView image, double delay, double duration) { }
 
-    private ConstructionType selectedType =
-            ConstructionType.COMMERCIAL;
+    private ConstructionType selectedType = ConstructionType.COMMERCIAL;
     private boolean demolitionActive = false;
     private boolean roadDragActive;
     private int roadStartRow;
@@ -104,20 +96,13 @@ public final class GridView
     private int roadEndColumn;
 
     // Inizializza la griglia di gioco, allocando le matrici di componenti grafici per le celle e impostando il layout del GridPane.
-    public GridView(
-            Controller controller,
-            Consumer<String> errorHandler,
-            Runnable demolitionSound,
-            Runnable placementSound,
-            Runnable expansionSound)
+    public GridView(Controller controller, Consumer<String> errorHandler,
+            Runnable demolitionSound, Runnable placementSound, Runnable expansionSound)
     {
-        if (controller == null || errorHandler == null
-                || demolitionSound == null || placementSound == null
+        if (controller == null || errorHandler == null || demolitionSound == null || placementSound == null
                 || expansionSound == null)
         {
-            throw new IllegalArgumentException(
-                    "Grid view dependencies cannot be null"
-            );
+            throw new IllegalArgumentException("Grid view dependencies cannot be null");
         }
 
         this.controller = controller;
@@ -133,9 +118,7 @@ public final class GridView
         view.setPadding(Insets.EMPTY);
         view.setAlignment(Pos.CENTER);
 
-        infoLabel = new Label(
-                "Clicca su una casella per colorarla"
-        );
+        infoLabel = new Label("Clicca su una casella per colorarla");
         infoLabel.setPadding(new Insets(5));
 
         rebuildCells();
@@ -192,34 +175,24 @@ public final class GridView
     // Instanzia e sovrappone le componenti grafiche per ciascuna cella della griglia agganciando i relativi listener per i click del mouse.
     private void createCells()
     {
-        for (int row = 0;
-             row < controller.getNumberOfRows();
-             row++)
+        for (int row = 0; row < controller.getNumberOfRows(); row++)
         {
-            for (int column = 0;
-                 column < controller.getNumberOfColumns();
-                 column++)
+            for (int column = 0; column < controller.getNumberOfColumns(); column++)
             {
-                Rectangle graphicCell =
-                        new Rectangle(CELL_SIZE, CELL_SIZE);
+                Rectangle graphicCell = new Rectangle(CELL_SIZE, CELL_SIZE);
                 graphicCell.setFill(Color.WHITESMOKE);
                 graphicCell.setStroke(Color.LIGHTGRAY);
                 // Il bordo resta dentro i 30x30: eventi come Energy Crisis
                 // possono aumentare lo spessore senza cambiare i layout bounds.
                 graphicCell.setStrokeType(StrokeType.INSIDE);
 
-                Rectangle crisisOverlay =
-                        new Rectangle(CELL_SIZE - 4, CELL_SIZE - 4);
+                Rectangle crisisOverlay = new Rectangle(CELL_SIZE - 4, CELL_SIZE - 4);
                 crisisOverlay.setFill(Color.web("#171326"));
                 crisisOverlay.setVisible(false);
                 crisisOverlay.setMouseTransparent(true);
 
                 Label crisisSpark = new Label("✦");
-                crisisSpark.setStyle(
-                        "-fx-text-fill: #f0d7ff;"
-                                + "-fx-font-size: 13px;"
-                                + "-fx-font-weight: bold;"
-                );
+                crisisSpark.setStyle("-fx-text-fill: #f0d7ff;" + "-fx-font-size: 13px;" + "-fx-font-weight: bold;");
                 crisisSpark.setVisible(false);
                 crisisSpark.setMouseTransparent(true);
                 StackPane.setAlignment(crisisSpark, Pos.TOP_RIGHT);
@@ -227,76 +200,41 @@ public final class GridView
                 crisisSpark.setTranslateY(1);
 
                 Label noPowerIcon = new Label("⚡");
-                noPowerIcon.setStyle(
-                        "-fx-text-fill: red;"
-                                + "-fx-font-size: 16px;"
-                );
+                noPowerIcon.setStyle("-fx-text-fill: red;" + "-fx-font-size: 16px;");
                 noPowerIcon.setVisible(false);
                 noPowerIcon.setMouseTransparent(true);
 
                 Label boostIcon = new Label("⬆");
-                boostIcon.setStyle(
-                        "-fx-text-fill: #32CD32;"
-                                + "-fx-font-weight: bold;"
-                                + "-fx-font-size: 22px;"
-                );
+                boostIcon.setStyle("-fx-text-fill: #32CD32;" + "-fx-font-weight: bold;" + "-fx-font-size: 22px;");
                 boostIcon.setVisible(false);
                 boostIcon.setMouseTransparent(true);
 
-                Rectangle tsunamiOverlay =
-                        new Rectangle(
-                                CELL_SIZE,
-                                CELL_SIZE
-                        );
-                tsunamiOverlay.setFill(
-                        Color.LIGHTBLUE
-                );
+                Rectangle tsunamiOverlay = new Rectangle(CELL_SIZE, CELL_SIZE);
+                tsunamiOverlay.setFill(Color.LIGHTBLUE);
                 tsunamiOverlay.setVisible(false);
                 tsunamiOverlay.setMouseTransparent(true);
 
-                Rectangle explosionOverlay =
-                        new Rectangle(
-                                CELL_SIZE,
-                                CELL_SIZE
-                        );
+                Rectangle explosionOverlay = new Rectangle(CELL_SIZE, CELL_SIZE);
                 explosionOverlay.setFill(Color.ORANGERED);
                 explosionOverlay.setOpacity(0.75);
                 explosionOverlay.setVisible(false);
                 explosionOverlay.setMouseTransparent(true);
 
                 Label tsunamiIcon = new Label("∿");
-                tsunamiIcon.setStyle(
-                        "-fx-text-fill: white;"
-                                + "-fx-font-size: 22px;"
-                                + "-fx-font-weight: bold;"
-                );
+                tsunamiIcon.setStyle("-fx-text-fill: white;" + "-fx-font-size: 22px;" + "-fx-font-weight: bold;");
                 tsunamiIcon.setVisible(false);
                 tsunamiIcon.setMouseTransparent(true);
 
                 Label grassIcon = new Label("❧");
-                grassIcon.setStyle(
-                        "-fx-text-fill: #2F5D31;"
-                                + "-fx-font-size: 21px;"
-                                + "-fx-font-weight: bold;"
-                );
+                grassIcon.setStyle("-fx-text-fill: #2F5D31;" + "-fx-font-size: 21px;" + "-fx-font-weight: bold;");
                 grassIcon.setVisible(false);
                 grassIcon.setMouseTransparent(true);
 
                 StackPane lodgeIcon = createLodgeIcon();
                 lodgeIcon.setVisible(false);
 
-                StackPane cell = new StackPane(
-                        graphicCell,
-                        crisisOverlay,
-                        noPowerIcon,
-                        boostIcon,
-                        grassIcon,
-                        lodgeIcon,
-                        crisisSpark,
-                        tsunamiOverlay,
-                        tsunamiIcon,
-                        explosionOverlay
-                );
+                StackPane cell = new StackPane(graphicCell, crisisOverlay, noPowerIcon,
+                        boostIcon, grassIcon, lodgeIcon, crisisSpark, tsunamiOverlay, tsunamiIcon, explosionOverlay);
 
                 // Ogni cella deve avere sempre esattamente la stessa dimensione.
                 // Icone e overlay degli eventi non possono quindi modificare
@@ -305,8 +243,7 @@ public final class GridView
                 cell.setPrefSize(CELL_SIZE, CELL_SIZE);
                 cell.setMaxSize(CELL_SIZE, CELL_SIZE);
 
-                Rectangle roadPreview =
-                        new Rectangle(CELL_SIZE, CELL_SIZE);
+                Rectangle roadPreview = new Rectangle(CELL_SIZE, CELL_SIZE);
                 roadPreview.setFill(Color.rgb(60, 185, 230, 0.42));
                 roadPreview.setVisible(false);
                 roadPreview.setMouseTransparent(true);
@@ -321,13 +258,9 @@ public final class GridView
                             @Override
                             public void handle(MouseEvent event)
                             {
-                                if (selectedType != ConstructionType.ROAD
-                                        || demolitionActive)
+                                if (selectedType != ConstructionType.ROAD || demolitionActive)
                                 {
-                                    handleCellClick(
-                                            selectedRow,
-                                            selectedColumn
-                                    );
+                                    handleCellClick(selectedRow, selectedColumn);
                                 }
                             }
                         }
@@ -340,9 +273,7 @@ public final class GridView
                             public void handle(MouseEvent event)
                             {
                                 if (selectedType == ConstructionType.ROAD
-                                        && !demolitionActive
-                                        && event.getButton()
-                                        == MouseButton.PRIMARY)
+                                        && !demolitionActive && event.getButton() == MouseButton.PRIMARY)
                                 {
                                     startRoadDrag(selectedRow, selectedColumn);
                                     event.consume();
@@ -372,9 +303,7 @@ public final class GridView
                             @Override
                             public void handle(MouseEvent event)
                             {
-                                if (roadDragActive
-                                        && event.getButton()
-                                        == MouseButton.PRIMARY)
+                                if (roadDragActive && event.getButton() == MouseButton.PRIMARY)
                                 {
                                     updateRoadDrag(event);
                                     finishRoadDrag();
@@ -392,10 +321,8 @@ public final class GridView
                 noPowerIcons[row][column] = noPowerIcon;
                 boostIcons[row][column] = boostIcon;
                 tsunamiIcons[row][column] = tsunamiIcon;
-                tsunamiOverlays[row][column] =
-                        tsunamiOverlay;
-                explosionOverlays[row][column] =
-                        explosionOverlay;
+                tsunamiOverlays[row][column] = tsunamiOverlay;
+                explosionOverlays[row][column] = explosionOverlay;
                 grassIcons[row][column] = grassIcon;
                 lodgeIcons[row][column] = lodgeIcon;
                 // I tooltip vengono creati soltanto quando la cella ne ha
@@ -474,15 +401,12 @@ public final class GridView
     {
         int rowStep = Integer.compare(roadEndRow, roadStartRow);
         int columnStep = Integer.compare(roadEndColumn, roadStartColumn);
-        int length = Math.max(
-                Math.abs(roadEndRow - roadStartRow),
-                Math.abs(roadEndColumn - roadStartColumn));
+        int length = Math.max(Math.abs(roadEndRow - roadStartRow), Math.abs(roadEndColumn - roadStartColumn));
 
         for (int i = 0; i <= length; i++)
         {
             roadPreviewOverlays[roadStartRow + i * rowStep]
-                    [roadStartColumn + i * columnStep]
-                    .setVisible(visible);
+                    [roadStartColumn + i * columnStep].setVisible(visible);
         }
     }
 
@@ -491,8 +415,7 @@ public final class GridView
         roadDragActive = false;
         showRoadPreview(false);
 
-        if (roadStartRow == roadEndRow
-                && roadStartColumn == roadEndColumn)
+        if (roadStartRow == roadEndRow && roadStartColumn == roadEndColumn)
         {
             handleCellClick(roadStartRow, roadStartColumn);
             return;
@@ -500,9 +423,7 @@ public final class GridView
 
         int rowStep = Integer.compare(roadEndRow, roadStartRow);
         int columnStep = Integer.compare(roadEndColumn, roadStartColumn);
-        int length = Math.max(
-                Math.abs(roadEndRow - roadStartRow),
-                Math.abs(roadEndColumn - roadStartColumn));
+        int length = Math.max(Math.abs(roadEndRow - roadStartRow), Math.abs(roadEndColumn - roadStartColumn));
         int previousRows = controller.getNumberOfRows();
         int previousColumns = controller.getNumberOfColumns();
         int placed = 0;
@@ -512,20 +433,16 @@ public final class GridView
         {
             int row = roadStartRow + i * rowStep;
             int column = roadStartColumn + i * columnStep;
-            Controller.CellState state =
-                    controller.getCellState(row, column);
+            Controller.CellState state = controller.getCellState(row, column);
 
-            if (state.empty()
-                    || state.type() != ConstructionType.ROAD)
+            if (state.empty() || state.type() != ConstructionType.ROAD)
             {
                 try
                 {
-                    controller.placeConstruction(
-                            ConstructionType.ROAD, row, column);
+                    controller.placeConstruction(ConstructionType.ROAD, row, column);
                     placed++;
                 }
-                catch (IllegalStateException
-                       | IllegalArgumentException exception)
+                catch (IllegalStateException | IllegalArgumentException exception)
                 {
                     errorHandler.accept(exception.getMessage());
                     canContinue = false;
@@ -535,8 +452,7 @@ public final class GridView
 
         if (placed > 0)
         {
-            if (controller.getNumberOfRows() != previousRows
-                    || controller.getNumberOfColumns() != previousColumns)
+            if (controller.getNumberOfRows() != previousRows || controller.getNumberOfColumns() != previousColumns)
             {
                 ensureGridSize();
                 if (expansionViewAction != null)
@@ -555,11 +471,7 @@ public final class GridView
 
     private static StackPane createLodgeIcon()
     {
-        Polygon triangle = new Polygon(
-                15.0, 2.0,
-                27.0, 26.0,
-                3.0, 26.0
-        );
+        Polygon triangle = new Polygon(15.0, 2.0, 27.0, 26.0, 3.0, 26.0);
         triangle.setFill(Color.TRANSPARENT);
         triangle.setStroke(Color.web("#483414"));
         triangle.setStrokeWidth(2);
@@ -579,58 +491,40 @@ public final class GridView
     // Gestisce il click su una cella provando a posizionare l'edificio selezionato o mostrando le informazioni di riga e colonna.
     private void handleCellClick(int row, int column)
     {
-        Controller.CellState state =
-                controller.getCellState(row, column);
+        Controller.CellState state = controller.getCellState(row, column);
 
         // Se è stata attivata la demolizione
         if (demolitionActive)
         {
             if (state.empty())
             {
-                errorHandler.accept(
-                        "There is no construction to demolish"
-                );
+                errorHandler.accept("There is no construction to demolish");
                 return;
             }
 
             try
             {
-                controller.removeConstructionByPlayer(
-                        row,
-                        column
-                );
+                controller.removeConstructionByPlayer(row, column);
                 demolitionSound.run();
 
                 // La modalità resta attiva per permettere
                 // demolizioni consecutive con un solo clic sul pulsante.
                 if (state.type() == ConstructionType.TERRORISTIC_GROUP)
                 {
-                    errorHandler.accept(
-                            "Terrorist group eliminated!"
-                    );
+                    errorHandler.accept("Terrorist group eliminated!");
                 }
                 else if (state.type() == ConstructionType.CRIMINAL_ACTIVITY)
                 {
-                    errorHandler.accept(
-                            "Criminal activity eliminated!"
-                    );
+                    errorHandler.accept("Criminal activity eliminated!");
                 }
                 else
                 {
-                    infoLabel.setText(
-                            "Construction demolished at row "
-                                    + row
-                                    + ", column "
-                                    + column
-                    );
+                    infoLabel.setText("Construction demolished at row " + row + ", column " + column);
                 }
             }
-            catch (IllegalStateException
-                   | IllegalArgumentException exception)
+            catch (IllegalStateException | IllegalArgumentException exception)
             {
-                errorHandler.accept(
-                        exception.getMessage()
-                );
+                errorHandler.accept(exception.getMessage());
             }
 
             return;
@@ -646,9 +540,8 @@ public final class GridView
 
                 controller.placeConstruction(selectedType, row, column);
 
-                boolean gridExpanded =
-                        controller.getNumberOfRows() != previousRows
-                                || controller.getNumberOfColumns() != previousColumns;
+                boolean gridExpanded = controller.getNumberOfRows() != previousRows
+                        || controller.getNumberOfColumns() != previousColumns;
 
                 if (gridExpanded)
                 {
@@ -660,37 +553,23 @@ public final class GridView
                     }
 
                     expansionSound.run();
-                    infoLabel.setText(
-                            "Grid expanded to " + controller.getNumberOfRows()
-                                    + "x" + controller.getNumberOfColumns()
-                    );
+                    infoLabel.setText("Grid expanded to " + controller.getNumberOfRows()
+                            + "x" + controller.getNumberOfColumns());
                 }
                 else
                 {
                     placementSound.run();
-                    infoLabel.setText(
-                            "Creato/a un/a " + selectedType
-                                    + " (riga " + row
-                                    + ", colonna " + column + ")"
-                    );
+                    infoLabel.setText("Creato/a un/a " + selectedType + " (riga " + row + ", colonna " + column + ")");
                 }
             }
-            catch (IllegalStateException
-                   | IllegalArgumentException exception)
+            catch (IllegalStateException | IllegalArgumentException exception)
             {
-                errorHandler.accept(
-                        exception.getMessage()
-                );
+                errorHandler.accept(exception.getMessage());
             }
         }
         else
         {
-            infoLabel.setText(
-                    "Ultima casella cliccata: riga "
-                            + row
-                            + ", colonna "
-                            + column
-            );
+            infoLabel.setText("Ultima casella cliccata: riga " + row + ", colonna " + column);
         }
     }
 
@@ -749,12 +628,8 @@ public final class GridView
 
     private void startCrisisSparks()
     {
-        crisisSparkTimeline = new Timeline(
-                new KeyFrame(Duration.seconds(1.6),
-                        event -> showCrisisSparks()),
-                new KeyFrame(Duration.seconds(1.75),
-                        event -> clearCrisisSparks())
-        );
+        crisisSparkTimeline = new Timeline(new KeyFrame(Duration.seconds(1.6),
+                event -> showCrisisSparks()), new KeyFrame(Duration.seconds(1.75), event -> clearCrisisSparks()));
         crisisSparkTimeline.setCycleCount(Timeline.INDEFINITE);
         crisisSparkTimeline.play();
     }
@@ -775,8 +650,7 @@ public final class GridView
 
         if (count > 6)
         {
-            int second = (first + 1
-                    + crisisRandom.nextInt(count - 1)) % count;
+            int second = (first + 1 + crisisRandom.nextInt(count - 1)) % count;
             Label secondSpark = crisisEligibleSparks.get(second);
             secondSpark.setVisible(true);
             crisisVisibleSparks.add(secondSpark);
@@ -804,11 +678,7 @@ public final class GridView
     }
 
     // Applica i colori di sfondo, l'evidenziazione di crisi energetica e visibilita delle icone (incendi, alimentazione, boost) per una specifica cella.
-    private void renderCell(
-            int row,
-            int column,
-            Controller.CellState state,
-            boolean energyCrisisActive)
+    private void renderCell(int row, int column, Controller.CellState state, boolean energyCrisisActive)
     {
         Rectangle graphicCell = graphicCells[row][column];
 
@@ -822,16 +692,12 @@ public final class GridView
         }
         else
         {
-            graphicCell.setFill(
-                    getConstructionColor(state.type())
-            );
+            graphicCell.setFill(getConstructionColor(state.type()));
         }
 
         if (!state.empty())
         {
-            noPowerIcons[row][column].setVisible(
-                    !state.powered()
-            );
+            noPowerIcons[row][column].setVisible(!state.powered());
         }
         else
         {
@@ -839,145 +705,83 @@ public final class GridView
             noPowerIcons[row][column].setVisible(false);
         }
 
-        boostIcons[row][column].setVisible(
-                !state.empty() && state.boosted()
-        );
+        boostIcons[row][column].setVisible(!state.empty() && state.boosted());
 
-        boolean grassPresent =
-                !state.empty()
-                        && state.type()
-                        == ConstructionType.GRASS;
+        boolean grassPresent = !state.empty() && state.type() == ConstructionType.GRASS;
 
-        grassIcons[row][column].setVisible(
-                grassPresent
-        );
+        grassIcons[row][column].setVisible(grassPresent);
 
-        boolean lodgePresent =
-                !state.empty()
-                        && state.type() == ConstructionType.MASONIC_LODGE;
+        boolean lodgePresent = !state.empty() && state.type() == ConstructionType.MASONIC_LODGE;
         lodgeIcons[row][column].setVisible(lodgePresent);
 
         if (lodgePresent)
         {
             if (lodgeTooltips[row][column] == null)
             {
-                Tooltip lodgeTooltip =
-                        new Tooltip(
-                                "Masonic Lodge"
-                        );
+                Tooltip lodgeTooltip = new Tooltip("Masonic Lodge");
 
-                lodgeTooltip.setShowDelay(
-                        Duration.millis(100)
-                );
+                lodgeTooltip.setShowDelay(Duration.millis(100));
 
-                lodgeTooltip.setHideDelay(
-                        Duration.ZERO
-                );
+                lodgeTooltip.setHideDelay(Duration.ZERO);
 
-                lodgeTooltips[row][column] =
-                        lodgeTooltip;
+                lodgeTooltips[row][column] = lodgeTooltip;
             }
 
-            Tooltip.uninstall(
-                    cells[row][column],
-                    lodgeTooltips[row][column]
-            );
+            Tooltip.uninstall(cells[row][column], lodgeTooltips[row][column]);
 
-            Tooltip.install(
-                    cells[row][column],
-                    lodgeTooltips[row][column]
-            );
+            Tooltip.install(cells[row][column], lodgeTooltips[row][column]);
         }
         else if (lodgeTooltips[row][column] != null)
         {
-            Tooltip.uninstall(
-                    cells[row][column],
-                    lodgeTooltips[row][column]
-            );
+            Tooltip.uninstall(cells[row][column], lodgeTooltips[row][column]);
         }
 
         if (grassPresent)
         {
             if (grassTooltips[row][column] == null)
             {
-                Tooltip grassTooltip =
-                        new Tooltip("Grass");
+                Tooltip grassTooltip = new Tooltip("Grass");
 
-                grassTooltip.setShowDelay(
-                        Duration.millis(100)
-                );
+                grassTooltip.setShowDelay(Duration.millis(100));
 
-                grassTooltip.setHideDelay(
-                        Duration.ZERO
-                );
+                grassTooltip.setHideDelay(Duration.ZERO);
 
-                grassTooltips[row][column] =
-                        grassTooltip;
+                grassTooltips[row][column] = grassTooltip;
             }
 
-            Tooltip.uninstall(
-                    cells[row][column],
-                    grassTooltips[row][column]
-            );
+            Tooltip.uninstall(cells[row][column], grassTooltips[row][column]);
 
-            Tooltip.install(
-                    cells[row][column],
-                    grassTooltips[row][column]
-            );
+            Tooltip.install(cells[row][column], grassTooltips[row][column]);
         }
         else if (grassTooltips[row][column] != null)
         {
-            Tooltip.uninstall(
-                    cells[row][column],
-                    grassTooltips[row][column]
-            );
+            Tooltip.uninstall(cells[row][column], grassTooltips[row][column]);
         }
 
-        boolean powerPlantPresent =
-                !state.empty()
-                        && state.type()
-                        == ConstructionType.POWER_PLANT;
+        boolean powerPlantPresent = !state.empty() && state.type() == ConstructionType.POWER_PLANT;
 
         if (powerPlantPresent)
         {
             if (powerPlantTooltips[row][column] == null)
             {
-                Tooltip powerPlantTooltip =
-                        new Tooltip();
+                Tooltip powerPlantTooltip = new Tooltip();
 
-                powerPlantTooltip.setShowDelay(
-                        Duration.millis(100)
-                );
+                powerPlantTooltip.setShowDelay(Duration.millis(100));
 
-                powerPlantTooltip.setHideDelay(
-                        Duration.ZERO
-                );
+                powerPlantTooltip.setHideDelay(Duration.ZERO);
 
-                powerPlantTooltips[row][column] =
-                        powerPlantTooltip;
+                powerPlantTooltips[row][column] = powerPlantTooltip;
             }
 
-            Tooltip.uninstall(
-                    cells[row][column],
-                    powerPlantTooltips[row][column]
-            );
+            Tooltip.uninstall(cells[row][column], powerPlantTooltips[row][column]);
 
-            updatePowerPlantTooltip(
-                    row,
-                    column
-            );
+            updatePowerPlantTooltip(row, column);
 
-            Tooltip.install(
-                    cells[row][column],
-                    powerPlantTooltips[row][column]
-            );
+            Tooltip.install(cells[row][column], powerPlantTooltips[row][column]);
         }
         else if (powerPlantTooltips[row][column] != null)
         {
-            Tooltip.uninstall(
-                    cells[row][column],
-                    powerPlantTooltips[row][column]
-            );
+            Tooltip.uninstall(cells[row][column], powerPlantTooltips[row][column]);
         }
 
         // --- EFFETTO GRAFICO ENERGY CRISIS ---
@@ -987,9 +791,7 @@ public final class GridView
 
         if (crisisAffected)
         {
-            crisisOverlays[row][column].setOpacity(
-                    CRISIS_OVERLAY_OPACITY
-            );
+            crisisOverlays[row][column].setOpacity(CRISIS_OVERLAY_OPACITY);
             graphicCell.setStroke(Color.web("#a76cdd"));
             graphicCell.setEffect(null);
             graphicCell.setStrokeWidth(2.2);
@@ -997,9 +799,7 @@ public final class GridView
         else if (grassPresent)
         {
             graphicCell.setEffect(null);
-            graphicCell.setStroke(
-                    Color.web("#6F8F55")
-            );
+            graphicCell.setStroke(Color.web("#6F8F55"));
             graphicCell.setStrokeWidth(1.5);
         }
         else
@@ -1020,10 +820,8 @@ public final class GridView
 
     private void updatePowerPlantTooltip(int row, int column)
     {
-        powerPlantTooltips[row][column].setText(
-                "Energy: " + controller.getPowerPlantEnergyConsumed(row, column)
-                        + " / " + controller.getPowerPlantEnergyCapacity(row, column)
-        );
+        powerPlantTooltips[row][column].setText("Energy: " + controller.getPowerPlantEnergyConsumed(row, column)
+                + " / " + controller.getPowerPlantEnergyCapacity(row, column));
     }
 
     // Imposta il tipo di costruzione corrente da piazzare al momento del click sulla griglia.
@@ -1031,9 +829,7 @@ public final class GridView
     {
         if (selectedType == null)
         {
-            throw new IllegalArgumentException(
-                    "Selected construction type cannot be null"
-            );
+            throw new IllegalArgumentException("Selected construction type cannot be null");
         }
 
         if (roadDragActive)
@@ -1082,8 +878,7 @@ public final class GridView
             StackPane cell = cells[row][column];
             earthquakeCells.add(cell);
             Controller.CellState previous = renderedStates[row][column];
-            if (previous != null && !previous.empty()
-                    && previous.type() != ConstructionType.ROAD
+            if (previous != null && !previous.empty() && previous.type() != ConstructionType.ROAD
                     && controller.getCellState(row, column).empty())
             {
                 destroyedCells.add(cell);
@@ -1175,9 +970,7 @@ public final class GridView
     public void showTsunamiRow(int row)
     {
         ensureGridSize();
-        for (int column = 0;
-             column < controller.getNumberOfColumns();
-             column++)
+        for (int column = 0; column < controller.getNumberOfColumns(); column++)
         {
             showTsunamiCell(row, column);
         }
@@ -1187,9 +980,7 @@ public final class GridView
     public void showTsunamiColumn(int column)
     {
         ensureGridSize();
-        for (int row = 0;
-             row < controller.getNumberOfRows();
-             row++)
+        for (int row = 0; row < controller.getNumberOfRows(); row++)
         {
             showTsunamiCell(row, column);
         }
@@ -1202,11 +993,9 @@ public final class GridView
      */
     private void showTsunamiCell(int row, int column)
     {
-        Rectangle overlay =
-                tsunamiOverlays[row][column];
+        Rectangle overlay = tsunamiOverlays[row][column];
 
-        Label icon =
-                tsunamiIcons[row][column];
+        Label icon = tsunamiIcons[row][column];
 
         if (!overlay.isVisible())
         {
@@ -1241,11 +1030,7 @@ public final class GridView
     }
 
     // Mostra un anello dell'esplosione e aggiorna le celle solo quando l'onda le raggiunge.
-    public void showExplosionRing(
-            int centerRow,
-            int centerColumn,
-            int radius,
-            int maxRadius)
+    public void showExplosionRing(int centerRow, int centerColumn, int radius, int maxRadius)
     {
         ensureGridSize();
         double progress = 0.0;
@@ -1255,91 +1040,42 @@ public final class GridView
             progress = (double) radius / maxRadius;
         }
 
-        Color explosionColor =
-                Color.YELLOW.interpolate(
-                        Color.DARKRED,
-                        progress
-                );
+        Color explosionColor = Color.YELLOW.interpolate(Color.DARKRED, progress);
 
-        double opacity =
-                0.9 - (0.4 * progress);
+        double opacity = 0.9 - (0.4 * progress);
 
-        boolean energyCrisisActive =
-                controller.getActiveEventType()
-                        == EventType.ENERGY_CRISIS;
+        boolean energyCrisisActive = controller.getActiveEventType() == EventType.ENERGY_CRISIS;
 
-        int startRow =
-                Math.max(
-                        0,
-                        centerRow - radius
-                );
+        int startRow = Math.max(0, centerRow - radius);
 
-        int endRow =
-                Math.min(
-                        controller.getNumberOfRows() - 1,
-                        centerRow + radius
-                );
+        int endRow = Math.min(controller.getNumberOfRows() - 1, centerRow + radius);
 
-        int startColumn =
-                Math.max(
-                        0,
-                        centerColumn - radius
-                );
+        int startColumn = Math.max(0, centerColumn - radius);
 
-        int endColumn =
-                Math.min(
-                        controller.getNumberOfColumns() - 1,
-                        centerColumn + radius
-                );
+        int endColumn = Math.min(controller.getNumberOfColumns() - 1, centerColumn + radius);
 
         for (int row = startRow; row <= endRow; row++)
         {
-            for (int column = startColumn;
-                 column <= endColumn;
-                 column++)
+            for (int column = startColumn; column <= endColumn; column++)
             {
-                int rowDistance =
-                        Math.abs(
-                                row - centerRow
-                        );
+                int rowDistance = Math.abs(row - centerRow);
 
-                int columnDistance =
-                        Math.abs(
-                                column - centerColumn
-                        );
+                int columnDistance = Math.abs(column - centerColumn);
 
-                if (Math.max(
-                        rowDistance,
-                        columnDistance
-                ) == radius)
+                if (Math.max(rowDistance, columnDistance) == radius)
                 {
-                    renderCell(
-                            row,
-                            column,
-                            controller.getCellState(
-                                    row,
-                                    column
-                            ),
-                            energyCrisisActive
-                    );
+                    renderCell(row, column, controller.getCellState(row, column), energyCrisisActive);
 
-                    Rectangle overlay =
-                            explosionOverlays[row][column];
+                    Rectangle overlay = explosionOverlays[row][column];
 
-                    overlay.setFill(
-                            explosionColor
-                    );
+                    overlay.setFill(explosionColor);
 
-                    overlay.setOpacity(
-                            opacity
-                    );
+                    overlay.setOpacity(opacity);
 
                     if (!overlay.isVisible())
                     {
                         overlay.setVisible(true);
-                        visibleExplosionOverlays.add(
-                                overlay
-                        );
+                        visibleExplosionOverlays.add(overlay);
                     }
                 }
             }
@@ -1351,8 +1087,7 @@ public final class GridView
     {
         ensureGridSize();
 
-        for (Rectangle overlay
-                : visibleExplosionOverlays)
+        for (Rectangle overlay : visibleExplosionOverlays)
         {
             overlay.setVisible(false);
         }
@@ -1376,14 +1111,11 @@ public final class GridView
     }
 
     // Mappa ed ottiene il riempimento grafico associato a ciascun tipo di edificio sulla griglia.
-    public static Paint getConstructionColor(
-            ConstructionType type)
+    public static Paint getConstructionColor(ConstructionType type)
     {
         if (type == null)
         {
-            throw new IllegalArgumentException(
-                    "model.Construction type cannot be null"
-            );
+            throw new IllegalArgumentException("model.Construction type cannot be null");
         }
 
         return switch (type)
@@ -1418,97 +1150,56 @@ public final class GridView
                         "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAIAAAC0Ujn1AAABYklEQVR42rWWv0vDQBTHX54ZVLAUDiOB0nNUCAQiOhWCa3Fxdu7k3+Pf4d/gLAQKHVwDgZJCIQQXwcGh8Wjv57u0fdySI/ncl+/73iPBy+wR/ivnDAw1L2qwVsNCaQcpXABIsys7erj+NaI/yrXlyx6qd55VuqqFXuirhW4X+jpoKrVVB1Bt6jA6vyR6ogqnWiklxKQ050xkAYlatlnOjFPRQsWG6OQKW1AkQSwnnSgF1YTZ6UQuAKAW1I8uvRDSr4CzFsVyB92wUNVIzMDb+8KREOlS0O/I63PiDl/DQrG8rLDQTzA4XS2/xYrii+vhuZfFD7fR59fKfWWkVuyjHeFApdKD9O5mz3aZ0kJCA8CEX1qGtTaFmGRxksW9fZgXdVm1T/fjI3qt0oN8mnbRrn983egGTnSm3Q+1x/LRgPLvYeEax1NZtXw0sE+Ssmrtp3boydg9j5wsDVrL3Qj3xW3XH7eZjsFsvkrrAAAAAElFTkSuQmCC"
                 );
 
-        Image image =
-                new Image(
-                        new ByteArrayInputStream(
-                                imageBytes
-                        )
-                );
+        Image image = new Image(new ByteArrayInputStream(imageBytes));
 
-        return new ImagePattern(
-                image,
-                0,
-                0,
-                CELL_SIZE,
-                CELL_SIZE,
-                false
-        );
+        return new ImagePattern(image, 0, 0, CELL_SIZE, CELL_SIZE, false);
     }
 
-    public Point2D getCellCenterInScene(
-            int row,
-            int column)
+    public Point2D getCellCenterInScene(int row, int column)
     {
-        if (row < 0
-                || row >= controller.getNumberOfRows()
-                || column < 0
-                || column >= controller.getNumberOfColumns())
+        if (row < 0 || row >= controller.getNumberOfRows() || column < 0 || column >= controller.getNumberOfColumns())
         {
-            throw new IllegalArgumentException(
-                    "Cell outside the grid"
-            );
+            throw new IllegalArgumentException("Cell outside the grid");
         }
 
-        return cells[row][column].localToScene(
-                CELL_SIZE / 2.0,
-                CELL_SIZE / 2.0
-        );
+        return cells[row][column].localToScene(CELL_SIZE / 2.0, CELL_SIZE / 2.0);
     }
 
     public double getCellCenterOffsetX(int column)
     {
-        if (column < 0
-                || column >= controller.getNumberOfColumns())
+        if (column < 0 || column >= controller.getNumberOfColumns())
         {
-            throw new IllegalArgumentException(
-                    "Column outside the grid"
-            );
+            throw new IllegalArgumentException("Column outside the grid");
         }
 
         double cellCenterFromLeft =
-                view.getPadding().getLeft()
-                        + column * (CELL_SIZE + view.getHgap())
-                        + CELL_SIZE / 2.0;
+                view.getPadding().getLeft() + column * (CELL_SIZE + view.getHgap()) + CELL_SIZE / 2.0;
 
-        return cellCenterFromLeft
-                - getGridVisualWidth() / 2.0;
+        return cellCenterFromLeft - getGridVisualWidth() / 2.0;
     }
 
     public double getCellCenterOffsetY(int row)
     {
-        if (row < 0
-                || row >= controller.getNumberOfRows())
+        if (row < 0 || row >= controller.getNumberOfRows())
         {
-            throw new IllegalArgumentException(
-                    "Row outside the grid"
-            );
+            throw new IllegalArgumentException("Row outside the grid");
         }
 
-        double cellCenterFromTop =
-                view.getPadding().getTop()
-                        + row * (CELL_SIZE + view.getVgap())
-                        + CELL_SIZE / 2.0;
+        double cellCenterFromTop = view.getPadding().getTop() + row * (CELL_SIZE + view.getVgap()) + CELL_SIZE / 2.0;
 
-        return cellCenterFromTop
-                - getGridVisualHeight() / 2.0;
+        return cellCenterFromTop - getGridVisualHeight() / 2.0;
     }
 
     public double getGridVisualWidth()
     {
-        return view.getPadding().getLeft()
-                + view.getPadding().getRight()
-                + controller.getNumberOfColumns() * CELL_SIZE
-                + (controller.getNumberOfColumns() - 1)
-                * view.getHgap();
+        return view.getPadding().getLeft() + view.getPadding().getRight()
+                + controller.getNumberOfColumns() * CELL_SIZE + (controller.getNumberOfColumns() - 1) * view.getHgap();
     }
 
     public double getGridVisualHeight()
     {
-        return view.getPadding().getTop()
-                + view.getPadding().getBottom()
-                + controller.getNumberOfRows() * CELL_SIZE
-                + (controller.getNumberOfRows() - 1)
-                * view.getVgap();
+        return view.getPadding().getTop() + view.getPadding().getBottom()
+                + controller.getNumberOfRows() * CELL_SIZE + (controller.getNumberOfRows() - 1) * view.getVgap();
     }
 
     public void setExpansionViewAction(Runnable expansionViewAction)

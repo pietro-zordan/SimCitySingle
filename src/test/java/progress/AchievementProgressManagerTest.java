@@ -29,87 +29,47 @@ class AchievementProgressManagerTest
     void saveAndLoadPreserveAchievements()
             throws IOException
     {
-        AchievementManager achievementManager =
-                new AchievementManager();
+        AchievementManager achievementManager = new AchievementManager();
 
-        achievementManager.unlock(
-                Achievement.FIRST_NUCLEAR_PLANT
-        );
+        achievementManager.unlock(Achievement.FIRST_NUCLEAR_PLANT);
 
-        Path file =
-                tempDirectory.resolve(
-                        "achievements.json"
-                );
+        Path file = tempDirectory.resolve("achievements.json");
 
-        manager.save(
-                achievementManager,
-                file.toString()
-        );
+        manager.save(achievementManager, file.toString());
 
-        AchievementManager loaded =
-                manager.load(file.toString());
+        AchievementManager loaded = manager.load(file.toString());
 
         assertTrue(Files.exists(file));
-        assertTrue(
-                loaded.isUnlocked(
-                        Achievement.FIRST_NUCLEAR_PLANT
-                )
-        );
+        assertTrue(loaded.isUnlocked(Achievement.FIRST_NUCLEAR_PLANT));
     }
 
     @Test
     void missingFileCreatesEmptyManager()
             throws IOException
     {
-        Path file =
-                tempDirectory.resolve(
-                        "missing.json"
-                );
+        Path file = tempDirectory.resolve("missing.json");
 
-        AchievementManager loaded =
-                manager.load(file.toString());
+        AchievementManager loaded = manager.load(file.toString());
 
-        assertFalse(
-                loaded.isUnlocked(
-                        Achievement.FIRST_NUCLEAR_PLANT
-                )
-        );
+        assertFalse(loaded.isUnlocked(Achievement.FIRST_NUCLEAR_PLANT));
     }
 
     @Test
     void resetClearsMemoryAndFile()
             throws IOException
     {
-        AchievementManager achievementManager =
-                new AchievementManager();
+        AchievementManager achievementManager = new AchievementManager();
 
-        achievementManager.unlock(
-                Achievement.FIRST_NUCLEAR_PLANT
-        );
+        achievementManager.unlock(Achievement.FIRST_NUCLEAR_PLANT);
 
-        Path file =
-                tempDirectory.resolve(
-                        "achievements.json"
-                );
+        Path file = tempDirectory.resolve("achievements.json");
 
-        manager.reset(
-                achievementManager,
-                file.toString()
-        );
+        manager.reset(achievementManager, file.toString());
 
-        AchievementManager loaded =
-                manager.load(file.toString());
+        AchievementManager loaded = manager.load(file.toString());
 
-        assertFalse(
-                achievementManager.isUnlocked(
-                        Achievement.FIRST_NUCLEAR_PLANT
-                )
-        );
+        assertFalse(achievementManager.isUnlocked(Achievement.FIRST_NUCLEAR_PLANT));
 
-        assertFalse(
-                loaded.isUnlocked(
-                        Achievement.FIRST_NUCLEAR_PLANT
-                )
-        );
+        assertFalse(loaded.isUnlocked(Achievement.FIRST_NUCLEAR_PLANT));
     }
 }

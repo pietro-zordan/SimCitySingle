@@ -26,8 +26,7 @@ public class EnergyCrisis extends Event
     @Override
     public void updateOfOneTick()
     {
-        int totalExtraCost =
-                calculateTotalExtraCost(grid);
+        int totalExtraCost = calculateTotalExtraCost(grid);
 
         applyExtraCostToCity(totalExtraCost);
     }
@@ -38,23 +37,17 @@ public class EnergyCrisis extends Event
     {
         int extraCost = 0;
 
-        for (int riga = 0;
-             riga < grid.getNumberOfRows();
-             riga++)
+        for (int riga = 0; riga < grid.getNumberOfRows(); riga++)
         {
-            for (int colonna = 0;
-                 colonna < grid.getNumberOfColumns();
-                 colonna++)
+            for (int colonna = 0; colonna < grid.getNumberOfColumns(); colonna++)
             {
                 Cell cell = grid.getCell(riga, colonna);
 
                 if (!cell.isEmpty())
                 {
-                    Construction construction =
-                            cell.getConstruction();
+                    Construction construction = cell.getConstruction();
 
-                    if (construction.getPowerConsumption() > 0
-                            && construction.isPowered())
+                    if (construction.getPowerConsumption() > 0 && construction.isPowered())
                     {
                         extraCost += EXTRA_COST_PER_BUILDING;
                     }
@@ -70,9 +63,7 @@ public class EnergyCrisis extends Event
     {
         if (extraCost > 0)
         {
-            city.updateBudgetAllowNegative(
-                    -extraCost
-            );
+            city.updateBudgetAllowNegative(-extraCost);
         }
     }
 
@@ -81,8 +72,7 @@ public class EnergyCrisis extends Event
     @Override
     public boolean canStart()
     {
-        return super.canStart()
-                && calculateTotalExtraCost(grid) > 0;
+        return super.canStart() && calculateTotalExtraCost(grid) > 0;
     }
 
     // Restituisce il tipo corrispondente alla crisi energetica.

@@ -13,9 +13,7 @@ public class PolicyFactory
     {
         if (type == null)
         {
-            throw new IllegalArgumentException(
-                    "policies.Policy type cannot be null"
-            );
+            throw new IllegalArgumentException("policies.Policy type cannot be null");
         }
 
         if (type == PolicyType.STANDARD)
@@ -33,8 +31,6 @@ public class PolicyFactory
             return new IndustrialPolicy();
         }
 
-        throw new IllegalArgumentException(
-                "Unknown policy type: " + type
-        );
+        throw new IllegalArgumentException("Unknown policy type: " + type);
     }
 }

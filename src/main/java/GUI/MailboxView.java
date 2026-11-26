@@ -50,8 +50,7 @@ public final class MailboxView
     private final Label readerTick = new Label();
     private final Label readerBody = new Label();
     private final Pane animationLayer = new Pane();
-    private final PauseTransition dockingDelay =
-            new PauseTransition(Duration.millis(120));
+    private final PauseTransition dockingDelay = new PauseTransition(Duration.millis(120));
     private ParallelTransition arrivalAnimation;
     private ParallelTransition foldingAnimation;
     private ImageView foldingGhost;
@@ -65,19 +64,14 @@ public final class MailboxView
     {
         if (mailbox == null || soundManager == null)
         {
-            throw new IllegalArgumentException(
-                    "Mailbox and sound manager cannot be null"
-            );
+            throw new IllegalArgumentException("Mailbox and sound manager cannot be null");
         }
 
         this.mailbox = mailbox;
         this.soundManager = soundManager;
 
         heading = new Label();
-        heading.setStyle(
-                "-fx-text-fill: #334155; -fx-font-size: 11px;"
-                        + "-fx-font-weight: bold;"
-        );
+        heading.setStyle("-fx-text-fill: #334155; -fx-font-size: 11px;" + "-fx-font-weight: bold;");
 
         entries = new VBox(6);
 
@@ -110,9 +104,7 @@ public final class MailboxView
             @Override
             public void handle(ActionEvent event)
             {
-                if (!docked && expandedId == null
-                        && mailbox.hasMessages()
-                        && mailbox.getUnreadCount() == 0)
+                if (!docked && expandedId == null && mailbox.hasMessages() && mailbox.getUnreadCount() == 0)
                 {
                     foldIntoCorner();
                 }
@@ -132,8 +124,7 @@ public final class MailboxView
     public void attachTo(StackPane gameOverlay)
     {
         animationLayer.setMouseTransparent(true);
-        gameOverlay.getChildren().addAll(
-                animationLayer, cornerButton, readerOverlay);
+        gameOverlay.getChildren().addAll(animationLayer, cornerButton, readerOverlay);
         StackPane.setAlignment(cornerButton, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(cornerButton, new Insets(0, 16, 16, 0));
 
@@ -150,9 +141,7 @@ public final class MailboxView
 
         boolean hasMessages = !messages.isEmpty();
         boolean wasDocked = docked;
-        boolean animateArrival = attached && hasMessages
-                && (!hadMessages
-                || (docked && mailbox.getUnreadCount() > 0));
+        boolean animateArrival = attached && hasMessages && (!hadMessages || (docked && mailbox.getUnreadCount() > 0));
         hadMessages = hasMessages;
         if (docked && mailbox.getUnreadCount() > 0)
         {
@@ -163,8 +152,7 @@ public final class MailboxView
 
         view.setVisible(hasMessages && !docked);
         view.setManaged(hasMessages && !docked);
-        cornerButton.setVisible(hasMessages && docked
-                && foldingAnimation == null);
+        cornerButton.setVisible(hasMessages && docked && foldingAnimation == null);
 
         if (!hasMessages)
         {
@@ -174,11 +162,7 @@ public final class MailboxView
         }
 
         int unreadCount = mailbox.getUnreadCount();
-        heading.setText(
-                unreadCount > 0
-                        ? "MAIL  ·  " + unreadCount + " new"
-                        : "MAIL"
-        );
+        heading.setText(unreadCount > 0 ? "MAIL  ·  " + unreadCount + " new" : "MAIL");
 
         entries.getChildren().clear();
 
@@ -228,12 +212,10 @@ public final class MailboxView
         view.setOpacity(0);
         view.setTranslateY(-16);
 
-        FadeTransition fade =
-                new FadeTransition(Duration.millis(320), view);
+        FadeTransition fade = new FadeTransition(Duration.millis(320), view);
         fade.setToValue(1);
 
-        TranslateTransition slide =
-                new TranslateTransition(Duration.millis(320), view);
+        TranslateTransition slide = new TranslateTransition(Duration.millis(320), view);
         slide.setToY(0);
         slide.setInterpolator(Interpolator.EASE_OUT);
 
@@ -257,12 +239,10 @@ public final class MailboxView
         entry.setOpacity(0);
         entry.setTranslateY(-10);
 
-        FadeTransition fade =
-                new FadeTransition(Duration.millis(300), entry);
+        FadeTransition fade = new FadeTransition(Duration.millis(300), entry);
         fade.setToValue(1);
 
-        TranslateTransition slide =
-                new TranslateTransition(Duration.millis(300), entry);
+        TranslateTransition slide = new TranslateTransition(Duration.millis(300), entry);
         slide.setToY(0);
         slide.setInterpolator(Interpolator.EASE_OUT);
 
@@ -275,12 +255,8 @@ public final class MailboxView
         final String id = message.getId();
         boolean expanded = id.equals(expandedId);
 
-        Button preview = new Button(
-                (message.isRead() ? "" : "●  ")
-                        + message.getSender()
-                        + "\n"
-                        + message.getSubject()
-        );
+        Button preview = new Button((message.isRead() ? "" : "●  ")
+                + message.getSender() + "\n" + message.getSubject());
         preview.setWrapText(true);
         preview.setMaxWidth(Double.MAX_VALUE);
         preview.setStyle(
@@ -329,10 +305,7 @@ public final class MailboxView
     private StackPane createReaderOverlay()
     {
         Label eyebrow = new Label("INBOX");
-        eyebrow.setStyle(
-                "-fx-text-fill: #a46c29; -fx-font-size: 11px;"
-                        + "-fx-font-weight: bold;"
-        );
+        eyebrow.setStyle("-fx-text-fill: #a46c29; -fx-font-size: 11px;" + "-fx-font-weight: bold;");
 
         Button close = new Button("Close");
         close.setStyle(
@@ -349,8 +322,7 @@ public final class MailboxView
                 expandedId = null;
                 refresh();
 
-                if (mailbox.hasMessages()
-                        && mailbox.getUnreadCount() == 0)
+                if (mailbox.hasMessages() && mailbox.getUnreadCount() == 0)
                 {
                     dockingDelay.playFromStart();
                 }
@@ -363,10 +335,7 @@ public final class MailboxView
         HBox.setHgrow(eyebrow, javafx.scene.layout.Priority.ALWAYS);
 
         readerSubject.setWrapText(true);
-        readerSubject.setStyle(
-                "-fx-text-fill: #1e293b; -fx-font-size: 19px;"
-                        + "-fx-font-weight: bold;"
-        );
+        readerSubject.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 19px;" + "-fx-font-weight: bold;");
         readerSender.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px;");
         readerTick.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 11px;");
 
@@ -375,10 +344,7 @@ public final class MailboxView
 
         readerBody.setWrapText(true);
         readerBody.setMaxWidth(Double.MAX_VALUE);
-        readerBody.setStyle(
-                "-fx-text-fill: #334155; -fx-font-size: 13px;"
-                        + "-fx-line-spacing: 3px;"
-        );
+        readerBody.setStyle("-fx-text-fill: #334155; -fx-font-size: 13px;" + "-fx-line-spacing: 3px;");
 
         VBox letter = new VBox(12, readerBody);
         letter.setPadding(new Insets(16, 0, 16, 0));
@@ -453,8 +419,7 @@ public final class MailboxView
 
                 // Alla riapertura la casella torna dolcemente nel pannello.
                 view.setOpacity(0);
-                FadeTransition reveal =
-                        new FadeTransition(Duration.millis(220), view);
+                FadeTransition reveal = new FadeTransition(Duration.millis(220), view);
                 reveal.setToValue(1);
                 reveal.play();
             }
@@ -475,13 +440,10 @@ public final class MailboxView
         // Il cue parte esattamente quando inizia il movimento verso l'angolo.
         soundManager.playMailDockSound();
 
-        Bounds from = animationLayer.sceneToLocal(
-                view.localToScene(view.getBoundsInLocal()));
-        Bounds to = animationLayer.sceneToLocal(
-                cornerButton.localToScene(cornerButton.getBoundsInLocal()));
+        Bounds from = animationLayer.sceneToLocal(view.localToScene(view.getBoundsInLocal()));
+        Bounds to = animationLayer.sceneToLocal(cornerButton.localToScene(cornerButton.getBoundsInLocal()));
 
-        foldingGhost = new ImageView(
-                view.snapshot(new SnapshotParameters(), null));
+        foldingGhost = new ImageView(view.snapshot(new SnapshotParameters(), null));
         foldingGhost.setManaged(false);
         foldingGhost.relocate(from.getMinX(), from.getMinY());
         animationLayer.getChildren().add(foldingGhost);
@@ -490,21 +452,16 @@ public final class MailboxView
         refresh();
 
         Duration duration = Duration.millis(540);
-        TranslateTransition slide =
-                new TranslateTransition(duration, foldingGhost);
-        slide.setToX(to.getMinX() + to.getWidth() / 2
-                - from.getMinX() - from.getWidth() / 2);
-        slide.setToY(to.getMinY() + to.getHeight() / 2
-                - from.getMinY() - from.getHeight() / 2);
+        TranslateTransition slide = new TranslateTransition(duration, foldingGhost);
+        slide.setToX(to.getMinX() + to.getWidth() / 2 - from.getMinX() - from.getWidth() / 2);
+        slide.setToY(to.getMinY() + to.getHeight() / 2 - from.getMinY() - from.getHeight() / 2);
         slide.setInterpolator(Interpolator.EASE_IN);
 
-        ScaleTransition shrink =
-                new ScaleTransition(duration, foldingGhost);
+        ScaleTransition shrink = new ScaleTransition(duration, foldingGhost);
         shrink.setToX(0.22);
         shrink.setToY(0.22);
 
-        FadeTransition fade =
-                new FadeTransition(duration, foldingGhost);
+        FadeTransition fade = new FadeTransition(duration, foldingGhost);
         fade.setToValue(0.35);
 
         foldingAnimation = new ParallelTransition(slide, shrink, fade);

@@ -90,8 +90,7 @@ public final class LoanView
             if (controller.requestLoan(amount))
             {
                 messageHandler.accept("Prestito ricevuto: " + amount
-                        + " €. Tra 3 tick dovrai restituire "
-                        + Math.round(amount * 1.5) + " €.");
+                        + " €. Tra 3 tick dovrai restituire " + Math.round(amount * 1.5) + " €.");
                 requestBox.setVisible(false);
             }
             else

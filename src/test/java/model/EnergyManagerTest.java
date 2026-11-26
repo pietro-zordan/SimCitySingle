@@ -12,133 +12,77 @@ class EnergyManagerTest
     @Test
     void nearbyConsumerIsConnectedAfterRebuild()
     {
-        Grid grid =
-                new Grid();
+        Grid grid = new Grid();
 
-        PowerPlant powerPlant =
-                new PowerPlant();
+        PowerPlant powerPlant = new PowerPlant();
 
-        Residential residential =
-                new Residential();
+        Residential residential = new Residential();
 
-        grid.restoreConstruction(
-                powerPlant,
-                10,
-                10
-        );
+        grid.restoreConstruction(powerPlant, 10, 10);
 
-        grid.restoreConstruction(
-                residential,
-                10,
-                11
-        );
+        grid.restoreConstruction(residential, 10, 11);
 
         grid.rebuildConnectionsAfterLoad();
 
-        assertTrue(
-                residential.isPowerPlantConnected()
-        );
+        assertTrue(residential.isPowerPlantConnected());
 
-        assertSame(
-                powerPlant,
-                residential.getConnectedPowerPlant()
-        );
+        assertSame(powerPlant, residential.getConnectedPowerPlant());
     }
 
     @Test
     void consumerOutsideAreaIsNotConnected()
     {
-        Grid grid =
-                new Grid();
+        Grid grid = new Grid();
 
-        PowerPlant powerPlant =
-                new PowerPlant();
+        PowerPlant powerPlant = new PowerPlant();
 
-        Residential residential =
-                new Residential();
+        Residential residential = new Residential();
 
-        grid.restoreConstruction(
-                powerPlant,
-                10,
-                10
-        );
+        grid.restoreConstruction(powerPlant, 10, 10);
 
-        grid.restoreConstruction(
-                residential,
-                14,
-                10
-        );
+        grid.restoreConstruction(residential, 14, 10);
 
         grid.rebuildConnectionsAfterLoad();
 
-        assertFalse(
-                residential.isPowerPlantConnected()
-        );
+        assertFalse(residential.isPowerPlantConnected());
     }
 
     @Test
     void powerPlantCapacityIsRespected()
     {
-        Grid grid =
-                new Grid();
+        Grid grid = new Grid();
 
-        PowerPlant powerPlant =
-                new PowerPlant();
+        PowerPlant powerPlant = new PowerPlant();
 
-        grid.restoreConstruction(
-                powerPlant,
-                10,
-                10
-        );
+        grid.restoreConstruction(powerPlant, 10, 10);
 
-        List<Industrial> industrials =
-                createIndustrials(
-                        grid,
-                        7
-                );
+        List<Industrial> industrials = createIndustrials(grid, 7);
 
         grid.rebuildConnectionsAfterLoad();
 
         int connectedConstructions = 0;
 
-        for (Industrial industrial
-                : industrials)
+        for (Industrial industrial : industrials)
         {
-            if (industrial
-                    .isPowerPlantConnected())
+            if (industrial.isPowerPlantConnected())
             {
                 connectedConstructions++;
             }
         }
 
-        assertEquals(
-                6,
-                connectedConstructions
-        );
+        assertEquals(6, connectedConstructions);
 
-        assertEquals(
-                6000,
-                grid.getPowerPlantUsedPower(
-                        powerPlant
-                )
-        );
+        assertEquals(6000, grid.getPowerPlantUsedPower(powerPlant));
 
-        assertEquals(
-                7000,
-                grid.getTotalEnergyDemand()
-        );
+        assertEquals(7000, grid.getTotalEnergyDemand());
     }
 
     @Test
     void maxEnergyServedIsAvailableFromGrid()
     {
-        Grid grid =
-                new Grid();
+        Grid grid = new Grid();
 
-        assertEquals(
-                24000,
-                grid.getMaxEnergyServed()
-        );
+        assertEquals(24000, grid.getMaxEnergyServed());
     }
 
     @Test
@@ -203,42 +147,21 @@ class EnergyManagerTest
         assertTrue(grid.shouldShowNuclearPlant());
     }
 
-    private List<Industrial> createIndustrials(
-            Grid grid,
-            int number)
+    private List<Industrial> createIndustrials(Grid grid, int number)
     {
-        List<Industrial> industrials =
-                new ArrayList<>();
+        List<Industrial> industrials = new ArrayList<>();
 
-        for (int row = 7;
-             row <= 13
-                     && industrials.size()
-                     < number;
-             row++)
+        for (int row = 7; row <= 13 && industrials.size() < number; row++)
         {
-            for (int column = 7;
-                 column <= 13
-                         && industrials.size()
-                         < number;
-                 column++)
+            for (int column = 7; column <= 13 && industrials.size() < number; column++)
             {
-                if (grid.getCell(
-                        row,
-                        column
-                ).isEmpty())
+                if (grid.getCell(row, column).isEmpty())
                 {
-                    Industrial industrial =
-                            new Industrial();
+                    Industrial industrial = new Industrial();
 
-                    grid.restoreConstruction(
-                            industrial,
-                            row,
-                            column
-                    );
+                    grid.restoreConstruction(industrial, row, column);
 
-                    industrials.add(
-                            industrial
-                    );
+                    industrials.add(industrial);
                 }
             }
         }

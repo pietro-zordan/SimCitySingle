@@ -17,10 +17,7 @@ public class MissileAttack extends Event
     private int targetColumn;
     private boolean intercepted;
 
-    public MissileAttack(
-            City city,
-            Grid grid,
-            MissileDefense missileDefense)
+    public MissileAttack(City city, Grid grid, MissileDefense missileDefense)
     {
         super(TICK_DURATION, city, 350);
 
@@ -49,8 +46,7 @@ public class MissileAttack extends Event
 
         targetColumn = random.nextInt(grid.getNumberOfColumns());
 
-        intercepted = missileDefense != null
-                        && missileDefense.absorbMissile();
+        intercepted = missileDefense != null && missileDefense.absorbMissile();
 
         if (!intercepted)
         {

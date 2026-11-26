@@ -28,18 +28,14 @@ class MasonicLodgeTest
     {
         Grid grid = new Grid();
         grid.placeConstruction(new Road(), 10, 10);
-        Controller controller = new Controller(
-                grid, new StandardPolicy(), 2000, 500, 0
-        );
+        Controller controller = new Controller(grid, new StandardPolicy(), 2000, 500, 0);
         int originalBudget = controller.getBudget();
 
         assertTrue(controller.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
         assertEquals(1, countLodges(grid));
         assertEquals(originalBudget, controller.getBudget());
         assertThrows(IllegalStateException.class,
-                () -> controller.placeConstruction(
-                        ConstructionType.MASONIC_LODGE, 9, 10
-                ));
+                () -> controller.placeConstruction(ConstructionType.MASONIC_LODGE, 9, 10));
 
         Controller loaded = controller.createProgress().restoreController();
         assertEquals(FreemasonryChoice.ACCEPTED, loaded.getFreemasonryChoice());
@@ -55,9 +51,7 @@ class MasonicLodgeTest
         Grid grid = new Grid();
         grid.placeConstruction(new Road(), 0, 0);
         grid.placeConstruction(new Residential(), 0, 1);
-        Controller controller = new Controller(
-                grid, new StandardPolicy(), 2000, 500, 0
-        );
+        Controller controller = new Controller(grid, new StandardPolicy(), 2000, 500, 0);
 
         assertEquals(1, grid.countBuildableCells());
         assertTrue(controller.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
@@ -73,9 +67,7 @@ class MasonicLodgeTest
     {
         Grid grid = new Grid();
         grid.placeConstruction(new Road(), 10, 10);
-        Controller controller = new Controller(
-                grid, new StandardPolicy(), 2000, 500, 0
-        );
+        Controller controller = new Controller(grid, new StandardPolicy(), 2000, 500, 0);
 
         assertTrue(controller.chooseFreemasonry(FreemasonryChoice.DECLINED));
         controller.placeConstruction(ConstructionType.ROAD, 10, 11);
@@ -90,24 +82,19 @@ class MasonicLodgeTest
         grid.placeConstruction(new Road(), 10, 10);
         grid.placeConstruction(new PowerPlant(), 10, 11);
         grid.placeConstruction(new ConstructionCompany(), 11, 10);
-        Controller controller = new Controller(
-                grid, new StandardPolicy(), 10000, 500, 0
-        );
+        Controller controller = new Controller(grid, new StandardPolicy(), 10000, 500, 0);
         assertTrue(controller.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
         assertEquals(1, grid.getNumberOfPoweredCC());
 
-        MasonicLodge first =
-                (MasonicLodge) grid.getCell(9, 10).getConstruction();
+        MasonicLodge first = (MasonicLodge) grid.getCell(9, 10).getConstruction();
         controller.removeConstructionByPlayer(9, 10);
         assertEquals(1, countLodges(grid));
-        MasonicLodge afterDemolition =
-                (MasonicLodge) grid.getCell(9, 10).getConstruction();
+        MasonicLodge afterDemolition = (MasonicLodge) grid.getCell(9, 10).getConstruction();
         assertFalse(first == afterDemolition);
 
         controller.removeConstruction(9, 10);
         assertEquals(1, countLodges(grid));
-        assertFalse(afterDemolition
-                == grid.getCell(9, 10).getConstruction());
+        assertFalse(afterDemolition == grid.getCell(9, 10).getConstruction());
     }
 
     @Test
@@ -115,30 +102,20 @@ class MasonicLodgeTest
     {
         Grid grid = new Grid();
         grid.placeConstruction(new Road(), 0, 0);
-        Controller controller = new Controller(
-                grid, new StandardPolicy(), 2000, 500, 0
-        );
+        Controller controller = new Controller(grid, new StandardPolicy(), 2000, 500, 0);
         assertTrue(controller.chooseFreemasonry(FreemasonryChoice.ACCEPTED));
-        MasonicLodge lodge =
-                (MasonicLodge) grid.getCell(0, 1).getConstruction();
+        MasonicLodge lodge = (MasonicLodge) grid.getCell(0, 1).getConstruction();
         assertEquals(0, controller.getTsunamiInsuranceBuildingCount());
 
         // Anche un vecchio salvataggio con il flag impostato non la ricostruisce.
         lodge.setTsunamiInsured(true);
-        InsuranceManager insurance = new InsuranceManager(
-                new City(grid, new StandardPolicy()), grid, true
-        );
-        insurance.registerTsunamiDamage(
-                List.of(new ReconstructionEntry(lodge, 0, 1)),
-                "UP"
-        );
+        InsuranceManager insurance = new InsuranceManager(new City(grid, new StandardPolicy()), grid, true);
+        insurance.registerTsunamiDamage(List.of(new ReconstructionEntry(lodge, 0, 1)), "UP");
         assertTrue(insurance.getPendingReconstructions().isEmpty());
     }
 
     private static long countLodges(Grid grid)
     {
-        return grid.getConstructions().stream()
-                .filter(MasonicLodge.class::isInstance)
-                .count();
+        return grid.getConstructions().stream().filter(MasonicLodge.class::isInstance).count();
     }
 }

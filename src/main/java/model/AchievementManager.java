@@ -26,9 +26,7 @@ public class AchievementManager {
 
         if (unlockedAchievements != null)
         {
-            this.unlockedAchievements.addAll(
-                    unlockedAchievements
-            );
+            this.unlockedAchievements.addAll(unlockedAchievements);
         }
     }
 
@@ -62,9 +60,7 @@ public class AchievementManager {
 
     public Set<Achievement> getUnlockedAchievements()
     {
-        return new HashSet<>(
-                unlockedAchievements
-        );
+        return new HashSet<>(unlockedAchievements);
     }
 
     public void reset()

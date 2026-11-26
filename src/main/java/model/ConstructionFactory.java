@@ -58,9 +58,7 @@ public class ConstructionFactory
                 return new MasonicLodge();
 
             default:
-                throw new IllegalArgumentException(
-                        "Unknown construction type: " + type
-                );
+                throw new IllegalArgumentException("Unknown construction type: " + type);
         }
     }
 }
